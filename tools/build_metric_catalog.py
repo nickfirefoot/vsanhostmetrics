@@ -13,7 +13,7 @@ Usage:
 To refresh the scrape (read-only GET, the only host call this project makes):
     curl -sk -H "Authorization: Bearer $TOK" https://<esxi>/vsanmetrics -o scrape.txt
 
-Notes on the source data, both verified against a live ESXi 8 host:
+Notes on the source data, both verified against a live ESXi 9.1.1 host:
   * The exposition emits NO '# TYPE' lines, so counter-vs-gauge is INFERRED
     from the '_total' suffix. Treat the Type column as a strong guess.
   * Several families are split into multiple series by a label (io_type being

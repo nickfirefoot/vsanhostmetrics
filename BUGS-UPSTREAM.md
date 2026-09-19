@@ -10,7 +10,7 @@ management pack; our own bugs are tracked in `REPORT.md`.
 | | |
 |---|---|
 | Host | `esxi01.example.com` (single ESXi host, vSAN ESA) |
-| ESXi build | **TODO — fill in before filing** (`vmware -vl` on the host); not discoverable remotely |
+| ESXi version | **VMware ESXi 9.1.1.0.25714478** (`vmware -r` on the host; not discoverable remotely) |
 | vSAN cluster UUID | `5deb636e-91b5-11f1-aef5-000c296fd50e` |
 | Endpoint | `GET https://<host>/vsanmetrics`, bearer token auth |
 | Endpoint server | `BaseHTTP/0.6 Python/3.11.15` (from the `server:` response header) |
@@ -19,6 +19,9 @@ management pack; our own bugs are tracked in `REPORT.md`.
 
 A full catalogue of the exposition is in `docs/vsan-metrics-catalog.xlsx`,
 regenerable with `tools/build_metric_catalog.py`.
+
+Note that all of the below is observed on **ESXi 9.1.1**, i.e. a current
+release, not a legacy build awaiting an upgrade.
 
 ---
 
