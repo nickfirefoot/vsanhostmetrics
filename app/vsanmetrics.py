@@ -9,6 +9,8 @@ adapter.py is the only file that touches the SDK.
 from __future__ import annotations
 
 import gzip
+import json
+import os
 import re
 import ssl
 import time
@@ -121,10 +123,55 @@ class RateCache:
       host reboot         every counter resets at once -> drop the whole host
                           for this interval rather than emitting garbage
 
-    State lives for the container's lifetime.  A container restart costs one
-    interval of rates, which is correct behaviour, not a bug to work around.
+    State MUST outlive the process.  commands.cfg runs
+    `python app/adapter.py collect` per collection, so a fresh interpreter
+    starts every interval and an in-memory baseline is always empty -- the
+    adapter would never emit a single rate.  Set `path` and the baseline is
+    persisted there instead, surviving for as long as the container does.
+
+    `time.monotonic()` is CLOCK_MONOTONIC on Linux, which is kernel-wide, so
+    timestamps stay comparable across those separate processes and are immune
+    to NTP steps.  Leave `path` unset (the default) and behaviour is purely
+    in-memory, which is what the unit tests use.
     """
     _prev: Dict[tuple, Tuple[float, float]] = field(default_factory=dict)
+    path: Optional[str] = None
+
+    def __post_init__(self) -> None:
+        if self.path:
+            self._load()
+
+    def _load(self) -> None:
+        """Best-effort.  A missing or corrupt cache just costs one interval."""
+        try:
+            with open(self.path) as fh:                  # type: ignore[arg-type]
+                raw = json.load(fh)
+        except (OSError, ValueError):
+            return
+        for entry in raw.get("series", []):
+            try:
+                key = (entry["scope"], entry["name"],
+                       tuple((k, v) for k, v in entry["labels"]))
+                self._prev[key] = (float(entry["t"]), float(entry["v"]))
+            except (KeyError, TypeError, ValueError):
+                continue
+
+    def _save(self) -> None:
+        """Atomic replace, so a killed collection cannot leave a torn file."""
+        if not self.path:
+            return
+        payload = {"series": [
+            {"scope": k[0], "name": k[1], "labels": [list(p) for p in k[2]],
+             "t": t, "v": v}
+            for k, (t, v) in self._prev.items()
+        ]}
+        tmp = f"{self.path}.tmp"
+        try:
+            with open(tmp, "w") as fh:
+                json.dump(payload, fh)
+            os.replace(tmp, self.path)
+        except OSError:
+            pass
 
     def rates(self,
               scope: str,
@@ -160,12 +207,14 @@ class RateCache:
             out = {}
 
         self._prev.update(staged)
+        self._save()
         return out, resets
 
     def forget(self, scope: str) -> None:
         """Drop a host's baselines, e.g. after it leaves the config."""
         for k in [k for k in self._prev if k[0] == scope]:
             del self._prev[k]
+        self._save()
 
 
 def derive_percentages(by_key: Dict[str, float]) -> Dict[str, float]:

@@ -10,6 +10,7 @@ cumulative TCP counters to rates, and emits one VsanHostTcpIp object per
 Import block and main() dispatch are taken verbatim from the mp-init
 generated adapter.py (SDK 1.3.1 / lib 1.1.0), which is ground truth.
 """
+import os
 import sys
 from typing import Dict
 from typing import List
@@ -34,9 +35,17 @@ import vsanmetrics as vm
 
 logger = logging.getLogger(__name__)
 
-# Module-level so baselines survive across collect() calls within the
-# container's lifetime.  See RateCache docstring.
-_RATES = vm.RateCache()
+# commands.cfg runs `python app/adapter.py collect` once per collection, so this
+# module is re-imported in a BRAND NEW interpreter every interval.  A purely
+# in-memory cache is therefore always empty and no rate is ever emitted; the
+# baseline has to live on the container filesystem.  See RateCache docstring.
+# /tmp, not /var/log: mp-test bind-mounts the project's logs/ over /var/log, and
+# the adapter runs as uid 1000 while that directory is owned by the host user, so
+# /var/log is read-only in practice.  /tmp is container-local and always writable,
+# which is exactly the container-lifetime scope we want.
+_RATES = vm.RateCache(
+    path=os.getenv("VSAN_RATE_CACHE", "/tmp/vsan_rate_cache.json")
+)
 
 
 # ---------------------------------------------------------------------------

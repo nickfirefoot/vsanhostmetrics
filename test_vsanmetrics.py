@@ -8,7 +8,10 @@ Offline tests for the parser and rate cache.  No SDK, no network, no host.
 Run these before you ever touch mp-test.  If the rate math is wrong here it
 will be wrong in Operations, and it is far cheaper to find out now.
 """
+import os
+import shutil
 import sys
+import tempfile
 sys.path.insert(0, "app")
 
 import vsanmetrics as vm
@@ -96,6 +99,44 @@ def test_zero_denominator_is_safe():
     assert vm.derive_percentages({"rcvOutOfOrderPackets": 1.0}) == {}
     assert vm.derive_percentages({"tcpPacketsTotal": 0.0,
                                   "rcvOutOfOrderPackets": 1.0}) == {}
+
+
+def test_baseline_survives_a_fresh_process():
+    """commands.cfg runs `python app/adapter.py collect` per collection, so the
+    interpreter is new every interval.  A path-backed cache must still produce
+    rates on the second collection; an in-memory one never would."""
+    tmpdir = tempfile.mkdtemp()
+    cache = os.path.join(tmpdir, "rates.json")
+    try:
+        # collection 1, in one "process"
+        c1 = vm.RateCache(path=cache)
+        rates, _ = c1.rates("esxi01", list(vm.parse(snapshot(1000, 1, 5, 20),
+                                                    keep=vm.TCP_COUNTERS)), now=0.0)
+        assert rates == {}, "first collection has no baseline"
+
+        # collection 2, in a brand-new object == a brand-new process
+        c2 = vm.RateCache(path=cache)
+        assert c2._prev, "baseline was not reloaded from disk"
+        rates, _ = c2.rates("esxi01", list(vm.parse(snapshot(4000, 4, 15, 80),
+                                                    keep=vm.TCP_COUNTERS)), now=300.0)
+        assert rates, "second collection in a fresh process must emit rates"
+        assert all(v >= 0 for v in rates.values()), "rates must be non-negative"
+    finally:
+        shutil.rmtree(tmpdir, ignore_errors=True)
+
+
+def test_corrupt_cache_costs_one_interval_not_a_crash():
+    tmpdir = tempfile.mkdtemp()
+    cache = os.path.join(tmpdir, "rates.json")
+    try:
+        with open(cache, "w") as fh:
+            fh.write("{not json at all")
+        c = vm.RateCache(path=cache)          # must not raise
+        rates, _ = c.rates("esxi01", list(vm.parse(snapshot(1000, 1, 5, 20),
+                                                   keep=vm.TCP_COUNTERS)), now=0.0)
+        assert rates == {}, "corrupt cache behaves like a cold start"
+    finally:
+        shutil.rmtree(tmpdir, ignore_errors=True)
 
 
 if __name__ == "__main__":
