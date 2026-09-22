@@ -31,11 +31,47 @@ needed beyond SSH.
 
 ## Correctness
 
-**The OOO denominator is wrong.** `tcpPacketsTotal` is rx+tx; the Broadcom
-thresholds are rx-only, so `outOfOrderPct` and friends understate by roughly
-2x. Documented in `derive_percentages()`. Needs an rx-only counter that has not
-been identified in the exposition yet. **Fix before trusting any alerting built
-on these percentages.**
+**`io_type` label collision silently discards half the traffic.** Confirmed
+against a live scrape of `esxi01.example.com` on 2026-09-22.
+
+`vmware_esx_tcppkt_total` and `vmware_esx_tcppkt_bytes_total` are each emitted
+**twice** per (host_uuid, stack), distinguished only by an `io_type` label of
+`rx` or `tx`. The other seven counters carry no `io_type`. In `collect()`:
+
+```python
+grouped.setdefault(ident, {})[vm.TCP_COUNTERS[name]] = rate
+```
+
+both samples map to the same friendly key under the same ident, so the second
+overwrites the first. `tcpPacketsTotal` and `tcpBytesTotal` therefore report
+**rx or tx arbitrarily, depending on iteration order** -- not the sum. Nothing
+in `vsanmetrics.py` references `io_type` at all.
+
+Observed on esxi01: rx 169,764,234 vs tx 184,368,054 packets.
+
+This supersedes the previously recorded caveat. `derive_percentages()` still
+says the denominator is "almost certainly rx+tx" and that an rx-only count
+must be found elsewhere -- "another name from getVsanNetworkStats or rxPackets
+from the vsan-vnic-net entity via /vsanperf". Both claims are wrong: it is not
+the sum, and the rx-only value is right there under `io_type="rx"`. The 2x
+magnitude in that caveat happened to be about right, for the wrong reason.
+
+**Consequences:** `tcpPacketsTotal` and `tcpBytesTotal` are wrong and
+non-deterministic, and all four derived percentages divide by an arbitrary
+denominator. **Do not build alerting on these until fixed.**
+
+Two fix shapes:
+
+- *Minimal, code-only:* keep the existing metric keys, make the collision
+  deterministic, and use the `io_type="rx"` sample as the percentage
+  denominator. No `describe.xml` change, so no pak reinstall -- which makes it
+  a good first exercise of the unverified fast path.
+- *Correct, schema change:* emit `tcpPacketsRx`/`tcpPacketsTx` and
+  `tcpBytesRx`/`tcpBytesTx` as distinct metrics and derive percentages from rx.
+  Changes `describe.xml`, so it needs a full pak reinstall.
+
+Also worth checking whether `sink_type` (observed constant at `cold`) can ever
+vary, since it would collide the same way.
 
 **Token rotation detection.** Scope is settled — tokens are cluster-wide — but
 the adapter cannot currently tell a rotated token from a network failure. Made
