@@ -11,10 +11,31 @@ resource kind.
 | `app/vsanmetrics.py` | none | Scrape, Prometheus parse, counter→rate cache, derived percentages. The logic. |
 | `app/adapter.py` | yes | `get_adapter_definition()` / `test()` / `get_endpoints()` / `collect()`. Thin glue. |
 | `app/constants.py` | none | Keys, and the Broadcom thresholds for symptom definitions. |
-| `test_vsanmetrics.py` | none | Offline tests. 6/6 passing. Run these first. |
+| `test_vsanmetrics.py` | none | Offline tests. 8/8 passing. Run these first. |
 
 The split is deliberate: everything that can be wrong about the data is in
 `vsanmetrics.py`, which has no SDK imports and runs anywhere.
+
+### Which document to read
+
+**Current truth — read these:**
+
+| File | Purpose |
+|---|---|
+| `REQUIREMENTS.md` | Everything needed to build, stage and deploy. Versions, network prerequisites, credentials, and a repeatability checklist. **Start here for a rebuild.** |
+| `README.md` | This file. What the code is, how to build it, how to deploy it. |
+| `BUGS-UPSTREAM.md` | Defects in the ESXi `/vsanmetrics` exposition itself, with reproductions. Read before trusting a metric that looks wrong. |
+
+**Historical — accurate when written, not maintained:**
+
+| File | Purpose |
+|---|---|
+| `HANDOFF.md` | The original brief: scope, fences, what "done" meant. Deliberately not rewritten as questions got answered — it records what was known at the start. |
+| `REPORT.md` | Findings from the `mp-test` bring-up, including the `RateCache` defect (§3b) that would have prevented any rate metric ever being emitted. |
+| `RESUME.md` | Agent session handoff: environment state and SDK API reconciliation. |
+| `TAKEOVER.md` | Session takeover context, plus lab infrastructure and networking findings (§E). |
+
+If those disagree with `REQUIREMENTS.md` or this file, these two win.
 
 ## Build host
 
@@ -214,8 +235,18 @@ The reported digest must match the `DIGEST` line in the pak's `.conf`.
 
 ### 5. Install the pak
 
-Install `build/VsanHostMetrics_1.0.0.pak` through the VCF Operations UI
-(Administration -> Repository). This writes the adapter's `describe.xml` schema
+Install `build/VsanHostMetrics_1.0.0.pak` through the VCF Operations UI:
+**Administration -> Integrations -> Repository -> Add**. (Broadcom's docs say
+Data Sources -> Integrations; Administration -> Integrations is the path
+actually present in 9.x. Not "Software Depot", which configures the VCF
+software depot and is unrelated.)
+
+Tick **both** checkboxes in that dialog:
+
+- *Install the PAK file even if it is already installed* -- needed for every
+  reinstall iteration
+- *Ignore the PAK file signature checking* -- **required**, this pak is
+  unsigned (`pak_validation_script` is empty and nothing signs it) This writes the adapter's `describe.xml` schema
 -- resource kinds, identifiers, attributes -- into the Operations database, and
 drops a plugin directory alongside the existing ones in
 `/usr/lib/vmware-vcops/user/plugins/inbound/`.
