@@ -205,9 +205,10 @@ def metric_key(family: str, name: str, meas_values) -> str:
     return "|".join(parts)
 
 
-def emit_python(model, helps, rows, path):
+def emit_python(model, helps, rows, path, kinds=None):
     """Write app/model.py -- the generated schema the adapter consumes."""
     import collections as _c
+    kinds = kinds or {}
     seen = _c.defaultdict(set)
     for name, labels in rows:
         fam = family_of(name)
@@ -223,6 +224,11 @@ def emit_python(model, helps, rows, path):
         fh.write("resource kind; identity labels split objects, measurement labels become\n")
         fh.write('part of the metric key.\n"""\n\n')
         fh.write("from typing import Dict, List, Tuple\n\n")
+        fh.write("# metrics entries are:\n")
+        fh.write("#   (metric_key, source_name, measurement_label_values, kind, help)\n")
+        fh.write("# kind is 'counter' (emit a per-second rate) or 'gauge' (emit as-is).\n")
+        fh.write("# See tools/classify_metrics.py and docs/metric-kinds.json for how\n")
+        fh.write("# each was decided and with what confidence.\n\n")
         fh.write("HOST_LABELS = %r\n\n" % sorted(HOST_LABELS))
         fh.write("# family -> resource kind definition\n")
         fh.write("FAMILIES: Dict[str, dict] = {\n")
@@ -243,7 +249,9 @@ def emit_python(model, helps, rows, path):
                 h = h.split("[from")[0].strip() if "[from" in h else h
                 if vals:
                     h = f"{h} ({', '.join(v for v in vals if v)})" if h else "/".join(vals)
-                fh.write(f"            ({key!r}, {nm!r}, {list(vals)!r}, {h[:180]!r}),\n")
+                k = kinds.get(nm, {})
+                fh.write(f"            ({key!r}, {nm!r}, {list(vals)!r}, "
+                         f"{k.get('kind','gauge')!r}, {h[:170]!r}),\n")
             fh.write("        ],\n    },\n")
         fh.write("}\n\n")
         fh.write("# All source metric names we consume, for the parser's keep-filter.\n")

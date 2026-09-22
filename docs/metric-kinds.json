@@ -1,0 +1,777 @@
+{
+ "vmware_esx_heap_usage_ratio": {
+  "confidence": "high",
+  "evidence": "help-point-in-time",
+  "kind": "gauge"
+ },
+ "vmware_esx_pnic_pkt_bytes_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_esx_pnic_pkt_err_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_esx_pnic_pkt_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_esx_rdt_checksum_mismatch_count": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_esx_rdt_latency_us": {
+  "confidence": "high",
+  "evidence": "observed-decrease",
+  "kind": "gauge"
+ },
+ "vmware_esx_slab_alloc_count": {
+  "confidence": "high",
+  "evidence": "observed-decrease",
+  "kind": "gauge"
+ },
+ "vmware_esx_slab_max_count": {
+  "confidence": "high",
+  "evidence": "help-point-in-time",
+  "kind": "gauge"
+ },
+ "vmware_esx_tcppkt_bytes_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_esx_tcppkt_rcvdupack_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_esx_tcppkt_rcvduppack_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_esx_tcppkt_rcvoopack_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_esx_tcppkt_sack_rcv_blocks_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_esx_tcppkt_sack_rexmits_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_esx_tcppkt_sack_send_blocks_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_esx_tcppkt_sndrexmitpack_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_esx_tcppkt_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_esx_world_readytime_seconds_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_esx_world_uptime_seconds_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_esx_world_usedtime_seconds_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_host_cpu_seconds_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_local_updates_count": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_update_latency": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_cmmds_updates_count_at_leader": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_agent_batches_sent": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_check_point_batches_sent": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_heartbeat_soft_timeouts": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_heartbeats_missed": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_master_batches_recved": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_rx_accept": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_rx_agent_update_request": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_rx_heartbeat_request": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_rx_master_update": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_rx_misc": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_rx_retransmit_request": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_rx_snapshot": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_total_upd_in_batch_ckpt": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_total_upd_in_master_batches": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_total_upd_sent_in_agent_batch": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_tx_agent_update_request": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_tx_heartbeat_request": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_tx_master_checkpoint": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_tx_master_ckpt_tried": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_tx_master_update": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_tx_master_update_tried": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_tx_retransmit_request": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_tx_snapshot": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_cmmds_workload_tx_snapshot_bytes": {
+  "confidence": "low",
+  "evidence": "default-safe",
+  "kind": "gauge"
+ },
+ "vmware_vsan_cmmds_workload_tx_snapshot_tried": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_disk_checksum_errors_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_vsan_dom_clientcache_readhit_count": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_dom_clientcache_readio_count": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_dom_congestion_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_vsan_dom_io_bytes_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_vsan_dom_io_duration_seconds_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_vsan_dom_io_durationsquare_seconds_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_vsan_dom_io_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_vsan_dom_numoio_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_clom_actual_bytes_moving": {
+  "confidence": "low",
+  "evidence": "default-safe",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_actual_bytes_sched_to_move": {
+  "confidence": "low",
+  "evidence": "default-safe",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_component_utilization": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_dedup_ratio": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_disk_logical_capacity_requested": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_disk_transient_capacity_used": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_fitness": {
+  "confidence": "low",
+  "evidence": "default-safe",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_fitness_disk_component_count_ratio": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_fitness_disk_data_component_count_ratio": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_fitness_diskgroup_data_component_count_ratio": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_fitness_max_actual_reserved_space_utilization": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_fitness_node_component_count_ratio": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_fitness_node_data_component_count_ratio": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_fitness_read_cache_reservation_utilization": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_fitness_resource_stddev_change": {
+  "confidence": "low",
+  "evidence": "default-safe",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_fitness_unreserved_address_space_utilization": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_fitness_version_weight": {
+  "confidence": "low",
+  "evidence": "default-safe",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_logical_fullness": {
+  "confidence": "high",
+  "evidence": "observed-decrease",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_num_components": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_clom_pending_deletes": {
+  "confidence": "low",
+  "evidence": "default-safe",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_pending_writes": {
+  "confidence": "low",
+  "evidence": "default-safe",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_physical_disk_capacity_reserved": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_physical_free_space": {
+  "confidence": "high",
+  "evidence": "observed-decrease",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_physical_fullness": {
+  "confidence": "high",
+  "evidence": "observed-decrease",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_queued_bytes": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_queued_objects": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_rebalancing_fullness": {
+  "confidence": "high",
+  "evidence": "observed-decrease",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_rebalancing_status": {
+  "confidence": "low",
+  "evidence": "default-safe",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_total_queued_work_items": {
+  "confidence": "medium",
+  "evidence": "help-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_clom_work_item_success_count": {
+  "confidence": "low",
+  "evidence": "default-safe",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_disk_congestion_be_data": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_disk_congestion_be_data_allocator": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_disk_congestion_be_policy_allocator": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_disk_congestion_global": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_disk_congestion_spl_allocator": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_disk_congestion_spl_attr": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_disk_congestion_spl_logical": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_disk_congestion_spl_prepare": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_disk_congestion_wal": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_disk_congestion_wal_allocator": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_disk_dev_read_time_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_disk_dev_write_time_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_disk_io_bytes": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_disk_io_count": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_disk_num_allocated_blocks": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_disk_num_total_blocks": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_disk_pending_free_blocks": {
+  "confidence": "medium",
+  "evidence": "help-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_disk_read_io_bytes": {
+  "confidence": "medium",
+  "evidence": "observed-monotonic",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_disk_read_io_count": {
+  "confidence": "medium",
+  "evidence": "observed-monotonic",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_disk_read_time_max": {
+  "confidence": "high",
+  "evidence": "observed-decrease",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_disk_read_time_min": {
+  "confidence": "high",
+  "evidence": "observed-decrease",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_disk_read_time_sum": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_disk_write_io_bytes": {
+  "confidence": "medium",
+  "evidence": "observed-monotonic",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_disk_write_io_count": {
+  "confidence": "medium",
+  "evidence": "observed-monotonic",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_disk_write_time_max": {
+  "confidence": "high",
+  "evidence": "observed-decrease",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_disk_write_time_min": {
+  "confidence": "high",
+  "evidence": "observed-decrease",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_disk_write_time_sum": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_num_max_components": {
+  "confidence": "low",
+  "evidence": "default-safe",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_splinter_cache_hits_branch": {
+  "confidence": "medium",
+  "evidence": "observed-monotonic",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_splinter_cache_hits_branch_range": {
+  "confidence": "low",
+  "evidence": "default-safe",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_splinter_cache_hits_filter": {
+  "confidence": "medium",
+  "evidence": "observed-monotonic",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_splinter_cache_hits_misc": {
+  "confidence": "low",
+  "evidence": "default-safe",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_splinter_cache_misses_branch": {
+  "confidence": "medium",
+  "evidence": "observed-monotonic",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_splinter_cache_misses_branch_range": {
+  "confidence": "low",
+  "evidence": "default-safe",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_splinter_cache_misses_filter": {
+  "confidence": "low",
+  "evidence": "default-safe",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_splinter_cache_misses_misc": {
+  "confidence": "low",
+  "evidence": "default-safe",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_splinter_checkpoint_write_latency_max": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_splinter_current_outstanding_tasks": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_splinter_max_outstanding_tasks": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_splinter_memtable_pending_tasks": {
+  "confidence": "low",
+  "evidence": "default-safe",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_splinter_total_tasks": {
+  "confidence": "low",
+  "evidence": "default-safe",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_splinter_total_tasks_latency_max_ns": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_splinter_total_tasks_latency_ns": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_splinter_total_tasks_runtime_max_ns": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_zdom_all_op_cache_miss": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_zdom_all_op_logical_tree_cache_miss": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_zdom_all_op_middle_tree_cache_miss": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_zdom_all_op_snap_tree_cache_miss": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_zdom_bank_flush_count": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_zdom_bank_flush_latency_us": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_zdom_data_checksum_mismatch": {
+  "confidence": "medium",
+  "evidence": "help-counter-words",
+  "kind": "counter"
+ },
+ "vmware_vsan_esa_zdom_seg_clean_read_bytes": {
+  "confidence": "low",
+  "evidence": "default-safe",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_zdom_seg_clean_unmap_bytes": {
+  "confidence": "low",
+  "evidence": "default-safe",
+  "kind": "gauge"
+ },
+ "vmware_vsan_esa_zdom_seg_clean_write_bytes": {
+  "confidence": "low",
+  "evidence": "default-safe",
+  "kind": "gauge"
+ },
+ "vmware_vsan_heap_usage_current_allocation": {
+  "confidence": "high",
+  "evidence": "observed-decrease",
+  "kind": "gauge"
+ },
+ "vmware_vsan_heap_usage_current_available": {
+  "confidence": "high",
+  "evidence": "observed-decrease",
+  "kind": "gauge"
+ },
+ "vmware_vsan_heap_usage_current_size": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_heap_usage_failed_count": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_heap_usage_max_size": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_memory_usage_bytes": {
+  "confidence": "high",
+  "evidence": "observed-decrease",
+  "kind": "gauge"
+ },
+ "vmware_vsan_rdt_max_network_latency": {
+  "confidence": "high",
+  "evidence": "observed-decrease",
+  "kind": "gauge"
+ },
+ "vmware_vsan_rdt_min_network_latency": {
+  "confidence": "high",
+  "evidence": "observed-decrease",
+  "kind": "gauge"
+ },
+ "vmware_vsan_vdisk_iopslimit": {
+  "confidence": "medium",
+  "evidence": "help-or-name-gauge-words",
+  "kind": "gauge"
+ },
+ "vmware_vsan_vdisk_normalizedio_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_vsan_vscsi_io_bytes_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_vsan_vscsi_io_duration_seconds_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ },
+ "vmware_vsan_vscsi_io_total": {
+  "confidence": "high",
+  "evidence": "name-suffix",
+  "kind": "counter"
+ }
+}
