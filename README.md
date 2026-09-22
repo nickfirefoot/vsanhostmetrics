@@ -100,11 +100,27 @@ metrics, that is the code working.
 
 ## Getting the token
 
-Per host, on the host:
+On **any ESXi host in the cluster** -- tokens are cluster-wide, so it does not
+matter which:
 
 ```sh
-configstorecli config current get -c vsan -g system -k vsan
-# -> metric_subscriptions[0].auth_token
+configstorecli config current get -c vsan -g system -k vsan -n
+# -> metric_subscriptions[].auth_token
+```
+
+**The `-n` is required and easy to miss.** Without it the token is returned
+**masked**, and the masked value looks plausible enough to paste into a
+credential field, where it will fail authentication. Worse, the host answers
+every authentication failure with **403, never 401** (`BUGS-UPSTREAM.md` item
+4), so the error does not say "bad credential" -- it looks like an
+authorisation or connectivity problem.
+
+Verify the token before pasting it anywhere:
+
+```sh
+curl -sk -o /dev/null -w '%{http_code}\n' \
+  -H "Authorization: Bearer $TOK" https://<esxi>/vsanmetrics
+# 200 = good.  403 = masked, wrong, or rotated token.
 ```
 
 The adapter runs in a container on a Cloud Proxy and cannot run

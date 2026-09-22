@@ -125,8 +125,16 @@ fix has to be scoped to the network, not to devices.
 Get the ESXi token, on any host in the cluster:
 
 ```sh
-configstorecli config current get -c vsan -g system -k vsan
-# -> metric_subscriptions[0].auth_token
+configstorecli config current get -c vsan -g system -k vsan -n
+# -> metric_subscriptions[].auth_token
+```
+
+**The `-n` is required.** Without it the value comes back masked, and a masked
+token fails authentication as a 403 rather than anything that says "bad
+credential". Confirm with a 200 before using it:
+
+```sh
+curl -sk -o /dev/null -w '%{http_code}\n' -H "Authorization: Bearer $TOK" https://<esxi>/vsanmetrics
 ```
 
 **No credential belongs in this repo.** `mp-test connect` writes the bearer
