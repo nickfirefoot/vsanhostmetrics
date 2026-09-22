@@ -86,12 +86,19 @@ def get_adapter_definition() -> AdapterDefinition:
         cred = d.define_credential_type("vsanmetrics_token", "vSAN metrics token")
         # NOTE: credential parameters in lib 1.1.0 take no `description` kwarg
         # (only key/label/required), so the retrieval hint lives in the label.
-        # Full command, run on the host:
-        #   configstorecli config current get -c vsan -g system -k vsan
-        #     -> metric_subscriptions[0].auth_token
+        # Full command, on any host in the cluster -- note the -n, without it
+        # the token comes back masked:
+        #   configstorecli config current get -c vsan -g system -k vsan -n
+        #     -> metric_subscriptions[].auth_token
+        #
+        # metric_subscriptions is a LIST, and every entry's token is valid
+        # simultaneously (verified 2026-09-22: two entries, both returning 200
+        # on two hosts).  Do not assume index 0 -- entries are added and removed
+        # over time, and a token observed earlier the same day had already been
+        # invalidated.  Any current entry will do.
         cred.define_password_parameter(
             TOKEN_CRED,
-            label="Bearer token (vsan/system/vsan -> metric_subscriptions[0].auth_token)",
+            label="Bearer token (vsan/system/vsan -> any metric_subscriptions[].auth_token)",
             required=True,
         )
 

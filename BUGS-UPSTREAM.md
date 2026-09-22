@@ -156,10 +156,30 @@ a real fault. It also forces a full ~624 KB `GET` just to check the endpoint is 
   serialise — relevant because this host exposes **two** `metric_subscriptions`,
   implying more than one intended consumer. What is the supported scrape
   concurrency and interval?
-- **Token scope and rotation.** Confirmed locally that the token is identical
-  across the cluster rather than per-host. What rotates these tokens, and is
-  there any way for a consumer to detect an impending rotation? Combined with
-  issue 4, a rotation currently presents as an undiagnosable 403.
+- **Token scope, lifetime and subscription semantics.** Confirmed locally that
+  a token is valid across the whole cluster rather than per-host.
+
+  Further observed 2026-09-22, and it changes the model: `metric_subscriptions`
+  is a **list, and every entry's token is valid simultaneously**. On
+  2026-09-19 the host exposed one entry; by 2026-09-22 it exposed two entirely
+  different ones, both returning 200 on two hosts, while the single token
+  observed at 03:16 that same day returned 403 by 21:41 on every host.
+
+  So entries are added and removed by something, and a consumer holding a token
+  can have it invalidated underneath it within hours. Open questions:
+
+  * What creates a subscription, and what removes one? Nothing we did registers
+    a consumer -- the adapter simply presents a bearer token.
+  * Is there a supported way to *create* a subscription for a known consumer,
+    rather than reading somebody else's token out of configstore? That is what
+    a management pack actually needs.
+  * What is the intended lifetime? An observed invalidation inside ~9 hours
+    makes a pasted credential unworkable for unattended monitoring.
+  * Can a consumer detect impending invalidation? Combined with issue 4, it
+    currently presents as an undiagnosable 403, and an adapter that skips
+    failed hosts reports an empty, *successful* collection.
+
+  Documentation referring to `metric_subscriptions[0]` should say "any entry".
 - **`server:` header disclosure.** The endpoint advertises its exact Python
   version. Minor information disclosure; worth suppressing on a management
   interface.
