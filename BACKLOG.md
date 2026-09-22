@@ -136,6 +136,27 @@ harder by the host returning 403 for every authentication failure and never 401
 (`BUGS-UPSTREAM.md` item 4). Whatever the handling, the failure must surface as
 a specific error, not a silently non-collecting object.
 
+**`verify_certs: true` is untested, and the reasoning behind it may be wrong.**
+`get_endpoints()` hands each host's URL to Operations, which fetches the cert
+and prompts the user to accept it -- confirmed working on 2026-09-22 when
+adding a third host. The docstring on `scrape()` then claims you can leave
+`verify=True` with `cafile=None`.
+
+That inference has a gap. The accepted cert lands in **Operations'** trust
+store, but `scrape()` runs **inside the adapter container**, where
+`ssl.create_default_context(cafile=None)` reads the *container's* CA bundle
+from the base image. Whether the SDK propagates Operations-accepted certs into
+the container is unverified.
+
+ESXi certs here are VMCA-signed by `vcenter.example.com`, so they will not chain
+against any public root.
+
+To test: accept the certs, flip `verify_certs` to `true`, and watch whether
+collection continues or every host starts failing in `collect()`'s exception
+handler. If it fails, the options are to pass the VMCA root via `cafile`, or to
+keep `verify_certs: false` and document why. Either way the current docstring
+should stop asserting something untested.
+
 ## Completeness
 
 **No relationship to the vCenter adapter's `HostSystem`.** Without it these
