@@ -34,8 +34,16 @@ ENTITY_LABELS = {
     "vm_instance_uuid", "vscsi_name", "splinter_uuid", "splinter_db_name",
 }
 
-# Entity labels that are really just a display name for another identifier.
-ALIAS = {"heap_name": "heap_id", "vm_name": "vm_instance_uuid", "name": "world_id"}
+# Previously an ALIAS map demoted heap_name/vm_name/name to properties on the
+# grounds they are display names for a "real" id.  That is true for heaps
+# (heap_name and heap_id are 1:1, so keeping both is merely redundant) and
+# false for worlds: vmware_esx_world_* has three label shapes, and 101 of its
+# 267 series carry `name` with NO `world_id` at all.  Demoting `name` collapsed
+# all of those into a single object with an empty identity.
+#
+# So: every entity label present becomes part of the identity.  A redundant
+# identifier costs nothing; a missing one silently merges distinct objects.
+ALIAS: dict = {}
 
 SAMPLE_RE = re.compile(r'^([a-zA-Z_:][a-zA-Z0-9_:]*)\{?([^}]*)\}?\s+([^\s]+)\s*$')
 LABEL_RE = re.compile(r'(\w+)="([^"]*)"')

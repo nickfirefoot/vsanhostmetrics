@@ -169,6 +169,7 @@
         "host_uuid",
         "objuuid",
         "vm_instance_uuid",
+        "vm_name",
         "vscsi_name"
       ],
       "metric_key_labels": [
@@ -177,7 +178,6 @@
       "properties": [
         "hostname",
         "sink_type",
-        "vm_name",
         "vsan_cluster_uuid"
       ],
       "unclassified": [],
@@ -363,12 +363,12 @@
       ],
       "identity": [
         "host_uuid",
+        "name",
         "world_id"
       ],
       "metric_key_labels": [],
       "properties": [
         "hostname",
-        "name",
         "sink_type",
         "vsan_cluster_uuid",
         "role",
@@ -385,7 +385,7 @@
         "vsan_cluster_uuid": 1,
         "world_id": 166
       },
-      "objects_per_host": 167,
+      "objects_per_host": 267,
       "metric_definitions": 3,
       "metrics_per_object": 1
     },
@@ -456,11 +456,11 @@
       ],
       "identity": [
         "heap_id",
+        "heap_name",
         "host_uuid"
       ],
       "metric_key_labels": [],
       "properties": [
-        "heap_name",
         "hostname",
         "sink_type",
         "vsan_cluster_uuid",
@@ -491,11 +491,11 @@
       ],
       "identity": [
         "heap_id",
+        "heap_name",
         "host_uuid"
       ],
       "metric_key_labels": [],
       "properties": [
-        "heap_name",
         "hostname",
         "sink_type",
         "vsan_cluster_uuid",
@@ -550,12 +550,12 @@
         "vmware_esx_rdt_latency_us"
       ],
       "identity": [
-        "host_uuid"
+        "host_uuid",
+        "name"
       ],
       "metric_key_labels": [],
       "properties": [
         "hostname",
-        "name",
         "sink_type",
         "unicast_agent_ipv4",
         "vsan_cluster_uuid"
@@ -569,9 +569,9 @@
         "unicast_agent_ipv4": 1,
         "vsan_cluster_uuid": 1
       },
-      "objects_per_host": 1,
+      "objects_per_host": 2,
       "metric_definitions": 2,
-      "metrics_per_object": 2
+      "metrics_per_object": 1
     },
     "vmware_vsan_rdt": {
       "series": 2,
@@ -580,14 +580,14 @@
         "vmware_vsan_rdt_min_network_latency"
       ],
       "identity": [
-        "host_uuid"
+        "host_uuid",
+        "name"
       ],
       "metric_key_labels": [
         "sink_type"
       ],
       "properties": [
         "hostname",
-        "name",
         "unicast_agent_ipv4",
         "vsan_cluster_uuid"
       ],

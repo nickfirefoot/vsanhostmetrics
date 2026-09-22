@@ -19,8 +19,9 @@ from dataclasses import dataclass, field
 from typing import Dict, Iterator, List, Optional, Tuple
 
 # ---------------------------------------------------------------------------
-# Beta scope: the nine TCP counters from /net/nics $getVsanNetworkStats.
-# Left column = name on the wire.  Right column = Operations metric key.
+# TCP_COUNTERS is the original hand-written beta scope, kept because the
+# threshold work and the derived percentages still refer to these names.  The
+# full schema now lives in the GENERATED app/model.py -- see group() below.
 # ---------------------------------------------------------------------------
 TCP_COUNTERS: Dict[str, str] = {
     "vmware_esx_tcppkt_total":                  "tcpPacketsTotal",
@@ -48,6 +49,31 @@ _SAMPLE_RE = re.compile(
     r'\s+(?P<value>[^\s]+)'
 )
 _LABEL_RE = re.compile(r'([A-Za-z_][A-Za-z0-9_]*)="((?:[^"\\]|\\.)*)"')
+
+
+@dataclass(frozen=True)
+class ObjectKey:
+    """Identity of one Operations object.
+
+    `family` selects the resource kind; `idents` are the identity-label values
+    in the order the model declares them, so the tuple is stable and hashable.
+    """
+    family: str
+    host_uuid: str
+    idents: Tuple[Tuple[str, str], ...]
+
+    def display(self, hostname: str) -> str:
+        if not self.idents:
+            return hostname
+        return f"{hostname} [{'/'.join(v for _, v in self.idents)}]"
+
+
+@dataclass
+class Grouped:
+    """Samples for one object, split by how they must be treated."""
+    counters: Dict[str, float] = field(default_factory=dict)
+    gauges: Dict[str, float] = field(default_factory=dict)
+    props: Dict[str, str] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -247,3 +273,92 @@ def derive_percentages(by_key: Dict[str, float]) -> Dict[str, float]:
         if v is not None:
             out[dst] = 100.0 * v / total
     return out
+
+
+# ---------------------------------------------------------------------------
+# Model-driven grouping
+#
+# Everything below consumes the GENERATED app/model.py.  The rule it encodes,
+# which `stack` always followed and `io_type` never did:
+#
+#   * a label distinguishing different ENTITIES      -> object identity
+#   * a label distinguishing MEASUREMENTS of one one -> part of the metric key
+#
+# That is why `total{io_type=rx}` and `total{io_type=tx}` became `total|rx` and
+# `total|tx` instead of overwriting each other, and why the same class of bug
+# cannot recur silently for pnic, dom, vdisk or vscsi.
+# ---------------------------------------------------------------------------
+
+try:                                    # pragma: no cover - import shape
+    from . import model as _model       # type: ignore
+except ImportError:                     # running flat, as the container does
+    import model as _model              # type: ignore
+
+MODEL = _model
+
+
+def _build_index():
+    """(source_name, measurement-values) -> (family, metric_key, kind)."""
+    idx = {}
+    for fam, d in MODEL.FAMILIES.items():
+        for key, src, vals, kind, _help in d["metrics"]:
+            idx[(src, tuple(vals))] = (fam, key, kind)
+    return idx
+
+
+_INDEX = _build_index()
+
+# Every source name the model knows, for parse()'s keep-filter.
+ALL_NAMES: Dict[str, str] = dict(MODEL.KEEP)
+
+
+def group(samples: List[Sample]) -> Tuple[Dict[ObjectKey, Grouped], List[str]]:
+    """Fold samples into one Grouped per object.
+
+    Returns (objects, unknown).  `unknown` lists source-name/label
+    combinations the model has never seen -- a new `io_type` value, a stack
+    that did not exist when the model was generated, an ESXi upgrade adding
+    metrics.  These are reported rather than dropped silently, because a
+    silently dropped sample is exactly how the io_type collision survived
+    8/8 passing tests.
+    """
+    out: Dict[ObjectKey, Grouped] = {}
+    unknown: List[str] = []
+
+    for s in samples:
+        fam = ALL_NAMES.get(s.name)
+        if fam is None:
+            unknown.append(f"{s.name} (unknown metric)")
+            continue
+        spec = MODEL.FAMILIES[fam]
+        labels = dict(s.labels)
+
+        meas = tuple(labels.get(k, "") for k in spec["metric_key_labels"])
+        hit = _INDEX.get((s.name, meas))
+        if hit is None:
+            unknown.append(f"{s.name}{{{','.join(meas)}}} (unknown combination)")
+            continue
+        _f, key, kind = hit
+
+        ident = tuple((k, labels.get(k, "")) for k in spec["identity"])
+        okey = ObjectKey(fam, labels.get("host_uuid", ""), ident)
+
+        g = out.setdefault(okey, Grouped())
+        bucket = g.counters if kind == "counter" else g.gauges
+        if key in bucket:
+            # Two samples landed on one metric key for one object.  That is the
+            # io_type bug's signature; the model is meant to make it impossible.
+            unknown.append(f"{s.name} -> {fam}/{key} COLLISION on {okey.idents}")
+            continue
+        bucket[key] = s.value
+
+        for p in spec["properties"]:
+            v = labels.get(p)
+            if v:
+                g.props[p] = v
+        for p in MODEL.HOST_LABELS:
+            v = labels.get(p)
+            if v:
+                g.props[p] = v
+
+    return out, unknown

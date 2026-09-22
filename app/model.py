@@ -22,9 +22,9 @@ HOST_LABELS = ['host_uuid', 'hostname', 'vsan_cluster_uuid']
 # family -> resource kind definition
 FAMILIES: Dict[str, dict] = {
     'vmware_esx_heap': {
-        'identity': ['heap_id'],
+        'identity': ['heap_id', 'heap_name'],
         'metric_key_labels': [],
-        'properties': ['heap_name', 'sink_type', 'subsystem'],
+        'properties': ['sink_type', 'subsystem'],
         'objects_per_host': 31,
         'metrics': [
             ('usage_ratio', 'vmware_esx_heap_usage_ratio', [], 'gauge', 'Point in time. Usage of heap (mempool) in percent. For some being full is normal, others may impact control or IO operations'),
@@ -45,10 +45,10 @@ FAMILIES: Dict[str, dict] = {
         ],
     },
     'vmware_esx_rdt': {
-        'identity': [],
+        'identity': ['name'],
         'metric_key_labels': [],
-        'properties': ['name', 'sink_type', 'unicast_agent_ipv4'],
-        'objects_per_host': 1,
+        'properties': ['sink_type', 'unicast_agent_ipv4'],
+        'objects_per_host': 2,
         'metrics': [
             ('checksum_mismatch_count', 'vmware_esx_rdt_checksum_mismatch_count', [], 'counter', 'The count of RDT checksum mismatch.'),
             ('latency_us', 'vmware_esx_rdt_latency_us', [], 'gauge', 'The RDT roundtrip network latency in microsecond'),
@@ -84,10 +84,10 @@ FAMILIES: Dict[str, dict] = {
         ],
     },
     'vmware_esx_world': {
-        'identity': ['world_id'],
+        'identity': ['name', 'world_id'],
         'metric_key_labels': [],
-        'properties': ['name', 'sink_type', 'role', 'subsystem'],
-        'objects_per_host': 167,
+        'properties': ['sink_type', 'role', 'subsystem'],
+        'objects_per_host': 267,
         'metrics': [
             ('readytime_seconds_total', 'vmware_esx_world_readytime_seconds_total', [], 'counter', 'Worlds is what ESX calls threads. Except when noted in the name, refers to a single world. readytime is a sum total of the time the world was activated, but waiting for a'),
             ('uptime_seconds_total', 'vmware_esx_world_uptime_seconds_total', [], 'counter', 'Worlds is what ESX calls threads. Except when noted in the name, refers to a single world. uptime is a sum total of the time the world was not paused'),
@@ -415,9 +415,9 @@ FAMILIES: Dict[str, dict] = {
         ],
     },
     'vmware_vsan_heap': {
-        'identity': ['heap_id'],
+        'identity': ['heap_id', 'heap_name'],
         'metric_key_labels': [],
-        'properties': ['heap_name', 'sink_type', 'subsystem'],
+        'properties': ['sink_type', 'subsystem'],
         'objects_per_host': 31,
         'metrics': [
             ('usage_current_allocation', 'vmware_vsan_heap_usage_current_allocation', [], 'gauge', ''),
@@ -498,9 +498,9 @@ FAMILIES: Dict[str, dict] = {
         ],
     },
     'vmware_vsan_rdt': {
-        'identity': [],
+        'identity': ['name'],
         'metric_key_labels': ['sink_type'],
-        'properties': ['name', 'unicast_agent_ipv4'],
+        'properties': ['unicast_agent_ipv4'],
         'objects_per_host': 1,
         'metrics': [
             ('max_network_latency|hot', 'vmware_vsan_rdt_max_network_latency', ['hot'], 'gauge', 'The maximum RDT roundtrip network latency in microsecond (hot)'),
@@ -521,9 +521,9 @@ FAMILIES: Dict[str, dict] = {
         ],
     },
     'vmware_vsan_vscsi': {
-        'identity': ['objuuid', 'vm_instance_uuid', 'vscsi_name'],
+        'identity': ['objuuid', 'vm_instance_uuid', 'vm_name', 'vscsi_name'],
         'metric_key_labels': ['io_type'],
-        'properties': ['sink_type', 'vm_name'],
+        'properties': ['sink_type'],
         'objects_per_host': 16,
         'metrics': [
             ('io_bytes_total|read', 'vmware_vsan_vscsi_io_bytes_total', ['read'], 'counter', 'Total bytes seen by a VSCSI controller in a VM. (read)'),
