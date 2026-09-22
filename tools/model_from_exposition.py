@@ -45,6 +45,35 @@ ENTITY_LABELS = {
 # identifier costs nothing; a missing one silently merges distinct objects.
 ALIAS: dict = {}
 
+# Human-facing names.  Anything not listed falls back to a title-cased
+# transform of the family, which is ugly but never wrong.
+FAMILY_LABELS = {
+    "vmware_esx_tcppkt":  ("EsxTcpIp",      "ESX TCP/IP"),
+    "vmware_esx_pnic":    ("EsxPnic",       "ESX Physical NIC"),
+    "vmware_esx_rdt":     ("EsxRdt",        "ESX RDT"),
+    "vmware_esx_heap":    ("EsxHeap",       "ESX Heap"),
+    "vmware_esx_slab":    ("EsxSlab",       "ESX Slab"),
+    "vmware_esx_world":   ("EsxWorld",      "ESX World"),
+    "vmware_host_cpu":    ("HostCpu",       "Host CPU"),
+    "vmware_vsan_rdt":    ("VsanRdt",       "vSAN RDT"),
+    "vmware_vsan_dom":    ("VsanDom",       "vSAN DOM"),
+    "vmware_vsan_cmmds":  ("VsanCmmds",     "vSAN CMMDS"),
+    "vmware_vsan_memory": ("VsanMemory",    "vSAN Memory"),
+    "vmware_vsan_heap":   ("VsanHeap",      "vSAN Heap"),
+    "vmware_vsan_esa":    ("VsanEsa",       "vSAN ESA"),
+    "vmware_vsan_disk":   ("VsanDisk",      "vSAN Disk"),
+    "vmware_vsan_vdisk":  ("VsanVdisk",     "vSAN Virtual Disk"),
+    "vmware_vsan_vscsi":  ("VsanVscsi",     "vSAN vSCSI"),
+}
+
+
+def kind_and_label(fam: str):
+    if fam in FAMILY_LABELS:
+        return FAMILY_LABELS[fam]
+    parts = [p for p in fam.split("_") if p != "vmware"]
+    return "".join(p.capitalize() for p in parts), " ".join(parts).title()
+
+
 SAMPLE_RE = re.compile(r'^([a-zA-Z_:][a-zA-Z0-9_:]*)\{?([^}]*)\}?\s+([^\s]+)\s*$')
 LABEL_RE = re.compile(r'(\w+)="([^"]*)"')
 
@@ -244,7 +273,10 @@ def emit_python(model, helps, rows, path, kinds=None):
             m = model[fam]
             ident = [k for k in m["identity"] if k not in HOST_LABELS]
             mets = sorted(seen[fam])
+            kind_name, kind_label = kind_and_label(fam)
             fh.write(f"    {fam!r}: {{\n")
+            fh.write(f"        'kind': {kind_name!r},\n")
+            fh.write(f"        'label': {kind_label!r},\n")
             fh.write(f"        'identity': {ident!r},\n")
             fh.write(f"        'metric_key_labels': {m['metric_key_labels']!r},\n")
             fh.write(f"        'properties': {[p for p in m['properties'] if p not in HOST_LABELS]!r},\n")

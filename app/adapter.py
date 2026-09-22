@@ -27,7 +27,6 @@ from aria.ops.timer import Timer
 from constants import ADAPTER_KIND
 from constants import ADAPTER_NAME
 from constants import HOSTS_PARAM
-from constants import OBJ_TCPIP
 from constants import TOKEN_CRED
 from constants import VERIFY_PARAM
 
@@ -96,35 +95,52 @@ def get_adapter_definition() -> AdapterDefinition:
             required=True,
         )
 
-        tcpip = d.define_object_type(OBJ_TCPIP, "vSAN Host TCP/IP")
-        tcpip.define_string_identifier("host_uuid", "Host UUID", is_part_of_uniqueness=True)
-        tcpip.define_string_identifier("stack", "TCP/IP stack", is_part_of_uniqueness=True)
-        tcpip.define_string_property("hostname", "Host name")
-        tcpip.define_string_property("vsan_cluster_uuid", "vSAN cluster UUID")
+        # ------------------------------------------------------------------
+        # Object types are GENERATED from app/model.py, which is itself derived
+        # from a real /vsanmetrics exposition.  Hand-writing 385 metric
+        # definitions across 16 resource kinds does not scale and would drift
+        # every time ESXi changes the endpoint.
+        #
+        # Identity vs metric key is the rule that matters here:
+        #   * identity labels split objects   (stack, vmnic, world_id, ...)
+        #   * measurement labels join the key (io_type -> total|rx, total|tx)
+        # The second is why the io_type collision cannot recur.
+        # ------------------------------------------------------------------
+        for fam in sorted(vm.MODEL.FAMILIES):
+            spec = vm.MODEL.FAMILIES[fam]
+            ot = d.define_object_type(spec["kind"], spec["label"])
 
-        # Rates.  NOTE: Units.RATE.PER_SECOND -- there is no Units.RATIO.PER_SECOND
-        # in lib 1.1.0; Ratio only defines PERCENT.
-        for key, label in (
-            ("tcpPacketsTotal",       "TCP packets/s"),
-            ("tcpBytesTotal",         "TCP bytes/s"),
-            ("rcvOutOfOrderPackets",  "Out-of-order packets/s"),
-            ("rcvDuplicateAcks",      "Duplicate ACKs/s"),
-            ("rcvDuplicatePackets",   "Duplicate packets/s"),
-            ("sndRetransmitPackets",  "Retransmitted packets/s"),
-            ("sackRcvBlocks",         "SACK blocks received/s"),
-            ("sackSendBlocks",        "SACK blocks sent/s"),
-            ("sackRetransmits",       "SACK retransmits/s"),
-        ):
-            tcpip.define_metric(key, label, unit=Units.RATE.PER_SECOND)
+            # host_uuid is always part of identity: every sample carries it and
+            # objects must not merge across hosts.
+            ot.define_string_identifier("host_uuid", "Host UUID",
+                                        is_part_of_uniqueness=True)
+            for lab in spec["identity"]:
+                ot.define_string_identifier(lab, _label_for(lab),
+                                            is_part_of_uniqueness=True)
 
-        # Derived percentages -- these are what symptoms alert on.
-        for key, label in (
-            ("outOfOrderPct",       "Out-of-order packets"),
-            ("retransmitPct",       "Retransmitted packets"),
-            ("duplicateAckPct",     "Duplicate ACKs"),
-            ("duplicatePacketPct",  "Duplicate packets"),
-        ):
-            tcpip.define_metric(key, label, unit=Units.RATIO.PERCENT)
+            ot.define_string_property("hostname", "Host name")
+            ot.define_string_property("vsan_cluster_uuid", "vSAN cluster UUID")
+            for prop in spec["properties"]:
+                if prop in ("hostname", "vsan_cluster_uuid", "host_uuid"):
+                    continue
+                ot.define_string_property(prop, _label_for(prop))
+
+            for key, _src, _vals, kind, help_text in spec["metrics"]:
+                label = _metric_label(key, help_text)
+                if kind == "counter":
+                    # Counters are cumulative since boot; we emit a rate.
+                    # NOTE Units.RATE.PER_SECOND -- lib 1.1.0 has no
+                    # Units.RATIO.PER_SECOND; Ratio only defines PERCENT.
+                    ot.define_metric(key, label, unit=Units.RATE.PER_SECOND)
+                else:
+                    ot.define_metric(key, label)
+
+            # Derived percentages live only on the TCP/IP kind for now; they
+            # are what symptom definitions can actually alert on, since a
+            # symptom cannot divide two metrics itself.
+            if fam == "vmware_esx_tcppkt":
+                for key, lbl in vm.DERIVED_LABELS.items():
+                    ot.define_metric(key, lbl, unit=Units.RATIO.PERCENT)
 
         logger.debug(f"Returning adapter definition: {d.to_json()}")
         return d
@@ -133,6 +149,36 @@ def get_adapter_definition() -> AdapterDefinition:
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+_LABEL_OVERRIDES = {
+    "host_uuid": "Host UUID", "hostname": "Host name",
+    "vsan_cluster_uuid": "vSAN cluster UUID", "stack": "TCP/IP stack",
+    "vmnic": "Physical NIC", "world_id": "World ID", "name": "Name",
+    "heap_id": "Heap ID", "heap_name": "Heap name", "slab": "Slab",
+    "cpu": "CPU", "disk_uuid": "Disk UUID", "objuuid": "Object UUID",
+    "objpath": "Object path", "vm_name": "VM name",
+    "vm_instance_uuid": "VM instance UUID", "vscsi_name": "vSCSI device",
+    "splinter_uuid": "Splinter UUID", "splinter_db_name": "Splinter DB",
+    "sink_type": "Sink type", "subsystem": "Subsystem", "role": "Role",
+}
+
+
+def _label_for(key: str) -> str:
+    return _LABEL_OVERRIDES.get(key, key.replace("_", " ").capitalize())
+
+
+def _metric_label(key: str, help_text: str) -> str:
+    """Readable label for a generated metric key.
+
+    `total|rx` -> "Total (rx)".  Operations builds its metric tree from the
+    '|' separators, so the label only needs to read well as a leaf.
+    """
+    parts = key.split("|")
+    base = parts[0].replace("_total", "").replace("_", " ").strip().capitalize()
+    if len(parts) > 1:
+        base = f"{base} ({', '.join(parts[1:])})"
+    return base or key
+
+
 def _hosts(adapter_instance: AdapterInstance) -> List[str]:
     raw = adapter_instance.get_identifier_value(HOSTS_PARAM) or ""
     return [h.strip() for h in raw.split(",") if h.strip()]
@@ -163,14 +209,24 @@ def test(adapter_instance: AdapterInstance) -> TestResult:
         for host in hosts:
             try:
                 text = vm.scrape(host, token, verify=verify, timeout=20)
-                found = list(vm.parse(text, keep=vm.TCP_COUNTERS))
+                found = list(vm.parse(text, keep=vm.ALL_NAMES))
                 if not found:
                     result.with_error(
-                        f"{host}: scrape succeeded but no vmware_esx_tcppkt_* "
-                        f"samples present."
+                        f"{host}: scrape succeeded but contained none of the "
+                        f"{len(vm.ALL_NAMES)} metrics this adapter knows. "
+                        f"Different ESXi build?"
                     )
-                else:
-                    logger.info("%s: %d TCP samples", host, len(found))
+                    continue
+                objs, unknown = vm.group(found)
+                logger.info("%s: %d samples -> %d objects across %d kinds",
+                            host, len(found), len(objs),
+                            len({o.family for o in objs}))
+                if unknown:
+                    # Surfaced in the connection test, not just the log: a new
+                    # ESXi build adding metrics is something the operator wants
+                    # to know at configuration time, not months later.
+                    logger.warning("%s: %d unrecognised sample(s): %s",
+                                   host, len(unknown), unknown[:5])
             except Exception as exc:
                 result.with_error(f"{host}: {exc}")
         return result
@@ -200,52 +256,57 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
                 logger.error("scrape failed for %s: %s", host, exc)
                 continue
 
-            samples = list(vm.parse(text, keep=vm.TCP_COUNTERS))
+            samples = list(vm.parse(text, keep=vm.ALL_NAMES))
             if not samples:
-                logger.warning("%s: no TCP samples in response", host)
+                logger.warning("%s: no known samples in response", host)
                 continue
 
-            rates, resets = _RATES.rates(host, samples)
+            objs, unknown = vm.group(samples)
+            if unknown:
+                # Loud on purpose.  A silently dropped sample is how the
+                # io_type collision survived a green test suite; an ESXi
+                # upgrade adding a metric or a new label value should show up
+                # here rather than as quietly missing data.
+                logger.warning("%s: %d unrecognised sample(s); first few: %s",
+                               host, len(unknown), unknown[:5])
+
+            rates, resets = _RATES.rates_for_objects(host, objs)
             if resets:
                 logger.warning("%s: %d counter resets this interval", host, resets)
-            if not rates:
-                continue                      # first interval, or a reboot
 
-            # Group rates by (host_uuid, stack) -> {metric_key: value}
-            grouped: Dict[tuple, Dict[str, float]] = {}
-            props: Dict[tuple, Dict[str, str]] = {}
-            for (scope, name, labels), rate in rates.items():
-                lab = dict(labels)
-                ident = (lab.get("host_uuid", host), lab.get("stack", "unknown"))
-                grouped.setdefault(ident, {})[vm.TCP_COUNTERS[name]] = rate
-                props.setdefault(ident, {
-                    "hostname": lab.get("hostname", host),
-                    "vsan_cluster_uuid": lab.get("vsan_cluster_uuid", ""),
-                })
+            for okey, g in objs.items():
+                spec = vm.MODEL.FAMILIES[okey.family]
+                hostname = g.props.get("hostname", host)
 
-            for (host_uuid, stack), metrics in grouped.items():
                 obj = result.object(
                     ADAPTER_KIND,
-                    OBJ_TCPIP,
-                    f"{props[(host_uuid, stack)]['hostname']} [{stack}]",
-                    identifiers=[
-                        Identifier("host_uuid", host_uuid),
-                        Identifier("stack", stack),
-                    ],
+                    spec["kind"],
+                    okey.display(hostname),
+                    identifiers=[Identifier("host_uuid", okey.host_uuid)]
+                    + [Identifier(k, v) for k, v in okey.idents],
                 )
-                for k, v in metrics.items():
+
+                # Gauges are point-in-time and need no baseline, so objects
+                # appear on the very first collection rather than waiting an
+                # interval.  Only counter-derived rates need two samples.
+                for k, v in g.gauges.items():
                     obj.with_metric(k, v)
-                for k, v in vm.derive_percentages(metrics).items():
+
+                counter_rates = rates.get(okey, {})
+                for k, v in counter_rates.items():
                     obj.with_metric(k, v)
-                for k, v in props[(host_uuid, stack)].items():
+
+                if okey.family == "vmware_esx_tcppkt":
+                    for k, v in vm.derive_percentages(counter_rates).items():
+                        obj.with_metric(k, v)
+
+                for k, v in g.props.items():
                     if v:
                         obj.with_property(k, v)
 
                 # TODO cross-adapter relationship to the vCenter adapter's
-                # HostSystem, so this is navigable from the host in Operations.
-                # Needs whatever VMWARE keys HostSystem on -- match on the FQDN
-                # in `hostname` if that is the HostSystem name, otherwise
-                # translate via GetVcMoRefFromPerfEntityRefId on /vsanperf.
+                # HostSystem, so these are navigable from the host in
+                # Operations.  Biggest usability gap -- see BACKLOG.md.
 
         logger.debug(f"Returning collection result {result.get_json()}")
         return result

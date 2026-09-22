@@ -236,11 +236,77 @@ class RateCache:
         self._save()
         return out, resets
 
+    def rates_for_objects(self, scope: str,
+                          objs: "Dict[ObjectKey, Grouped]",
+                          now: Optional[float] = None
+                          ) -> Tuple["Dict[ObjectKey, Dict[str, float]]", int]:
+        """Per-object counter rates.
+
+        Reuses the same persisted baseline as rates(): the key becomes
+        (scope, "family/metric_key", identity-tuple), which is unique per
+        object per metric and stable across restarts.
+
+        Reboot handling is per host rather than per object: every since-boot
+        counter on a host resets together, so if a majority of that host's
+        counters went backwards the whole host is dropped for this interval
+        instead of emitting a burst of garbage rates.
+        """
+        now = time.monotonic() if now is None else now
+        staged: Dict[tuple, Tuple[float, float]] = {}
+        out: Dict[ObjectKey, Dict[str, float]] = {}
+        resets = 0
+
+        for okey, g in objs.items():
+            for mkey, value in g.counters.items():
+                key = (scope, f"{okey.family}/{mkey}", okey.idents)
+                prev = self._prev.get(key)
+                staged[key] = (now, value)
+                if prev is None:
+                    continue
+                dt = now - prev[0]
+                dv = value - prev[1]
+                if dt <= 0:
+                    continue
+                if dv < 0:
+                    resets += 1
+                    continue
+                out.setdefault(okey, {})[mkey] = dv / dt
+
+        if resets and resets >= max(2, len(staged) // 2):
+            out = {}
+
+        self._prev.update(staged)
+        self._save()
+        return out, resets
+
     def forget(self, scope: str) -> None:
         """Drop a host's baselines, e.g. after it leaves the config."""
         for k in [k for k in self._prev if k[0] == scope]:
             del self._prev[k]
         self._save()
+
+
+# Numerator -> (denominator, metric key, label).  Direction matters: a
+# receive-side event count must be divided by RECEIVED packets and a
+# transmit-side one by TRANSMITTED packets.
+#
+# The previous version divided everything by a single "tcpPacketsTotal" which,
+# because of the io_type collision, silently held the tx value -- so three of
+# the four percentages were a receive-side numerator over a transmit-side
+# denominator.  Not a scale error: a ratio of two unrelated quantities.
+DERIVED = {
+    "outOfOrderPct":      ("rcvoopack_total",     "total|rx"),
+    "duplicateAckPct":    ("rcvdupack_total",     "total|rx"),
+    "duplicatePacketPct": ("rcvduppack_total",    "total|rx"),
+    "retransmitPct":      ("sndrexmitpack_total", "total|tx"),
+}
+
+DERIVED_LABELS = {
+    "outOfOrderPct":      "Out-of-order packets (of received)",
+    "duplicateAckPct":    "Duplicate ACKs (of received)",
+    "duplicatePacketPct": "Duplicate packets (of received)",
+    "retransmitPct":      "Retransmitted packets (of transmitted)",
+}
 
 
 def derive_percentages(by_key: Dict[str, float]) -> Dict[str, float]:
@@ -249,30 +315,19 @@ def derive_percentages(by_key: Dict[str, float]) -> Dict[str, float]:
     Emit these rather than numerator+denominator: a symptom definition cannot
     divide two metrics, so shipping only the raw rates leaves you unalertable.
 
-    CAVEAT on the denominator.  tcpPacketsTotal is ALL packets processed by
-    ESX TCP, almost certainly rx+tx, while rcvOutOfOrderPackets and
-    rcvDuplicateAcks are receive-side only.  Broadcom's thresholds
-    (<0.1% healthy / 0.1-0.5% warn / >1.0% critical for out-of-order) come
-    from the tcprx section of net-stats, i.e. relative to RECEIVED packets.
-    Using the combined total understates receive-side rates by roughly 2x.
-    Before this pak goes past beta, replace the denominator with an rx-only
-    count -- either another name from getVsanNetworkStats or rxPackets from
-    the vsan-vnic-net entity via /vsanperf.
+    Broadcom's published thresholds for out-of-order (<0.1% healthy,
+    0.1-0.5% warn, >1.0% critical) come from the tcprx section of net-stats,
+    i.e. relative to RECEIVED packets -- which is what `total|rx` now is.
     """
     out: Dict[str, float] = {}
-    total = by_key.get("tcpPacketsTotal")
-    if not total or total <= 0:
-        return out
-    for src, dst in (
-        ("rcvOutOfOrderPackets", "outOfOrderPct"),
-        ("sndRetransmitPackets", "retransmitPct"),
-        ("rcvDuplicateAcks",     "duplicateAckPct"),
-        ("rcvDuplicatePackets",  "duplicatePacketPct"),
-    ):
-        v = by_key.get(src)
-        if v is not None:
-            out[dst] = 100.0 * v / total
+    for dst, (num_key, den_key) in DERIVED.items():
+        num = by_key.get(num_key)
+        den = by_key.get(den_key)
+        if num is None or not den or den <= 0:
+            continue
+        out[dst] = 100.0 * num / den
     return out
+
 
 
 # ---------------------------------------------------------------------------

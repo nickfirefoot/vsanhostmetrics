@@ -22,6 +22,8 @@ HOST_LABELS = ['host_uuid', 'hostname', 'vsan_cluster_uuid']
 # family -> resource kind definition
 FAMILIES: Dict[str, dict] = {
     'vmware_esx_heap': {
+        'kind': 'EsxHeap',
+        'label': 'ESX Heap',
         'identity': ['heap_id', 'heap_name'],
         'metric_key_labels': [],
         'properties': ['sink_type', 'subsystem'],
@@ -31,6 +33,8 @@ FAMILIES: Dict[str, dict] = {
         ],
     },
     'vmware_esx_pnic': {
+        'kind': 'EsxPnic',
+        'label': 'ESX Physical NIC',
         'identity': ['vmnic'],
         'metric_key_labels': ['io_type'],
         'properties': ['sink_type'],
@@ -45,6 +49,8 @@ FAMILIES: Dict[str, dict] = {
         ],
     },
     'vmware_esx_rdt': {
+        'kind': 'EsxRdt',
+        'label': 'ESX RDT',
         'identity': ['name'],
         'metric_key_labels': [],
         'properties': ['sink_type', 'unicast_agent_ipv4'],
@@ -55,6 +61,8 @@ FAMILIES: Dict[str, dict] = {
         ],
     },
     'vmware_esx_slab': {
+        'kind': 'EsxSlab',
+        'label': 'ESX Slab',
         'identity': ['slab'],
         'metric_key_labels': [],
         'properties': ['sink_type', 'subsystem'],
@@ -65,6 +73,8 @@ FAMILIES: Dict[str, dict] = {
         ],
     },
     'vmware_esx_tcppkt': {
+        'kind': 'EsxTcpIp',
+        'label': 'ESX TCP/IP',
         'identity': ['stack'],
         'metric_key_labels': ['io_type'],
         'properties': ['sink_type'],
@@ -84,6 +94,8 @@ FAMILIES: Dict[str, dict] = {
         ],
     },
     'vmware_esx_world': {
+        'kind': 'EsxWorld',
+        'label': 'ESX World',
         'identity': ['name', 'world_id'],
         'metric_key_labels': [],
         'properties': ['sink_type', 'role', 'subsystem'],
@@ -95,6 +107,8 @@ FAMILIES: Dict[str, dict] = {
         ],
     },
     'vmware_host_cpu': {
+        'kind': 'HostCpu',
+        'label': 'Host CPU',
         'identity': ['cpu'],
         'metric_key_labels': ['type'],
         'properties': ['sink_type'],
@@ -107,6 +121,8 @@ FAMILIES: Dict[str, dict] = {
         ],
     },
     'vmware_vsan_cmmds': {
+        'kind': 'VsanCmmds',
+        'label': 'vSAN CMMDS',
         'identity': [],
         'metric_key_labels': ['sink_type', 'type'],
         'properties': [],
@@ -148,6 +164,8 @@ FAMILIES: Dict[str, dict] = {
         ],
     },
     'vmware_vsan_disk': {
+        'kind': 'VsanDisk',
+        'label': 'vSAN Disk',
         'identity': ['disk_uuid'],
         'metric_key_labels': [],
         'properties': ['sink_type'],
@@ -157,6 +175,8 @@ FAMILIES: Dict[str, dict] = {
         ],
     },
     'vmware_vsan_dom': {
+        'kind': 'VsanDom',
+        'label': 'vSAN DOM',
         'identity': [],
         'metric_key_labels': ['io_type', 'role', 'sink_type'],
         'properties': [],
@@ -245,6 +265,8 @@ FAMILIES: Dict[str, dict] = {
         ],
     },
     'vmware_vsan_esa': {
+        'kind': 'VsanEsa',
+        'label': 'vSAN ESA',
         'identity': ['disk_uuid', 'splinter_db_name', 'splinter_uuid'],
         'metric_key_labels': ['disk_role', 'sink_type', 'source', 'type'],
         'properties': [],
@@ -415,6 +437,8 @@ FAMILIES: Dict[str, dict] = {
         ],
     },
     'vmware_vsan_heap': {
+        'kind': 'VsanHeap',
+        'label': 'vSAN Heap',
         'identity': ['heap_id', 'heap_name'],
         'metric_key_labels': [],
         'properties': ['sink_type', 'subsystem'],
@@ -428,6 +452,8 @@ FAMILIES: Dict[str, dict] = {
         ],
     },
     'vmware_vsan_memory': {
+        'kind': 'VsanMemory',
+        'label': 'vSAN Memory',
         'identity': [],
         'metric_key_labels': ['memory_type'],
         'properties': ['sink_type'],
@@ -498,6 +524,8 @@ FAMILIES: Dict[str, dict] = {
         ],
     },
     'vmware_vsan_rdt': {
+        'kind': 'VsanRdt',
+        'label': 'vSAN RDT',
         'identity': ['name'],
         'metric_key_labels': ['sink_type'],
         'properties': ['unicast_agent_ipv4'],
@@ -508,6 +536,8 @@ FAMILIES: Dict[str, dict] = {
         ],
     },
     'vmware_vsan_vdisk': {
+        'kind': 'VsanVdisk',
+        'label': 'vSAN Virtual Disk',
         'identity': ['objpath', 'objuuid'],
         'metric_key_labels': ['io_type'],
         'properties': ['sink_type'],
@@ -521,6 +551,8 @@ FAMILIES: Dict[str, dict] = {
         ],
     },
     'vmware_vsan_vscsi': {
+        'kind': 'VsanVscsi',
+        'label': 'vSAN vSCSI',
         'identity': ['objuuid', 'vm_instance_uuid', 'vm_name', 'vscsi_name'],
         'metric_key_labels': ['io_type'],
         'properties': ['sink_type'],
