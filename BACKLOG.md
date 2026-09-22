@@ -63,11 +63,40 @@ obvious since-boot ramp; the reverse would be a plausible-looking wrong number,
 which is why the default leans this way. Worth eyeballing the low-confidence
 list against real graphs once data accumulates.
 
-**Token rotation detection.** Scope is settled -- tokens are cluster-wide --
-but the adapter cannot tell a rotated token from a network failure. Made harder
-by the host returning 403 for every authentication failure and never 401
-(`BUGS-UPSTREAM.md` item 4). Whatever the handling, the failure must surface as
-a specific error, not a silently non-collecting object.
+**Token rotation detection. OBSERVED 2026-09-22, no longer theoretical.**
+A token that worked at 03:16 and again around 12:30 returned 403 by 21:41 the
+same day. Both the token in `~/esxi.env` and the older one stored in
+`connections.json` failed simultaneously, so this was rotation at the host, not
+a stale copy.
+
+What the adapter did, and why it is not good enough:
+
+```
+ERROR scrape failed for esxi01.example.com: HTTP Error 403: Forbidden
+INFO  Finished 'Collection' in 0.05s
+{"nonExistingObjects": [], "relationships": [], "result": []}
+```
+
+The error handling worked as designed -- the host was skipped rather than
+failing the whole collection -- but the collection then returned **empty and
+successful**. In Operations that is a silently non-collecting adapter: no
+error surfaced, no alert, objects simply stop receiving data. Someone would
+notice days later from a flat graph.
+
+Made worse by the host answering 403 for every authentication failure and never
+401 (`BUGS-UPSTREAM.md` item 4), so a rotated token is indistinguishable from a
+permissions problem without out-of-band knowledge.
+
+Minimum fix: when **every** configured host fails to scrape, the collection
+should surface a specific error rather than returning an empty success. A 403
+specifically should say "credential rejected -- the bearer token may have
+rotated; re-read it with `configstorecli ... -n`", because that is the actual
+cause far more often than a genuine permissions change.
+
+Still unknown and worth finding out: **what rotates these tokens and on what
+schedule.** A ~9-hour lifetime would make manual credential entry unworkable
+at any scale, and would change the design -- the adapter might need to read the
+token itself rather than take it as configuration.
 
 **`verify_certs: true` is untested, and the reasoning behind it may be wrong.**
 See the note under Blocking, above -- accepted certs land in Operations' trust
