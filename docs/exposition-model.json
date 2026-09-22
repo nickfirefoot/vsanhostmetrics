@@ -1,0 +1,799 @@
+{
+  "model": {
+    "vmware_vsan_dom": {
+      "series": 80,
+      "metric_names": [
+        "vmware_vsan_dom_clientcache_readhit_count",
+        "vmware_vsan_dom_clientcache_readio_count",
+        "vmware_vsan_dom_congestion_total",
+        "vmware_vsan_dom_io_bytes_total",
+        "vmware_vsan_dom_io_duration_seconds_total",
+        "vmware_vsan_dom_io_durationsquare_seconds_total",
+        "vmware_vsan_dom_io_total",
+        "vmware_vsan_dom_numoio_total"
+      ],
+      "identity": [
+        "host_uuid"
+      ],
+      "metric_key_labels": [
+        "io_type",
+        "role",
+        "sink_type"
+      ],
+      "properties": [
+        "hostname",
+        "vsan_cluster_uuid"
+      ],
+      "unclassified": [],
+      "label_cardinality": {
+        "host_uuid": 1,
+        "hostname": 1,
+        "io_type": 6,
+        "role": 4,
+        "sink_type": 2,
+        "vsan_cluster_uuid": 1
+      },
+      "objects_per_host": 1,
+      "metric_definitions": 80,
+      "metrics_per_object": 80
+    },
+    "vmware_vsan_esa": {
+      "series": 245,
+      "metric_names": [
+        "vmware_vsan_esa_clom_actual_bytes_moving",
+        "vmware_vsan_esa_clom_actual_bytes_sched_to_move",
+        "vmware_vsan_esa_clom_component_utilization",
+        "vmware_vsan_esa_clom_dedup_ratio",
+        "vmware_vsan_esa_clom_disk_logical_capacity_requested",
+        "vmware_vsan_esa_clom_disk_transient_capacity_used",
+        "vmware_vsan_esa_clom_fitness",
+        "vmware_vsan_esa_clom_fitness_disk_component_count_ratio",
+        "vmware_vsan_esa_clom_fitness_disk_data_component_count_ratio",
+        "vmware_vsan_esa_clom_fitness_diskgroup_data_component_count_ratio",
+        "vmware_vsan_esa_clom_fitness_max_actual_reserved_space_utilization",
+        "vmware_vsan_esa_clom_fitness_node_component_count_ratio",
+        "vmware_vsan_esa_clom_fitness_node_data_component_count_ratio",
+        "vmware_vsan_esa_clom_fitness_read_cache_reservation_utilization",
+        "vmware_vsan_esa_clom_fitness_resource_stddev_change",
+        "vmware_vsan_esa_clom_fitness_unreserved_address_space_utilization",
+        "vmware_vsan_esa_clom_fitness_version_weight",
+        "vmware_vsan_esa_clom_logical_fullness",
+        "vmware_vsan_esa_clom_num_components",
+        "vmware_vsan_esa_clom_pending_deletes",
+        "vmware_vsan_esa_clom_pending_writes",
+        "vmware_vsan_esa_clom_physical_disk_capacity_reserved",
+        "vmware_vsan_esa_clom_physical_free_space",
+        "vmware_vsan_esa_clom_physical_fullness",
+        "vmware_vsan_esa_clom_queued_bytes",
+        "vmware_vsan_esa_clom_queued_objects",
+        "vmware_vsan_esa_clom_rebalancing_fullness",
+        "vmware_vsan_esa_clom_rebalancing_status",
+        "vmware_vsan_esa_clom_total_queued_work_items",
+        "vmware_vsan_esa_clom_work_item_success_count",
+        "vmware_vsan_esa_disk_congestion_be_data",
+        "vmware_vsan_esa_disk_congestion_be_data_allocator",
+        "vmware_vsan_esa_disk_congestion_be_policy_allocator",
+        "vmware_vsan_esa_disk_congestion_global",
+        "vmware_vsan_esa_disk_congestion_spl_allocator",
+        "vmware_vsan_esa_disk_congestion_spl_attr",
+        "vmware_vsan_esa_disk_congestion_spl_logical",
+        "vmware_vsan_esa_disk_congestion_spl_prepare",
+        "vmware_vsan_esa_disk_congestion_wal",
+        "vmware_vsan_esa_disk_congestion_wal_allocator",
+        "vmware_vsan_esa_disk_dev_read_time_total",
+        "vmware_vsan_esa_disk_dev_write_time_total",
+        "vmware_vsan_esa_disk_io_bytes",
+        "vmware_vsan_esa_disk_io_count",
+        "vmware_vsan_esa_disk_num_allocated_blocks",
+        "vmware_vsan_esa_disk_num_total_blocks",
+        "vmware_vsan_esa_disk_pending_free_blocks",
+        "vmware_vsan_esa_disk_read_io_bytes",
+        "vmware_vsan_esa_disk_read_io_count",
+        "vmware_vsan_esa_disk_read_time_max",
+        "vmware_vsan_esa_disk_read_time_min",
+        "vmware_vsan_esa_disk_read_time_sum",
+        "vmware_vsan_esa_disk_write_io_bytes",
+        "vmware_vsan_esa_disk_write_io_count",
+        "vmware_vsan_esa_disk_write_time_max",
+        "vmware_vsan_esa_disk_write_time_min",
+        "vmware_vsan_esa_disk_write_time_sum",
+        "vmware_vsan_esa_num_max_components",
+        "vmware_vsan_esa_splinter_cache_hits_branch",
+        "vmware_vsan_esa_splinter_cache_hits_branch_range",
+        "vmware_vsan_esa_splinter_cache_hits_filter",
+        "vmware_vsan_esa_splinter_cache_hits_misc",
+        "vmware_vsan_esa_splinter_cache_misses_branch",
+        "vmware_vsan_esa_splinter_cache_misses_branch_range",
+        "vmware_vsan_esa_splinter_cache_misses_filter",
+        "vmware_vsan_esa_splinter_cache_misses_misc",
+        "vmware_vsan_esa_splinter_checkpoint_write_latency_max",
+        "vmware_vsan_esa_splinter_current_outstanding_tasks",
+        "vmware_vsan_esa_splinter_max_outstanding_tasks",
+        "vmware_vsan_esa_splinter_memtable_pending_tasks",
+        "vmware_vsan_esa_splinter_total_tasks",
+        "vmware_vsan_esa_splinter_total_tasks_latency_max_ns",
+        "vmware_vsan_esa_splinter_total_tasks_latency_ns",
+        "vmware_vsan_esa_splinter_total_tasks_runtime_max_ns",
+        "vmware_vsan_esa_zdom_all_op_cache_miss",
+        "vmware_vsan_esa_zdom_all_op_logical_tree_cache_miss",
+        "vmware_vsan_esa_zdom_all_op_middle_tree_cache_miss",
+        "vmware_vsan_esa_zdom_all_op_snap_tree_cache_miss",
+        "vmware_vsan_esa_zdom_bank_flush_count",
+        "vmware_vsan_esa_zdom_bank_flush_latency_us",
+        "vmware_vsan_esa_zdom_data_checksum_mismatch",
+        "vmware_vsan_esa_zdom_seg_clean_read_bytes",
+        "vmware_vsan_esa_zdom_seg_clean_unmap_bytes",
+        "vmware_vsan_esa_zdom_seg_clean_write_bytes"
+      ],
+      "identity": [
+        "disk_uuid",
+        "host_uuid",
+        "splinter_db_name",
+        "splinter_uuid"
+      ],
+      "metric_key_labels": [
+        "disk_role",
+        "sink_type",
+        "source",
+        "type"
+      ],
+      "properties": [
+        "hostname",
+        "vsan_cluster_uuid"
+      ],
+      "unclassified": [],
+      "label_cardinality": {
+        "disk_role": 2,
+        "disk_uuid": 2,
+        "host_uuid": 1,
+        "hostname": 1,
+        "sink_type": 2,
+        "source": 2,
+        "splinter_db_name": 3,
+        "splinter_uuid": 6,
+        "type": 21,
+        "vsan_cluster_uuid": 1
+      },
+      "objects_per_host": 9,
+      "metric_definitions": 162,
+      "metrics_per_object": 18
+    },
+    "vmware_vsan_vscsi": {
+      "series": 96,
+      "metric_names": [
+        "vmware_vsan_vscsi_io_bytes_total",
+        "vmware_vsan_vscsi_io_duration_seconds_total",
+        "vmware_vsan_vscsi_io_total"
+      ],
+      "identity": [
+        "host_uuid",
+        "objuuid",
+        "vm_instance_uuid",
+        "vscsi_name"
+      ],
+      "metric_key_labels": [
+        "io_type"
+      ],
+      "properties": [
+        "hostname",
+        "sink_type",
+        "vm_name",
+        "vsan_cluster_uuid"
+      ],
+      "unclassified": [],
+      "label_cardinality": {
+        "host_uuid": 1,
+        "hostname": 1,
+        "io_type": 2,
+        "objuuid": 16,
+        "sink_type": 1,
+        "vm_instance_uuid": 5,
+        "vm_name": 5,
+        "vsan_cluster_uuid": 1,
+        "vscsi_name": 10
+      },
+      "objects_per_host": 16,
+      "metric_definitions": 6,
+      "metrics_per_object": 1
+    },
+    "vmware_vsan_vdisk": {
+      "series": 10,
+      "metric_names": [
+        "vmware_vsan_vdisk_iopslimit",
+        "vmware_vsan_vdisk_normalizedio_total"
+      ],
+      "identity": [
+        "host_uuid",
+        "objpath",
+        "objuuid"
+      ],
+      "metric_key_labels": [
+        "io_type"
+      ],
+      "properties": [
+        "hostname",
+        "sink_type",
+        "vsan_cluster_uuid"
+      ],
+      "unclassified": [],
+      "label_cardinality": {
+        "host_uuid": 1,
+        "hostname": 1,
+        "io_type": 4,
+        "objpath": 2,
+        "objuuid": 2,
+        "sink_type": 1,
+        "vsan_cluster_uuid": 1
+      },
+      "objects_per_host": 2,
+      "metric_definitions": 5,
+      "metrics_per_object": 3
+    },
+    "vmware_esx_pnic": {
+      "series": 12,
+      "metric_names": [
+        "vmware_esx_pnic_pkt_bytes_total",
+        "vmware_esx_pnic_pkt_err_total",
+        "vmware_esx_pnic_pkt_total"
+      ],
+      "identity": [
+        "host_uuid",
+        "vmnic"
+      ],
+      "metric_key_labels": [
+        "io_type"
+      ],
+      "properties": [
+        "hostname",
+        "sink_type",
+        "vsan_cluster_uuid"
+      ],
+      "unclassified": [],
+      "label_cardinality": {
+        "host_uuid": 1,
+        "hostname": 1,
+        "io_type": 2,
+        "sink_type": 1,
+        "vmnic": 2,
+        "vsan_cluster_uuid": 1
+      },
+      "objects_per_host": 2,
+      "metric_definitions": 6,
+      "metrics_per_object": 3
+    },
+    "vmware_esx_tcppkt": {
+      "series": 11,
+      "metric_names": [
+        "vmware_esx_tcppkt_bytes_total",
+        "vmware_esx_tcppkt_rcvdupack_total",
+        "vmware_esx_tcppkt_rcvduppack_total",
+        "vmware_esx_tcppkt_rcvoopack_total",
+        "vmware_esx_tcppkt_sack_rcv_blocks_total",
+        "vmware_esx_tcppkt_sack_rexmits_total",
+        "vmware_esx_tcppkt_sack_send_blocks_total",
+        "vmware_esx_tcppkt_sndrexmitpack_total",
+        "vmware_esx_tcppkt_total"
+      ],
+      "identity": [
+        "host_uuid"
+      ],
+      "metric_key_labels": [
+        "io_type"
+      ],
+      "properties": [
+        "hostname",
+        "sink_type",
+        "stack",
+        "vsan_cluster_uuid"
+      ],
+      "unclassified": [],
+      "label_cardinality": {
+        "host_uuid": 1,
+        "hostname": 1,
+        "io_type": 2,
+        "sink_type": 1,
+        "stack": 1,
+        "vsan_cluster_uuid": 1
+      },
+      "objects_per_host": 1,
+      "metric_definitions": 11,
+      "metrics_per_object": 11
+    },
+    "vmware_vsan_cmmds": {
+      "series": 33,
+      "metric_names": [
+        "vmware_vsan_cmmds_local_updates_count",
+        "vmware_vsan_cmmds_update_latency",
+        "vmware_vsan_cmmds_updates_count_at_leader",
+        "vmware_vsan_cmmds_workload_agent_batches_sent",
+        "vmware_vsan_cmmds_workload_check_point_batches_sent",
+        "vmware_vsan_cmmds_workload_heartbeat_soft_timeouts",
+        "vmware_vsan_cmmds_workload_heartbeats_missed",
+        "vmware_vsan_cmmds_workload_master_batches_recved",
+        "vmware_vsan_cmmds_workload_rx_accept",
+        "vmware_vsan_cmmds_workload_rx_agent_update_request",
+        "vmware_vsan_cmmds_workload_rx_heartbeat_request",
+        "vmware_vsan_cmmds_workload_rx_master_update",
+        "vmware_vsan_cmmds_workload_rx_misc",
+        "vmware_vsan_cmmds_workload_rx_retransmit_request",
+        "vmware_vsan_cmmds_workload_rx_snapshot",
+        "vmware_vsan_cmmds_workload_total_upd_in_batch_ckpt",
+        "vmware_vsan_cmmds_workload_total_upd_in_master_batches",
+        "vmware_vsan_cmmds_workload_total_upd_sent_in_agent_batch",
+        "vmware_vsan_cmmds_workload_tx_agent_update_request",
+        "vmware_vsan_cmmds_workload_tx_heartbeat_request",
+        "vmware_vsan_cmmds_workload_tx_master_checkpoint",
+        "vmware_vsan_cmmds_workload_tx_master_ckpt_tried",
+        "vmware_vsan_cmmds_workload_tx_master_update",
+        "vmware_vsan_cmmds_workload_tx_master_update_tried",
+        "vmware_vsan_cmmds_workload_tx_retransmit_request",
+        "vmware_vsan_cmmds_workload_tx_snapshot",
+        "vmware_vsan_cmmds_workload_tx_snapshot_bytes",
+        "vmware_vsan_cmmds_workload_tx_snapshot_tried"
+      ],
+      "identity": [
+        "host_uuid"
+      ],
+      "metric_key_labels": [
+        "sink_type",
+        "type"
+      ],
+      "properties": [
+        "hostname",
+        "vsan_cluster_uuid"
+      ],
+      "unclassified": [],
+      "label_cardinality": {
+        "host_uuid": 1,
+        "hostname": 1,
+        "sink_type": 2,
+        "type": 7,
+        "vsan_cluster_uuid": 1
+      },
+      "objects_per_host": 1,
+      "metric_definitions": 33,
+      "metrics_per_object": 33
+    },
+    "vmware_esx_world": {
+      "series": 801,
+      "metric_names": [
+        "vmware_esx_world_readytime_seconds_total",
+        "vmware_esx_world_uptime_seconds_total",
+        "vmware_esx_world_usedtime_seconds_total"
+      ],
+      "identity": [
+        "host_uuid",
+        "world_id"
+      ],
+      "metric_key_labels": [
+        "role",
+        "subsystem"
+      ],
+      "properties": [
+        "hostname",
+        "name",
+        "sink_type",
+        "vsan_cluster_uuid"
+      ],
+      "unclassified": [],
+      "label_cardinality": {
+        "host_uuid": 1,
+        "hostname": 1,
+        "name": 164,
+        "role": 5,
+        "sink_type": 1,
+        "subsystem": 6,
+        "vsan_cluster_uuid": 1,
+        "world_id": 166
+      },
+      "objects_per_host": 167,
+      "metric_definitions": 27,
+      "metrics_per_object": 1
+    },
+    "vmware_host_cpu": {
+      "series": 260,
+      "metric_names": [
+        "vmware_host_cpu_seconds_total"
+      ],
+      "identity": [
+        "cpu",
+        "host_uuid"
+      ],
+      "metric_key_labels": [
+        "type"
+      ],
+      "properties": [
+        "hostname",
+        "sink_type",
+        "vsan_cluster_uuid"
+      ],
+      "unclassified": [],
+      "label_cardinality": {
+        "cpu": 65,
+        "host_uuid": 1,
+        "hostname": 1,
+        "sink_type": 1,
+        "type": 4,
+        "vsan_cluster_uuid": 1
+      },
+      "objects_per_host": 65,
+      "metric_definitions": 4,
+      "metrics_per_object": 1
+    },
+    "vmware_esx_slab": {
+      "series": 124,
+      "metric_names": [
+        "vmware_esx_slab_alloc_count",
+        "vmware_esx_slab_max_count"
+      ],
+      "identity": [
+        "host_uuid",
+        "slab"
+      ],
+      "metric_key_labels": [
+        "subsystem"
+      ],
+      "properties": [
+        "hostname",
+        "sink_type",
+        "vsan_cluster_uuid"
+      ],
+      "unclassified": [],
+      "label_cardinality": {
+        "host_uuid": 1,
+        "hostname": 1,
+        "sink_type": 1,
+        "slab": 62,
+        "subsystem": 4,
+        "vsan_cluster_uuid": 1
+      },
+      "objects_per_host": 62,
+      "metric_definitions": 8,
+      "metrics_per_object": 1
+    },
+    "vmware_esx_heap": {
+      "series": 31,
+      "metric_names": [
+        "vmware_esx_heap_usage_ratio"
+      ],
+      "identity": [
+        "heap_id",
+        "host_uuid"
+      ],
+      "metric_key_labels": [
+        "subsystem"
+      ],
+      "properties": [
+        "heap_name",
+        "hostname",
+        "sink_type",
+        "vsan_cluster_uuid"
+      ],
+      "unclassified": [],
+      "label_cardinality": {
+        "heap_id": 31,
+        "heap_name": 31,
+        "host_uuid": 1,
+        "hostname": 1,
+        "sink_type": 1,
+        "subsystem": 8,
+        "vsan_cluster_uuid": 1
+      },
+      "objects_per_host": 31,
+      "metric_definitions": 8,
+      "metrics_per_object": 1
+    },
+    "vmware_vsan_heap": {
+      "series": 155,
+      "metric_names": [
+        "vmware_vsan_heap_usage_current_allocation",
+        "vmware_vsan_heap_usage_current_available",
+        "vmware_vsan_heap_usage_current_size",
+        "vmware_vsan_heap_usage_failed_count",
+        "vmware_vsan_heap_usage_max_size"
+      ],
+      "identity": [
+        "heap_id",
+        "host_uuid"
+      ],
+      "metric_key_labels": [
+        "subsystem"
+      ],
+      "properties": [
+        "heap_name",
+        "hostname",
+        "sink_type",
+        "vsan_cluster_uuid"
+      ],
+      "unclassified": [],
+      "label_cardinality": {
+        "heap_id": 31,
+        "heap_name": 31,
+        "host_uuid": 1,
+        "hostname": 1,
+        "sink_type": 1,
+        "subsystem": 8,
+        "vsan_cluster_uuid": 1
+      },
+      "objects_per_host": 31,
+      "metric_definitions": 40,
+      "metrics_per_object": 2
+    },
+    "vmware_vsan_memory": {
+      "series": 62,
+      "metric_names": [
+        "vmware_vsan_memory_usage_bytes"
+      ],
+      "identity": [
+        "host_uuid"
+      ],
+      "metric_key_labels": [
+        "memory_type"
+      ],
+      "properties": [
+        "hostname",
+        "sink_type",
+        "vsan_cluster_uuid"
+      ],
+      "unclassified": [],
+      "label_cardinality": {
+        "host_uuid": 1,
+        "hostname": 1,
+        "memory_type": 62,
+        "sink_type": 1,
+        "vsan_cluster_uuid": 1
+      },
+      "objects_per_host": 1,
+      "metric_definitions": 62,
+      "metrics_per_object": 62
+    },
+    "vmware_esx_rdt": {
+      "series": 2,
+      "metric_names": [
+        "vmware_esx_rdt_checksum_mismatch_count",
+        "vmware_esx_rdt_latency_us"
+      ],
+      "identity": [
+        "host_uuid"
+      ],
+      "metric_key_labels": [],
+      "properties": [
+        "hostname",
+        "name",
+        "sink_type",
+        "unicast_agent_ipv4",
+        "vsan_cluster_uuid"
+      ],
+      "unclassified": [],
+      "label_cardinality": {
+        "host_uuid": 1,
+        "hostname": 1,
+        "name": 1,
+        "sink_type": 1,
+        "unicast_agent_ipv4": 1,
+        "vsan_cluster_uuid": 1
+      },
+      "objects_per_host": 1,
+      "metric_definitions": 2,
+      "metrics_per_object": 2
+    },
+    "vmware_vsan_rdt": {
+      "series": 2,
+      "metric_names": [
+        "vmware_vsan_rdt_max_network_latency",
+        "vmware_vsan_rdt_min_network_latency"
+      ],
+      "identity": [
+        "host_uuid"
+      ],
+      "metric_key_labels": [
+        "sink_type"
+      ],
+      "properties": [
+        "hostname",
+        "name",
+        "unicast_agent_ipv4",
+        "vsan_cluster_uuid"
+      ],
+      "unclassified": [],
+      "label_cardinality": {
+        "host_uuid": 1,
+        "hostname": 1,
+        "name": 1,
+        "sink_type": 2,
+        "unicast_agent_ipv4": 1,
+        "vsan_cluster_uuid": 1
+      },
+      "objects_per_host": 1,
+      "metric_definitions": 2,
+      "metrics_per_object": 2
+    },
+    "vmware_vsan_disk": {
+      "series": 2,
+      "metric_names": [
+        "vmware_vsan_disk_checksum_errors_total"
+      ],
+      "identity": [
+        "disk_uuid",
+        "host_uuid"
+      ],
+      "metric_key_labels": [],
+      "properties": [
+        "hostname",
+        "sink_type",
+        "vsan_cluster_uuid"
+      ],
+      "unclassified": [],
+      "label_cardinality": {
+        "disk_uuid": 2,
+        "host_uuid": 1,
+        "hostname": 1,
+        "sink_type": 1,
+        "vsan_cluster_uuid": 1
+      },
+      "objects_per_host": 2,
+      "metric_definitions": 1,
+      "metrics_per_object": 1
+    }
+  },
+  "helps": {
+    "vmware_vsan_dom_io_total": "Total IOs processed by vSAN DOM since boot. [from /vmkModules/vsan/dom compmgrStats,clientStats,ownerStats]",
+    "vmware_vsan_dom_io_bytes_total": "Total Bytes processed by vSAN DOM since boot. [from /vmkModules/vsan/dom compmgrStats,clientStats,ownerStats]",
+    "vmware_vsan_dom_io_duration_seconds_total": "Sum total of duration of IO processed by vSAN DOM since boot. [from /vmkModules/vsan/dom compmgrStats,clientStats,ownerStats]",
+    "vmware_vsan_dom_io_durationsquare_seconds_total": "Sum total of duration^2 of IO processed by vSAN DOM since boot. [from /vmkModules/vsan/dom compmgrStats,clientStats,ownerStats]",
+    "vmware_vsan_dom_congestion_total": "Sum total of observed congestion values by vSAN DOM since boot. [from /vmkModules/vsan/dom compmgrStats,clientStats,ownerStats]",
+    "vmware_vsan_dom_numoio_total": "Sum total of observed Outstanding IOs (aka Queue Depth) by vSAN DOM since boot. [from /vmkModules/vsan/dom compmgrStats,clientStats,ownerStats]",
+    "vmware_vsan_dom_clientcache_readio_count": "Total number of Read IOs seen by vSAN DOM Client memory read cache since boot (number). [from /vmkModules/vsan/dom clientCacheStats]",
+    "vmware_vsan_dom_clientcache_readhit_count": "Total number of cache hit Read IOs seen by vSAN DOM Client memory read cache since boot (number). [from /vmkModules/vsan/dom clientCacheStats]",
+    "vmware_vsan_esa_disk_dev_read_time_total": "vSAN ESA disk device total read time. [from /storage/scsifw/devices $getVsan2DiskScsiFWStats]",
+    "vmware_vsan_esa_disk_dev_write_time_total": "vSAN ESA disk device total write time. [from /storage/scsifw/devices $getVsan2DiskScsiFWStats]",
+    "vmware_vsan_vscsi_io_total": "Total IOs seen by a VSCSI controller in a VM. [from /worldGroups %v/vscsi/%v/stats/ioStats]",
+    "vmware_vsan_vscsi_io_bytes_total": "Total bytes seen by a VSCSI controller in a VM. [from /worldGroups %v/vscsi/%v/stats/ioStats]",
+    "vmware_vsan_vscsi_io_duration_seconds_total": "Sum total of duration of IO seen by a VSCSI controller in a VM. [from /worldGroups %v/vscsi/%v/stats/ioStats]",
+    "vmware_vsan_vdisk_normalizedio_total": "Total normalized IOs of a virtual disk. [from /vmkModules/vsan/dom/topclients $getVirtualDiskStats]",
+    "vmware_vsan_vdisk_iopslimit": "IOPS limit number of a virtual disk. [from /vmkModules/vsan/dom/topclients $getVirtualDiskStats]",
+    "vmware_esx_pnic_pkt_total": "Total Packets processed by ESX physical NIC since boot. [from /net/nics $getVsanNetworkStats]",
+    "vmware_esx_pnic_pkt_bytes_total": "Total Bytes processed by ESX physical NIC since boot. [from /net/nics $getVsanNetworkStats]",
+    "vmware_esx_tcppkt_total": "Total Packets processed by ESX TCP since boot. [from /net/nics $getVsanNetworkStats]",
+    "vmware_esx_tcppkt_bytes_total": "Total Bytes processed by ESX TCP since boot. [from /net/nics $getVsanNetworkStats]",
+    "vmware_esx_tcppkt_rcvduppack_total": "Total received duplicate packets by ESX TCP since boot. [from /net/nics $getVsanNetworkStats]",
+    "vmware_esx_tcppkt_rcvdupack_total": "Total received duplicate ACKs by ESX TCP since boot. [from /net/nics $getVsanNetworkStats]",
+    "vmware_esx_tcppkt_sack_rcv_blocks_total": "Total received SACK asks for blocks by ESX TCP since boot. [from /net/nics $getVsanNetworkStats]",
+    "vmware_esx_tcppkt_sack_send_blocks_total": "Total requested SACK retransmit of blocks by ESX TCP since boot. [from /net/nics $getVsanNetworkStats]",
+    "vmware_esx_tcppkt_sack_rexmits_total": "Total sent SACK asks for blocks by ESX TCP since boot. [from /net/nics $getVsanNetworkStats]",
+    "vmware_esx_tcppkt_sndrexmitpack_total": "Total retransmitted packets by ESX TCP since boot. [from /net/nics $getVsanNetworkStats]",
+    "vmware_esx_tcppkt_rcvoopack_total": "Total received out-of-order packets by ESX TCP since boot. [from /net/nics $getVsanNetworkStats]",
+    "vmware_vsan_cmmds_workload_rx_accept": "Number of total (local and remote) update requests received. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_rx_agent_update_request": "Number of agent update messages received. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_rx_heartbeat_request": "Number of heartbeat request messages received. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_rx_master_update": "Number of all master update messages received. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_rx_retransmit_request": "Number of retransmit request messages received. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_rx_snapshot": "Number of snapshot message received. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_rx_misc": "Number of miscellaneous message received. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_tx_agent_update_request": "Number of agent update messages sent. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_tx_heartbeat_request": "Number of heartbeat request messages sent. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_tx_master_checkpoint": "Number of master checkpoint messages sent. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_tx_master_ckpt_tried": "Number of master checkpoint messages tried to send. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_tx_retransmit_request": "Number of retransmit request messages sent. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_tx_snapshot": "Number of snapshot messages sent. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_tx_snapshot_bytes": "Bytes of snapshot messages sent. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_tx_snapshot_tried": "Number of snapshot messages tried to send. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_tx_master_update": "Number of master update messages sent. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_tx_master_update_tried": "Number of master update messages tried to send. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_agent_batches_sent": "Number of update batches sent by the agent to master. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_total_upd_sent_in_agent_batch": "Number of updates sent in batch updates by the agent to master. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_check_point_batches_sent": "Number of checkpoint batches sent by the master to backup. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_total_upd_in_batch_ckpt": "Number of checkpoints sent in batch by the master to backup. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_master_batches_recved": "Number of update batches sent by the master to agent. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_total_upd_in_master_batches": "Number of updates sent in batch by the master to agent. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_heartbeat_soft_timeouts": "Number of heartbeat soft timeout. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_workload_heartbeats_missed": "Number of heartbeat missed. [from /vmkModules/cmmds $getCmmdsWorkloadStats]",
+    "vmware_vsan_cmmds_updates_count_at_leader": "Number of updates happened at leader. [from /vmkModules/cmmds $getCmmdsUpdateLatencyStats]",
+    "vmware_vsan_cmmds_update_latency": "Update latency of local updates committed in USec. [from /vmkModules/cmmds $getCmmdsUpdateLatencyStats]",
+    "vmware_vsan_cmmds_local_updates_count": "Number of local updates. [from /vmkModules/cmmds $getCmmdsUpdateLatencyStats]",
+    "vmware_esx_world_uptime_seconds_total": "Worlds is what ESX calls threads. Except when noted in the name, refers to a single world. uptime is a sum total of the time the world was not paused [from /sched/Vcpus $getNetworkWorldInformation,$getDomWorldInformation,$getRdtWorldInformation,$getCmmdsWorldInformation]",
+    "vmware_esx_world_usedtime_seconds_total": "Worlds is what ESX calls threads. Except when noted in the name, refers to a single world. usedtime is a sum total of the time the world was running on a pCPU. So usedtime/uptime is utilization. [from /sched/Vcpus $getNetworkWorldInformation,$getDomWorldInformation,$getRdtWorldInformation,$getCmmdsWorldInformation]",
+    "vmware_esx_world_readytime_seconds_total": "Worlds is what ESX calls threads. Except when noted in the name, refers to a single world. readytime is a sum total of the time the world was activated, but waiting for a pCPU. [from /sched/Vcpus $getNetworkWorldInformation,$getDomWorldInformation,$getRdtWorldInformation,$getCmmdsWorldInformation]",
+    "vmware_host_cpu_seconds_total": "usedtime is a sum total of the used time of all pCPUs on host. elapsedtime is a sum total of the elapsed time of all pCPUs on host. utiltime is a sum total of the utilization time of all pCPUs on host. coreutiltime is a sum total of the utilization time of cores of all pCPUs on host. [from /sched/pcpus $getHostCpuInformation]",
+    "vmware_esx_slab_alloc_count": "Point in time. Number of objects allocated/used. For some being full is normal, others may impact control or IO operations [from /vmkModules/vsanutil/slabs $getSlabInformation]",
+    "vmware_esx_slab_max_count": "Point in time. Total number of objects in the slab that could be allocated from. For some being full is normal, others may impact control or IO operations [from /vmkModules/vsanutil/slabs $getSlabInformation]",
+    "vmware_esx_heap_usage_ratio": "Point in time. Usage of heap (mempool) in percent. For some being full is normal, others may impact control or IO operations [from /system/heaps $getHeapInformation]",
+    "vmware_vsan_heap_usage_max_size": " [from /system/heaps $getHeapInformation]",
+    "vmware_vsan_heap_usage_current_size": " [from /system/heaps $getHeapInformation]",
+    "vmware_vsan_heap_usage_current_available": " [from /system/heaps $getHeapInformation]",
+    "vmware_vsan_heap_usage_current_allocation": " [from /system/heaps $getHeapInformation]",
+    "vmware_vsan_heap_usage_failed_count": " [from /system/heaps $getHeapInformation]",
+    "vmware_vsan_esa_disk_num_allocated_blocks": "Number of allocated blocks for vSAN2 ESA disk Lsom2. [from /vmkModules/lsom/lsom2/disks $getLsom2AllocatorStats]",
+    "vmware_vsan_esa_disk_num_total_blocks": "Total allocated blocks for vSAN2 ESA disk Lsom2. [from /vmkModules/lsom/lsom2/disks $getLsom2AllocatorStats]",
+    "vmware_vsan_esa_disk_pending_free_blocks": "Number of pending free blocks for vSAN2 ESA disk Lsom2. [from /vmkModules/lsom/lsom2/disks $getLsom2AllocatorStats]",
+    "vmware_vsan_esa_num_max_components": "vSAN ESA number of max components. [from /vsan-esa-distribution $getVsanEsaDistribution]",
+    "vmware_vsan_esa_splinter_total_tasks": "vSAN ESA LSOM2 splinter total tasks numbers. [from /vmkModules/wobtree/splinters $getSplinterStats]",
+    "vmware_vsan_esa_splinter_total_tasks_latency_ns": "vSAN ESA LSOM2 splinter total tasks latency in nano seconds. [from /vmkModules/wobtree/splinters $getSplinterStats]",
+    "vmware_vsan_esa_splinter_total_tasks_runtime_max_ns": "vSAN ESA LSOM2 splinter total task queue runtime max in nano seconds. [from /vmkModules/wobtree/splinters $getSplinterStats]",
+    "vmware_vsan_esa_splinter_total_tasks_latency_max_ns": "vSAN ESA LSOM2 splinter total task queue runtime latency max in nano seconds. [from /vmkModules/wobtree/splinters $getSplinterStats]",
+    "vmware_vsan_esa_splinter_cache_hits_branch": "vSAN ESA LSOM2 splinter cache hits branch. [from /vmkModules/wobtree/splinters $getSplinterStats]",
+    "vmware_vsan_esa_splinter_cache_hits_filter": "vSAN ESA LSOM2 splinter cache hits filter. [from /vmkModules/wobtree/splinters $getSplinterStats]",
+    "vmware_vsan_esa_splinter_cache_hits_misc": "vSAN ESA LSOM2 splinter cache hits misc. [from /vmkModules/wobtree/splinters $getSplinterStats]",
+    "vmware_vsan_esa_splinter_cache_hits_branch_range": "vSAN ESA LSOM2 splinter cache hits branch range. [from /vmkModules/wobtree/splinters $getSplinterStats]",
+    "vmware_vsan_esa_splinter_cache_misses_branch": "vSAN ESA LSOM2 splinter cache misses branch. [from /vmkModules/wobtree/splinters $getSplinterStats]",
+    "vmware_vsan_esa_splinter_cache_misses_filter": "vSAN ESA LSOM2 splinter cache misses filter. [from /vmkModules/wobtree/splinters $getSplinterStats]",
+    "vmware_vsan_esa_splinter_cache_misses_misc": "vSAN ESA LSOM2 splinter cache misses misc. [from /vmkModules/wobtree/splinters $getSplinterStats]",
+    "vmware_vsan_esa_splinter_cache_misses_branch_range": "vSAN ESA LSOM2 splinter cache misses branch range. [from /vmkModules/wobtree/splinters $getSplinterStats]",
+    "vmware_vsan_esa_splinter_current_outstanding_tasks": "vmware vSAN splinter current outstanding tasks. [from /vmkModules/wobtree/splinters $getSplinterStats]",
+    "vmware_vsan_esa_splinter_memtable_pending_tasks": "vmware vSAN splinter memtable pending tasks. [from /vmkModules/wobtree/splinters $getSplinterStats]",
+    "vmware_vsan_esa_splinter_max_outstanding_tasks": "vmware vSAN splinter max outstanding tasks. [from /vmkModules/wobtree/splinters $getSplinterStats]",
+    "vmware_vsan_esa_splinter_checkpoint_write_latency_max": "vSAN ESA splinter checkpoint max write latency. [from /vmkModules/wobtree/splinters $getSplinterCheckpointStats]",
+    "vmware_vsan_esa_disk_io_count": "Total IO count of vSAN2 ESA disk Lsom2. [from /vsan/lsom2 $getVsan2DiskLsom2Stats]",
+    "vmware_vsan_esa_disk_io_bytes": "Total IO bytes of vSAN2 ESA disk Lsom2. [from /vsan/lsom2 $getVsan2DiskLsom2Stats]",
+    "vmware_vsan_esa_disk_read_io_count": "Read IO count of vSAN2 ESA disk Lsom2. [from /vsan/lsom2 $getVsan2DiskLsom2Stats]",
+    "vmware_vsan_esa_disk_read_io_bytes": "Read IO bytes of vSAN2 ESA disk Lsom2. [from /vsan/lsom2 $getVsan2DiskLsom2Stats]",
+    "vmware_vsan_esa_disk_write_io_count": "Write IO count of vSAN2 ESA disk Lsom2. [from /vsan/lsom2 $getVsan2DiskLsom2Stats]",
+    "vmware_vsan_esa_disk_write_io_bytes": "Write IO bytes of vSAN2 ESA disk Lsom2. [from /vsan/lsom2 $getVsan2DiskLsom2Stats]",
+    "vmware_vsan_esa_disk_read_time_sum": "Total read time of vSAN2 ESA disk Lsom2. [from /vsan/lsom2 $getVsan2DiskLsom2Stats]",
+    "vmware_vsan_esa_disk_read_time_max": "Max read time of vSAN2 ESA disk Lsom2. [from /vsan/lsom2 $getVsan2DiskLsom2Stats]",
+    "vmware_vsan_esa_disk_read_time_min": "Min read time of vSAN2 ESA disk Lsom2. [from /vsan/lsom2 $getVsan2DiskLsom2Stats]",
+    "vmware_vsan_esa_disk_write_time_sum": "Total write time of vSAN2 ESA disk Lsom2. [from /vsan/lsom2 $getVsan2DiskLsom2Stats]",
+    "vmware_vsan_esa_disk_write_time_max": "Max write time of vSAN2 ESA disk Lsom2. [from /vsan/lsom2 $getVsan2DiskLsom2Stats]",
+    "vmware_vsan_esa_disk_write_time_min": "Min write time of vSAN2 ESA disk Lsom2. [from /vsan/lsom2 $getVsan2DiskLsom2Stats]",
+    "vmware_vsan_esa_disk_congestion_global": "vSAN2 ESA disk Lsom2 global congress. [from /vsan/lsom2 $getLsom2CongestionStats]",
+    "vmware_vsan_esa_disk_congestion_be_data": "vSAN2 ESA disk Lsom2 congestion block engine data. [from /vsan/lsom2 $getLsom2CongestionStats]",
+    "vmware_vsan_esa_disk_congestion_be_data_allocator": "vSAN2 ESA disk Lsom2 congestion block engine data allocator. [from /vsan/lsom2 $getLsom2CongestionStats]",
+    "vmware_vsan_esa_disk_congestion_be_policy_allocator": "vSAN2 ESA disk Lsom2 congestion block engine policy allocator. [from /vsan/lsom2 $getLsom2CongestionStats]",
+    "vmware_vsan_esa_disk_congestion_wal": "vSAN2 ESA disk Lsom2 congestion write after log. [from /vsan/lsom2 $getLsom2CongestionStats]",
+    "vmware_vsan_esa_disk_congestion_wal_allocator": "vSAN2 ESA disk Lsom2 congestion write after log allocator. [from /vsan/lsom2 $getLsom2CongestionStats]",
+    "vmware_vsan_esa_disk_congestion_spl_logical": "vSAN2 ESA disk Lsom2 congestion for splinter logical table logical. [from /vsan/lsom2 $getLsom2CongestionStats]",
+    "vmware_vsan_esa_disk_congestion_spl_prepare": "vSAN2 ESA disk Lsom2 congestion for splinter logical table prepare. [from /vsan/lsom2 $getLsom2CongestionStats]",
+    "vmware_vsan_esa_disk_congestion_spl_attr": "vSAN2 ESA disk Lsom2 congestion for splinter logical table attributes. [from /vsan/lsom2 $getLsom2CongestionStats]",
+    "vmware_vsan_esa_disk_congestion_spl_allocator": "vSAN2 ESA disk Lsom2 congestion for splinter logical table allocator. [from /vsan/lsom2 $getLsom2CongestionStats]",
+    "vmware_vsan_esa_zdom_bank_flush_latency_us": "Bank flush latency sum. [from /zdom-stats $getZdomIoStats]",
+    "vmware_vsan_esa_zdom_bank_flush_count": "Total count of zDOM bank flush. [from /zdom-stats $getZdomIoStats]",
+    "vmware_vsan_esa_zdom_all_op_cache_miss": "Total cache missed. [from /zdom-stats $getZdomStats]",
+    "vmware_vsan_esa_zdom_all_op_logical_tree_cache_miss": "Total logical tree cache missed. [from /zdom-stats $getZdomStats]",
+    "vmware_vsan_esa_zdom_all_op_middle_tree_cache_miss": "Total middle tree cache missed. [from /zdom-stats $getZdomStats]",
+    "vmware_vsan_esa_zdom_all_op_snap_tree_cache_miss": "Total snap tree cache missed. [from /zdom-stats $getZdomStats]",
+    "vmware_vsan_space_usage_bytes": "The space used by the vSAN object. [from /vsan-space-usage getVsanObjectSpaceUsageStats]",
+    "vmware_vsan_memory_usage_bytes": "The usage of vSAN memory. [from /vsan-memory getVsanMemory]",
+    "vmware_esx_rdt_checksum_mismatch_count": "The count of RDT checksum mismatch. [from /rdt-net getRdtNetworkStats]",
+    "vmware_esx_rdt_latency_us": "The RDT roundtrip network latency in microsecond [from /rdt-net-latency getRdtNetworkLatencyStats]",
+    "vmware_vsan_rdt_min_network_latency": "The minimum RDT roundtrip network latency in microsecond [from /rdt-net-latency getRdtNetworkLatencyStats]",
+    "vmware_vsan_rdt_max_network_latency": "The maximum RDT roundtrip network latency in microsecond [from /rdt-net-latency getRdtNetworkLatencyStats]",
+    "vmware_vsan_disk_checksum_errors_total": "Total checksum errors of vSAN disk [from /lsom-disk-checksum-errors getLsomDiskChecksumErrors]",
+    "vmware_vsan_disk_checksum_datablks_corrected_total": "Total DATA blks corrected for vSAN disk [from /lsom-disk-checksum-errors getLsomDiskChecksumErrors]",
+    "vmware_vsan_disk_checksum_crc_corrected_total": "Total CRC corrected for vSAN disk [from /lsom-disk-checksum-errors getLsomDiskChecksumErrors]",
+    "vmware_esx_emm": "The host EMM metrics. [from /host-emm getEMMStats]",
+    "vmware_vsan_esa_zdom_seg_clean_unmap_bytes": "Segment cleaning unmap in bytes. [from /zdom-stats getZdomOverviewStats]",
+    "vmware_vsan_esa_zdom_seg_clean_write_bytes": "Segment cleaning write in bytes. [from /zdom-stats getZdomOverviewStats]",
+    "vmware_vsan_esa_zdom_seg_clean_read_bytes": "Segment cleaning read in bytes. [from /zdom-stats getZdomOverviewStats]",
+    "vmware_vsan_esa_zdom_data_checksum_mismatch": "Number of data checksum mismatch being observed. [from /zdom-stats getZdomOverviewStats]",
+    "vmware_vsan_esa_clom_fitness_max_actual_reserved_space_utilization": "Max actual reserved space utilization on this ESXi host. [from /clom-stats getClomFitnessStats]",
+    "vmware_vsan_esa_clom_fitness_unreserved_address_space_utilization": "Unreserved address space utilization on this ESXi host. [from /clom-stats getClomFitnessStats]",
+    "vmware_vsan_esa_clom_fitness_read_cache_reservation_utilization": "Read cache reservation utilization on this ESXi host. [from /clom-stats getClomFitnessStats]",
+    "vmware_vsan_esa_clom_fitness_disk_component_count_ratio": "Disk component count ratio on this ESXi host. [from /clom-stats getClomFitnessStats]",
+    "vmware_vsan_esa_clom_fitness_disk_data_component_count_ratio": "Disk data component count ratio on this ESXi host. [from /clom-stats getClomFitnessStats]",
+    "vmware_vsan_esa_clom_fitness_diskgroup_data_component_count_ratio": "Diskgroup data component count ratio on this ESXi host. [from /clom-stats getClomFitnessStats]",
+    "vmware_vsan_esa_clom_fitness_resource_stddev_change": "Resource standard deviation change on this ESXi host. [from /clom-stats getClomFitnessStats]",
+    "vmware_vsan_esa_clom_fitness_version_weight": "Version weight on this ESXi host. [from /clom-stats getClomFitnessStats]",
+    "vmware_vsan_esa_clom_fitness": "Fitness on this ESXi host. [from /clom-stats getClomFitnessStats]",
+    "vmware_vsan_esa_clom_fitness_node_component_count_ratio": "Node component count ratio on this ESXi host. [from /clom-stats getClomFitnessStats]",
+    "vmware_vsan_esa_clom_fitness_node_data_component_count_ratio": "Node data component count ratio on this ESXi host. [from /clom-stats getClomFitnessStats]",
+    "vmware_vsan_esa_clom_physical_free_space": "Physical free space on this ESXi host. [from /clom-fullness-slackspace-stats getClomStats]",
+    "vmware_vsan_esa_clom_physical_fullness": "Physical fullness on this ESXi host. [from /clom-fullness-slackspace-stats getClomStats]",
+    "vmware_vsan_esa_clom_logical_fullness": "Logical fullness on this ESXi host. [from /clom-fullness-slackspace-stats getClomStats]",
+    "vmware_vsan_esa_clom_disk_transient_capacity_used": "Disk transient capacity used on this ESXi host. [from /clom-fullness-slackspace-stats getClomStats]",
+    "vmware_vsan_esa_clom_rebalancing_fullness": "Rebalancing fullness on this ESXi host. [from /clom-fullness-slackspace-stats getClomStats]",
+    "vmware_vsan_esa_clom_dedup_ratio": "Dedup ratio on this ESXi host. [from /clom-fullness-slackspace-stats getClomStats]",
+    "vmware_vsan_esa_clom_pending_writes": "Pending writes on this ESXi host. [from /clom-fullness-slackspace-stats getClomStats]",
+    "vmware_vsan_esa_clom_pending_deletes": "Pending deletes on this ESXi host. [from /clom-fullness-slackspace-stats getClomStats]",
+    "vmware_vsan_esa_clom_disk_logical_capacity_requested": "Diskgroup logical capacity requested on this ESXi host. [from /clom-fullness-slackspace-stats getClomStats]",
+    "vmware_vsan_esa_clom_physical_disk_capacity_reserved": "Physical disk capacity reserved on this ESXi host. [from /clom-fullness-slackspace-stats getClomStats]",
+    "vmware_vsan_esa_clom_actual_bytes_sched_to_move": "Acutual bytes sched to move on this ESXi host. [from /clom-fullness-slackspace-stats getClomStats]",
+    "vmware_vsan_esa_clom_actual_bytes_moving": "Actual bytes moving on this ESXi host. [from /clom-fullness-slackspace-stats getClomStats]",
+    "vmware_vsan_esa_clom_rebalancing_status": "Rebalancing status on this ESXi host. [from /clom-fullness-slackspace-stats getClomStats]",
+    "vmware_vsan_esa_clom_num_components": "Number of components on this ESXi host. [from /clom-fullness-slackspace-stats getClomStats]",
+    "vmware_vsan_esa_clom_component_utilization": "Component utilization on this ESXi host. [from /clom-fullness-slackspace-stats getClomStats]",
+    "vmware_vsan_esa_clom_queued_bytes": "Queued bytes on this ESXi host. [from /clom-fullness-slackspace-stats getClomStats]",
+    "vmware_vsan_esa_clom_queued_objects": "Queued objects on this ESXi host. [from /clom-fullness-slackspace-stats getClomStats]",
+    "vmware_vsan_esa_clom_total_queued_work_items": "Total queued work items on this ESXi host. [from /clom-fullness-slackspace-stats getClomStats]",
+    "vmware_vsan_esa_clom_work_item_success_count": "Success count on this ESXi host. [from /clom-fullness-slackspace-stats getClomStats]"
+  }
+}
