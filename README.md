@@ -252,6 +252,13 @@ The reported digest must match the `DIGEST` line in the pak's `.conf`.
 
 ### 5. Install the pak
 
+**Replacing an existing install?** Remove the old pack first
+(Administration -> Integrations -> Repository, select it, Uninstall) and delete
+its adapter instances. A schema change means the old `describe.xml` is already
+in the Operations database; uninstalling clears it rather than leaving orphaned
+resource kinds and objects behind. Skipping this is how you end up with two
+generations of metric definitions and objects that never collect again.
+
 Install `build/VsanHostMetrics_1.0.0.pak` through the VCF Operations UI:
 **Administration -> Integrations -> Repository -> Add**. (Broadcom's docs say
 Data Sources -> Integrations; Administration -> Integrations is the path
@@ -274,9 +281,47 @@ badly.
 
 ### 6. Restart the collector, create the adapter instance
 
-Restart the Cloud Proxy service, then create the adapter instance and assign it
-to that proxy. Configuration takes `hosts`, `verify_certs`, the bearer token
-credential, and `container_memory_limit`.
+The pak distributes to collectors on install -- a `VsanHostMetrics` directory
+appears under `/usr/lib/vmware-vcops/user/plugins/inbound/` on the Cloud Proxy
+within a minute, without any restart. Confirm the digest there matches the pak:
+
+```sh
+cat /usr/lib/vmware-vcops/user/plugins/inbound/VsanHostMetrics.conf
+```
+
+Then **Administration -> Integrations -> Accounts -> Add Account**.
+
+**The collector selection is the step that decides whether any of this works.**
+Pick your Cloud Proxy explicitly in *Cloud Proxy / Group*. Leave it on a default
+collector group and Operations will try to run the container on an analytics
+node, which has neither the image nor the registry CA -- and the resulting
+failure looks like a registry problem rather than a placement one.
+
+Fields, from `describe.xml`:
+
+| Field | Value |
+|---|---|
+| ESXi hosts | comma-separated FQDNs; the token is cluster-wide so list as many as you like |
+| Verify host certificates | **false** for bring-up -- see `BACKLOG.md`, `true` is untested |
+| Credential | the bearer token, from `configstorecli ... -n` |
+| Cloud Proxy / Group | **your Cloud Proxy**, not a default group |
+| container_memory_limit | 1024, under Advanced Settings |
+
+**Expect one certificate prompt per host.** `get_endpoints()` hands each host
+URL to Operations, which fetches the cert and asks you to accept it. ESXi certs
+are VMCA-signed by vCenter, so they are untrusted by default. One-time per host.
+
+Hit **Validate Connection** before saving -- that runs `test()`, a real scrape,
+so a green result proves both the token and the network path.
+
+**Adding hosts later is a hot operation.** Verified 2026-09-22: adding a third
+host did not recycle the container (`restarts=0`, `StartedAt` unchanged), so
+the rate-cache baselines survived and no host dropped a collection cycle.
+
+**The first collection emits no rate metrics.** Counters have no baseline yet,
+so `collect()` returns nothing for them and no objects appear. That is
+`test_first_interval_emits_nothing` working, not a fault. Judge it on cycle two,
+roughly five minutes later.
 
 ### 7. What needs a full reinstall, and what does not
 
