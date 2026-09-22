@@ -171,7 +171,17 @@ In order. Each step is verifiable before the next, which is the point.
 10. Objects appear with real identifiers — not `unknown`, not a hostname
     fallback
 
-Steps 1-8 were verified on 2026-09-22. Steps 9-10 **[unverified]**.
+All ten steps were verified on 2026-09-22 against `example.com`.
+
+Step 10 evidence: two `VsanHostTcpIp` objects
+(`esxi01.example.com [defaultTcpipStack]`, `esxi02.example.com [defaultTcpipStack]`),
+real `host_uuid` identifiers, 9 rate metrics plus 4 percentages each, values
+cross-checked against an independent computation run outside Operations and
+agreeing within sampling variance.
+
+Note that agreement confirms the *pipeline*, not the *correctness of two of the
+metrics* -- see `BACKLOG.md` on the `io_type` collision, which both
+implementations reproduce identically because they share the same defect.
 
 ---
 

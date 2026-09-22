@@ -95,8 +95,25 @@ Two fix shapes:
   `tcpBytesRx`/`tcpBytesTx` as distinct metrics and derive percentages from rx.
   Changes `describe.xml`, so it needs a full pak reinstall.
 
-Also worth checking whether `sink_type` (observed constant at `cold`) can ever
-vary, since it would collide the same way.
+**This is structural, not a two-metric mapping error.** Surveyed the full
+exposition (1926 series) on 2026-09-22:
+
+- `io_type` is a general-purpose label here, not a TCP concept:
+  `write` 67, `read` 67, `unmap` 17, `recoveryWrite` 12, `resyncRead` 10,
+  `rx` 8, `tx` 8. Only 2 of the 8 `rx` series are ours. **Any future metric
+  added from this exposition that carries `io_type` will collide identically.**
+- `sink_type` is `cold` on all 11 of our samples, but takes `cold` (1731) and
+  `hot` (195) elsewhere in the exposition. Safe today by luck, not design; a
+  hot variant of a TCP counter would reproduce the bug with no change on our
+  side.
+- `stack` only ever appears as `defaultTcpipStack`, and only on our 11 series.
+  There is no vmotion or provisioning stack exposed, so one object per host is
+  correct.
+
+So the fix should address the keying scheme rather than special-casing two
+metrics: `collect()` should fold every distinguishing label into either the
+object identity or the metric key, and fail loudly on an unexpected collision
+rather than silently overwriting.
 
 **Token rotation detection.** Scope is settled — tokens are cluster-wide — but
 the adapter cannot currently tell a rotated token from a network failure. Made
