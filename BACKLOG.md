@@ -47,7 +47,32 @@ overwrites the first. `tcpPacketsTotal` and `tcpBytesTotal` therefore report
 **rx or tx arbitrarily, depending on iteration order** -- not the sum. Nothing
 in `vsanmetrics.py` references `io_type` at all.
 
-Observed on esxi01: rx 169,764,234 vs tx 184,368,054 packets.
+**Measured 2026-09-22 on esxi01, same-window controlled test: `tx` wins.**
+The exposition emits `rx` before `tx`, so the `tx` sample is written last and
+survives. Deterministic, not random.
+
+```
+tcpPacketsTotal   rx  1,039.823   tx  1,306.462   rx+tx  2,346.285
+                  EMITTED 1,306.432   <- tx
+tcpBytesTotal     rx    942,276   tx  7,422,002   rx+tx  8,364,278
+                  EMITTED 7,421,833   <- tx
+```
+
+So the adapter reports **transmit-only** and discards all receive traffic --
+roughly 44% of packets and 11% of bytes on that host.
+
+This makes three of the four percentages **dimensionally wrong**, not merely
+mis-scaled: they divide a receive-side event count by a transmit-side packet
+count.
+
+| Metric | Numerator | Denominator | Verdict |
+|---|---|---|---|
+| `outOfOrderPct` | rcv out-of-order | tx packets | wrong |
+| `duplicateAckPct` | rcv duplicate ACKs | tx packets | wrong |
+| `duplicatePacketPct` | rcv duplicate packets | tx packets | wrong |
+| `retransmitPct` | snd retransmits | tx packets | **correct** -- both tx |
+
+`retransmitPct` is right by accident, since retransmits are transmit-side.
 
 This supersedes the previously recorded caveat. `derive_percentages()` still
 says the denominator is "almost certainly rx+tx" and that an rx-only count
