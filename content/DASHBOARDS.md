@@ -35,6 +35,79 @@ Metric keys carry `|` separators, so Operations renders a tree —
 `total` → `rx`/`tx` — rather than 385 flat entries. Dashboards should lean on
 that hierarchy rather than fighting it.
 
+## Reference: how HCIBench presents these metrics
+
+HCIBench ships ~142 Grafana dashboards built against vSAN's internal stats
+(`vmware-labs/hci-benchmark-appliance`, under
+`HCIBench/automation/conf/grafana/dashboards/humbug/`). It is the closest thing
+to an authoritative answer on which of these metrics matter and how to group
+them, so it is worth copying the shape rather than inventing one.
+
+**Important caveat: it is a different data source.** Those dashboards query
+InfluxDB against vSAN Observer's metric set — `tcpRxPackets`, `tcpSndacks`,
+`tcpBadsyn`, `tcpConndrops` — which is richer than what `/vsanmetrics` exposes.
+The queries cannot be lifted. The panel design can.
+
+### What it independently confirms
+
+**rx and tx are always separate series.** Every networking dashboard pairs
+`rxPackets`/`txPackets` and `rxThroughput`/`txThroughput` in one panel. That is
+exactly the split the `io_type` fix introduced, arrived at independently —
+which makes the collision a plain bug rather than a debatable modelling choice.
+
+**Error and drop ratios are shown in per-mille, not percent.** Every such panel
+is titled "(per-mille)". These values are tiny — our measured `duplicateAckPct`
+was 0.122% — and per-mille reads better at that magnitude.
+
+We keep **percent** anyway, because Broadcom's published thresholds are stated
+in percent (0.1% / 0.5% / 1.0% for out-of-order). Matching the threshold units
+matters more than readability; a symptom definition written against a number in
+different units is a bug waiting to happen. Worth revisiting if we ever publish
+our own thresholds.
+
+**Latency panels come in avg / max / min triples.** The RDT dashboard shows all
+three separately, because with latency the maximum is the interesting number —
+one slow host is the problem, not the average across hosts. Relevant to the
+supermetrics below.
+
+### Panel structure worth copying
+
+| Dashboard | Panels, in order |
+|---|---|
+| Physical NIC | Packets/sec · Throughput · Error rate · vSwitch port drops · IO chain drops · Flow control |
+| TCP/IP | Packets/sec · Throughput · Connections · Transmission · Errors · Congestion |
+| Host | Packets/sec · Throughput · Discards · Port drops · IO chain drops · TCP rexmit rate · TCP rx error rate |
+
+Units: `binBps` for throughput, `µs` for latency, `short` for counts and ratios.
+
+### What we can and cannot reproduce from `/vsanmetrics`
+
+| Panel | Ours? | Notes |
+|---|---|---|
+| Packets/sec | ✅ | `total\|rx`, `total\|tx` on `EsxTcpIp`; `pkt_total\|rx/tx` on `EsxPnic` |
+| Throughput | ✅ | `bytes_total\|rx/tx`, `pkt_bytes_total\|rx/tx` |
+| NIC error rate | ⚠️ partial | we have `pkt_err_total\|rx/tx` only — no CRC, carrier, FIFO or missed-error breakdown |
+| TCP transmission | ✅ | dup ACKs, dup packets, out-of-order, retransmits, all three SACK counters |
+| RDT latency | ⚠️ partial | `latency_us` only — no min/max, no socket space, no queue depth |
+| TCP connections | ❌ | no conndrops, keepalive timeouts, or connect counts in the exposition |
+| TCP errors | ❌ | no badsyn, badrst, bad checksum, short packets |
+| TCP congestion | ❌ | no zero-window or ECN counters |
+| vSwitch / IO chain drops | ❌ | not exposed |
+| Flow control | ❌ | no pause or PFC counters |
+
+So roughly half of HCIBench's networking panels are reachable. The gaps are all
+because `/vsanmetrics` exposes less than vSAN Observer does, not because of
+anything in this adapter — worth stating plainly when someone asks why our
+dashboard is thinner.
+
+### One concrete improvement to adopt
+
+HCIBench derives rate-of-total ratios for **seven** TCP counters, not four:
+retransmits, duplicate ACKs, out-of-order, duplicate packets, **plus all three
+SACK counters** (`sackSendBlocksRate`, `sackRcvBlocksRate`,
+`sackRexmitsRate`). We currently derive four. Adding the three SACK ratios is
+cheap and matches the reference.
+
 ## Proposed dashboards
 
 Ordered by how often someone will actually open them.
