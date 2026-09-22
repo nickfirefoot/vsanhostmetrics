@@ -106,14 +106,29 @@ exposition (1926 series) on 2026-09-22:
   `hot` (195) elsewhere in the exposition. Safe today by luck, not design; a
   hot variant of a TCP counter would reproduce the bug with no change on our
   side.
-- `stack` only ever appears as `defaultTcpipStack`, and only on our 11 series.
-  There is no vmotion or provisioning stack exposed, so one object per host is
-  correct.
+- `stack` appears only as `defaultTcpipStack` in this lab today, but **do not
+  treat that as fixed**. An ENS/EDP stack (NSX Enhanced Datapath) can appear on
+  hosts configured for it. This is already handled correctly: `stack` is an
+  `Identifier`, so a new stack value produces a new object
+  (`<host> [<stack>]`) rather than colliding. No change needed -- but any fix
+  must preserve `stack` in the object identity.
 
 So the fix should address the keying scheme rather than special-casing two
-metrics: `collect()` should fold every distinguishing label into either the
-object identity or the metric key, and fail loudly on an unexpected collision
-rather than silently overwriting.
+metrics. The principle to apply, which `stack` already follows and `io_type`
+does not:
+
+- A label that distinguishes **different entities** belongs in the object
+  **identity**. `stack` is one of these -- `defaultTcpipStack` and an ENS/EDP
+  stack are genuinely different things to monitor, and each should be its own
+  object.
+- A label that distinguishes **different measurements of the same entity**
+  belongs in the **metric key**. `io_type` is one of these -- rx and tx are two
+  facts about one TCP/IP stack, not two stacks, so they should become
+  `tcpPacketsRx` / `tcpPacketsTx` rather than separate objects.
+
+And `collect()` should **fail loudly on an unexpected collision** rather than
+silently overwriting, so the next label like this is found by an error rather
+than by someone noticing the numbers look odd months later.
 
 **Token rotation detection.** Scope is settled — tokens are cluster-wide — but
 the adapter cannot currently tell a rotated token from a network failure. Made
