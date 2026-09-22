@@ -25,6 +25,7 @@ The split is deliberate: everything that can be wrong about the data is in
 | `REQUIREMENTS.md` | Everything needed to build, stage and deploy. Versions, network prerequisites, credentials, and a repeatability checklist. **Start here for a rebuild.** |
 | `README.md` | This file. What the code is, how to build it, how to deploy it. |
 | `BUGS-UPSTREAM.md` | Defects in the ESXi `/vsanmetrics` exposition itself, with reproductions. Read before trusting a metric that looks wrong. |
+| `BACKLOG.md` | What is not done, and why, in rough priority order. |
 
 **Historical — accurate when written, not maintained:**
 
