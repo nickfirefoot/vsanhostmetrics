@@ -79,6 +79,14 @@ def build(rows):  # noqa: C901
         for k, vals in sorted(d["labels"].items()):
             if k in HOST_LABELS:
                 props.append(k) if k != "host_uuid" else ident.append(k)
+            elif k in ENTITY_LABELS and k not in ALIAS:
+                # Entity labels stay identity even when this scrape shows only
+                # one value.  `stack` is the case that matters: an ENS/EDP
+                # stack appears only on hosts configured for it, and if a
+                # single-stack sample demoted it to a property, those hosts
+                # would collapse both stacks into one object.  A classifier
+                # cannot see variation that is not in its sample.
+                ident.append(k)
             elif len(vals) == 1:
                 props.append(k)                       # constant: descriptive
             elif k in ALIAS:
@@ -89,6 +97,26 @@ def build(rows):  # noqa: C901
                 metric_parts.append(k)
             else:
                 unknown.append(k)
+
+        # Refine: a label is only a measurement variant if it actually VARIES
+        # within a fixed identity.  subsystem takes 8 values across 31 heaps,
+        # but each heap has exactly one -- so it describes the heap rather than
+        # splitting its measurements, and belongs in properties.  io_type does
+        # vary within one (host_uuid, stack), so it stays.
+        if metric_parts:
+            id_keys = [k for k in ident if k not in HOST_LABELS]
+            per_ident = collections.defaultdict(lambda: collections.defaultdict(set))
+            for name, labels in rows:
+                if family_of(name) != fam:
+                    continue
+                tup = tuple(labels.get(x, "") for x in id_keys)
+                for k in metric_parts:
+                    per_ident[tup][k].add(labels.get(k, ""))
+            still, demoted = [], []
+            for k in metric_parts:
+                varies = any(len(per_ident[t][k]) > 1 for t in per_ident)
+                (still if varies else demoted).append(k)
+            metric_parts, props = still, props + demoted
 
         model[fam] = {
             "series": d["series"],
@@ -155,3 +183,73 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# --------------------------------------------------------------------------
+# Python emission
+# --------------------------------------------------------------------------
+
+def metric_key(family: str, name: str, meas_values) -> str:
+    """Metric key for Operations.
+
+    Operations builds a metric tree from '|' separators, which is the
+    difference between a navigable dashboard and 457 flat entries.  The
+    resource kind already carries the family, so the key drops that prefix:
+
+        vmware_esx_tcppkt_total{io_type=rx}  ->  total|rx
+        vmware_vsan_dom_iops{io_type=read,role=client,sink_type=hot}
+                                             ->  iops|read|client|hot
+    """
+    short = name[len(family) + 1:] if name.startswith(family + "_") else name
+    parts = [short] + [v for v in meas_values if v]
+    return "|".join(parts)
+
+
+def emit_python(model, helps, rows, path):
+    """Write app/model.py -- the generated schema the adapter consumes."""
+    import collections as _c
+    seen = _c.defaultdict(set)
+    for name, labels in rows:
+        fam = family_of(name)
+        m = model[fam]
+        seen[fam].add((name,) + tuple(labels.get(k, "") for k in m["metric_key_labels"]))
+
+    with open(path, "w") as fh:
+        fh.write('"""GENERATED -- do not edit by hand.\n\n')
+        fh.write("Regenerate with:\n")
+        fh.write("    python3 tools/model_from_exposition.py \\\n")
+        fh.write("        docs/sample-exposition-esxi01.txt --python app/model.py\n\n")
+        fh.write("Derived from a real /vsanmetrics exposition.  Each family becomes one\n")
+        fh.write("resource kind; identity labels split objects, measurement labels become\n")
+        fh.write('part of the metric key.\n"""\n\n')
+        fh.write("from typing import Dict, List, Tuple\n\n")
+        fh.write("HOST_LABELS = %r\n\n" % sorted(HOST_LABELS))
+        fh.write("# family -> resource kind definition\n")
+        fh.write("FAMILIES: Dict[str, dict] = {\n")
+        for fam in sorted(model):
+            m = model[fam]
+            ident = [k for k in m["identity"] if k not in HOST_LABELS]
+            mets = sorted(seen[fam])
+            fh.write(f"    {fam!r}: {{\n")
+            fh.write(f"        'identity': {ident!r},\n")
+            fh.write(f"        'metric_key_labels': {m['metric_key_labels']!r},\n")
+            fh.write(f"        'properties': {[p for p in m['properties'] if p not in HOST_LABELS]!r},\n")
+            fh.write(f"        'objects_per_host': {m['objects_per_host']},\n")
+            fh.write("        'metrics': [\n")
+            for row in mets:
+                nm, vals = row[0], row[1:]
+                key = metric_key(fam, nm, vals)
+                h = helps.get(nm, "").strip()
+                h = h.split("[from")[0].strip() if "[from" in h else h
+                if vals:
+                    h = f"{h} ({', '.join(v for v in vals if v)})" if h else "/".join(vals)
+                fh.write(f"            ({key!r}, {nm!r}, {list(vals)!r}, {h[:180]!r}),\n")
+            fh.write("        ],\n    },\n")
+        fh.write("}\n\n")
+        fh.write("# All source metric names we consume, for the parser's keep-filter.\n")
+        fh.write("KEEP: Dict[str, str] = {\n")
+        for fam in sorted(model):
+            for nm in model[fam]["metric_names"]:
+                fh.write(f"    {nm!r}: {fam!r},\n")
+        fh.write("}\n")
+    return sum(len(seen[f]) for f in model)

@@ -275,7 +275,8 @@
         "vmware_esx_tcppkt_total"
       ],
       "identity": [
-        "host_uuid"
+        "host_uuid",
+        "stack"
       ],
       "metric_key_labels": [
         "io_type"
@@ -283,7 +284,6 @@
       "properties": [
         "hostname",
         "sink_type",
-        "stack",
         "vsan_cluster_uuid"
       ],
       "unclassified": [],
@@ -365,15 +365,14 @@
         "host_uuid",
         "world_id"
       ],
-      "metric_key_labels": [
-        "role",
-        "subsystem"
-      ],
+      "metric_key_labels": [],
       "properties": [
         "hostname",
         "name",
         "sink_type",
-        "vsan_cluster_uuid"
+        "vsan_cluster_uuid",
+        "role",
+        "subsystem"
       ],
       "unclassified": [],
       "label_cardinality": {
@@ -387,7 +386,7 @@
         "world_id": 166
       },
       "objects_per_host": 167,
-      "metric_definitions": 27,
+      "metric_definitions": 3,
       "metrics_per_object": 1
     },
     "vmware_host_cpu": {
@@ -430,13 +429,12 @@
         "host_uuid",
         "slab"
       ],
-      "metric_key_labels": [
-        "subsystem"
-      ],
+      "metric_key_labels": [],
       "properties": [
         "hostname",
         "sink_type",
-        "vsan_cluster_uuid"
+        "vsan_cluster_uuid",
+        "subsystem"
       ],
       "unclassified": [],
       "label_cardinality": {
@@ -448,7 +446,7 @@
         "vsan_cluster_uuid": 1
       },
       "objects_per_host": 62,
-      "metric_definitions": 8,
+      "metric_definitions": 2,
       "metrics_per_object": 1
     },
     "vmware_esx_heap": {
@@ -460,14 +458,13 @@
         "heap_id",
         "host_uuid"
       ],
-      "metric_key_labels": [
-        "subsystem"
-      ],
+      "metric_key_labels": [],
       "properties": [
         "heap_name",
         "hostname",
         "sink_type",
-        "vsan_cluster_uuid"
+        "vsan_cluster_uuid",
+        "subsystem"
       ],
       "unclassified": [],
       "label_cardinality": {
@@ -480,7 +477,7 @@
         "vsan_cluster_uuid": 1
       },
       "objects_per_host": 31,
-      "metric_definitions": 8,
+      "metric_definitions": 1,
       "metrics_per_object": 1
     },
     "vmware_vsan_heap": {
@@ -496,14 +493,13 @@
         "heap_id",
         "host_uuid"
       ],
-      "metric_key_labels": [
-        "subsystem"
-      ],
+      "metric_key_labels": [],
       "properties": [
         "heap_name",
         "hostname",
         "sink_type",
-        "vsan_cluster_uuid"
+        "vsan_cluster_uuid",
+        "subsystem"
       ],
       "unclassified": [],
       "label_cardinality": {
@@ -516,8 +512,8 @@
         "vsan_cluster_uuid": 1
       },
       "objects_per_host": 31,
-      "metric_definitions": 40,
-      "metrics_per_object": 2
+      "metric_definitions": 5,
+      "metrics_per_object": 1
     },
     "vmware_vsan_memory": {
       "series": 62,
