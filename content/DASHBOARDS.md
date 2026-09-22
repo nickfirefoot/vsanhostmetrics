@@ -180,13 +180,91 @@ baseline:
 
 ## Supermetrics
 
-Needed because the pack is per-host and the questions are usually per-cluster:
+The pack collects per host (and per heap, per NIC, per world); the questions
+people ask are per cluster. Supermetrics bridge that.
 
-- Cluster-wide TCP retransmit percentage — max and average across hosts
-- Cluster-wide RDT latency — max across hosts, since one slow host is the
-  problem, not the average
-- Worst heap usage ratio across all heaps on a host, collapsing 31 objects into
-  one number worth alerting on
+**Prefer max over average.** HCIBench's RDT dashboard shows latency as separate
+avg / max / min panels, and the max is the one that matters: one slow host is
+the problem, and averaging across hosts hides it. Same for every "worst of N"
+rollup below - a host with 61 healthy heaps and one at 98% should alert, and
+its average will not.
+
+| Name | Rolls up | Why |
+|---|---|---|
+| `clusterMaxRetransmitPct` | max `retransmitPct` across `EsxTcpIp` | The TCP ratio with a published threshold |
+| `clusterMaxOutOfOrderPct` | max `outOfOrderPct` across `EsxTcpIp` | Broadcom thresholds are per host; this makes them cluster-visible |
+| `clusterMaxRdtLatency` | max `latency_us` across `EsxRdt` | One slow host defines cluster behaviour |
+| `clusterAvgRdtLatency` | avg `latency_us` across `EsxRdt` | Baseline to read the max against |
+| `hostWorstHeapUsage` | max `usage_ratio` over that host's `EsxHeap` + `VsanHeap` | Collapses 62 objects per host into one alertable number |
+| `hostWorstSlabUsage` | max over that host's `EsxSlab` | Same, for slabs |
+| `clusterRdtChecksumMismatch` | sum `checksum_mismatch_count` across `EsxRdt` | Should be flat zero; any movement is a finding |
+
+Expected syntax, following Operations' supermetric form:
+
+```
+max(${adaptertype=VsanHostMetrics, objecttype=EsxTcpIp, metric=retransmitPct})
+```
+
+**Unverified.** That is the documented shape, but neither the syntax nor the
+file format for shipping supermetrics in a pak has been tested here - the SDK
+scaffolds `content/supermetrics/` with no schema, unlike `alertdefs` and
+`traversalspecs` which both ship an `.xsd`. Build the first one in the UI,
+export it, and use that as the template. Do not hand-write the XML from a
+guess.
+
+**Depends on the `HostSystem` relationship.** A cluster-scoped rollup needs
+Operations to know which hosts belong to which cluster. These objects are
+currently an island, so "across the cluster" has nothing to resolve against.
+Until that is fixed, rollups can only be scoped by custom group or adapter
+instance - which works, but is manual. That makes the relationship a
+prerequisite for this section rather than a nice-to-have.
+
+## Where the metrics we cannot reach actually live
+
+Worth knowing before anyone tries to find them in `/vsanmetrics`: they are not
+there, and no amount of parsing will surface them.
+
+HCIBench collects via **Telegraf's vSphere input plugin against vCenter's
+SDK**, reading the **vSAN Performance Service**
+(`HCIBench/automation/conf/vsphere_template.conf`):
+
+```
+[[inputs.vsphere]]
+  vcenters = ["https://<vcenter-ip>/sdk"]
+  vsan_metric_include = [
+     "performance.vsan-host-net",    # the TCP stats
+     "performance.vsan-pnic-net",    # physical NIC
+     "performance.vsan-vnic-net",    # virtual NIC
+     "performance.host-memory-heap",
+     "performance.host-cpu", ...
+  ]
+```
+
+`run_telegraf.rb` skips any cluster where the Performance Service is not
+enabled, which tells you how hard the dependency is.
+
+**This is the same source as vCenter's "Performance for Support" UI.** So a
+like-for-like equivalent of that UI needs this API, not the host endpoint.
+`derive_percentages()` already hinted at it - its original docstring suggested
+finding an rx-only counter "from the vsan-vnic-net entity via /vsanperf".
+
+| | `/vsanmetrics` (this pack) | vSAN Performance Service |
+|---|---|---|
+| Path | ESXi host directly | vCenter SDK |
+| Requires vCenter | No | **Yes** |
+| Requires Performance Service | No | **Yes**, plus a stats object consuming vSAN capacity |
+| Credential | cluster-wide bearer token | vCenter account |
+| Breadth | 155 metric names | substantially more |
+| Survives vCenter outage | **Yes** | No |
+
+These are complementary rather than competing. The host scrape is the
+always-available floor - it keeps working when vCenter is down, which is
+exactly when you want network telemetry. The Performance Service is what makes
+a Performance-for-Support equivalent possible. A mature pack probably wants
+both, and that is an architectural decision, not a backlog item.
+
+Note `HANDOFF.md` fence #2 lists destructive `VsanPerformanceManager` methods
+to avoid, which implies the read methods were always considered in scope.
 
 ## Open dependencies
 
