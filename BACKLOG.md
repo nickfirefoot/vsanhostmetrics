@@ -15,9 +15,18 @@ a rebuild, a `DIGEST` swap in the Cloud Proxy's `.conf`, and a collector
 restart — no pak reinstall. That is the README's claim, not a tested fact, and
 several other things lean on it. Confirm on the first code-only iteration.
 
-**Finish steps 9-10.** Pak installed, adapter instance created, objects
-appearing with real identifiers. Until then the deploy half of the pipeline is
-documented but unproven.
+Relevant data point from 2026-09-22: **adding a host to the adapter instance
+did not recycle the container** (`restarts=0`, `StartedAt` unchanged), so the
+config change applied hot and the rate cache survived — the existing two hosts
+never dropped a cycle. Good news for reconfiguration, but it means the
+collector does *not* restart the container on every change, so a digest swap
+may well need an explicit restart rather than being picked up. Test that
+specifically rather than assuming.
+
+~~**Finish steps 9-10.**~~ ✅ Done 2026-09-22. Pak installed, adapter instance
+created, three `VsanHostTcpIp` objects collecting with real identifiers, values
+cross-checked against an independent computation outside Operations. The full
+ten-step checklist in `REQUIREMENTS.md` is verified.
 
 ## Automation, once the above is proven
 
