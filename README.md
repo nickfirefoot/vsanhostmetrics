@@ -85,17 +85,21 @@ configstorecli config current get -c vsan -g system -k vsan
 # -> metric_subscriptions[0].auth_token
 ```
 
-**This is the weak point of the beta.** The adapter runs in a container on a
-Cloud Proxy and cannot run `configstorecli` on each host, so the token is a
-config field you paste in. Two things to settle before this is more than a lab
-pak:
+The adapter runs in a container on a Cloud Proxy and cannot run
+`configstorecli` on each host, so the token is a config field you paste in.
 
-- Are the tokens identical across hosts in the cluster, or per-host? Compare
-  them. Per-host means one credential per host, which the current single
-  credential field doesn't model.
-- What rotates them, and how does the adapter notice? A 401 should be
-  distinguishable from a network failure and surfaced as a specific error, not
-  a silent non-collecting object.
+**Tokens are cluster-wide, not per-host** (confirmed on `example.com`,
+2026-09-22). The single credential field in `get_adapter_definition()` is
+therefore the right model, not a simplification -- one credential covers every
+host in the cluster, and the `hosts` parameter can list them all against it.
+
+Still open: what rotates them, and how the adapter notices. Note that this is
+harder than it looks here, because the host returns **403 for every
+authentication failure and never 401** -- see `BUGS-UPSTREAM.md` item 4. A
+rotated token is thus not trivially distinguishable from an authorisation
+problem, and neither should be mistaken for a network failure. Whatever the
+handling, it must surface as a specific error rather than a silently
+non-collecting object.
 
 ## Known gaps, in priority order
 
@@ -107,7 +111,16 @@ pak:
    objects are an island nobody can navigate to. See the TODO in `collect()`.
 3. **No `content/`.** Metrics with no symptoms attached are just storage. The
    thresholds are in `constants.py` ready to become symptom definitions.
-4. Token handling, above.
+
+   Management Pack Builder (Developer Center -> Management Pack Builder) is not
+   an alternative to this adapter, despite advertising Prometheus support. Its
+   Prometheus connector needs a query backend (PromQL over `/api/v1/query`);
+   `/vsanmetrics` is a raw exposition endpoint with no query API and no
+   storage. Using it would mean running a Prometheus server that scrapes every
+   host, then pointing Operations at that -- an extra service for a pack whose
+   purpose is reading hosts directly.
+4. **Token rotation handling**, above. The per-host-vs-cluster-wide question
+   is settled (cluster-wide); detecting rotation is not.
 
 ## Deploy
 
