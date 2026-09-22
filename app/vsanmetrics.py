@@ -295,17 +295,25 @@ class RateCache:
 # the four percentages were a receive-side numerator over a transmit-side
 # denominator.  Not a scale error: a ratio of two unrelated quantities.
 DERIVED = {
-    "outOfOrderPct":      ("rcvoopack_total",     "total|rx"),
-    "duplicateAckPct":    ("rcvdupack_total",     "total|rx"),
-    "duplicatePacketPct": ("rcvduppack_total",    "total|rx"),
-    "retransmitPct":      ("sndrexmitpack_total", "total|tx"),
+    # receive-side events over RECEIVED packets
+    "outOfOrderPct":       ("rcvoopack_total",        "total|rx"),
+    "duplicateAckPct":     ("rcvdupack_total",        "total|rx"),
+    "duplicatePacketPct":  ("rcvduppack_total",       "total|rx"),
+    "sackRcvBlocksPct":    ("sack_rcv_blocks_total",  "total|rx"),
+    # transmit-side events over TRANSMITTED packets
+    "retransmitPct":       ("sndrexmitpack_total",    "total|tx"),
+    "sackSendBlocksPct":   ("sack_send_blocks_total", "total|tx"),
+    "sackRetransmitsPct":  ("sack_rexmits_total",     "total|tx"),
 }
 
 DERIVED_LABELS = {
-    "outOfOrderPct":      "Out-of-order packets (of received)",
-    "duplicateAckPct":    "Duplicate ACKs (of received)",
-    "duplicatePacketPct": "Duplicate packets (of received)",
-    "retransmitPct":      "Retransmitted packets (of transmitted)",
+    "outOfOrderPct":       "Out-of-order packets (of received)",
+    "duplicateAckPct":     "Duplicate ACKs (of received)",
+    "duplicatePacketPct":  "Duplicate packets (of received)",
+    "sackRcvBlocksPct":    "SACK blocks received (of received)",
+    "retransmitPct":       "Retransmitted packets (of transmitted)",
+    "sackSendBlocksPct":   "SACK blocks sent (of transmitted)",
+    "sackRetransmitsPct":  "SACK retransmits (of transmitted)",
 }
 
 
