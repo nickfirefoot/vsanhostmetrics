@@ -1,0 +1,1659 @@
+{
+   "entries": {
+      "resourceKind": [
+         {
+            "resourceKindKey": "StoragePool",
+            "internalId": "resourceKind:id:0_::_",
+            "adapterKindKey": "VirtualAndPhysicalSANAdapter"
+         },
+         {
+            "resourceKindKey": "VirtualSANDCCluster",
+            "internalId": "resourceKind:id:1_::_",
+            "adapterKindKey": "VirtualAndPhysicalSANAdapter"
+         },
+         {
+            "resourceKindKey": "Vsan2Disk",
+            "internalId": "resourceKind:id:2_::_",
+            "adapterKindKey": "VirtualAndPhysicalSANAdapter"
+         }
+      ],
+      "resource": [{
+         "resourceKindKey": "vSAN World",
+         "internalId": "resource:id:0_::_",
+         "adapterKindKey": "VirtualAndPhysicalSANAdapter",
+         "identifiers": [],
+         "name": "vSAN World"
+      }]
+   },
+   "dashboards": [{
+      "shared": true,
+      "hidden": true,
+      "creationTime": 1789500213580,
+      "autoswitchEnabled": false,
+      "importAttempts": 0,
+      "columnProportion": "1-1",
+      "importComplete": true,
+      "description": "2.0\nMonitor the performance of vSAN ESA Clusters. Both the contention and utilization counters are shown. It lists all the clusters with their key performance indicators.",
+      "widgets": [
+         {
+            "tabId": "0318e22f-cf52-41b9-bb96-11f746c9a9fc",
+            "collapsed": false,
+            "id": "f377d58a-d467-410e-b04d-a6ae98799e0a",
+            "gridsterCoords": {
+               "w": 4,
+               "x": 9,
+               "h": 6,
+               "y": 1
+            },
+            "state": "",
+            "type": "View",
+            "title": "Read Latency among VMs",
+            "config": {
+               "refreshInterval": 300,
+               "resource": null,
+               "traversalSpecId": "",
+               "refreshContent": {"refreshContent": false},
+               "isUpdatedView": true,
+               "chartViewItems": ["labels"],
+               "selectFirstRow": {"selectFirstRow": false},
+               "selfProvider": {"selfProvider": false},
+               "title": "Read Latency among VMs",
+               "viewDefinitionId": "c0a05dad-fc5c-48cc-a71f-4bdc95004084"
+            },
+            "height": 0
+         },
+         {
+            "tabId": "0318e22f-cf52-41b9-bb96-11f746c9a9fc",
+            "collapsed": false,
+            "id": "4dd29c2b-0a53-49b1-817e-eb8e6df3a965",
+            "gridsterCoords": {
+               "w": 4,
+               "x": 1,
+               "h": 6,
+               "y": 1
+            },
+            "state": "",
+            "type": "View",
+            "title": "vSAN ESA Clusters",
+            "config": {
+               "refreshInterval": 300,
+               "resource": {
+                  "resourceId": "resource:id:0_::_",
+                  "traversalSpecId": "",
+                  "resourceName": "vSAN World",
+                  "id": "Ext.vcops.chrome.model.Resource-9",
+                  "resourceKindId": "002028VirtualAndPhysicalSANAdaptervSAN World"
+               },
+               "traversalSpecId": null,
+               "refreshContent": {"refreshContent": false},
+               "isUpdatedView": true,
+               "chartViewItems": [],
+               "selectFirstRow": {"selectFirstRow": true},
+               "selfProvider": {"selfProvider": true},
+               "title": "vSAN ESA Clusters",
+               "viewDefinitionId": "fc3518f5-893a-4935-9ac1-2f46b0e063d6"
+            },
+            "height": 0,
+            "states": [{
+               "value": "b%3A0",
+               "key": "perm_toolbarVisible_widget_0318e22f-cf52-41b9-bb96-11f746c9a9fc_4dd29c2b-0a53-49b1-817e-eb8e6df3a965"
+            }]
+         },
+         {
+            "tabId": "0318e22f-cf52-41b9-bb96-11f746c9a9fc",
+            "collapsed": false,
+            "id": "73a2142a-ac45-4b6c-a63c-4027261ce063",
+            "gridsterCoords": {
+               "w": 5,
+               "x": 8,
+               "h": 3,
+               "y": 16
+            },
+            "state": "",
+            "type": "Scoreboard",
+            "title": "Storage Pool: Contention",
+            "config": {
+               "maxCellCount": 100,
+               "oldMetricValues": false,
+               "relationshipMode": {"relationshipMode": 0},
+               "valueSize": 24,
+               "boxHeight": null,
+               "title": "Storage Pool: Contention",
+               "showResourceName": {"showResourceName": false},
+               "roundDecimals": 0,
+               "mode": {"layoutMode": "fixedView"},
+               "labelSize": 16,
+               "customFilter": {
+                  "filter": [],
+                  "excludedResources": null,
+                  "includedResources": null
+               },
+               "selfProvider": {"selfProvider": false},
+               "resInteractionMode": null,
+               "visualTheme": 8,
+               "showMetricName": {"showMetricName": true},
+               "refreshInterval": 300,
+               "resource": [],
+               "showDT": {"showDT": false},
+               "refreshContent": {"refreshContent": false},
+               "showMetricUnit": {"showMetricUnit": true},
+               "depth": 1,
+               "metric": {
+                  "mode": "resourceKind",
+                  "resourceMetrics": [],
+                  "resourceKindMetrics": [
+                     {
+                        "yellowBound": 1,
+                        "metricUnitId": null,
+                        "metricName": "Disk I/O|Total Bus Resets",
+                        "metricKey": "DiskI/O|busResets",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Storage Pool",
+                        "label": "",
+                        "resourceKindId": "resourceKind:id:0_::_",
+                        "orangeBound": 2,
+                        "unit": "",
+                        "id": "extModel2578-1",
+                        "redBound": 4,
+                        "colorMethod": 0
+                     },
+                     {
+                        "yellowBound": 1,
+                        "metricName": "Disk I/O|Total IOPS Aborted",
+                        "metricKey": "DiskI/O|commandsAborted",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Storage Pool",
+                        "label": "",
+                        "resourceKindId": "resourceKind:id:0_::_",
+                        "orangeBound": 2,
+                        "id": "extModel2578-2",
+                        "redBound": 4,
+                        "colorMethod": 0
+                     },
+                     {
+                        "yellowBound": 4,
+                        "metricUnitId": -1,
+                        "metricName": "Disk I/O|Physical Layer Read Latency",
+                        "metricKey": "DiskI/O|latencyDevRead",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Storage Pool",
+                        "label": "Read Latency",
+                        "resourceKindId": "resourceKind:id:0_::_",
+                        "orangeBound": 8,
+                        "unit": "Auto",
+                        "id": "extModel15270-1",
+                        "redBound": 16,
+                        "colorMethod": 0
+                     },
+                     {
+                        "yellowBound": 4,
+                        "metricUnitId": -1,
+                        "metricName": "Disk I/O|Physical Layer Write Latency",
+                        "metricKey": "DiskI/O|latencyDevWrite",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Storage Pool",
+                        "label": "Write Latency",
+                        "resourceKindId": "resourceKind:id:0_::_",
+                        "orangeBound": 8,
+                        "unit": "Auto",
+                        "id": "extModel15270-2",
+                        "redBound": 16,
+                        "colorMethod": 0
+                     }
+                  ],
+                  "subMode": "resourceKindAll"
+               },
+               "showSparkline": {"showSparkline": true},
+               "boxColumns": 4,
+               "periodLength": "dashboardTime"
+            },
+            "height": 0
+         },
+         {
+            "tabId": "0318e22f-cf52-41b9-bb96-11f746c9a9fc",
+            "collapsed": false,
+            "id": "b76e92df-f338-496d-85e0-e4538d431af0",
+            "gridsterCoords": {
+               "w": 4,
+               "x": 1,
+               "h": 6,
+               "y": 22
+            },
+            "state": "",
+            "type": "View",
+            "title": "Physical Disks",
+            "config": {
+               "refreshInterval": 300,
+               "resource": null,
+               "traversalSpecId": "vSAN and Storage Devices-VirtualAndPhysicalSANAdapter-VirtualSANDCCluster",
+               "refreshContent": {"refreshContent": false},
+               "isUpdatedView": true,
+               "chartViewItems": [],
+               "selectFirstRow": {"selectFirstRow": false},
+               "selfProvider": {"selfProvider": false},
+               "title": "Physical Disks",
+               "viewDefinitionId": "548cfc7a-4976-46b9-8b7a-eb877d14e61e"
+            },
+            "height": 0,
+            "states": [{
+               "value": "b%3A0",
+               "key": "perm_toolbarVisible_widget_0318e22f-cf52-41b9-bb96-11f746c9a9fc_b76e92df-f338-496d-85e0-e4538d431af0"
+            }]
+         },
+         {
+            "tabId": "0318e22f-cf52-41b9-bb96-11f746c9a9fc",
+            "collapsed": false,
+            "id": "dbd58be1-5683-40c3-8f73-d5a5dd4b3480",
+            "gridsterCoords": {
+               "w": 7,
+               "x": 1,
+               "h": 6,
+               "y": 16
+            },
+            "state": "",
+            "type": "View",
+            "title": "Storage Pools",
+            "config": {
+               "refreshInterval": 300,
+               "resource": null,
+               "traversalSpecId": "",
+               "refreshContent": {"refreshContent": false},
+               "isUpdatedView": true,
+               "chartViewItems": [],
+               "selectFirstRow": {"selectFirstRow": false},
+               "selfProvider": {"selfProvider": false},
+               "title": "Storage Pools",
+               "viewDefinitionId": "4cacd93c-e75e-4693-b323-2140d4a510c5"
+            },
+            "height": 0
+         },
+         {
+            "tabId": "0318e22f-cf52-41b9-bb96-11f746c9a9fc",
+            "collapsed": false,
+            "id": "90ff0b1c-91e9-4cc7-abf0-48535f56e4a7",
+            "gridsterCoords": {
+               "w": 3,
+               "x": 10,
+               "h": 6,
+               "y": 7
+            },
+            "state": "",
+            "type": "Scoreboard",
+            "title": "Compute & Network",
+            "config": {
+               "maxCellCount": 100,
+               "oldMetricValues": false,
+               "relationshipMode": {"relationshipMode": 0},
+               "valueSize": 24,
+               "boxHeight": null,
+               "title": "Compute & Network",
+               "showResourceName": {"showResourceName": false},
+               "roundDecimals": 1,
+               "mode": {"layoutMode": "fixedView"},
+               "labelSize": 16,
+               "customFilter": {
+                  "filter": [],
+                  "excludedResources": null,
+                  "includedResources": null
+               },
+               "selfProvider": {"selfProvider": false},
+               "resInteractionMode": null,
+               "visualTheme": 8,
+               "showMetricName": {"showMetricName": true},
+               "refreshInterval": 300,
+               "resource": [],
+               "showDT": {"showDT": false},
+               "refreshContent": {"refreshContent": false},
+               "showMetricUnit": {"showMetricUnit": true},
+               "depth": 1,
+               "metric": {
+                  "mode": "resourceKind",
+                  "resourceMetrics": [],
+                  "resourceKindMetrics": [
+                     {
+                        "yellowBound": 0.5,
+                        "metricUnitId": -1,
+                        "metricName": "Summary|Max vSAN CPU Ready",
+                        "metricKey": "summary|max_vsan_cpu_ready",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "vSAN CPU Ready",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": 1,
+                        "unit": "Auto",
+                        "id": "extModel16149-2",
+                        "redBound": 2,
+                        "colorMethod": 0
+                     },
+                     {
+                        "yellowBound": 0.5,
+                        "metricUnitId": -1,
+                        "metricName": "KPI|Sum vSAN Portgroup Packets Dropped",
+                        "metricKey": "kpi|hostVMKernelPacketDropped_sum",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "vSAN Portgroup Packets Dropped",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": 1,
+                        "unit": "Auto",
+                        "id": "extModel16149-1",
+                        "redBound": 2,
+                        "colorMethod": 0
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricUnitId": "ghz",
+                        "metricName": "Summary|Total vSAN CPU Used",
+                        "metricKey": "summary|total_vsan_cpu_used",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "vSAN CPU Used",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": null,
+                        "unit": "GHz",
+                        "id": "extModel16149-3",
+                        "redBound": null,
+                        "colorMethod": 2
+                     }
+                  ],
+                  "subMode": "resourceKindAll"
+               },
+               "showSparkline": {"showSparkline": true},
+               "boxColumns": 1,
+               "periodLength": "dashboardTime"
+            },
+            "height": 0
+         },
+         {
+            "tabId": "0318e22f-cf52-41b9-bb96-11f746c9a9fc",
+            "collapsed": false,
+            "id": "8b6b667f-b18a-4145-83b4-29c894f52cb2",
+            "gridsterCoords": {
+               "w": 8,
+               "x": 5,
+               "h": 3,
+               "y": 25
+            },
+            "state": "",
+            "type": "Scoreboard",
+            "title": "Physical Disk: Utilization",
+            "config": {
+               "maxCellCount": 100,
+               "oldMetricValues": false,
+               "relationshipMode": {"relationshipMode": 0},
+               "valueSize": 24,
+               "boxHeight": null,
+               "title": "Physical Disk: Utilization",
+               "showResourceName": {"showResourceName": false},
+               "roundDecimals": 0,
+               "mode": {"layoutMode": "fixedView"},
+               "labelSize": 16,
+               "customFilter": {
+                  "filter": [],
+                  "excludedResources": null,
+                  "includedResources": null
+               },
+               "selfProvider": {"selfProvider": false},
+               "resInteractionMode": null,
+               "visualTheme": 8,
+               "showMetricName": {"showMetricName": true},
+               "refreshInterval": 300,
+               "resource": [],
+               "showDT": {"showDT": false},
+               "refreshContent": {"refreshContent": false},
+               "showMetricUnit": {"showMetricUnit": true},
+               "depth": 1,
+               "metric": {
+                  "mode": "resourceKind",
+                  "resourceMetrics": [],
+                  "resourceKindMetrics": [
+                     {
+                        "yellowBound": null,
+                        "metricUnitId": null,
+                        "metricName": "vSAN|Performance|Physical Layer Read IOPS",
+                        "metricKey": "vSAN|Performance|iopsDevRead",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN ESA Disk",
+                        "label": "",
+                        "resourceKindId": "resourceKind:id:2_::_",
+                        "orangeBound": null,
+                        "unit": "",
+                        "id": "extModel18986-1",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricUnitId": "mbps",
+                        "metricName": "vSAN|Performance|Physical Layer Read Throughput",
+                        "metricKey": "vSAN|Performance|throughputDevRead",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN ESA Disk",
+                        "label": "",
+                        "resourceKindId": "resourceKind:id:2_::_",
+                        "orangeBound": null,
+                        "unit": "MBps",
+                        "id": "extModel18986-2",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricName": "vSAN|Performance|Physical Layer Write IOPS",
+                        "metricKey": "vSAN|Performance|iopsDevWrite",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN ESA Disk",
+                        "label": "",
+                        "resourceKindId": "resourceKind:id:2_::_",
+                        "orangeBound": null,
+                        "id": "extModel18986-3",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricUnitId": -1,
+                        "metricName": "vSAN|Performance|Physical Layer Write Throughput",
+                        "metricKey": "vSAN|Performance|throughputDevWrite",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN ESA Disk",
+                        "label": "",
+                        "resourceKindId": "resourceKind:id:2_::_",
+                        "orangeBound": null,
+                        "unit": "Auto",
+                        "id": "extModel18986-4",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricName": "vSAN|Performance|vSAN Layer Read IOPS",
+                        "metricKey": "vSAN|Performance|iopsReadCapacity",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN ESA Disk",
+                        "label": "",
+                        "resourceKindId": "resourceKind:id:2_::_",
+                        "orangeBound": null,
+                        "id": "extModel18986-5",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricUnitId": -1,
+                        "metricName": "vSAN|Performance|vSAN Layer Read Throughput",
+                        "metricKey": "vSAN|Performance|tputReadCapacity",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN ESA Disk",
+                        "label": "",
+                        "resourceKindId": "resourceKind:id:2_::_",
+                        "orangeBound": null,
+                        "unit": "Auto",
+                        "id": "extModel18986-6",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricUnitId": -1,
+                        "metricName": "vSAN|Performance|vSAN Layer Write Throughput",
+                        "metricKey": "vSAN|Performance|tputWriteCapacity",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN ESA Disk",
+                        "label": "",
+                        "resourceKindId": "resourceKind:id:2_::_",
+                        "orangeBound": null,
+                        "unit": "Auto",
+                        "id": "extModel18986-7",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricName": "vSAN|Performance|vSAN Layer Write IOPS",
+                        "metricKey": "vSAN|Performance|iopsWriteCapacity",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN ESA Disk",
+                        "label": "",
+                        "resourceKindId": "resourceKind:id:2_::_",
+                        "orangeBound": null,
+                        "id": "extModel18986-8",
+                        "redBound": null,
+                        "colorMethod": 2
+                     }
+                  ],
+                  "subMode": "resourceKindAll"
+               },
+               "showSparkline": {"showSparkline": true},
+               "boxColumns": 8,
+               "periodLength": "dashboardTime"
+            },
+            "height": 0
+         },
+         {
+            "tabId": "0318e22f-cf52-41b9-bb96-11f746c9a9fc",
+            "collapsed": false,
+            "id": "132f8c1d-05fe-4c1a-8e5a-6b8478a58f86",
+            "gridsterCoords": {
+               "w": 11,
+               "x": 2,
+               "h": 6,
+               "y": 28
+            },
+            "state": "",
+            "type": "ResourceRelationshipAdvanced",
+            "title": "Related Objects to selected vSAN Cluster",
+            "config": {
+               "filterMode": "tagPicker",
+               "tagFilter": null,
+               "resourceId": null,
+               "depth": "1,1",
+               "refreshInterval": 300,
+               "traversalSpecId": "",
+               "refreshContent": {"refreshContent": false},
+               "customFilter": {
+                  "filter": [],
+                  "excludedResources": null,
+                  "includedResources": null
+               },
+               "resourceName": null,
+               "selectFirstRow": {"selectFirstRow": false},
+               "selfProvider": {"selfProvider": false},
+               "title": "Related Objects to selected vSAN Cluster"
+            },
+            "height": 0,
+            "states": [
+               {
+                  "value": "o%3A",
+                  "key": "perm_ResourceRelationshipTree_widget_0318e22f-cf52-41b9-bb96-11f746c9a9fc_132f8c1d-05fe-4c1a-8e5a-6b8478a58f86"
+               },
+               {
+                  "value": "b%3A1",
+                  "key": "perm_toolbarVisible_widget_0318e22f-cf52-41b9-bb96-11f746c9a9fc_132f8c1d-05fe-4c1a-8e5a-6b8478a58f86"
+               }
+            ]
+         },
+         {
+            "tabId": "0318e22f-cf52-41b9-bb96-11f746c9a9fc",
+            "collapsed": false,
+            "id": "5996b4b1-37c4-4ea4-821d-d0ebc9c45575",
+            "gridsterCoords": {
+               "w": 4,
+               "x": 5,
+               "h": 6,
+               "y": 1
+            },
+            "state": "",
+            "type": "View",
+            "title": "Write Latency among VMs",
+            "config": {
+               "refreshInterval": 300,
+               "resource": null,
+               "traversalSpecId": "",
+               "refreshContent": {"refreshContent": false},
+               "isUpdatedView": true,
+               "chartViewItems": ["labels"],
+               "selectFirstRow": {"selectFirstRow": false},
+               "selfProvider": {"selfProvider": false},
+               "title": "Write Latency among VMs",
+               "viewDefinitionId": "86672987-b9a5-4a84-ae90-32be1d92b95e"
+            },
+            "height": 0
+         },
+         {
+            "tabId": "0318e22f-cf52-41b9-bb96-11f746c9a9fc",
+            "collapsed": false,
+            "id": "487c3a13-4d75-48a8-bf41-f47d88d65e8d",
+            "gridsterCoords": {
+               "w": 5,
+               "x": 8,
+               "h": 3,
+               "y": 19
+            },
+            "state": "",
+            "type": "Scoreboard",
+            "title": "Storage Pool: Utilization",
+            "config": {
+               "maxCellCount": 100,
+               "oldMetricValues": false,
+               "relationshipMode": {"relationshipMode": 0},
+               "valueSize": 24,
+               "boxHeight": null,
+               "title": "Storage Pool: Utilization",
+               "showResourceName": {"showResourceName": false},
+               "roundDecimals": 0,
+               "mode": {"layoutMode": "fixedView"},
+               "labelSize": 16,
+               "customFilter": {
+                  "filter": [],
+                  "excludedResources": null,
+                  "includedResources": null
+               },
+               "selfProvider": {"selfProvider": false},
+               "resInteractionMode": null,
+               "visualTheme": 8,
+               "showMetricName": {"showMetricName": true},
+               "refreshInterval": 300,
+               "resource": [],
+               "showDT": {"showDT": false},
+               "refreshContent": {"refreshContent": false},
+               "showMetricUnit": {"showMetricUnit": true},
+               "depth": 1,
+               "metric": {
+                  "mode": "resourceKind",
+                  "resourceMetrics": [],
+                  "resourceKindMetrics": [
+                     {
+                        "yellowBound": null,
+                        "metricUnitId": -1,
+                        "metricName": "DiskI/O|Physical Layer Read Throughput",
+                        "metricKey": "DiskI/O|throughputDevRead",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Storage Pool",
+                        "label": "Read Throughput",
+                        "resourceKindId": "resourceKind:id:0_::_",
+                        "orangeBound": null,
+                        "unit": "Auto",
+                        "id": "extModel16055-1",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricUnitId": -1,
+                        "metricName": "DiskI/O|Physical Layer Write Throughput",
+                        "metricKey": "DiskI/O|throughputDevWrite",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Storage Pool",
+                        "label": "Write Thoughput",
+                        "resourceKindId": "resourceKind:id:0_::_",
+                        "orangeBound": null,
+                        "unit": "Auto",
+                        "id": "extModel16055-2",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricUnitId": "Auto",
+                        "metricName": "DiskI/O|Physical Layer Read IOPS",
+                        "metricKey": "DiskI/O|iopsDevRead",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Storage Pool",
+                        "label": "Read IOPS",
+                        "resourceKindId": "resourceKind:id:0_::_",
+                        "orangeBound": null,
+                        "unit": "Auto",
+                        "id": "extModel16055-3",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricUnitId": "Auto",
+                        "metricName": "DiskI/O|Physical Layer Write IOPS",
+                        "metricKey": "DiskI/O|iopsDevWrite",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Storage Pool",
+                        "label": "Write IOPS",
+                        "resourceKindId": "resourceKind:id:0_::_",
+                        "orangeBound": null,
+                        "unit": "Auto",
+                        "id": "extModel16055-4",
+                        "redBound": null,
+                        "colorMethod": 2
+                     }
+                  ],
+                  "subMode": "resourceKindAll"
+               },
+               "showSparkline": {"showSparkline": true},
+               "boxColumns": 4,
+               "periodLength": "dashboardTime"
+            },
+            "height": 0,
+            "states": [{
+               "value": "b%3A0",
+               "key": "perm_toolbarVisible_widget_0318e22f-cf52-41b9-bb96-11f746c9a9fc_487c3a13-4d75-48a8-bf41-f47d88d65e8d"
+            }]
+         },
+         {
+            "tabId": "0318e22f-cf52-41b9-bb96-11f746c9a9fc",
+            "collapsed": false,
+            "id": "f3de0b1f-9683-4444-9b92-aaff7082cbe1",
+            "gridsterCoords": {
+               "w": 9,
+               "x": 1,
+               "h": 3,
+               "y": 10
+            },
+            "state": "",
+            "type": "Scoreboard",
+            "title": "Utilization",
+            "config": {
+               "maxCellCount": 100,
+               "oldMetricValues": false,
+               "relationshipMode": {"relationshipMode": 0},
+               "valueSize": 24,
+               "boxHeight": null,
+               "title": "Utilization",
+               "showResourceName": {"showResourceName": false},
+               "roundDecimals": 0,
+               "mode": {"layoutMode": "fixedView"},
+               "labelSize": 16,
+               "customFilter": {
+                  "filter": [],
+                  "excludedResources": null,
+                  "includedResources": null
+               },
+               "selfProvider": {"selfProvider": false},
+               "resInteractionMode": null,
+               "visualTheme": 8,
+               "showMetricName": {"showMetricName": true},
+               "refreshInterval": 300,
+               "resource": [],
+               "showDT": {"showDT": false},
+               "refreshContent": {"refreshContent": false},
+               "showMetricUnit": {"showMetricUnit": true},
+               "depth": 1,
+               "metric": {
+                  "mode": "resourceKind",
+                  "resourceMetrics": [],
+                  "resourceKindMetrics": [
+                     {
+                        "yellowBound": null,
+                        "metricUnitId": -1,
+                        "metricName": "vSAN|Performance|Read I/O Size",
+                        "metricKey": "vsan|performance|readiosize",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "Read IO Size",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": null,
+                        "unit": "Auto",
+                        "id": "extModel21940-1",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricName": "vSAN|Performance|Read IOPS",
+                        "metricKey": "vsan|performance|iopsRead",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": null,
+                        "id": "extModel13238-3",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricUnitId": "gbitsps",
+                        "metricName": "vSAN|Performance|Read Throughput",
+                        "metricKey": "vsan|performance|throughputRead",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": null,
+                        "unit": "Gbps",
+                        "id": "extModel13238-1",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricUnitId": -1,
+                        "metricName": "vSAN|Performance|Write I/O Size",
+                        "metricKey": "vsan|performance|writeiosize",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "Write IO Size",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": null,
+                        "unit": "Auto",
+                        "id": "extModel21940-2",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricName": "vSAN|Performance|Write IOPS",
+                        "metricKey": "vsan|performance|iopsWrite",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": null,
+                        "id": "extModel13238-4",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricUnitId": "gbitsps",
+                        "metricName": "vSAN|Performance|Write Throughput",
+                        "metricKey": "vsan|performance|throughputWrite",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": null,
+                        "unit": "Gbps",
+                        "id": "extModel13238-2",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricUnitId": null,
+                        "metricName": "KPI|Max ESA Disk IOPS",
+                        "metricKey": "kpi|esaDiskIops_max",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": null,
+                        "unit": "",
+                        "id": "extModel10343-1",
+                        "redBound": null,
+                        "colorMethod": 2
+                     }
+                  ],
+                  "subMode": "resourceKindAll"
+               },
+               "showSparkline": {"showSparkline": true},
+               "boxColumns": 7,
+               "periodLength": "dashboardTime"
+            },
+            "height": 0
+         },
+         {
+            "tabId": "0318e22f-cf52-41b9-bb96-11f746c9a9fc",
+            "collapsed": false,
+            "id": "0068cf5f-9bb7-4526-b2ee-614c4baf8788",
+            "gridsterCoords": {
+               "w": 8,
+               "x": 5,
+               "h": 3,
+               "y": 22
+            },
+            "state": "",
+            "type": "Scoreboard",
+            "title": "Physical Disk: Contention",
+            "config": {
+               "maxCellCount": 100,
+               "oldMetricValues": false,
+               "relationshipMode": {"relationshipMode": 0},
+               "valueSize": 24,
+               "boxHeight": null,
+               "title": "Physical Disk: Contention",
+               "showResourceName": {"showResourceName": false},
+               "roundDecimals": 0,
+               "mode": {"layoutMode": "fixedView"},
+               "labelSize": 16,
+               "customFilter": {
+                  "filter": [],
+                  "excludedResources": null,
+                  "includedResources": null
+               },
+               "selfProvider": {"selfProvider": false},
+               "resInteractionMode": null,
+               "visualTheme": 8,
+               "showMetricName": {"showMetricName": true},
+               "refreshInterval": 300,
+               "resource": [],
+               "showDT": {"showDT": false},
+               "refreshContent": {"refreshContent": false},
+               "showMetricUnit": {"showMetricUnit": true},
+               "depth": 1,
+               "metric": {
+                  "mode": "resourceKind",
+                  "resourceMetrics": [],
+                  "resourceKindMetrics": [
+                     {
+                        "yellowBound": 5,
+                        "metricUnitId": "msec",
+                        "metricName": "vSAN|Performance|Physical Layer Read Latency",
+                        "metricKey": "vSAN|Performance|latencyDevRead",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN ESA Disk",
+                        "label": "Physical Read Latency",
+                        "resourceKindId": "resourceKind:id:2_::_",
+                        "orangeBound": 10,
+                        "unit": "ms",
+                        "id": "extModel18141-1",
+                        "redBound": 20,
+                        "colorMethod": 0
+                     },
+                     {
+                        "yellowBound": 5,
+                        "metricUnitId": "msec",
+                        "metricName": "vSAN|Performance|Physical Layer Write Latency",
+                        "metricKey": "vSAN|Performance|latencyDevWrite",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN ESA Disk",
+                        "label": "Physical Write Latency",
+                        "resourceKindId": "resourceKind:id:2_::_",
+                        "orangeBound": 10,
+                        "unit": "ms",
+                        "id": "extModel18141-2",
+                        "redBound": 20,
+                        "colorMethod": 0
+                     },
+                     {
+                        "yellowBound": 5,
+                        "metricUnitId": "msec",
+                        "metricName": "vSAN|Performance|vSAN Layer Average Read Latency",
+                        "metricKey": "vSAN|Performance|avgLatReadCapacity",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN ESA Disk",
+                        "label": "vSAN Read Latency",
+                        "resourceKindId": "resourceKind:id:2_::_",
+                        "orangeBound": 10,
+                        "unit": "ms",
+                        "id": "extModel18141-3",
+                        "redBound": 20,
+                        "colorMethod": 0
+                     },
+                     {
+                        "yellowBound": 5,
+                        "metricUnitId": "msec",
+                        "metricName": "vSAN|Performance|vSAN Layer Average Write Latency",
+                        "metricKey": "vSAN|Performance|avgLatWriteCapacity",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN ESA Disk",
+                        "label": "vSAN Write Latency",
+                        "resourceKindId": "resourceKind:id:2_::_",
+                        "orangeBound": 10,
+                        "unit": "ms",
+                        "id": "extModel18141-4",
+                        "redBound": 20,
+                        "colorMethod": 0
+                     },
+                     {
+                        "yellowBound": 5,
+                        "metricUnitId": "msec",
+                        "metricName": "vSAN|Performance|Device Latency",
+                        "metricKey": "vSAN|Performance|latencyDevDAvg",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN ESA Disk",
+                        "label": "Device Latency",
+                        "resourceKindId": "resourceKind:id:2_::_",
+                        "orangeBound": 10,
+                        "unit": "ms",
+                        "id": "extModel18141-6",
+                        "redBound": 20,
+                        "colorMethod": 0
+                     },
+                     {
+                        "yellowBound": 5,
+                        "metricUnitId": "msec",
+                        "metricName": "vSAN|Performance|Guest Latency",
+                        "metricKey": "vSAN|Performance|latencyDevGAvg",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN ESA Disk",
+                        "label": "Guest Latency",
+                        "resourceKindId": "resourceKind:id:2_::_",
+                        "orangeBound": 10,
+                        "unit": "ms",
+                        "id": "extModel18141-7",
+                        "redBound": 20,
+                        "colorMethod": 0
+                     },
+                     {
+                        "yellowBound": 50,
+                        "metricUnitId": null,
+                        "metricName": "vSAN|Health|Congestion Health|Congestion Value",
+                        "metricKey": "vSAN|Health|Congestion Health|Congestion Value",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN ESA Disk",
+                        "label": "Congestion ",
+                        "resourceKindId": "resourceKind:id:2_::_",
+                        "orangeBound": 100,
+                        "unit": "",
+                        "id": "extModel18141-5",
+                        "redBound": 200,
+                        "colorMethod": 0
+                     }
+                  ],
+                  "subMode": "resourceKindAll"
+               },
+               "showSparkline": {"showSparkline": true},
+               "boxColumns": 7,
+               "periodLength": "dashboardTime"
+            },
+            "height": 0
+         },
+         {
+            "tabId": "0318e22f-cf52-41b9-bb96-11f746c9a9fc",
+            "collapsed": false,
+            "id": "0d57e7e1-c44a-4e8b-874d-471c5c62d530",
+            "gridsterCoords": {
+               "w": 9,
+               "x": 1,
+               "h": 3,
+               "y": 7
+            },
+            "state": "",
+            "type": "Scoreboard",
+            "title": "Contention",
+            "config": {
+               "maxCellCount": 100,
+               "oldMetricValues": false,
+               "relationshipMode": {"relationshipMode": 0},
+               "valueSize": 24,
+               "boxHeight": null,
+               "title": "Contention",
+               "showResourceName": {"showResourceName": false},
+               "roundDecimals": 0,
+               "mode": {"layoutMode": "fixedView"},
+               "labelSize": 16,
+               "customFilter": {
+                  "filter": [],
+                  "excludedResources": null,
+                  "includedResources": null
+               },
+               "selfProvider": {"selfProvider": false},
+               "resInteractionMode": null,
+               "visualTheme": 8,
+               "showMetricName": {"showMetricName": true},
+               "refreshInterval": 300,
+               "resource": [],
+               "showDT": {"showDT": false},
+               "refreshContent": {"refreshContent": false},
+               "showMetricUnit": {"showMetricUnit": true},
+               "depth": 1,
+               "metric": {
+                  "mode": "resourceKind",
+                  "resourceMetrics": [],
+                  "resourceKindMetrics": [
+                     {
+                        "yellowBound": 10,
+                        "metricUnitId": "msec",
+                        "metricName": "Summary|Worst VM Disk Latency",
+                        "metricKey": "summary|worst_vm_disk_latency",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "VM Disk Latency",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": 20,
+                        "unit": "ms",
+                        "id": "extModel4196-1",
+                        "redBound": 40,
+                        "colorMethod": 0
+                     },
+                     {
+                        "yellowBound": 5,
+                        "metricUnitId": "msec",
+                        "metricName": "KPI|Max ESA Disk Latency",
+                        "metricKey": "kpi|esaDiskLatency_max",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "Physical Disk Latency",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": 10,
+                        "unit": "ms",
+                        "id": "extModel7785-1",
+                        "redBound": 20,
+                        "colorMethod": 0
+                     },
+                     {
+                        "yellowBound": 5,
+                        "metricUnitId": -1,
+                        "metricName": "vSAN|Performance|Read Latency",
+                        "metricKey": "vsan|performance|latencyAvgRead",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "Read Latency",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": 10,
+                        "unit": "Auto",
+                        "id": "extModel21227-3",
+                        "redBound": 20,
+                        "colorMethod": 0
+                     },
+                     {
+                        "yellowBound": 5,
+                        "metricUnitId": -1,
+                        "metricName": "vSAN|Performance|Write Latency",
+                        "metricKey": "vsan|performance|latencyAvgWrite",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "Write Latency",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": 10,
+                        "unit": "Auto",
+                        "id": "extModel21227-4",
+                        "redBound": 20,
+                        "colorMethod": 0
+                     },
+                     {
+                        "yellowBound": 10,
+                        "metricUnitId": null,
+                        "metricName": "vSAN|Performance|Outstanding I/O",
+                        "metricKey": "vsan|performance|oio",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "Outstanding I/O",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": 20,
+                        "unit": "",
+                        "id": "extModel21227-2",
+                        "redBound": 40,
+                        "colorMethod": 0
+                     },
+                     {
+                        "yellowBound": 60,
+                        "metricUnitId": null,
+                        "metricName": "vSAN|Performance|Congestion",
+                        "metricKey": "vsan|performance|congestion",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "Congestion",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": 100,
+                        "unit": "",
+                        "id": "extModel21227-1",
+                        "redBound": 150,
+                        "colorMethod": 0
+                     }
+                  ],
+                  "subMode": "resourceKindAll"
+               },
+               "showSparkline": {"showSparkline": true},
+               "boxColumns": 6,
+               "periodLength": "dashboardTime"
+            },
+            "height": 0
+         },
+         {
+            "tabId": "0318e22f-cf52-41b9-bb96-11f746c9a9fc",
+            "collapsed": false,
+            "id": "84571546-1d04-4364-abc5-808617970514",
+            "gridsterCoords": {
+               "w": 6,
+               "x": 7,
+               "h": 3,
+               "y": 13
+            },
+            "state": "",
+            "type": "Scoreboard",
+            "title": "Relevant Properties",
+            "config": {
+               "maxCellCount": 100,
+               "oldMetricValues": false,
+               "relationshipMode": {"relationshipMode": 0},
+               "valueSize": 14,
+               "boxHeight": null,
+               "title": "Relevant Properties",
+               "showResourceName": {"showResourceName": false},
+               "roundDecimals": 0,
+               "mode": {"layoutMode": "fixedSize"},
+               "labelSize": 12,
+               "customFilter": {
+                  "filter": [],
+                  "excludedResources": null,
+                  "includedResources": null
+               },
+               "selfProvider": {"selfProvider": false},
+               "resInteractionMode": null,
+               "visualTheme": 4,
+               "showMetricName": {"showMetricName": true},
+               "refreshInterval": 300,
+               "resource": [],
+               "showDT": {"showDT": true},
+               "refreshContent": {"refreshContent": false},
+               "showMetricUnit": {"showMetricUnit": true},
+               "depth": 1,
+               "metric": {
+                  "mode": "resourceKind",
+                  "resourceMetrics": [],
+                  "resourceKindMetrics": [
+                     {
+                        "yellowBound": null,
+                        "metricName": "Configuration|vSAN|Deduplication and Compression",
+                        "metricKey": "Configuration|vSAN|deduplicationAndCompressionEnabled",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": true,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": null,
+                        "id": "extModel28408-2",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricName": "Configuration|vSAN|Encryption",
+                        "metricKey": "Configuration|vSAN|encryption",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": true,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": null,
+                        "id": "extModel28408-3",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricName": "Configuration|vSAN|Stretched Cluster",
+                        "metricKey": "Configuration|vSAN|stretchedCluster",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": true,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": null,
+                        "id": "extModel28408-5",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricName": "Configuration|vSAN|Reservations|Operations Reserve",
+                        "metricKey": "Configuration|vSAN|reservations|operationsReserve",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": true,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": null,
+                        "id": "extModel28408-7",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricName": "Configuration|vSAN|Reservations|Host Rebuild Reserve",
+                        "metricKey": "Configuration|vSAN|reservations|hostRebuildReserve",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": true,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": null,
+                        "id": "extModel28408-8",
+                        "redBound": null,
+                        "colorMethod": 2
+                     }
+                  ],
+                  "subMode": "resourceKindAll"
+               },
+               "showSparkline": {"showSparkline": false},
+               "boxColumns": 3,
+               "periodLength": null
+            },
+            "height": 0
+         },
+         {
+            "tabId": "0318e22f-cf52-41b9-bb96-11f746c9a9fc",
+            "collapsed": false,
+            "id": "0b3fb30f-d7a9-4c32-bb21-8a4faf9d8464",
+            "gridsterCoords": {
+               "w": 6,
+               "x": 1,
+               "h": 3,
+               "y": 13
+            },
+            "state": "",
+            "type": "Scoreboard",
+            "title": "Configuration",
+            "config": {
+               "maxCellCount": 100,
+               "oldMetricValues": false,
+               "relationshipMode": {"relationshipMode": 0},
+               "valueSize": 14,
+               "boxHeight": null,
+               "title": "Configuration",
+               "showResourceName": {"showResourceName": false},
+               "roundDecimals": 0,
+               "mode": {"layoutMode": "fixedSize"},
+               "labelSize": 12,
+               "customFilter": {
+                  "filter": [],
+                  "excludedResources": null,
+                  "includedResources": null
+               },
+               "selfProvider": {"selfProvider": false},
+               "resInteractionMode": null,
+               "visualTheme": 4,
+               "showMetricName": {"showMetricName": true},
+               "refreshInterval": 300,
+               "resource": [],
+               "showDT": {"showDT": true},
+               "refreshContent": {"refreshContent": false},
+               "showMetricUnit": {"showMetricUnit": true},
+               "depth": 1,
+               "metric": {
+                  "mode": "resourceKind",
+                  "resourceMetrics": [],
+                  "resourceKindMetrics": [
+                     {
+                        "yellowBound": null,
+                        "metricName": "Configuration|vSAN|vSAN Configuration",
+                        "metricKey": "Configuration|vSAN|vSANConfiguration",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": true,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": null,
+                        "id": "extModel28408-6",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricUnitId": null,
+                        "metricName": "Summary|Number of Hosts",
+                        "metricKey": "summary|total_number_hosts",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "ESXi",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": null,
+                        "unit": "",
+                        "id": "extModel34579-4",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricUnitId": null,
+                        "metricName": "Summary|Number of VMs",
+                        "metricKey": "summary|total_number_vms",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "Total VMs",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": null,
+                        "unit": "",
+                        "id": "extModel34579-5",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricUnitId": null,
+                        "metricName": "Summary|Number of Storage Pools",
+                        "metricKey": "summary|total_number_storage_pools",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "Storage Pools",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": null,
+                        "unit": "",
+                        "id": "extModel16131-1",
+                        "redBound": null,
+                        "colorMethod": 2
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricUnitId": null,
+                        "metricName": "Summary|Number of ESA Disks",
+                        "metricKey": "summary|total_number_esa_disks",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "isStringMetric": false,
+                        "resourceKindName": "vSAN Cluster",
+                        "label": "Physical Disks",
+                        "resourceKindId": "resourceKind:id:1_::_",
+                        "orangeBound": null,
+                        "unit": "",
+                        "id": "extModel16131-2",
+                        "redBound": null,
+                        "colorMethod": 2
+                     }
+                  ],
+                  "subMode": "resourceKindAll"
+               },
+               "showSparkline": {"showSparkline": false},
+               "boxColumns": 3,
+               "periodLength": null
+            },
+            "height": 0
+         },
+         {
+            "tabId": "0318e22f-cf52-41b9-bb96-11f746c9a9fc",
+            "collapsed": false,
+            "id": "7fa1dde3-104d-4f02-b879-cd190de7b8c1",
+            "gridsterCoords": {
+               "w": 1,
+               "x": 1,
+               "h": 6,
+               "y": 28
+            },
+            "state": "",
+            "type": "TextDisplay",
+            "title": "Read Me",
+            "config": {
+               "locationFile": "",
+               "locationUrl": "ContentPack/VirtualAndPhysicalSANAdapter/conf/pages/osa_performance/index.html?locale=%locale%",
+               "editorData": "",
+               "refreshInterval": 300,
+               "refreshContent": {"refreshContent": false},
+               "title": "Read Me",
+               "viewModeHTML": true
+            },
+            "height": 0
+         }
+      ],
+      "states": [{
+         "value": "o%3AdateRange%3Ds%253Alast6Hour%5EdateRangeText%3Ds%253A6H",
+         "key": "permDashboardTime_dashboard_0318e22f-cf52-41b9-bb96-11f746c9a9fc"
+      }],
+      "editAllowed": true,
+      "homeTab": true,
+      "rank": 0,
+      "disabled": false,
+      "id": "0318e22f-cf52-41b9-bb96-11f746c9a9fc",
+      "adapterName": "Management Pack for Storage Area Network",
+      "locked": false,
+      "dashboardNavigations": {
+         "132f8c1d-05fe-4c1a-8e5a-6b8478a58f86": [{
+            "id": "533e14ed-2796-4ead-a644-468beb6396f8",
+            "widgets": [{
+               "interactionType": "resourceId",
+               "id": "67bac823-de3f-4be1-9838-1445f70e8bac"
+            }]
+         }],
+         "4dd29c2b-0a53-49b1-817e-eb8e6df3a965": [
+            {
+               "id": "a10e7aaa-8fa7-4373-8ebb-87a9cc7daaec",
+               "widgets": [{
+                  "interactionType": "resourceId",
+                  "id": "584b09f3-b41a-4634-896f-9f3eceba017b"
+               }]
+            },
+            {
+               "id": "50b6bce2-bb88-4fe4-b7ce-a1a5fbf7faa3",
+               "widgets": [{
+                  "interactionType": "resourceId",
+                  "id": "9a0a2a3e-7b2c-4015-b2e0-683e0deae592"
+               }]
+            }
+         ]
+      },
+      "widgetInteractions": [
+         {
+            "widgetIdProvider": "4dd29c2b-0a53-49b1-817e-eb8e6df3a965",
+            "type": "resourceId",
+            "widgetIdReceiver": "f3de0b1f-9683-4444-9b92-aaff7082cbe1"
+         },
+         {
+            "widgetIdProvider": "4dd29c2b-0a53-49b1-817e-eb8e6df3a965",
+            "type": "resourceId",
+            "widgetIdReceiver": "0d57e7e1-c44a-4e8b-874d-471c5c62d530"
+         },
+         {
+            "widgetIdProvider": "4dd29c2b-0a53-49b1-817e-eb8e6df3a965",
+            "type": "resourceId",
+            "widgetIdReceiver": "84571546-1d04-4364-abc5-808617970514"
+         },
+         {
+            "widgetIdProvider": "4dd29c2b-0a53-49b1-817e-eb8e6df3a965",
+            "type": "resourceId",
+            "widgetIdReceiver": "b76e92df-f338-496d-85e0-e4538d431af0"
+         },
+         {
+            "widgetIdProvider": "b76e92df-f338-496d-85e0-e4538d431af0",
+            "type": "resourceId",
+            "widgetIdReceiver": "0068cf5f-9bb7-4526-b2ee-614c4baf8788"
+         },
+         {
+            "widgetIdProvider": "4dd29c2b-0a53-49b1-817e-eb8e6df3a965",
+            "type": "resourceId",
+            "widgetIdReceiver": "dbd58be1-5683-40c3-8f73-d5a5dd4b3480"
+         },
+         {
+            "widgetIdProvider": "dbd58be1-5683-40c3-8f73-d5a5dd4b3480",
+            "type": "resourceId",
+            "widgetIdReceiver": "487c3a13-4d75-48a8-bf41-f47d88d65e8d"
+         },
+         {
+            "widgetIdProvider": "dbd58be1-5683-40c3-8f73-d5a5dd4b3480",
+            "type": "resourceId",
+            "widgetIdReceiver": "73a2142a-ac45-4b6c-a63c-4027261ce063"
+         },
+         {
+            "widgetIdProvider": "4dd29c2b-0a53-49b1-817e-eb8e6df3a965",
+            "type": "resourceId",
+            "widgetIdReceiver": "0b3fb30f-d7a9-4c32-bb21-8a4faf9d8464"
+         },
+         {
+            "widgetIdProvider": "4dd29c2b-0a53-49b1-817e-eb8e6df3a965",
+            "type": "resourceId",
+            "widgetIdReceiver": "90ff0b1c-91e9-4cc7-abf0-48535f56e4a7"
+         },
+         {
+            "widgetIdProvider": "b76e92df-f338-496d-85e0-e4538d431af0",
+            "type": "resourceId",
+            "widgetIdReceiver": "8b6b667f-b18a-4145-83b4-29c894f52cb2"
+         },
+         {
+            "widgetIdProvider": "dbd58be1-5683-40c3-8f73-d5a5dd4b3480",
+            "type": "resourceId",
+            "widgetIdReceiver": "b76e92df-f338-496d-85e0-e4538d431af0"
+         },
+         {
+            "widgetIdProvider": "4dd29c2b-0a53-49b1-817e-eb8e6df3a965",
+            "type": "resourceId",
+            "widgetIdReceiver": "f377d58a-d467-410e-b04d-a6ae98799e0a"
+         },
+         {
+            "widgetIdProvider": "4dd29c2b-0a53-49b1-817e-eb8e6df3a965",
+            "type": "resourceId",
+            "widgetIdReceiver": "5996b4b1-37c4-4ea4-821d-d0ebc9c45575"
+         },
+         {
+            "widgetIdProvider": "4dd29c2b-0a53-49b1-817e-eb8e6df3a965",
+            "type": "resourceId",
+            "widgetIdReceiver": "132f8c1d-05fe-4c1a-8e5a-6b8478a58f86"
+         }
+      ],
+      "namePath": "Performance/Provider",
+      "lastUpdateUserId": "833b693b-0960-4d05-b868-f14446488fc3",
+      "docCenterKey": "vcom_637",
+      "columnCount": 1,
+      "userId": "833b693b-0960-4d05-b868-f14446488fc3",
+      "name": "Performance/Provider/vSAN ESA Performance",
+      "gridsterMaxColumns": 12,
+      "lastUpdateTime": 1790204147144
+   }],
+   "uuid": "6c646a0f-4c21-4a7f-a5ad-a643a5a2a06c"
+}

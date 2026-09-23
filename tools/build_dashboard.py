@@ -177,17 +177,96 @@ def write(doc, name):
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
         z.writestr("dashboard/dashboard.json", json.dumps(doc, indent=1))
     db = doc["dashboards"][0]
-    kinds = {w["config"]["configs"][0]["attributeKind"]["value"]
-             for w in db["widgets"] if w["type"] == "Heatmap"}
     print(f"  {out}")
     print(f"    {len(db['widgets'])} widgets "
-          f"({sum(1 for w in db['widgets'] if w['type']=='Heatmap')} heatmaps, "
+          f"({sum(1 for w in db['widgets'] if w['type']=='Scoreboard')} scoreboards, "
           f"{sum(1 for w in db['widgets'] if w['type']=='TextDisplay')} text)")
     for w in db["widgets"]:
-        if w["type"] == "Heatmap":
-            m = w["config"]["configs"][0]["colorBy"]["value"]
-            print(f"      {m:20} {metric_labels.LABELS.get(m, m)[:44]}")
+        if w["type"] == "Scoreboard":
+            for e in w["config"]["metric"]["resourceKindMetrics"]:
+                print(f"      {e['metricKey']:20} {e['resourceKindName'][:36]}")
+
+
+# ---------------------------------------------------------------------------
+# Scoreboard — the widget Broadcom's own vSAN dashboards use for this job.
+# Pattern taken from docs/assets/dashboard.broadcom-vsan-esa.json.
+#
+# Note resourceKindId is the literal placeholder "resourceKind:id:0_::_", NOT
+# the 002<len><adapterKind><resourceKind> encoding used by MetricChart and
+# Heatmap groupBy. The kind is identified by resourceKindName instead.
+
+
+def scoreboard(dash_id, title, resource_kind_name, metrics, x, y, w=4, h=5,
+               self_provider=True):
+    """metrics: list of (metricKey, label, yellow, orange, red)."""
+    wid = str(uuid.uuid4())
+    entries = []
+    for i, (key, label, yb, ob, rb) in enumerate(metrics):
+        entries.append({
+            "metricKey": key, "metricName": label, "label": label,
+            "resourceKindName": resource_kind_name,
+            "resourceKindId": "resourceKind:id:0_::_",
+            "yellowBound": yb, "orangeBound": ob, "redBound": rb,
+            "colorMethod": 0, "handleOldColoring": False,
+            "isStringMetric": False, "link": "", "unit": "",
+            "metricUnitId": None, "id": f"extModel-{wid[:6]}-{i}",
+        })
+    return {
+        "tabId": dash_id, "id": wid, "type": "Scoreboard", "title": title,
+        "collapsed": False, "state": "", "height": 0,
+        "gridsterCoords": {"x": x, "y": y, "w": w, "h": h},
+        "config": {
+            "title": title, "widgetId": wid, "refreshInterval": 300,
+            "metric": {"mode": "resourceKind", "resourceMetrics": [],
+                       "resourceKindMetrics": entries},
+            "selfProvider": {"selfProvider": self_provider},
+            "mode": {"layoutMode": "fixedView"},
+            "maxCellCount": 100, "oldMetricValues": False,
+            "relationshipMode": {"relationshipMode": 0},
+            "valueSize": 24, "labelSize": 16, "roundDecimals": 0,
+            "boxHeight": None, "visualTheme": 8, "depth": 1,
+            "showResourceName": {"showResourceName": True},
+            "showMetricName": {"showMetricName": True},
+            "showMetricUnit": {"showMetricUnit": True},
+            "showDT": {"showDT": False},
+            "refreshContent": {"refreshContent": False},
+            "customFilter": {"filter": [], "excludedResources": None,
+                             "includedResources": None},
+            "resource": [], "resInteractionMode": None,
+        },
+    }
+
+
+def kind_label(resource_kind):
+    """Human name Operations shows for one of our resource kinds."""
+    for spec in perfsvc_model.ENTITIES.values():
+        if spec["kind"] == resource_kind:
+            return spec["label"]
+    raise SystemExit(f"unknown kind {resource_kind}")
+
+
+def probe():
+    """Three widgets only. Cheap to import, proves or disproves the bindings."""
+    def widgets(did):
+        for m in ("rxMissErr", "rxCrcErr", "portRxDrops"):
+            validate("VsanPnic", m)
+        return [
+            text(did, "Probe", "<p>If the panel below shows values per vmnic, "
+                               "the Scoreboard binding is correct.</p>", 1, 1, w=12, h=3),
+            scoreboard(did, "pNIC errors (probe)", kind_label("VsanPnic"), [
+                ("rxMissErr",   "RX missed errors (ring full)", 1, 5, 10),
+                ("rxCrcErr",    "RX CRC errors",                1, 5, 10),
+                ("portRxDrops", "vSwitch RX drops (per-mille)", 1, 5, 10),
+            ], 1, 4, w=6, h=6),
+            scoreboard(did, "Host network (probe)", kind_label("VsanHostNet"), [
+                ("tcpTxRexmitRate", "TCP retransmit rate", 1, 5, 10),
+                ("tcpRxErrRate",    "TCP RX error rate",   1, 5, 10),
+            ], 7, 4, w=6, h=6),
+        ]
+    return dashboard("vSAN Rapid — binding probe",
+                     "Three widgets to verify Scoreboard bindings. Safe to delete.",
+                     widgets)
 
 
 if __name__ == "__main__":
-    write(network_rapid(), "vsan-network-rapid")
+    write(probe(), "vsan-rapid-probe")
