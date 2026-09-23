@@ -97,16 +97,49 @@ have cost.
 credentials anyway loses little by also using them for metrics, and gains a
 credential that does not evaporate daily.
 
-## Open decisions
+## Decision, 2026-09-23: Performance Service only
 
-1. **Ship both collectors at once, or perfsvc first and keep the host scrape
-   as-is?** Both is more work; perfsvc-first gets the network depth soonest.
-2. **One adapter instance or two?** One instance holding both credentials is
-   simpler to operate; two makes the failure domains independent and lets a
-   site run host-only where vCenter access is not granted.
-3. **Is the host scrape worth keeping at all**, given it costs a fragile
-   credential for 308 metrics that are mostly deep diagnostics? A defensible
-   position is perfsvc-only, accepting the loss.
+**One source. Never two gathering points for the same metric.**
+
+That rule matters more than the coverage arithmetic above. Two collectors
+producing the same metric means two sampling intervals, two rounding
+behaviours, two failure modes and a reconciliation problem every time they
+disagree - and they will disagree, because perfsvc reduces to fixed 5-minute
+buckets and the host returns raw counters over whatever interval we choose.
+Nobody would be able to say which number was right.
+
+So: **perfsvc is the collection source.** The host scrape is archived and
+deactivated rather than deleted.
+
+### What that costs, explicitly
+
+Roughly 308 metrics that perfsvc covers thinly or not at all - ESA splinter
+internals, DOM depth, the 62-way memory breakdown, CMMDS workload, heaps and
+slabs. That loss is accepted, not overlooked.
+
+### What it buys
+
+* A credential that does not evaporate. The bearer token was removed from the
+  cluster profile list twice inside 24 hours, cannot be read back through the
+  API, and belongs to a subscription we never registered.
+* Deeper networking. `vsan-tcpip-stats` returns 32 metrics against our 11,
+  including TCP errors, ECN, zero-window and half-open drops.
+* Cluster-level entities and rollups that we were going to have to build
+  supermetrics for.
+* No dependency on a host-side endpoint whose subscription semantics we still
+  do not fully understand.
+
+### Host gathering logic
+
+Preserved, deactivated, clearly marked. "We may pull host stats later" applies
+specifically to the families perfsvc does not serve - heaps, slabs, CMMDS
+workload, memory detail, ESA internals. If that happens, those families come
+back as *additional* metrics, never as a second source for something perfsvc
+already provides.
+
+Nothing is deleted. `app/vsanmetrics.py`, `app/model.py` and the exposition
+captures stay in the tree and stay tested, so reviving a family is a routing
+change rather than an archaeology exercise.
 
 ## Not decided by this document
 
