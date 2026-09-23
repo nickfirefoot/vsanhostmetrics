@@ -285,3 +285,66 @@ value observed was 0, so it could not be settled by measurement.
 Resolving this properly means adjudicating per metric against non-zero observed
 values, preferring the official *description* over the graph unit. Worth doing
 before any alert definition depends on a threshold.
+
+## Counter vs rate, and the per-mille problem
+
+Two related questions settled by measurement 2026-09-23, and one left open
+because it needs a decision rather than more data.
+
+### `*Raw` is the only cumulative family
+
+Classified 194 (entity, metric) series over an hour, 13 samples each, asking
+which are monotonic non-decreasing *and* rising. Exactly three qualify, all
+`*Raw`:
+
+```
+rxPktRaw        347,383,079 -> 351,537,162     strictly rising
+txPktRaw        296,590,389 -> 300,723,244     strictly rising
+pauseCountRaw           222 -> 224             steps, never falls
+```
+
+Everything else is per-interval. `portRxDrops` in particular is **not** a
+counter -- one vmnic read `1,1,0,0,0,1,0,0,0,1,0,1`, which falls. It is
+officially "Inbound Packet Drop Rate of vSwitch Port", described as a
+percentage, so non-monotonic is exactly right.
+
+Consequence: the `*Raw` metrics are cumulative since driver load and are
+currently defined as plain gauges, so a dashboard plots an ever-rising line.
+They need either a rate derivation or an explicit note. The rest of the model's
+"everything is a gauge" assumption is confirmed correct.
+
+Note also: **wildcard queries are capped at one hour.** A longer range raises
+`com.vmware.vsan.perfsvc.fault.queryperf.wildcardqueryrange`. Collection uses a
+15-minute window so it is unaffected, but any backfill or analysis tooling has
+to page.
+
+### Ratios are per-mille and the SDK has no unit for it
+
+Confirmed independently, twice:
+
+- `tcpRcvdupackRate` read 1-2 from perfsvc where the host `/vsanmetrics` scrape
+  measured 0.122% for the same thing -- recorded in `app/constants.py`.
+- The schema's graph unit says `permille` for these metrics, while their
+  official *descriptions* say "Percentage of ...". The descriptions are loose;
+  the values agree with per-mille.
+
+**`aria.ops.definition.units.Units.RATIO` has only `PERCENT`.** There is no
+per-mille unit, so there are three options and all have a cost:
+
+1. Leave unitless -- a value of 1 means 0.1% and nothing says so. Current
+   behavior.
+2. Declare `RATIO.PERCENT` -- wrong by 10x, and Operations renders it
+   confidently. Worst option.
+3. Divide by 10 at collection and declare `RATIO.PERCENT` -- correct and
+   unambiguous, but the adapter then reports a different number than the
+   Performance Service does, which will confuse anyone cross-checking against
+   the vSphere UI.
+
+Option 3 is probably right, but it changes emitted values and directly affects
+any threshold written against these metrics, so it is a deliberate decision
+rather than a cleanup. `THRESHOLDS` in `app/constants.py` already carries the
+"divide by 10" caveat and would be simplified by it.
+
+Affected metrics are those whose official description begins "Percentage of"
+-- `portRxDrops`, `portTxDrops`, `pauseCount`, `rxPacketsLossRate`,
+`txPacketsLossRate`, `tcpRcvdupackRate` and the other `*Rate` ratios.
