@@ -257,3 +257,31 @@ fabric from a failing NIC.
 and the precise meaning varies by vendor. It is the best available signal, but
 it is an interpretation -- worth confirming against a driver that documents it
 before an alert definition depends on the exact wording.
+
+## Unit conflicts between the two authorities
+
+The Performance Service schema carries a `unit` (`time_ms`, `rate_bytes`,
+`permille`, `number`, ...). It disagrees with our HCIBench-derived units on
+**34 of the 60 metrics where both have an opinion**. Checked against live
+values 2026-09-23, and the schema is wrong in the cases that could be
+adjudicated:
+
+| Metric | Ours | Schema | Observed | Verdict |
+|---|---|---|---|---|
+| `latencyAvgRead` | microseconds | `time_ms` | 589 | ours -- 589 ms on an idle NVMe cluster is absurd; 0.59 ms is right |
+| `rxSbSpaceMin` | bytes | `rate_bytes` | 8,286,980 | ours -- an 8 MB socket buffer, not 8 MB/s. The official *name* says "Bytes" and contradicts its own graph unit |
+| `portRxDrops` | none | `permille` | 0,0,1,1 | schema doubtful -- small integers read as counts |
+
+The cause is structural: **`unit` hangs off the graph, not the metric**, and a
+graph mixes metric kinds. So it describes an axis, not a series, and bulk
+applying it would have introduced a 1000x error across 20+ latency metrics.
+
+But it is not uniformly wrong, which is why this is a backlog item and not a
+closed question. `pauseCount` is officially "pNic 802.3x Pause Rate", described
+as *"Percentage of Physical NIC 802.3x Pause Rate"* -- so the id says count,
+the metric is a rate, and the schema's `permille` is probably right. Every
+value observed was 0, so it could not be settled by measurement.
+
+Resolving this properly means adjudicating per metric against non-zero observed
+values, preferring the official *description* over the graph unit. Worth doing
+before any alert definition depends on a threshold.

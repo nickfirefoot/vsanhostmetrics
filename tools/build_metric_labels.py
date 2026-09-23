@@ -138,12 +138,15 @@ def _expand(token: str) -> str:
 
 # Metrics whose meaning the token rules cannot reach. Keep this small: every
 # entry is a hand-maintained claim that has to stay true.
+# These outrank even the official schema name, so keep the list short and the
+# reason explicit: each one adds meaning the official name leaves out.
 OVERRIDE = {
-    # The NIC ring buffer had no free descriptor, so the packet was dropped
-    # before the driver ever saw it. Distinct from rxDrp (dropped higher up)
-    # and from rxErr (arrived damaged), and the single most useful counter for
-    # "is this NIC being overrun".
-    "rxMissErr": "RX missed errors (ring buffer full)",
+    # Official name is "pNIC RX Missed Error", which does not say what was
+    # missed. The NIC ring buffer had no free descriptor, so the packet was
+    # dropped before the driver ever saw it -- distinct from rxDrp (dropped
+    # higher up) and rxErr (arrived damaged), and the single most useful
+    # counter for "is this NIC being overrun".
+    "rxMissErr": "pNIC RX missed error (ring buffer full)",
 }
 OVERRIDE.update({f"{k}Actual": f"{v} (actual)" for k, v in list(OVERRIDE.items())})
 OVERRIDE.update({f"{k}Raw": f"{v} (raw)" for k, v in list(OVERRIDE.items())
@@ -170,16 +173,41 @@ def label_for(metric: str) -> str:
     return text
 
 
+def official_names(path="docs/assets/perfsvc_schema.json"):
+    """Broadcom's own metric names, harvested from the Performance Service.
+
+    These beat anything derived from the id, and sometimes contradict it:
+    `pauseCount` is officially "pNic 802.3x Pause Rate", described as a
+    percentage -- so the id says count and the metric is a rate. No token rule
+    could ever recover that.
+
+    Only `name` and `description` are taken. The schema's `unit` hangs off the
+    graph rather than the metric; see tools/build_metric_reference.py.
+    """
+    try:
+        raw = json.load(open(path))
+    except FileNotFoundError:
+        return {}
+    out = {}
+    for metrics in raw.values():
+        for mid, d in metrics.items():
+            if d.get("name"):
+                out.setdefault(mid, d["name"].strip())
+    return out
+
+
 def main() -> None:
     hcib = json.load(open(sys.argv[1])) if len(sys.argv) > 1 else {}
     sys.path.insert(0, "app")
     import perfsvc_model as P
+    official = official_names()
 
     metrics = sorted({m for d in P.ENTITIES.values() for m in d["metrics"]})
     labels, units = {}, {}
     stats = collections.Counter()
     for m in metrics:
-        labels[m] = label_for(m)
+        # hand-curated > Broadcom's own > derived from the id
+        labels[m] = OVERRIDE.get(m) or official.get(m) or label_for(m)
         raw = (hcib.get(m) or {}).get("unit", "")
         # *Actual twins carry the same unit as their base metric
         if not raw and m.endswith("Actual"):
@@ -211,6 +239,7 @@ def main() -> None:
         fh.write("}\n")
 
     print(f"  {len(metrics)} metrics")
+    print(f"  official names used: {sum(1 for m in metrics if m in official)}")
     print(f"  units resolved: {len(units)} ({100*len(units)/len(metrics):.0f}%)")
     print(f"  source units: {dict(stats.most_common(8))}")
     print("  wrote app/metric_labels.py")

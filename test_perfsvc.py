@@ -169,7 +169,9 @@ def test_labels_are_not_just_the_camelcase_id():
     """The point of the generated labels is that they say more than the id
     does -- txSbSpaceMin must not render as "Tx sb space min"."""
     import metric_labels
-    assert metric_labels.LABELS["txSbSpaceMin"] == "TX socket buffer space (min)"
+    # Broadcom's own name, which independently confirms the unit: "Bytes", not
+    # the rate_bytes the schema's graph-level unit claims.
+    assert metric_labels.LABELS["txSbSpaceMin"] == "RDT Network Socket Min Outbound Bytes"
     assert metric_labels.UNITS["txSbSpaceMin"] == "DATA_SIZE.BYTE"
     assert metric_labels.UNITS["tcpRxThroughput"] == "DATA_RATE.BIBYTE_PER_SECOND"
 
@@ -216,15 +218,24 @@ def test_disk_label_passes_through_unrecognized_names():
 def test_nic_error_counters_are_readable():
     """These are the grey-state signals for a failing NIC or link -- the ones
     a rapid dashboard shows -- so they are the labels that must not stay
-    cryptic.  "RX lgt err" tells an operator nothing."""
+    cryptic.  "RX lgt err" tells an operator nothing.
+
+    Three sources feed these, in precedence order, and all three appear here:
+    a curated override, Broadcom's own schema name, and our derived label for
+    metrics the schema does not document."""
     import metric_labels as ml
+    # Curated: the official name omits what was missed.
+    assert ml.LABELS["rxMissErr"] == "pNIC RX missed error (ring buffer full)"
+    # Official: documented in the Performance Service schema.
+    assert ml.LABELS["rxCrcErr"] == "pNIC RX CRC Error"
+    assert ml.LABELS["txCarErr"] == "pNIC TX Carrier Error"
+    # Derived: undocumented upstream, so our token rules have to carry it.
     assert ml.LABELS["rxLgtErr"] == "RX length errors"
-    assert ml.LABELS["txCarErr"] == "TX carrier errors"
     assert ml.LABELS["rxFrmErr"] == "RX frame alignment errors"
-    assert ml.LABELS["pfcCount"] == "PFC count"
     assert ml.LABELS["ioChainRxdrops"] == "IO chain RX drops"
-    # The ring-buffer-full counter, distinct from rxDrp and rxErr.
-    assert ml.LABELS["rxMissErr"] == "RX missed errors (ring buffer full)"
+    # Whatever the source, none of them may leave a bare abbreviation.
+    for key in ("rxLgtErr", "txCarErr", "rxFrmErr", "rxMissErr", "rxCrcErr"):
+        assert " err" not in ml.LABELS[key].lower().replace(" error", ""), key
 
 
 def test_cache_miss_is_not_pluralised_into_missed():
