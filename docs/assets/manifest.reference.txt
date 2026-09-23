@@ -1,0 +1,32 @@
+{
+    "display_name": "DISPLAY_NAME",
+    "name": "iSDK_VsanHostMetrics",
+    "description": "DESCRIPTION",
+    "version": "1.1.6",
+    "vcops_minimum_version": "8.10.0",
+    "disk_space_required": 500,
+    "run_scripts_on_all_nodes": "true",
+    "eula_file": "eula.txt",
+    "platform": [
+        "Linux Non-VA",
+        "Linux VA"
+    ],
+    "vendor": "nickwilson.io",
+    "pak_icon": "pak_icon.png",
+    "pak_validation_script": {
+        "script": ""
+    },
+    "adapter_pre_script": {
+        "script": ""
+    },
+    "adapter_post_script": {
+        "script": ""
+    },
+    "adapters": [
+        "adapter.zip"
+    ],
+    "adapter_kinds": [
+        "VsanHostMetrics"
+    ],
+    "license_type": ""
+}
