@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>vSAN Network Rapid — how to read this</title>
+<style>
+ body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 13px;
+        line-height: 1.5; color: #d0d0d0; background: transparent; margin: 0; padding: 4px 8px; }
+ h3 { margin: 0 0 8px; font-size: 15px; color: #f0f0f0; }
+ p { margin: 0 0 8px; } code { background: #2a2a2a; padding: 1px 4px; border-radius: 3px; }
+ a { color: #4db4ff; } b { color: #fff; }
+</style></head><body>
+
+<h3>Network rapid &mdash; is a NIC or link bad right now?</h3>
+<p>This screen catches <b>grey-state failure</b>: partial degradation that
+leaves everything nominally up. A NIC dropping 0.1% of frames still moves
+traffic at line rate, so throughput and latency look green through the exact
+fault this exists to find. <b>Non-zero is the catch.</b> It is not a
+root-cause tool.</p>
+<p><b>Drop and pause metrics are per-mille, not percent.</b> A value of
+<code>1</code> means 0.1%, which is already Broadcom's warning threshold for
+out-of-order packets; <code>10</code> is critical. Do not read them as packet
+counts.</p>
+<p><b>RX missed errors</b> means the NIC ring buffer had no free descriptor and
+the packet was dropped before the driver saw it &mdash; distinct from
+<i>RX dropped</i> (discarded higher up) and <i>RX errors</i> (arrived damaged).
+It is the clearest signal that a NIC is being overrun.</p>
+<p><b>Pause / PFC</b> separate a congested fabric from a failing NIC: the host
+asking the switch to slow down is a different problem from the host losing
+frames.</p>
+<p><b>Blind spot:</b> there are no disk media-error counters anywhere in the
+vSAN Performance Service, and no NIC ring-buffer <i>utilisation</i> &mdash;
+only overflow after the fact. A green screen here does not mean the hardware is
+healthy.</p>
+<p><a href="https://github.com/nickfirefoot/vsanhostmetrics">Documentation and
+full metric reference</a></p>
+
+</body></html>
