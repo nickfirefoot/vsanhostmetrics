@@ -1,0 +1,15 @@
+# The base-adapter image is built automatically by the integration SDK.
+FROM base-adapter:python-1.2.0
+
+# OCI labels. image.source is the one that matters: GHCR uses it to link the
+# published package to its repository, so the package page shows the source and
+# inherits the repo's visibility rather than being an orphan.
+LABEL org.opencontainers.image.source="https://github.com/nickfirefoot/vsanhostmetrics" \
+      org.opencontainers.image.description="Long-term vSAN telemetry for VCF Operations, collected from the vSAN Performance Service via vCenter" \
+      org.opencontainers.image.licenses="Apache-2.0" \
+      org.opencontainers.image.title="vSAN Host Metrics"
+
+COPY commands.cfg .
+COPY adapter_requirements.txt .
+RUN pip3 install -r adapter_requirements.txt --upgrade
+COPY app app
