@@ -74,3 +74,46 @@ network depth. At 500 hosts: 80,000 objects rather than 247,000.
   `authToken`, while the host config store schema has three fields -- token,
   destination_url and interval. Anything inferred from the API about that
   structure is incomplete.
+
+## The vSAN UI plugin is not a separate data source
+
+Checked whether the "Performance for Support" dashboard exposes an endpoint we
+could pull directly. It does not.
+
+```
+extension    com.vmware.vsan.client 9.1.1.10000
+client       https://<vc>/vsan/plugins/vsan-ui-repa/plugin.zip   (manifests only)
+UI assets    /vsan/plugins/vsan-ui-repa/index.html               (Angular shell)
+Support tab  index.html?viewId=support&viewType=view
+backend      /vsanHealth   (SOAP)
+REST facade  none - /api/vsan, /rest/vsan, /api/vcenter/vsan all 404
+```
+
+The plugin is a client-side Angular app talking SOAP to `/vsanHealth`, which is
+the same endpoint `vsanapiutils.VSAN_API_VC_SERVICE_ENDPOINT` uses. So anything
+the dashboard renders is reachable through `VsanPerfQueryPerf` - there is no
+alternative API and nothing to curl.
+
+The `/ui/app/cluster;nav=...` URL is an Angular route, not an endpoint: it
+returns 1,015 bytes of app shell. Data arrives via XHR after load. To see the
+exact query a given panel issues, use browser dev tools on the Network tab;
+reconstructing the SOAP by hand buys nothing over the Python path.
+
+## Out-of-order packets are available from both sources
+
+`vsan-tcpip-stats` carries `tcpRcvoopackRate`, and a live query returns **32**
+metrics rather than the 16 the schema advertises - every `*Rate` has an
+`*Actual` twin, plus `tcpTxRexmitRate`, `tcpRxErrRate`, `ipTotal`, `ip6Total`,
+`tcpEcnCe` and `arpDropRate` which are not in the enumeration at all. So the
+schema understates what the API returns.
+
+Measured values agree with the host scrape: `tcpRcvoopackRate` is 0 across all
+samples, matching our `outOfOrderPct` of 0.000000.
+
+Units appear to be **per-mille**: their `tcpRcvdupackRate` reads 1-2 while our
+`duplicateAckPct` measured 0.122% = 1.22 per-mille. Consistent with HCIBench
+labelling every ratio panel "(per-mille)". Worth confirming before relying on
+it.
+
+Sampling is fixed at **5 minutes**. The host scrape computes rates over
+whatever interval we choose, so perfsvc cannot give finer resolution.
