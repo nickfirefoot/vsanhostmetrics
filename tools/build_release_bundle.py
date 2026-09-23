@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
-"""Bundle a built .pak with the docs needed to deploy it.
+"""Bundle a built .pak with the docs -- and optionally the adapter image.
 
-    python3 tools/build_release_bundle.py [version]
+    python3 tools/build_release_bundle.py [version] [--with-image]
+
+With --with-image the container image is saved into the bundle as a tar, for
+targets with no registry and no external network. See AIRGAP.md in the bundle:
+the image must be loaded onto the Cloud Proxy before the pak is installed.
 
 Produces dist/VsanHostMetrics-<version>.zip, flat, so unpacking leaves the
 .pak beside the README rather than buried in directories.
@@ -43,6 +47,92 @@ def sha256(path):
         for chunk in iter(lambda: fh.read(1 << 20), b""):
             h.update(chunk)
     return h.hexdigest()
+
+
+def airgap_doc(version, registry, repository, digest, tar_name):
+    return f"""# Offline install — no registry, no external network
+
+This bundle carries the adapter container image alongside the pak, for targets
+that cannot reach any registry.
+
+## Why this step exists
+
+A VCF Operations container management pack does not contain its adapter. The
+pak is ~145 KB of schema and a pointer; the adapter is a ~430 MB container
+image. Normally the Cloud Proxy pulls that image from a registry. With no
+registry and no egress, the image has to be placed on the Cloud Proxy by hand
+**before** the pak is installed.
+
+| | |
+|---|---|
+| Image | `{registry}{repository}` |
+| Digest | `{digest}` |
+| Tar | `{tar_name}` |
+
+## Steps, on the Cloud Proxy
+
+SSH is disabled by default on the appliance. Enable it from the VM console:
+
+```sh
+systemctl enable --now sshd
+```
+
+Copy the tar over and load it:
+
+```sh
+scp {tar_name} root@<cloud-proxy>:/tmp/
+ssh root@<cloud-proxy> 'docker load -i /tmp/{tar_name}'
+```
+
+Confirm the image is present. The loaded image ID must equal the digest above:
+
+```sh
+docker images --no-trunc | grep -i vsan
+```
+
+Then install the pak in Operations
+(**Administration → Integrations → Repository → Add**), tick both boxes, and
+create the adapter instance against that Cloud Proxy.
+
+Consider disabling SSH again afterwards.
+
+## Status of this procedure — READ THIS
+
+**[unverified]** Loading the image locally is necessary, but whether the
+collector will *use* a locally loaded image instead of attempting a registry
+pull has not yet been confirmed on a real Cloud Proxy.
+
+What is known, tested on the build host:
+
+- `docker save` then `docker load` restores the image with ID
+  `{digest}` — the same value the pak references.
+- It does **not** restore the repository/digest association
+  (`docker images --digests` shows none), so a literal
+  `docker pull <registry>/<repo>@<digest>` would still go to the network.
+
+So this works if the collector resolves the image locally first, and fails if
+it always resolves through the registry reference. If it fails, the symptom
+will be an adapter instance that installs cleanly and then reports
+`Dockerized adapter API client error` with no objects collected.
+
+If you hit that, say so — the fallback is to run a minimal local registry on
+the Cloud Proxy itself, which needs no external network but is more moving
+parts than a `docker load`.
+"""
+
+
+def save_image(registry, repository, digest, dest):
+    """docker save the image the pak points at, for offline delivery.
+
+    Pulls by digest first so the tar contains exactly the bytes the pak
+    references, rather than whatever happens to be tagged locally.
+    """
+    import subprocess
+    ref = f"{registry}{repository}@{digest}"
+    subprocess.run(["docker", "pull", ref], check=True,
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(["docker", "save", "-o", dest, ref], check=True)
+    return os.path.getsize(dest)
 
 
 def main() -> None:
@@ -127,10 +217,23 @@ untested.
     with open(tmp_readme, "w") as fh:
         fh.write(readme)
 
+    want_image = "--with-image" in sys.argv
+    image_tar = None
+    if want_image:
+        image_tar = os.path.join("dist", f"vsan-host-metrics-{version}.image.tar")
+        size = save_image(registry, repository, digest, image_tar)
+        print(f"  saved image tar: {size/1024/1024:.0f} MB")
+
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
         z.write(pak_path, pak_name)
+        if image_tar:
+            z.write(image_tar, os.path.basename(image_tar))
+            z.writestr("AIRGAP.md", airgap_doc(version, registry, repository,
+                                               digest, os.path.basename(image_tar)))
         z.writestr("README.md", readme)
         sums = [f"{sha256(pak_path)}  {pak_name}"]
+        if image_tar:
+            sums.append(f"{sha256(image_tar)}  {os.path.basename(image_tar)}")
         for doc in DOCS:
             if not os.path.exists(doc):
                 continue
