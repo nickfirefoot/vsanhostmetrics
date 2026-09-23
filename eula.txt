@@ -1,0 +1,51 @@
+vSAN HOST METRICS MANAGEMENT PACK
+END USER LICENSE AGREEMENT
+
+Copyright 2026 Nick Wilson
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this software except in compliance with the License. You may obtain a copy
+of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations under
+the License.
+
+Source: https://github.com/nickfirefoot/vsanhostmetrics
+
+
+THIRD-PARTY COMPONENTS
+
+This management pack bundles the vSAN Management API Python bindings
+(vsanmgmtObjects.py, vsanapiutils.py), Copyright 2016-2021 VMware, Inc.,
+redistributed unmodified under the BSD 2-Clause License. The full notice and
+disclaimer are reproduced in the NOTICE file accompanying the source.
+
+
+WHAT THIS SOFTWARE DOES
+
+It connects to one vCenter Server over HTTPS using credentials you supply, and
+reads performance data from the vSAN Performance Service. It reads only. It
+issues no configuration change, and it does not connect to ESXi hosts. A
+read-only vCenter account is sufficient and is what is recommended.
+
+The adapter runs as a container on a VCF Operations Cloud Proxy. The container
+image is published at ghcr.io/nickfirefoot/vsanhostmetrics and is referenced by
+immutable digest, so the image your Cloud Proxy runs is cryptographically
+bound to the pack you installed.
+
+
+NO WARRANTY
+
+This software is not affiliated with, endorsed by, or supported by Broadcom Inc.
+or VMware. "vSAN", "vSphere" and "VCF Operations" are trademarks of their
+respective owners, used here only to describe interoperability.
+
+It is provided without warranty of any kind. You are responsible for validating
+it in a non-production environment before relying on it. Known limitations,
+including environments it has not been tested against, are documented in
+QUICKSTART.md and BACKLOG.md in the source repository.
