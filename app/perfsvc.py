@@ -196,6 +196,33 @@ def build_name_map(service_instance, clusters, perf,
                 value = getattr(cfg, attr, None)
                 if value:
                     names[value] = vm.name
+
+            # virtual-disk refs are "<namespace-uuid>/<file>.vmdk", which is
+            # the datastore path with the "[datastore] " prefix stripped. The
+            # attached VM's backing fileName is the same path, so inventory
+            # resolves them without any extra privilege.
+            #
+            # The obvious route -- vStorageObjectManager.ListVStorageObject --
+            # returns NoPermission for a read-only account (verified
+            # 2026-09-23). Using it would raise this pack's required privilege
+            # above read-only for cosmetics, which is the wrong trade for a
+            # monitoring tool.
+            for dev in (getattr(getattr(cfg, "hardware", None), "device", None) or []):
+                if not isinstance(dev, vim.vm.device.VirtualDisk):
+                    continue
+                backing = getattr(dev, "backing", None)
+                filename = getattr(backing, "fileName", None)
+                if not filename:
+                    continue
+                path = _DS_PREFIX.sub("", filename)
+                label = (getattr(getattr(dev, "deviceInfo", None), "label", None)
+                         or f"key{dev.key}")
+                display = f"{vm.name} [{label}]"
+                # perfsvc emits the path with and without a leading slash --
+                # one disk in 60 arrived as "/<uuid>/name.vmdk". Register both
+                # rather than guessing which form a given ref will use.
+                names[path] = display
+                names["/" + path.lstrip("/")] = display
     except Exception:                                    # noqa: BLE001
         pass
     finally:
@@ -231,6 +258,7 @@ def build_name_map(service_instance, clusters, perf,
 
 # t10.NVMe____Micron_7450_MTFDKCB1T9TFR_______________FCD815400175A000
 #     ^bus    ^vendor/model tokens       ^padding     ^serial
+_DS_PREFIX = re.compile(r"^\[[^\]]+\]\s*")
 _T10 = re.compile(r"^t10\.(?P<bus>[A-Za-z0-9]+)_+(?P<body>.+)$")
 
 

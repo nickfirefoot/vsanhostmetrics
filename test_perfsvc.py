@@ -272,6 +272,22 @@ def test_labels_use_us_spelling():
     assert not bad, bad[:5]
 
 
+def test_vmdk_paths_register_both_slash_forms():
+    """perfsvc emits virtual-disk refs with and without a leading slash -- 59
+    of 60 came back bare, one as "/<uuid>/name.vmdk". Registering only the
+    inventory form left that one showing as a UUID."""
+    class _Backing:
+        fileName = "[vsanDatastore] 82caad6a-7fbc/ubuntuclaud.vmdk"
+    class _Info:
+        label = "Hard disk 1"
+    class _Disk(perfsvc.vim.vm.device.VirtualDisk):
+        pass
+    # Build the two keys the way build_name_map does, without needing vCenter.
+    path = perfsvc._DS_PREFIX.sub("", _Backing.fileName)
+    assert path == "82caad6a-7fbc/ubuntuclaud.vmdk", path
+    assert "/" + path.lstrip("/") == "/82caad6a-7fbc/ubuntuclaud.vmdk"
+
+
 def test_model_is_non_trivial():
     assert len(perfsvc.MODEL.ENTITIES) >= 20
     t = perfsvc.MODEL.ENTITIES["vsan-tcpip-stats"]

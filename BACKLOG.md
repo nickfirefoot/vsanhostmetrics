@@ -204,19 +204,25 @@ goes to many sites.
 
 ## Object naming
 
-**`virtual-disk` objects still read as UUIDs.** Every other entity type now
-resolves to a human name, but `virtual-disk` refs look like
-`8e97b16a-ba2a-8bf5-db38-9c6b00c51395/0eb3af29c00e4a12898229feb77f454d.vmdk`.
+**~~`virtual-disk` objects still read as UUIDs.~~** Resolved 2026-09-23. All
+60 now name themselves, e.g. `harbor-core-56d4957445-hp8cc [Hard disk 2]`.
 
-That is not a gap in `build_name_map` so much as what these objects are: the
-observed ones are CNS persistent volumes backing Supervisor/TKG nodes, and an
-FCD's filename genuinely *is* a UUID — there is no friendly name on the
-datastore to find. Resolving them needs a separate lookup through
-`vStorageObjectManager` (`RetrieveVStorageObject` → `config.name`, which for a
-CNS volume is the PVC name), or `CnsQueryVolume` for the Kubernetes-side name.
+Worth recording how, because the obvious route is a trap. These are CNS
+volumes and an FCD's filename genuinely is a UUID, so the apparent answer is
+`vStorageObjectManager.ListVStorageObject` -> `RetrieveVStorageObject` ->
+`config.name`. That returns **NoPermission** for a read-only account, and
+granting the privilege would raise this pack's requirement above read-only for
+what is purely a cosmetic gain -- the wrong trade for a monitoring tool.
 
-Worth doing before dashboards: a per-volume IO panel nobody can map back to a
-PVC is not actionable. Not worth blocking a release on.
+The route taken instead costs nothing: a `virtual-disk` ref is the datastore
+path with the `[datastore] ` prefix stripped, and the attached VM's
+`backing.fileName` is the same path. The VM walk already happening for VM names
+resolves them, using access the pack already has. Name map went 83 -> 197
+entries and 0.8s -> 1.1s.
+
+One wrinkle: perfsvc emits the path both with and without a leading slash --
+59 of 60 came back bare and one as `/<uuid>/name.vmdk`. Both forms are
+registered rather than guessing.
 
 **Unit coverage is 40%** (294 of 730). The resolved ones come from HCIBench's
 dashboards plus conservative name heuristics; the remainder are either
