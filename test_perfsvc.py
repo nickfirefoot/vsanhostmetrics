@@ -59,6 +59,33 @@ def test_parse_ref_rejects_unmodelled():
     assert perfsvc.parse_ref("no-colon-here") is None
 
 
+def test_variable_arity_is_padded_not_dropped():
+    """host-cpu returns BOTH "host-cpu:<uuid>" (host aggregate) and
+    "host-cpu:<uuid>|cpu-8" (per CPU) -- 61 objects per host for 60 CPUs.
+
+    Found by deploying: Operations rejected the aggregate objects with
+    "Identifier 'cpu' is required in describe.xml, but it was not found on
+    this resource." Padding keeps the aggregate, which is real data.
+    """
+    agg = perfsvc.parse_ref(f"host-cpu:{HOST}")
+    one = perfsvc.parse_ref(f"host-cpu:{HOST}|cpu-8")
+    assert dict(agg.idents) == {"host_uuid": HOST, "cpu": perfsvc.AGGREGATE}
+    assert dict(one.idents) == {"host_uuid": HOST, "cpu": "cpu-8"}
+    assert agg != one, "aggregate and per-CPU must be distinct objects"
+    # every declared identifier present, so describe.xml validation passes
+    names = perfsvc.MODEL.ENTITIES["host-cpu"]["identity"]
+    assert [n for n, _ in agg.idents] == names
+
+
+def test_extra_parts_are_kept_not_merged():
+    """A ref with more parts than the model names must not collapse into
+    another object."""
+    a = perfsvc.parse_ref(f"host-domclient:{HOST}|unexpected")
+    b = perfsvc.parse_ref(f"host-domclient:{HOST}")
+    assert a != b
+    assert dict(a.idents)["part1"] == "unexpected"
+
+
 def test_objectkey_is_hashable_and_stable():
     a = perfsvc.parse_ref(f"vsan-tcpip-stats:{HOST}|defaultTcpipStack")
     b = perfsvc.parse_ref(f"vsan-tcpip-stats:{HOST}|defaultTcpipStack")

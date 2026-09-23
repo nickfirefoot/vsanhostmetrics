@@ -53,6 +53,10 @@ except ImportError:                                  # flat, as the container ru
 
 MODEL = _model
 
+# Placeholder for an identity component an entityRefId does not carry.  See
+# parse_ref: entity types mix aggregate and scoped refs.
+AGGREGATE = "(all)"
+
 
 @dataclass(frozen=True)
 class ObjectKey:
@@ -130,11 +134,25 @@ def parse_ref(ref: str) -> Optional[ObjectKey]:
         return None
     parts = tail.split("|")
     names = spec["identity"]
-    idents = tuple(
-        (names[i] if i < len(names) else f"part{i}", p)
-        for i, p in enumerate(parts)
-    )
-    return ObjectKey(entity, idents)
+
+    # Arity VARIES within an entity type.  host-cpu returns both
+    # "host-cpu:<uuid>" (the host-level aggregate) and
+    # "host-cpu:<uuid>|cpu-8" (one per physical CPU) -- 61 objects per host
+    # for 60 CPUs.  Operations rejects an object missing a required
+    # identifier, so short refs are padded with a sentinel rather than
+    # dropped: the aggregate is real data and worth keeping, it just is not
+    # scoped to one CPU.
+    idents = []
+    for i, name in enumerate(names):
+        if i < len(parts):
+            idents.append((name, parts[i]))
+        else:
+            idents.append((name, AGGREGATE))
+    # Any parts beyond what the model names are kept, so nothing is silently
+    # merged into an existing object.
+    for i in range(len(names), len(parts)):
+        idents.append((f"part{i}", parts[i]))
+    return ObjectKey(entity, tuple(idents))
 
 
 def collect(perf, cluster, window_minutes: int = 15
