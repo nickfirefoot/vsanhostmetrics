@@ -13,6 +13,24 @@ into one release rather than cutting a version per fix.
 | `TextDisplay` `locationUrl` | "URL is not available" | lab egress is fine (Cloud Proxy reaches raw.githubusercontent 200/56ms), so the suspect is `text/plain` + `nosniff` being rejected in HTML view mode. GitHub Pages would serve `text/html` and settle it |
 | Backpressure + disk rapid dashboards | designed, not built | the same `colorBy` fix; then ~20 min each |
 
+| Cluster selector on rapid dashboards | requested | a populated `dashboardNavigations` — wire any two widgets in the UI and export. Heatmaps become `selfProvider: false` and receive the selected cluster; works because 1.2.0 parents every object to its `ClusterComputeResource` |
+
+### Scale notes (from the collector-binding question)
+
+An adapter instance is **pinned to one collector** — all collection for that
+vCenter runs in one container on one Cloud Proxy and does not fan out.
+
+- More clusters in a vCenter: same instance, same proxy.
+- More vCenters: one instance each, assignable to different proxies.
+- One very large vCenter: **does not split**; that proxy is the ceiling.
+- HA: assign the instance to a *collector group* rather than a single proxy.
+
+Measured headroom: 847 objects collected in ~9s against a 5-minute cycle, so
+roughly 30x per instance. The first constraint at a large site is more likely
+**object count in the analytics cluster** than proxy CPU — `VsanDomWorld` alone
+is 315 objects on four hosts and scales per host. Per-family collection
+toggles (already on this backlog) are the lever for that.
+
 **Blocking all dashboard work:** the lab still runs **1.1.9**, which collects
 nothing (`ObjectKeyAlreadyExistsException`, fixed in 1.2.0). With zero
 `VsanPnic` objects the panels cannot render, so a correct dashboard and a
