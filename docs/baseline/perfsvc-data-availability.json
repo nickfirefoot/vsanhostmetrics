@@ -1,0 +1,254 @@
+{
+ "BEFORE": {
+  "cluster-domclient": [
+   1,
+   14
+  ],
+  "cluster-domcompmgr": [
+   1,
+   15
+  ],
+  "host-domclient": [
+   4,
+   312
+  ],
+  "host-domowner": [
+   4,
+   1152
+  ],
+  "host-domcompmgr": [
+   4,
+   328
+  ],
+  "host-vsansparse": [
+   4,
+   84
+  ],
+  "vscsi": [
+   106,
+   848
+  ],
+  "virtual-machine": [
+   30,
+   240
+  ],
+  "virtual-disk": [
+   60,
+   420
+  ],
+  "vsan-vnic-net": [
+   4,
+   256
+  ],
+  "vsan-host-net": [
+   4,
+   64
+  ],
+  "vsan-pnic-net": [
+   7,
+   455
+  ],
+  "vsan-cluster-capacity": [
+   1,
+   6
+  ],
+  "vsan-cpu": [
+   4,
+   28
+  ],
+  "dom-world-cpu": [
+   315,
+   945
+  ],
+  "vsan-memory": [
+   4,
+   200
+  ],
+  "system-mem": [
+   4,
+   12
+  ],
+  "cmmds-net": [
+   4,
+   40
+  ],
+  "host-cpu": [
+   244,
+   732
+  ],
+  "rdt-net": [
+   4,
+   4
+  ],
+  "vsan-tcpip-stats": [
+   4,
+   128
+  ],
+  "vnic-rdt-network-latency": [
+   4,
+   68
+  ],
+  "cluster-rdt-network-latency": [
+   1,
+   17
+  ],
+  "rdt-network-latency": [
+   4,
+   68
+  ],
+  "cluster-domowner": [
+   1,
+   46
+  ],
+  "vsan-esa-disk-scsifw": [
+   7,
+   112
+  ],
+  "vsan-esa-disk-layer": [
+   7,
+   266
+  ],
+  "zdom-vtx": [
+   4,
+   284
+  ],
+  "cluster-zdom-top-stats": [
+   1,
+   12
+  ],
+  "host-zdom-top-stats": [
+   4,
+   76
+  ],
+  "vsan-dp-historical-stats": [
+   1,
+   1
+  ]
+ },
+ "AFTER": {
+  "cluster-domclient": [
+   1,
+   14
+  ],
+  "cluster-domcompmgr": [
+   1,
+   15
+  ],
+  "host-domclient": [
+   4,
+   312
+  ],
+  "host-domowner": [
+   4,
+   1152
+  ],
+  "host-domcompmgr": [
+   4,
+   328
+  ],
+  "host-vsansparse": [
+   4,
+   84
+  ],
+  "vscsi": [
+   106,
+   848
+  ],
+  "virtual-machine": [
+   30,
+   240
+  ],
+  "virtual-disk": [
+   60,
+   420
+  ],
+  "vsan-vnic-net": [
+   4,
+   256
+  ],
+  "vsan-host-net": [
+   4,
+   64
+  ],
+  "vsan-pnic-net": [
+   7,
+   455
+  ],
+  "vsan-cluster-capacity": [
+   1,
+   6
+  ],
+  "vsan-cpu": [
+   4,
+   28
+  ],
+  "dom-world-cpu": [
+   315,
+   945
+  ],
+  "vsan-memory": [
+   4,
+   200
+  ],
+  "system-mem": [
+   4,
+   12
+  ],
+  "cmmds-net": [
+   4,
+   40
+  ],
+  "host-cpu": [
+   244,
+   732
+  ],
+  "rdt-net": [
+   4,
+   4
+  ],
+  "vsan-tcpip-stats": [
+   4,
+   128
+  ],
+  "vnic-rdt-network-latency": [
+   4,
+   68
+  ],
+  "cluster-rdt-network-latency": [
+   1,
+   17
+  ],
+  "rdt-network-latency": [
+   4,
+   68
+  ],
+  "cluster-domowner": [
+   1,
+   46
+  ],
+  "vsan-esa-disk-scsifw": [
+   7,
+   112
+  ],
+  "vsan-esa-disk-layer": [
+   7,
+   266
+  ],
+  "zdom-vtx": [
+   4,
+   284
+  ],
+  "cluster-zdom-top-stats": [
+   1,
+   12
+  ],
+  "host-zdom-top-stats": [
+   4,
+   76
+  ],
+  "vsan-dp-historical-stats": [
+   1,
+   1
+  ]
+ }
+}
