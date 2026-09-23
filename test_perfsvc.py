@@ -358,6 +358,36 @@ def test_parent_map_is_empty_without_a_vcenter_id():
     assert out["hosts"] == {} and out["vms"] == {} and out["clusters"] == {}
 
 
+def test_one_vcenter_object_yields_one_parent():
+    """Regression: two buckets can resolve to the same vCenter object -- a VM
+    reached by vm_uuid and the same VM reached by a virtual disk's datastore
+    path, or a host reached by host_uuid and by a disk_uuid. Keying the parent
+    cache by bucket built two Python objects sharing one Operations key, and
+    CollectResult rejects that with ObjectKeyAlreadyExistsException, which
+    aborts the ENTIRE collection -- the adapter reported only its own instance
+    object, in ERROR, with "Dockerized adapter API client error".
+    """
+    sys.argv = ["x", "collect", "in", "out"]
+    import adapter
+
+    parents = {
+        "vcid": "VC-1",
+        "vms": {"vm-uuid-a": "vm-8032"},
+        "vdisks": {"path/to/a.vmdk": "vm-8032"},
+        "hosts": {"host-uuid-a": "host-27"},
+        "disks": {"disk-uuid-a": "host-27"},
+        "clusters": {},
+    }
+    cache = {}
+    a = adapter._vc_parent(cache, parents, "vms", "vm-uuid-a")
+    b = adapter._vc_parent(cache, parents, "vdisks", "path/to/a.vmdk")
+    c = adapter._vc_parent(cache, parents, "hosts", "host-uuid-a")
+    d = adapter._vc_parent(cache, parents, "disks", "disk-uuid-a")
+    assert a is b, "same VM via two buckets must be one object"
+    assert c is d, "same host via two buckets must be one object"
+    assert len(cache) == 2, cache.keys()
+
+
 def test_model_is_non_trivial():
     assert len(perfsvc.MODEL.ENTITIES) >= 20
     t = perfsvc.MODEL.ENTITIES["vsan-tcpip-stats"]

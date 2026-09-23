@@ -163,7 +163,13 @@ def _vc_parent(cache, parents, bucket, uuid):
     vcid = parents.get("vcid")
     if not moid or not vcid:
         return None
-    ckey = (bucket, moid)
+    # Dedupe on the vCenter object, not the bucket that found it. Two buckets
+    # resolve to the same VirtualMachine -- vm_uuid and a virtual disk's
+    # datastore path -- and two buckets resolve to the same HostSystem. Keying
+    # the cache by bucket built two Python objects sharing one Operations key,
+    # and CollectResult rejects that with ObjectKeyAlreadyExistsException,
+    # which aborts the entire collection.
+    ckey = (VC_KINDS[bucket], moid)
     if ckey not in cache:
         cache[ckey] = Object(Key(
             adapter_kind=VC_ADAPTER,
