@@ -1,20 +1,42 @@
-# vSAN Host Metrics — beta scaffold
+# vSAN Host Metrics
 
-Direct-from-host vSAN telemetry for VCF Operations. Beta scope: the nine
-`vmware_esx_tcppkt_*` counters off `https://<esxi>/vsanmetrics`, as one
-resource kind.
+**Objective: pull in the vSAN stats the regular vCenter API misses.**
+
+A management pack for VCF Operations that collects long-term vSAN telemetry
+from the **vSAN Performance Service** through vCenter: **1035 metrics across 31
+resource kinds**, with Broadcom's own metric names where they publish them, and
+every object attached to the vCenter host, VM or cluster it belongs to.
+
+On a four-host cluster that is 847 objects, collected in about 9 seconds.
+
+| | |
+|---|---|
+| Talks to | **one vCenter, on 443** |
+| Credential | a **read-only** vCenter account |
+| ESXi access | **none** -- no host credentials, no per-host firewall rules |
+| Runs on | a Cloud Proxy, as a container adapter |
+
+New here? **`QUICKSTART.md`** is the shortest correct path from nothing to a
+collecting adapter. The full metric catalogue is at the bottom of this file.
 
 ## What's here
 
 | File | SDK dependency | Notes |
 |---|---|---|
-| `app/vsanmetrics.py` | none | Scrape, Prometheus parse, counter→rate cache, derived percentages. The logic. |
+| `app/perfsvc.py` | none | Performance Service client: connect, collect, parse `entityRefId`, resolve UUIDs to names. The logic. |
+| `app/perfsvc_model.py` | none | **Generated.** 31 entity types, 1035 metrics, regenerable from a live service with `tools/model_from_perfsvc.py`. |
+| `app/metric_labels.py` | none | **Generated.** Labels and units, from Broadcom's schema plus HCIBench. |
 | `app/adapter.py` | yes | `get_adapter_definition()` / `test()` / `get_endpoints()` / `collect()`. Thin glue. |
-| `app/constants.py` | none | Keys, and the Broadcom thresholds for symptom definitions. |
-| `test_vsanmetrics.py` | none | Offline tests. 8/8 passing. Run these first. |
+| `app/vendor/` | none | VMware's vSAN API bindings, BSD-2-Clause. See `NOTICE`. |
+| `test_perfsvc.py` | none | Offline tests. 26/26. Run these first. |
 
 The split is deliberate: everything that can be wrong about the data is in
-`vsanmetrics.py`, which has no SDK imports and runs anywhere.
+`perfsvc.py`, which has no SDK imports and runs anywhere.
+
+A second, **dormant** path (`app/vsanmetrics.py`, `app/model.py`,
+`test_vsanmetrics.py`, 16/16) scrapes `https://<esxi>/vsanmetrics` directly. It
+is retained but not used -- one source, never two gathering points for the same
+metric. See `docs/COLLECTION-DESIGN.md`.
 
 ### Which document to read
 
@@ -24,7 +46,9 @@ The split is deliberate: everything that can be wrong about the data is in
 |---|---|
 | `REQUIREMENTS.md` | Everything needed to build, stage and deploy. Versions, network prerequisites, credentials, and a repeatability checklist. **Start here for a rebuild.** |
 | `README.md` | This file. What the code is, how to build it, how to deploy it. |
-| `BUGS-UPSTREAM.md` | Defects in the ESXi `/vsanmetrics` exposition itself, with reproductions. Read before trusting a metric that looks wrong. |
+| `QUICKSTART.md` | **Deploy from scratch.** Start here if you just want it running. |
+| `BUGS-UPSTREAM.md` | Defects found in Broadcom's own endpoints, with reproductions. Read before trusting a metric that looks wrong. |
+| `docs/soap/` | The Performance Service driven over plain HTTP, no pyVmomi. Useful if you want to reimplement this elsewhere. |
 | `BACKLOG.md` | What is not done, and why, in rough priority order. |
 
 **Historical — accurate when written, not maintained:**
