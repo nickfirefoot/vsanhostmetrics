@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <soapenv:Body>
+  <Login xmlns="urn:vim25">
+   <_this type="SessionManager">SessionManager</_this>
+   <userName>YOUR_VC_USER</userName>
+   <password>YOUR_VC_PASSWORD</password>
+  </Login>
+ </soapenv:Body>
+</soapenv:Envelope>
