@@ -102,6 +102,39 @@ the reference tool builds `profiles=[]` and appends a single token without ever
 reading the existing profiles first -- so running it is at best ambiguous about
 preserving other consumers' subscriptions, and is the likely cause.
 
+**Working hypothesis: staggered rotation with overlap.** Two subscriptions may
+exist deliberately so their lifetimes overlap - A valid 00:00-24:00, B valid
+12:00-36:00 - giving any consumer that re-reads the token a window to pick up
+the new one before its current one dies. Standard key-rotation practice, and it
+would explain two subscriptions with no visible second consumer.
+
+Falsifiable, and a monitor is running to test it:
+
+| Observation | Conclusion |
+|---|---|
+| one token fails, the other survives | staggered rotation |
+| both fail in the same poll | the profile list was replaced wholesale |
+
+Counter-evidence so far: at 2026-09-22 03:00 there was **one** subscription, and
+by 21:50 there were **two**. Steady-state overlap should show two at all times,
+so either the scheme was still establishing or something else added the second.
+
+**If the hypothesis holds, the token is meant to be re-read, not held** - and a
+consumer pasting a static credential is using the mechanism wrong. That is
+awkward for this pack specifically: the adapter runs in a container on a Cloud
+Proxy and cannot reach the host's config store, so "just re-read it" is not
+available to us. It would also turn occasional breakage into daily breakage,
+which makes option 1 below insufficient on its own.
+
+Two dead ends already ruled out, so nobody repeats them:
+
+* `hostd.log` records ConfigStore Begin/Commit transactions but never the key
+  contents, and they fire every 20-40 minutes for unrelated reasons.
+* `generation_num` / `generation_time` under `host` do **not** track
+  `metric_subscriptions`. Observed `generation_time` moving 20.76 hours while
+  `generation_num` stayed at 5, across a period when the tokens definitely
+  changed.
+
 **What this pack should do about it**, in increasing order of effort:
 
 1. *Minimum, and still required regardless:* when every host fails to scrape,
