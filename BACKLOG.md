@@ -55,7 +55,7 @@ matching direction. On measured esxi01 rates `duplicateAckPct` moved from
 0.097% to 0.122%.
 
 **Review the 21 low-confidence metric kinds.** `tools/classify_metrics.py`
-infers counter-vs-gauge from observed behaviour, name suffix and HELP wording,
+infers counter-vs-gauge from observed behavior, name suffix and HELP wording,
 because the exposition carries no `# TYPE` lines. 178 counters and 207 gauges,
 of which 21 fall to the safe default (gauge). Evidence and confidence per
 metric are in `docs/metric-kinds.json`. A counter misfiled as a gauge shows an
@@ -227,7 +227,7 @@ the heuristics.
 
 ## Known metric gaps
 
-**No NIC ring buffer utilisation.** Searched all 730 modelled metrics: zero
+**No NIC ring buffer utilization.** Searched all 730 modeled metrics: zero
 matches for ring/descriptor/buffer/watermark/occupancy. The Performance
 Service exposes the *consequence* of the RX ring filling -- `rxMissErr`,
 `rxOvErr`, `rxFifoErr` -- but not its depth, so there is no early warning,

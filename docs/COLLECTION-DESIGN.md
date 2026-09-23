@@ -103,7 +103,7 @@ credential that does not evaporate daily.
 
 That rule matters more than the coverage arithmetic above. Two collectors
 producing the same metric means two sampling intervals, two rounding
-behaviours, two failure modes and a reconciliation problem every time they
+behaviors, two failure modes and a reconciliation problem every time they
 disagree - and they will disagree, because perfsvc reduces to fixed 5-minute
 buckets and the host returns raw counters over whatever interval we choose.
 Nobody would be able to say which number was right.

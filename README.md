@@ -113,7 +113,7 @@ configstorecli config current get -c vsan -g system -k vsan -n
 credential field, where it will fail authentication. Worse, the host answers
 every authentication failure with **403, never 401** (`BUGS-UPSTREAM.md` item
 4), so the error does not say "bad credential" -- it looks like an
-authorisation or connectivity problem.
+authorization or connectivity problem.
 
 Verify the token before pasting it anywhere:
 
@@ -134,7 +134,7 @@ host in the cluster, and the `hosts` parameter can list them all against it.
 Still open: what rotates them, and how the adapter notices. Note that this is
 harder than it looks here, because the host returns **403 for every
 authentication failure and never 401** -- see `BUGS-UPSTREAM.md` item 4. A
-rotated token is thus not trivially distinguishable from an authorisation
+rotated token is thus not trivially distinguishable from an authorization
 problem, and neither should be mistaken for a network failure. Whatever the
 handling, it must surface as a specific error rather than a silently
 non-collecting object.

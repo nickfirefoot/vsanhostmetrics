@@ -62,7 +62,7 @@ should never be the address in a published pak.
       makes the repo unusable to exactly the careful people you want.
 - [ ] **Keep the vendored vSAN bindings honest.** `app/vendor/` contains
       Broadcom's 2021 `vsanmgmtObjects.py` and `vsanapiutils.py`, redistributed.
-      Check their licence permits it and attribute them in the LICENSE file.
+      Check their license permits it and attribute them in the LICENSE file.
       This is the one genuine legal question here.
 
 ## 3. Branch and history

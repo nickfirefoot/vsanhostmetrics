@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Build an XLSX catalogue of every metric exposed by an ESXi /vsanmetrics scrape.
+Build an XLSX catalog of every metric exposed by an ESXi /vsanmetrics scrape.
 
 Groups metrics by the source "branch" that each HELP string names -- e.g.
 '[from /net/nics $getVsanNetworkStats]' -- so the sheet can be filtered one
@@ -81,7 +81,7 @@ def parse(path: str):
     return families
 
 
-def analyse(families):
+def analyze(families):
     rows = []
     for name, fam in families.items():
         samples = fam["samples"]
@@ -151,7 +151,7 @@ def write_xlsx(rows, families, out_path, scrape_path):
     ws.column_dimensions["A"].width = 26
     ws.column_dimensions["B"].width = 112
     about = [
-        ("Document", "ESXi /vsanmetrics metric catalogue"),
+        ("Document", "ESXi /vsanmetrics metric catalog"),
         ("Generated from", os.path.basename(scrape_path)),
         ("Metric families", len(families)),
         ("API branches", len({r['branch'] for r in rows})),
@@ -256,7 +256,7 @@ def main() -> None:
         sys.exit(1)
     scrape, out = sys.argv[1], sys.argv[2]
     families = parse(scrape)
-    rows = analyse(families)
+    rows = analyze(families)
     write_xlsx(rows, families, out, scrape)
     print(f"{len(families)} metric families, "
           f"{len({r['branch'] for r in rows})} branches, "

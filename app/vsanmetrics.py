@@ -157,7 +157,7 @@ class RateCache:
 
     `time.monotonic()` is CLOCK_MONOTONIC on Linux, which is kernel-wide, so
     timestamps stay comparable across those separate processes and are immune
-    to NTP steps.  Leave `path` unset (the default) and behaviour is purely
+    to NTP steps.  Leave `path` unset (the default) and behavior is purely
     in-memory, which is what the unit tests use.
     """
     _prev: Dict[tuple, Tuple[float, float]] = field(default_factory=dict)

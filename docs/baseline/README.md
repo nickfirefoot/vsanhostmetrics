@@ -112,7 +112,7 @@ samples, matching our `outOfOrderPct` of 0.000000.
 
 Units appear to be **per-mille**: their `tcpRcvdupackRate` reads 1-2 while our
 `duplicateAckPct` measured 0.122% = 1.22 per-mille. Consistent with HCIBench
-labelling every ratio panel "(per-mille)". Worth confirming before relying on
+labeling every ratio panel "(per-mille)". Worth confirming before relying on
 it.
 
 Sampling is fixed at **5 minutes**. The host scrape computes rates over

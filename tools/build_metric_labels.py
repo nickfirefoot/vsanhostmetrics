@@ -49,8 +49,10 @@ ABBREV = [
     ("qlat", "queue latency"), ("recved", "received"),
     ("ckpt", "checkpoint"), ("sb", "socket buffer"), ("ctx", "context"),
     ("lat", "latency"), ("pkt", "packet"), ("pct", "percent"),
-    ("util", "utilisation"), ("cnt", "count"),
+    ("util", "utilization"), ("cnt", "count"),
     ("vmdisk", "VM disk"), ("stddev", "standard deviation"),
+    # Upstream ids that arrive as a single unsplittable token.
+    ("avglatency", "average latency"),
     # Classic ESXi/Linux NIC counters. These are the grey-state signals for a
     # failing NIC or link, so they are the ones an operator must read at a
     # glance -- "RX lgt err" is not readable.
@@ -72,7 +74,7 @@ ACRONYMS = {"tcp", "ip", "ip6", "arp", "ecn", "sack", "rdt", "dom", "lsom",
             "cmmds", "clom", "zdom", "esa", "vsan", "cpu", "io", "iops",
             "vm", "pnic", "vnic", "scsi", "vscsi", "nvme", "ssd", "dp",
             "rx", "tx", "id", "uuid", "db", "ack", "acks",
-            "crc", "fifo", "pfc", "nic"}
+            "crc", "fifo", "pfc", "nic", "pcpu"}
 # Safe to replace inside a longer token. Anything that can occur as a
 # substring of a real English word must NOT be listed here.
 SUBSTRING_SAFE = [

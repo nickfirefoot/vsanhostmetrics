@@ -25,7 +25,7 @@ Per host, from `app/model.py`:
 | `vmware_esx_heap` | 31 | 1 | Heap exhaustion risk |
 | `vmware_vsan_heap` | 31 | 5 | Heap exhaustion risk |
 | `vmware_esx_slab` | 62 | 2 | Slab exhaustion risk |
-| `vmware_host_cpu` | 65 | 4 | Per-CPU utilisation |
+| `vmware_host_cpu` | 65 | 4 | Per-CPU utilization |
 | `vmware_esx_world` | 167 | 3 | Per-world CPU — the churning majority of objects |
 | `vmware_vsan_vscsi` | 16 | 6 | Per-VM virtual SCSI |
 | `vmware_vsan_vdisk` | 2 | 5 | Per-vdisk |
@@ -53,7 +53,7 @@ The queries cannot be lifted. The panel design can.
 **rx and tx are always separate series.** Every networking dashboard pairs
 `rxPackets`/`txPackets` and `rxThroughput`/`txThroughput` in one panel. That is
 exactly the split the `io_type` fix introduced, arrived at independently —
-which makes the collision a plain bug rather than a debatable modelling choice.
+which makes the collision a plain bug rather than a debatable modeling choice.
 
 **Error and drop ratios are shown in per-mille, not percent.** Every such panel
 is titled "(per-mille)". These values are tiny — our measured `duplicateAckPct`
@@ -135,7 +135,7 @@ Feeds from `vsan_dom`, `vsan_vdisk`, `vsan_vscsi`, `vsan_disk`.
 ### 3. Host Resource Pressure
 - Heap and slab usage ratios, worst-N across hosts
 - Memory by type
-- Per-CPU utilisation
+- Per-CPU utilization
 
 Feeds from `esx_heap`, `vsan_heap`, `esx_slab`, `vsan_memory`, `host_cpu`.
 Heap and slab exhaustion is the interesting signal — these are the counters
@@ -193,7 +193,7 @@ its average will not.
 |---|---|---|
 | `clusterMaxRetransmitPct` | max `retransmitPct` across `EsxTcpIp` | The TCP ratio with a published threshold |
 | `clusterMaxOutOfOrderPct` | max `outOfOrderPct` across `EsxTcpIp` | Broadcom thresholds are per host; this makes them cluster-visible |
-| `clusterMaxRdtLatency` | max `latency_us` across `EsxRdt` | One slow host defines cluster behaviour |
+| `clusterMaxRdtLatency` | max `latency_us` across `EsxRdt` | One slow host defines cluster behavior |
 | `clusterAvgRdtLatency` | avg `latency_us` across `EsxRdt` | Baseline to read the max against |
 | `hostWorstHeapUsage` | max `usage_ratio` over that host's `EsxHeap` + `VsanHeap` | Collapses 62 objects per host into one alertable number |
 | `hostWorstSlabUsage` | max over that host's `EsxSlab` | Same, for slabs |

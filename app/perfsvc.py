@@ -256,7 +256,7 @@ def _disk_label(scsi) -> Optional[str]:
 
 
 def parse_ref(ref: str) -> Optional[ObjectKey]:
-    """'<entity>:<uuid>|<part>' -> ObjectKey, or None if unmodelled."""
+    """'<entity>:<uuid>|<part>' -> ObjectKey, or None if unmodeled."""
     if ":" not in ref:
         return None
     entity, _, tail = ref.partition(":")
@@ -288,7 +288,7 @@ def parse_ref(ref: str) -> Optional[ObjectKey]:
 
 def collect(perf, cluster, window_minutes: int = 15
             ) -> Tuple[Dict[ObjectKey, Grouped], List[str]]:
-    """Query every modelled entity type; return the most recent sample of each.
+    """Query every modeled entity type; return the most recent sample of each.
 
     Operations collects on its own schedule and wants a point value, while
     perfsvc returns a series.  We take the last non-empty sample -- looking back
@@ -317,7 +317,7 @@ def collect(perf, cluster, window_minutes: int = 15
         for res in results:
             key = parse_ref(getattr(res, "entityRefId", "") or "")
             if key is None:
-                problems.append(f"unmodelled entityRefId: {res.entityRefId}")
+                problems.append(f"unmodeled entityRefId: {res.entityRefId}")
                 continue
             g = out.setdefault(key, Grouped())
             for val in (getattr(res, "value", []) or []):

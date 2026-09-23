@@ -33,8 +33,8 @@ def make_icon(src_path: str, dest_path: str) -> None:
     src = Image.open(src_path).convert("RGBA")
     width, height = src.size
 
-    # Flood fill from every corner with a colour that cannot occur in the
-    # artwork, then turn exactly that colour into alpha.
+    # Flood fill from every corner with a color that cannot occur in the
+    # artwork, then turn exactly that color into alpha.
     KEY = (255, 0, 255)
     flat = src.convert("RGB")
     for xy in ((0, 0), (width - 1, 0), (0, height - 1), (width - 1, height - 1)):

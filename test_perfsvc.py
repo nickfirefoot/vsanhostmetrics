@@ -54,7 +54,7 @@ def test_parse_ref_single_uuid():
     assert dict(k.idents) == {"host_uuid": HOST}
 
 
-def test_parse_ref_rejects_unmodelled():
+def test_parse_ref_rejects_unmodeled():
     assert perfsvc.parse_ref("not-a-real-entity:abc") is None
     assert perfsvc.parse_ref("no-colon-here") is None
 
@@ -124,7 +124,7 @@ def test_empty_series_are_skipped_not_zeroed():
     assert g.gauges["tcpRxPackets"] == 10.0
 
 
-def test_unmodelled_ref_is_reported_not_dropped():
+def test_unmodeled_ref_is_reported_not_dropped():
     _patch_specs()
     res = [_Result(f"vsan-tcpip-stats:{HOST}|defaultTcpipStack",
                    [_Value("tcpRxPackets", "1")]),
@@ -206,7 +206,7 @@ def test_disk_label_drops_the_padding_but_keeps_the_serial():
     assert len(label) < len(_Scsi.displayName)
 
 
-def test_disk_label_passes_through_unrecognised_names():
+def test_disk_label_passes_through_unrecognized_names():
     class _Scsi:
         displayName = "Local SAS Disk (naa.5000c500a1b2c3d4)"
         canonicalName = "naa.5000c500a1b2c3d4"
@@ -256,6 +256,20 @@ def test_cert_failure_names_the_remedy():
         assert "FQDN" in text, text
     finally:
         perfsvc.SmartConnect = real
+
+
+def test_labels_use_us_spelling():
+    """Product surface is US English, matching the vSphere/vSAN ecosystem.
+    These are generated, so a British spelling entering the abbreviation table
+    silently rewrites every label built from it -- "util" -> "utilisation" put
+    it into five."""
+    import metric_labels as ml
+    BRITISH = ("utilis", "normalis", "serialis", "optimis", "recognis",
+               "organis", "behaviour", "colour", "labelled", "modelling",
+               "catalogue", "licence", "analyse", "centre")
+    bad = [(k, v) for k, v in ml.LABELS.items()
+           if any(b in v.lower() for b in BRITISH)]
+    assert not bad, bad[:5]
 
 
 def test_model_is_non_trivial():

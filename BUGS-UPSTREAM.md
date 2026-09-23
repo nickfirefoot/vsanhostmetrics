@@ -17,7 +17,7 @@ management pack; our own bugs are tracked in `REPORT.md`.
 | Observed | 2026-09-19 |
 | Exposition size | 159 metric families, 30 source branches, 2152 series, ~624 KB |
 
-A full catalogue of the exposition is in `docs/vsan-metrics-catalog.xlsx`,
+A full catalog of the exposition is in `docs/vsan-metrics-catalog.xlsx`,
 regenerable with `tools/build_metric_catalog.py`.
 
 Note that all of the below is observed on **ESXi 9.1.1**, i.e. a current
@@ -60,7 +60,7 @@ since-boot counters on the same scrape:
   retransmits being most of all retransmits is plausible; the reverse is not.
 
 **Impact:** anyone building dashboards or alerts from the HELP text — the normal
-workflow — labels two panels backwards and mis-diagnoses SACK behaviour. This is
+workflow — labels two panels backwards and mis-diagnoses SACK behavior. This is
 a silent correctness problem, since both metrics exist and both return plausible
 numbers.
 
@@ -83,8 +83,8 @@ counter from a gauge without guessing.
 heuristic is not reliable here — e.g. `vmware_vsan_esa_disk_read_time_max` and
 `vmware_esx_heap_usage_ratio` are clearly gauges, while several `_total` names
 are cumulative counters requiring rate derivation. Getting this wrong produces
-either meaningless rates or meaningless absolute values. Our catalogue's "Type"
-column is explicitly labelled a guess for this reason.
+either meaningless rates or meaningless absolute values. Our catalog's "Type"
+column is explicitly labeled a guess for this reason.
 
 **Suggested fix:** emit `# TYPE <name> counter|gauge` alongside each `# HELP`.
 
@@ -126,7 +126,7 @@ concretely: an expired or rotated token is indistinguishable from a
 misconfigured one, so the adapter cannot surface a specific, actionable error
 and the operator is left guessing. RFC 7235 semantics would use `401` with a
 `WWW-Authenticate` header for an authentication failure, reserving `403` for an
-authenticated-but-unauthorised caller.
+authenticated-but-unauthorized caller.
 
 **Suggested fix:** return `401` for missing/invalid credentials.
 
@@ -138,7 +138,7 @@ HTTP/2 501
 server: BaseHTTP/0.6 Python/3.11.15
 ```
 
-`GET` on the same URL returns `200`. This is the default behaviour of Python's
+`GET` on the same URL returns `200`. This is the default behavior of Python's
 `BaseHTTPRequestHandler` when `do_HEAD` is not implemented.
 
 **Impact:** minor, but a `HEAD` request is the cheapest possible liveness/reachability
@@ -153,7 +153,7 @@ a real fault. It also forces a full ~624 KB `GET` just to check the endpoint is 
   consumers that key on the full label set.
 - **Concurrency of the exporter.** The `server:` header identifies a stock
   Python `BaseHTTP` server. If it is single-threaded, concurrent scrapes
-  serialise — relevant because this host exposes **two** `metric_subscriptions`,
+  serialize — relevant because this host exposes **two** `metric_subscriptions`,
   implying more than one intended consumer. What is the supported scrape
   concurrency and interval?
 - **Token scope, lifetime and subscription semantics.** Confirmed locally that

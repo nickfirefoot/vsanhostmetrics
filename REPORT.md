@@ -107,7 +107,7 @@ collect=/usr/local/bin/python app/adapter.py collect
 ```
 
 Every collection starts a **fresh Python interpreter**. `_RATES` was a
-module-level `vm.RateCache()`, so it was re-initialised on every single
+module-level `vm.RateCache()`, so it was re-initialized on every single
 collect and the baseline was always empty. `RateCache`'s docstring claim —
 "State lives for the container's lifetime" — does not hold under this execution
 model. The adapter would have emitted **zero** rate metrics forever, in
@@ -146,7 +146,7 @@ container-lifetime scope) rather than `/var/log`.
 **For deployment this needs a decision**: on a real Cloud Proxy the uid mapping
 and log volume differ, so confirm where the adapter may persist state before
 trusting `/tmp` there. `/tmp` also means a container restart costs one interval,
-which is the originally intended behaviour.
+which is the originally intended behavior.
 
 ## 4. `mp-test` run 1 and run 2 output
 
@@ -336,4 +336,4 @@ resolves the collision and the rx-only denominator in one change.
 - Collect on 5-minute intervals aligned to the `:00/:05/:10` pattern past the
   hour, to gauge the load this puts on ESXi host CPU and network.
 - Dashboard layout: with that many metrics, likely separate tabs; the idiomatic
-  way Operations organises this still needs research.
+  way Operations organizes this still needs research.

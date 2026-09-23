@@ -46,7 +46,7 @@ IDENTITY = {
 # First-part name when the entity carries only a uuid.
 # Entity types that are cluster-scoped despite not being named cluster-*.
 # vsan-dp-historical-stats returns the cluster UUID, which was originally
-# mislabelled host_uuid -- caught because host_uuid then had 5 distinct values
+# mislabeled host_uuid -- caught because host_uuid then had 5 distinct values
 # across 4 hosts.
 _CLUSTER_SCOPED = {"vsan-dp-historical-stats", "vsan-cluster-capacity"}
 
