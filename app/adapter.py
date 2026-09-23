@@ -42,6 +42,7 @@ from constants import VC_PASS_CRED
 from constants import VERIFY_PARAM
 
 import perfsvc
+import metric_labels
 
 logger = logging.getLogger(__name__)
 
@@ -115,7 +116,11 @@ def get_adapter_definition() -> AdapterDefinition:
                 # Every perfsvc metric is a point value: the service has already
                 # reduced into 5-minute buckets, so nothing here is a rate we
                 # compute or a counter we difference.
-                ot.define_metric(metric, _metric_label(metric))
+                unit = _unit_for(metric)
+                if unit is not None:
+                    ot.define_metric(metric, _metric_label(metric), unit=unit)
+                else:
+                    ot.define_metric(metric, _metric_label(metric))
 
         logger.debug(f"Returning adapter definition: {d.to_json()}")
         return d
@@ -138,13 +143,40 @@ def _label_for(key: str) -> str:
 
 
 def _metric_label(key: str) -> str:
-    """camelCase metric id -> readable label.  tcpRxPackets -> 'Tcp rx packets'."""
+    """Readable label for a perfsvc metric id.
+
+    Generated in app/metric_labels.py, because camelCase-splitting the id is
+    not enough: txSbSpaceMin becomes "Tx sb space min", which is derived from
+    the name and tells you nothing. "Sb" is socket buffer.
+    """
+    label = metric_labels.LABELS.get(key)
+    if label:
+        return label
     out = []
     for i, ch in enumerate(key):
         if ch.isupper() and i and not key[i - 1].isupper():
             out.append(" ")
         out.append(ch)
     return "".join(out).replace("_", " ").capitalize()
+
+
+def _unit_for(key: str):
+    """Resolve a dotted Units path, e.g. "TIME.MICROSECONDS".
+
+    Without a unit Operations renders a bare number, so tcpRxThroughput gives
+    no way to tell bytes/s from bits/s. Units are harvested from HCIBench's
+    dashboards over the same underlying stats; metrics with no entry stay
+    dimensionless rather than being guessed at.
+    """
+    path = metric_labels.UNITS.get(key)
+    if not path:
+        return None
+    node = Units
+    for part in path.split("."):
+        node = getattr(node, part, None)
+        if node is None:
+            return None
+    return node
 
 
 def _cfg(adapter_instance: AdapterInstance, key: str, default: str = "") -> str:
@@ -232,7 +264,7 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
             # perfsvc identifies everything by UUID and returns no friendly
             # name alongside it, unlike the host exposition. Without this every
             # object in Operations reads as a bare UUID.
-            names = perfsvc.build_name_map(si, clusters, perf)
+            names = perfsvc.build_name_map(si, clusters, perf, mos)
             logger.info("resolved %d identifier names", len(names))
 
             total_problems: List[str] = []

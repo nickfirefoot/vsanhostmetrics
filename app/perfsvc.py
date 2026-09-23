@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import datetime
 import os
+import re
 import ssl
 import sys
 from dataclasses import dataclass, field
@@ -132,7 +133,8 @@ def connect(host: str, user: str, password: str, verify: bool = False):
     return si, clusters, mos
 
 
-def build_name_map(service_instance, clusters, perf) -> Dict[str, str]:
+def build_name_map(service_instance, clusters, perf,
+                   _mos: Optional[Dict] = None) -> Dict[str, str]:
     """uuid -> human label, for every identifier type we can resolve.
 
     Best effort throughout: a lookup that fails leaves the UUID in place rather
@@ -187,7 +189,54 @@ def build_name_map(service_instance, clusters, perf) -> Dict[str, str]:
             except Exception:                            # noqa: BLE001
                 pass
 
+    # Physical disks: vsanUuid -> device display name. ESA presents disks via
+    # storage POOLS, not disk groups, which is why the disk-group entity type
+    # returns nothing on an ESA cluster.
+    try:
+        dms = _mos.get("vsan-disk-management-system") if _mos else None
+        if dms is not None:
+            for cluster in clusters:
+                for host in getattr(cluster, "host", []) or []:
+                    try:
+                        managed = dms.QueryVsanManagedDisks(host)
+                    except Exception:                    # noqa: BLE001
+                        continue
+                    for pool in (getattr(managed, "storagePools", None) or []):
+                        for entry in (getattr(pool, "storagePoolDisks", None) or []):
+                            uuid = getattr(entry, "vsanUuid", None)
+                            label = _disk_label(getattr(entry, "disk", None))
+                            if uuid and label:
+                                names[uuid] = f"{label} ({host.name})"
+    except Exception:                                    # noqa: BLE001
+        pass
+
     return names
+
+
+# t10.NVMe____Micron_7450_MTFDKCB1T9TFR_______________FCD815400175A000
+#     ^bus    ^vendor/model tokens       ^padding     ^serial
+_T10 = re.compile(r"^t10\.(?P<bus>[A-Za-z0-9]+)_+(?P<body>.+)$")
+
+
+def _disk_label(scsi) -> Optional[str]:
+    """Readable disk name.
+
+    displayName is "Local NVMe Disk (<canonical>)" and the canonical name pads
+    the model field out to a fixed width with underscores, so the raw name runs
+    ~94 characters of which twenty are padding.  Collapse the padding and drop
+    the wrapper; keep the full serial, because a host can hold several disks of
+    the same model and the serial is the only thing separating them.
+    """
+    display = getattr(scsi, "displayName", None)
+    canonical = (getattr(scsi, "canonicalName", None)
+                 or getattr(scsi, "deviceName", None))
+    if not canonical:
+        return display
+    match = _T10.match(canonical)
+    if not match:                        # naa.*/eui.* -- nothing to compact
+        return display or canonical
+    tokens = [t for t in match.group("body").split("_") if t]
+    return " ".join([match.group("bus")] + tokens)
 
 
 def parse_ref(ref: str) -> Optional[ObjectKey]:

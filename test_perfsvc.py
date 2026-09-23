@@ -155,6 +155,64 @@ def test_entity_errors_are_collected_not_swallowed():
     assert any("host-cpu" in p for p in problems)
 
 
+def test_labels_do_not_repeat_an_expanded_substring():
+    """Regression: expanding "lat"->"latency" inside avgLatency gave
+    "Latencyency".  Substring expansion must not fire inside a word that
+    already contains the expansion."""
+    import metric_labels
+    bad = [k for k, v in metric_labels.LABELS.items()
+           if "latencyency" in v.lower() or "  " in v or v != v.strip()]
+    assert not bad, bad[:5]
+
+
+def test_labels_are_not_just_the_camelcase_id():
+    """The point of the generated labels is that they say more than the id
+    does -- txSbSpaceMin must not render as "Tx sb space min"."""
+    import metric_labels
+    assert metric_labels.LABELS["txSbSpaceMin"] == "TX socket buffer space (min)"
+    assert metric_labels.UNITS["txSbSpaceMin"] == "DATA_SIZE.BYTE"
+    assert metric_labels.UNITS["tcpRxThroughput"] == "DATA_RATE.BIBYTE_PER_SECOND"
+
+
+def test_every_unit_path_resolves_against_the_sdk_units():
+    """A unit is a dotted path into aria.ops.definition.units.Units.  A typo
+    there is silent -- the attribute just comes out unitless."""
+    try:
+        from aria.ops.definition.units import Units
+    except ImportError:
+        return                                       # SDK absent: offline run
+    import metric_labels
+    unresolved = []
+    for key, path in metric_labels.UNITS.items():
+        node = Units
+        for part in path.split("."):
+            node = getattr(node, part, None)
+            if node is None:
+                unresolved.append((key, path)); break
+    assert not unresolved, unresolved[:5]
+
+
+def test_disk_label_drops_the_padding_but_keeps_the_serial():
+    """Two disks of one model on one host differ only by serial, so the serial
+    cannot be truncated away -- but the ~20 underscores of model padding can."""
+    class _Scsi:
+        displayName = ("Local NVMe Disk (t10.NVMe____Micron_7450_MTFDKCB1T9TFR"
+                       "_______________FCD815400175A000)")
+        canonicalName = ("t10.NVMe____Micron_7450_MTFDKCB1T9TFR"
+                         "_______________FCD815400175A000")
+    label = perfsvc._disk_label(_Scsi())
+    assert label == "NVMe Micron 7450 MTFDKCB1T9TFR FCD815400175A000", label
+    assert "__" not in label
+    assert len(label) < len(_Scsi.displayName)
+
+
+def test_disk_label_passes_through_unrecognised_names():
+    class _Scsi:
+        displayName = "Local SAS Disk (naa.5000c500a1b2c3d4)"
+        canonicalName = "naa.5000c500a1b2c3d4"
+    assert perfsvc._disk_label(_Scsi()) == "Local SAS Disk (naa.5000c500a1b2c3d4)"
+
+
 def test_model_is_non_trivial():
     assert len(perfsvc.MODEL.ENTITIES) >= 20
     t = perfsvc.MODEL.ENTITIES["vsan-tcpip-stats"]
