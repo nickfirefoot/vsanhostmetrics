@@ -29,7 +29,7 @@ import aria.ops.adapter_logging as logging
 from aria.ops.adapter_instance import AdapterInstance
 from aria.ops.definition.adapter_definition import AdapterDefinition
 from aria.ops.definition.units import Units
-from aria.ops.object import Identifier
+from aria.ops.object import Identifier, Key, Object
 from aria.ops.result import CollectResult
 from aria.ops.result import EndpointResult
 from aria.ops.result import TestResult
@@ -140,6 +140,39 @@ _LABEL_OVERRIDES = {
 
 def _label_for(key: str) -> str:
     return _LABEL_OVERRIDES.get(key, key.replace("_", " ").capitalize())
+
+
+# vCenter objects our objects attach to. Operations already holds these from
+# the built-in VMWARE adapter, keyed on the managed object reference plus the
+# vCenter instance UUID; see perfsvc.build_parent_map.
+VC_ADAPTER = "VMWARE"
+VC_KINDS = {"hosts": "HostSystem", "vms": "VirtualMachine",
+            "clusters": "ClusterComputeResource",
+            "disks": "HostSystem", "vdisks": "VirtualMachine"}
+
+
+def _vc_parent(cache, parents, bucket, uuid):
+    """Object for the vCenter host/VM/cluster an object belongs to, or None.
+
+    Returns an Object keyed exactly as the VMWARE adapter keys it, so
+    Operations matches the existing object rather than creating a second one.
+    Only the two uniqueness identifiers are set -- adding the non-unique ones
+    (VMEntityName and friends) risks a mismatch when they change.
+    """
+    moid = parents.get(bucket, {}).get(uuid)
+    vcid = parents.get("vcid")
+    if not moid or not vcid:
+        return None
+    ckey = (bucket, moid)
+    if ckey not in cache:
+        cache[ckey] = Object(Key(
+            adapter_kind=VC_ADAPTER,
+            object_kind=VC_KINDS[bucket],
+            name=moid,
+            identifiers=[Identifier("VMEntityObjectID", moid),
+                         Identifier("VMEntityVCID", vcid)],
+        ))
+    return cache[ckey]
 
 
 def _metric_label(key: str) -> str:
@@ -266,6 +299,12 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
             # object in Operations reads as a bare UUID.
             names = perfsvc.build_name_map(si, clusters, perf, mos)
             logger.info("resolved %d identifier names", len(names))
+            parents = perfsvc.build_parent_map(si, clusters, perf, mos)
+            logger.info("mapped %d hosts, %d VMs, %d clusters to vCenter objects",
+                        len(parents.get("hosts", {})), len(parents.get("vms", {})),
+                        len(parents.get("clusters", {})))
+            vc_cache: dict = {}
+            linked = 0
 
             total_problems: List[str] = []
             for cluster in clusters:
@@ -286,6 +325,31 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
                         if value:
                             obj.with_property(f"{name}_prop",
                                               names.get(value, value))
+
+                    # Hang the object off the vCenter object it belongs to, so
+                    # vSAN metrics show up under the host or VM an operator is
+                    # already looking at. Identity order matters: host_uuid
+                    # before cluster_uuid, because a host-scoped object that
+                    # also carries a cluster id belongs under the host.
+                    idents = dict(key.idents)
+                    for bucket, ident in (("hosts", "host_uuid"),
+                                          ("vms", "vm_uuid"),
+                                          ("disks", "disk_uuid"),
+                                          ("vdisks", "vdisk_uuid"),
+                                          ("clusters", "cluster_uuid")):
+                        value = idents.get(ident)
+                        if not value:
+                            continue
+                        parent = _vc_parent(vc_cache, parents, bucket, value)
+                        if parent is not None:
+                            parent.add_child(obj)
+                            linked += 1
+                        break
+
+            for parent in vc_cache.values():
+                result.add_object(parent)
+            logger.info("linked %d objects to %d vCenter parents",
+                        linked, len(vc_cache))
 
             if total_problems:
                 # Loud on purpose. A silently dropped sample is how the io_type

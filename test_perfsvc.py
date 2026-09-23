@@ -340,6 +340,24 @@ def test_units_do_not_contradict_what_the_metric_is():
     assert not contradictions, contradictions[:5]
 
 
+def test_parent_map_is_empty_without_a_vcenter_id():
+    """Relationships key on VMEntityObjectID + VMEntityVCID. Without the
+    vCenter instance UUID we cannot key an object the way the VMWARE adapter
+    does, and a near-miss would create a duplicate ghost object rather than
+    attaching to the real one -- so emit nothing instead."""
+    class _About:
+        instanceUuid = ""
+    class _Content:
+        about = _About()
+        rootFolder = None
+        viewManager = None
+    class _SI:
+        def RetrieveContent(self): return _Content()
+    out = perfsvc.build_parent_map(_SI(), [], None)
+    assert out["vcid"] == ""
+    assert out["hosts"] == {} and out["vms"] == {} and out["clusters"] == {}
+
+
 def test_model_is_non_trivial():
     assert len(perfsvc.MODEL.ENTITIES) >= 20
     t = perfsvc.MODEL.ENTITIES["vsan-tcpip-stats"]

@@ -283,6 +283,124 @@ def _disk_label(scsi) -> Optional[str]:
     return " ".join([match.group("bus")] + tokens)
 
 
+def build_parent_map(service_instance, clusters, perf,
+                     _mos: Optional[Dict] = None) -> Dict[str, Dict[str, str]]:
+    """Identity of the vCenter objects our objects should hang off.
+
+    Operations already holds HostSystem, VirtualMachine and
+    ClusterComputeResource objects from the built-in VMWARE adapter. Attaching
+    to those is far more useful than inventing parents of our own: vSAN metrics
+    then appear under the host an operator is already looking at, and traversal
+    works without a custom traversal spec.
+
+    The join, verified 2026-09-23 against the live instance: those objects are
+    uniquely identified by `VMEntityObjectID` (the managed object reference,
+    e.g. `host-27`) plus `VMEntityVCID` (the vCenter instance UUID). Both are
+    readable through pyVmomi -- `_moId` and `content.about.instanceUuid` -- and
+    the instanceUuid matched Operations' VMEntityVCID exactly.
+
+    Returns {"vcid": <uuid>, "hosts": {vsan_host_uuid: moid},
+             "vms": {vm_uuid: moid}, "clusters": {vsan_cluster_uuid: moid}}.
+
+    Best effort: anything unresolved simply yields no relationship, never a
+    failed collection.
+    """
+    out: Dict[str, Dict[str, str]] = {"hosts": {}, "vms": {}, "clusters": {},
+                                      "disks": {}, "vdisks": {}}
+    vcid = ""
+    try:
+        content = service_instance.RetrieveContent()
+        vcid = getattr(content.about, "instanceUuid", "") or ""
+    except Exception:                                    # noqa: BLE001
+        content = None
+    out["vcid"] = vcid                                   # type: ignore[assignment]
+    if not vcid:
+        return out
+
+    for cluster in clusters:
+        # vSAN cluster uuid -> cluster MoRef
+        try:
+            cfg = getattr(getattr(cluster, "configurationEx", None),
+                          "vsanConfigInfo", None)
+            cuuid = getattr(getattr(cfg, "defaultConfig", None), "uuid", None)
+            if cuuid:
+                out["clusters"][cuuid] = cluster._moId
+        except Exception:                                # noqa: BLE001
+            pass
+
+        # vSAN node uuid -> host MoRef, joined on hostname because perfsvc
+        # reports the vSAN node uuid and vCenter reports the MoRef, with the
+        # hostname the only field both agree on.
+        by_name: Dict[str, str] = {}
+        for host in (getattr(cluster, "host", None) or []):
+            try:
+                by_name[host.name] = host._moId
+            except Exception:                            # noqa: BLE001
+                pass
+        try:
+            for node in (perf.VsanPerfQueryNodeInformation(cluster) or []):
+                uuid = getattr(node, "vsanNodeUuid", None)
+                moid = by_name.get(getattr(node, "hostname", None) or "")
+                if uuid and moid:
+                    out["hosts"][uuid] = moid
+        except Exception:                                # noqa: BLE001
+            pass
+
+    # Physical disks belong to the host that owns the storage pool. Same
+    # QueryVsanManagedDisks walk that resolves their display names.
+    try:
+        dms = _mos.get("vsan-disk-management-system") if _mos else None
+        if dms is not None:
+            for cluster in clusters:
+                for host in (getattr(cluster, "host", None) or []):
+                    try:
+                        managed = dms.QueryVsanManagedDisks(host)
+                    except Exception:                    # noqa: BLE001
+                        continue
+                    for pool in (getattr(managed, "storagePools", None) or []):
+                        for entry in (getattr(pool, "storagePoolDisks", None) or []):
+                            uuid = getattr(entry, "vsanUuid", None)
+                            if uuid:
+                                out["disks"][uuid] = host._moId
+    except Exception:                                    # noqa: BLE001
+        pass
+
+    if content is not None:
+        view = None
+        try:
+            view = content.viewManager.CreateContainerView(
+                content.rootFolder, [vim.VirtualMachine], True)
+            for vm in view.view:
+                cfg = getattr(vm, "config", None)
+                if not cfg:
+                    continue
+                for attr in ("uuid", "instanceUuid"):
+                    value = getattr(cfg, attr, None)
+                    if value:
+                        out["vms"][value] = vm._moId
+                # A virtual-disk object is identified by its datastore path,
+                # which is the attached VM's backing fileName. Both slash
+                # forms, as in build_name_map.
+                for dev in (getattr(getattr(cfg, "hardware", None), "device", None) or []):
+                    if not isinstance(dev, vim.vm.device.VirtualDisk):
+                        continue
+                    filename = getattr(getattr(dev, "backing", None), "fileName", None)
+                    if not filename:
+                        continue
+                    path = _DS_PREFIX.sub("", filename)
+                    out["vdisks"][path] = vm._moId
+                    out["vdisks"]["/" + path.lstrip("/")] = vm._moId
+        except Exception:                                # noqa: BLE001
+            pass
+        finally:
+            if view is not None:
+                try:
+                    view.DestroyView()
+                except Exception:                        # noqa: BLE001
+                    pass
+    return out
+
+
 def parse_ref(ref: str) -> Optional[ObjectKey]:
     """'<entity>:<uuid>|<part>' -> ObjectKey, or None if unmodeled."""
     if ":" not in ref:
