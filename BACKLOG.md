@@ -201,3 +201,26 @@ goes to many sites.
   `~/harbor.env` and an SSH key with no context.
 - Consider turning SSH back off on the Cloud Proxy once validation is done; it
   is disabled by default as deliberate hardening.
+
+## Object naming
+
+**`virtual-disk` objects still read as UUIDs.** Every other entity type now
+resolves to a human name, but `virtual-disk` refs look like
+`8e97b16a-ba2a-8bf5-db38-9c6b00c51395/0eb3af29c00e4a12898229feb77f454d.vmdk`.
+
+That is not a gap in `build_name_map` so much as what these objects are: the
+observed ones are CNS persistent volumes backing Supervisor/TKG nodes, and an
+FCD's filename genuinely *is* a UUID — there is no friendly name on the
+datastore to find. Resolving them needs a separate lookup through
+`vStorageObjectManager` (`RetrieveVStorageObject` → `config.name`, which for a
+CNS volume is the PVC name), or `CnsQueryVolume` for the Kubernetes-side name.
+
+Worth doing before dashboards: a per-volume IO panel nobody can map back to a
+PVC is not actionable. Not worth blocking a release on.
+
+**Unit coverage is 40%** (294 of 730). The resolved ones come from HCIBench's
+dashboards plus conservative name heuristics; the remainder are either
+genuinely dimensionless counts or unknown, and are deliberately left unitless.
+A wrong unit is worse than none, because Operations will scale and render it
+confidently. Improving this means finding a second authority, not loosening
+the heuristics.

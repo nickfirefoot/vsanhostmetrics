@@ -213,6 +213,28 @@ def test_disk_label_passes_through_unrecognised_names():
     assert perfsvc._disk_label(_Scsi()) == "Local SAS Disk (naa.5000c500a1b2c3d4)"
 
 
+def test_nic_error_counters_are_readable():
+    """These are the grey-state signals for a failing NIC or link -- the ones
+    a rapid dashboard shows -- so they are the labels that must not stay
+    cryptic.  "RX lgt err" tells an operator nothing."""
+    import metric_labels as ml
+    assert ml.LABELS["rxLgtErr"] == "RX length errors"
+    assert ml.LABELS["txCarErr"] == "TX carrier errors"
+    assert ml.LABELS["rxFrmErr"] == "RX frame alignment errors"
+    assert ml.LABELS["pfcCount"] == "PFC count"
+    assert ml.LABELS["ioChainRxdrops"] == "IO chain RX drops"
+    # The ring-buffer-full counter, distinct from rxDrp and rxErr.
+    assert ml.LABELS["rxMissErr"] == "RX missed errors (ring buffer full)"
+
+
+def test_cache_miss_is_not_pluralised_into_missed():
+    """Regression: a whole-token "miss"->"missed" rule for rxMissErr turned
+    30 cache-miss metrics into "cache missed", which is wrong English."""
+    import metric_labels as ml
+    wrong = [k for k, v in ml.LABELS.items() if "cache missed" in v.lower()]
+    assert not wrong, wrong[:5]
+
+
 def test_model_is_non_trivial():
     assert len(perfsvc.MODEL.ENTITIES) >= 20
     t = perfsvc.MODEL.ENTITIES["vsan-tcpip-stats"]

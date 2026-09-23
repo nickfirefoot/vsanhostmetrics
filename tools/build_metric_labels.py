@@ -51,6 +51,18 @@ ABBREV = [
     ("lat", "latency"), ("pkt", "packet"), ("pct", "percent"),
     ("util", "utilisation"), ("cnt", "count"),
     ("vmdisk", "VM disk"), ("stddev", "standard deviation"),
+    # Classic ESXi/Linux NIC counters. These are the grey-state signals for a
+    # failing NIC or link, so they are the ones an operator must read at a
+    # glance -- "RX lgt err" is not readable.
+    ("rxpkts", "RX packets"), ("txpkts", "TX packets"),
+    ("rxdrops", "RX drops"), ("txdrops", "TX drops"),
+    ("drp", "dropped"), ("err", "errors"), ("errs", "errors"),
+    ("frm", "frame alignment"), ("lgt", "length"),
+    ("ov", "overrun"), ("abort", "aborted"), ("car", "carrier"),
+    # NB no ("miss", "missed"): "miss" is overwhelmingly cache miss,
+    # where "missed" is wrong. rxMissErr is handled in OVERRIDE.
+    ("heart", "heartbeat"), ("win", "window"), ("ka", "keepalive"),
+    ("mcast", "multicast"), ("ucast", "unicast"),
     ("tput", "throughput"), ("oio", "outstanding IO"),
     ("txn", "transaction"), ("rec", "recovery"), ("resync", "resync"),
     ("rcv", "received"), ("snd", "sent"), ("q", "queue"),
@@ -59,7 +71,8 @@ ABBREV = [
 ACRONYMS = {"tcp", "ip", "ip6", "arp", "ecn", "sack", "rdt", "dom", "lsom",
             "cmmds", "clom", "zdom", "esa", "vsan", "cpu", "io", "iops",
             "vm", "pnic", "vnic", "scsi", "vscsi", "nvme", "ssd", "dp",
-            "rx", "tx", "id", "uuid", "db", "ack", "acks"}
+            "rx", "tx", "id", "uuid", "db", "ack", "acks",
+            "crc", "fifo", "pfc", "nic"}
 # Safe to replace inside a longer token. Anything that can occur as a
 # substring of a real English word must NOT be listed here.
 SUBSTRING_SAFE = [
@@ -121,7 +134,23 @@ def _expand(token: str) -> str:
     return " ".join(w.upper() if w in ACRONYMS else w for w in out.split())
 
 
+# Metrics whose meaning the token rules cannot reach. Keep this small: every
+# entry is a hand-maintained claim that has to stay true.
+OVERRIDE = {
+    # The NIC ring buffer had no free descriptor, so the packet was dropped
+    # before the driver ever saw it. Distinct from rxDrp (dropped higher up)
+    # and from rxErr (arrived damaged), and the single most useful counter for
+    # "is this NIC being overrun".
+    "rxMissErr": "RX missed errors (ring buffer full)",
+}
+OVERRIDE.update({f"{k}Actual": f"{v} (actual)" for k, v in list(OVERRIDE.items())})
+OVERRIDE.update({f"{k}Raw": f"{v} (raw)" for k, v in list(OVERRIDE.items())
+                 if not k.endswith("Actual")})
+
+
 def label_for(metric: str) -> str:
+    if metric in OVERRIDE:
+        return OVERRIDE[metric]
     parts = split_camel(metric)
     trailing = []
     both = {**QUALIFIER, **TRAILING_ONLY}
