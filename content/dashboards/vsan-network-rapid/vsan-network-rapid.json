@@ -1,0 +1,1113 @@
+{
+ "entries": {},
+ "dashboards": [
+  {
+   "id": "1f7894ac-ab74-4751-af11-c7efb5624f3a",
+   "name": "vSAN Network Rapid",
+   "description": "Grey-state detection for vSAN networking. Non-zero is the catch.",
+   "shared": true,
+   "hidden": false,
+   "creationTime": 0,
+   "autoswitchEnabled": false,
+   "importAttempts": 0,
+   "columnProportion": "1",
+   "importComplete": true,
+   "columnCount": 0,
+   "gridsterMaxColumns": 12,
+   "rank": 0,
+   "disabled": false,
+   "locked": false,
+   "homeTab": false,
+   "editAllowed": true,
+   "states": [],
+   "dashboardNavigations": {},
+   "widgets": [
+    {
+     "tabId": "1f7894ac-ab74-4751-af11-c7efb5624f3a",
+     "id": "26c2158a-22cf-4afb-b182-f98ac9c2cc43",
+     "type": "TextDisplay",
+     "title": "How to read this",
+     "collapsed": false,
+     "state": "",
+     "height": 0,
+     "gridsterCoords": {
+      "x": 1,
+      "y": 1,
+      "w": 12,
+      "h": 5
+     },
+     "config": {
+      "description": "\n<h3>Network rapid &mdash; is a NIC or link bad right now?</h3>\n<p>This screen catches <b>grey-state failure</b>: partial degradation that\nleaves everything nominally up. A NIC dropping 0.1% of frames still moves\ntraffic at line rate, so throughput and latency look green through the exact\nfault this exists to find. <b>Non-zero is the catch.</b> It is not a\nroot-cause tool.</p>\n<p><b>Drop and pause metrics are per-mille, not percent.</b> A value of\n<code>1</code> means 0.1%, which is already Broadcom's warning threshold for\nout-of-order packets; <code>10</code> is critical. Do not read them as packet\ncounts.</p>\n<p><b>RX missed errors</b> means the NIC ring buffer had no free descriptor and\nthe packet was dropped before the driver saw it &mdash; distinct from\n<i>RX dropped</i> (discarded higher up) and <i>RX errors</i> (arrived damaged).\nIt is the clearest signal that a NIC is being overrun.</p>\n<p><b>Pause / PFC</b> separate a congested fabric from a failing NIC: the host\nasking the switch to slow down is a different problem from the host losing\nframes.</p>\n<p><b>Blind spot:</b> there are no disk media-error counters anywhere in the\nvSAN Performance Service, and no NIC ring-buffer <i>utilisation</i> &mdash;\nonly overflow after the fact. A green screen here does not mean the hardware is\nhealthy.</p>\n<p><a href=\"https://github.com/nickfirefoot/vsanhostmetrics\">Documentation and\nfull metric reference</a></p>\n",
+      "locationUrl": "",
+      "locationFile": "",
+      "viewModeHTML": true,
+      "refreshInterval": 300,
+      "widgetId": "26c2158a-22cf-4afb-b182-f98ac9c2cc43",
+      "title": "How to read this",
+      "refreshContent": {
+       "refreshContent": false
+      },
+      "viewDetails": ""
+     }
+    },
+    {
+     "tabId": "1f7894ac-ab74-4751-af11-c7efb5624f3a",
+     "id": "2c09d256-5194-44e2-b870-816ead9d3f20",
+     "type": "Heatmap",
+     "title": "pNIC RX missed errors (ring full)",
+     "collapsed": false,
+     "state": "",
+     "height": 0,
+     "gridsterCoords": {
+      "x": 1,
+      "y": 6,
+      "w": 4,
+      "h": 5
+     },
+     "config": {
+      "configs": [
+       {
+        "colorBy": {
+         "value": "rxMissErr"
+        },
+        "sizeBy": {
+         "value": ""
+        },
+        "attributeKind": {
+         "value": "002015VsanHostMetricsVsanPnic"
+        },
+        "groupBy": {
+         "resourceKind": "HostSystem",
+         "adapterKind": "VMWARE",
+         "typeId": "resourceKind:id:0_::_",
+         "id": "004null002006VMWAREHostSystem",
+         "text": "HostSystem",
+         "type": "resourceKind",
+         "parentText": "vCenter",
+         "parentId": "VMWARE"
+        },
+        "color": {
+         "thresholds": {
+          "values": [
+           0,
+           1,
+           10
+          ],
+          "colors": [
+           "#67CA16",
+           "#FFDB24",
+           "#FF4D2E"
+          ]
+         }
+        },
+        "focusOnGroups": true,
+        "relationalGrouping": false,
+        "solidColoring": false,
+        "filterMode": "tagPicker",
+        "nameLocalized": "name",
+        "name": "name",
+        "nameOrig": "name",
+        "thenBy": null,
+        "mode": {
+         "mode": false
+        },
+        "resourceKind": null,
+        "id": "extModel-2c09d256"
+       }
+      ],
+      "refreshInterval": 300,
+      "widgetId": "2c09d256-5194-44e2-b870-816ead9d3f20",
+      "title": "pNIC RX missed errors (ring full)",
+      "description": "",
+      "mode": "resource",
+      "depth": 10,
+      "refreshContent": {
+       "refreshContent": true
+      },
+      "relationshipMode": {
+       "relationshipMode": [
+        1,
+        -1,
+        0
+       ]
+      },
+      "selfProvider": {
+       "selfProvider": true
+      },
+      "viewDetails": "",
+      "value": 0
+     }
+    },
+    {
+     "tabId": "1f7894ac-ab74-4751-af11-c7efb5624f3a",
+     "id": "2706af4b-3649-448b-a278-50e5d94fe609",
+     "type": "Heatmap",
+     "title": "pNIC RX CRC errors",
+     "collapsed": false,
+     "state": "",
+     "height": 0,
+     "gridsterCoords": {
+      "x": 5,
+      "y": 6,
+      "w": 4,
+      "h": 5
+     },
+     "config": {
+      "configs": [
+       {
+        "colorBy": {
+         "value": "rxCrcErr"
+        },
+        "sizeBy": {
+         "value": ""
+        },
+        "attributeKind": {
+         "value": "002015VsanHostMetricsVsanPnic"
+        },
+        "groupBy": {
+         "resourceKind": "HostSystem",
+         "adapterKind": "VMWARE",
+         "typeId": "resourceKind:id:0_::_",
+         "id": "004null002006VMWAREHostSystem",
+         "text": "HostSystem",
+         "type": "resourceKind",
+         "parentText": "vCenter",
+         "parentId": "VMWARE"
+        },
+        "color": {
+         "thresholds": {
+          "values": [
+           0,
+           1,
+           10
+          ],
+          "colors": [
+           "#67CA16",
+           "#FFDB24",
+           "#FF4D2E"
+          ]
+         }
+        },
+        "focusOnGroups": true,
+        "relationalGrouping": false,
+        "solidColoring": false,
+        "filterMode": "tagPicker",
+        "nameLocalized": "name",
+        "name": "name",
+        "nameOrig": "name",
+        "thenBy": null,
+        "mode": {
+         "mode": false
+        },
+        "resourceKind": null,
+        "id": "extModel-2706af4b"
+       }
+      ],
+      "refreshInterval": 300,
+      "widgetId": "2706af4b-3649-448b-a278-50e5d94fe609",
+      "title": "pNIC RX CRC errors",
+      "description": "",
+      "mode": "resource",
+      "depth": 10,
+      "refreshContent": {
+       "refreshContent": true
+      },
+      "relationshipMode": {
+       "relationshipMode": [
+        1,
+        -1,
+        0
+       ]
+      },
+      "selfProvider": {
+       "selfProvider": true
+      },
+      "viewDetails": "",
+      "value": 0
+     }
+    },
+    {
+     "tabId": "1f7894ac-ab74-4751-af11-c7efb5624f3a",
+     "id": "b7be18c4-aee8-43fe-b1d3-01ee0745d0c8",
+     "type": "Heatmap",
+     "title": "pNIC TX carrier errors",
+     "collapsed": false,
+     "state": "",
+     "height": 0,
+     "gridsterCoords": {
+      "x": 9,
+      "y": 6,
+      "w": 4,
+      "h": 5
+     },
+     "config": {
+      "configs": [
+       {
+        "colorBy": {
+         "value": "txCarErr"
+        },
+        "sizeBy": {
+         "value": ""
+        },
+        "attributeKind": {
+         "value": "002015VsanHostMetricsVsanPnic"
+        },
+        "groupBy": {
+         "resourceKind": "HostSystem",
+         "adapterKind": "VMWARE",
+         "typeId": "resourceKind:id:0_::_",
+         "id": "004null002006VMWAREHostSystem",
+         "text": "HostSystem",
+         "type": "resourceKind",
+         "parentText": "vCenter",
+         "parentId": "VMWARE"
+        },
+        "color": {
+         "thresholds": {
+          "values": [
+           0,
+           1,
+           10
+          ],
+          "colors": [
+           "#67CA16",
+           "#FFDB24",
+           "#FF4D2E"
+          ]
+         }
+        },
+        "focusOnGroups": true,
+        "relationalGrouping": false,
+        "solidColoring": false,
+        "filterMode": "tagPicker",
+        "nameLocalized": "name",
+        "name": "name",
+        "nameOrig": "name",
+        "thenBy": null,
+        "mode": {
+         "mode": false
+        },
+        "resourceKind": null,
+        "id": "extModel-b7be18c4"
+       }
+      ],
+      "refreshInterval": 300,
+      "widgetId": "b7be18c4-aee8-43fe-b1d3-01ee0745d0c8",
+      "title": "pNIC TX carrier errors",
+      "description": "",
+      "mode": "resource",
+      "depth": 10,
+      "refreshContent": {
+       "refreshContent": true
+      },
+      "relationshipMode": {
+       "relationshipMode": [
+        1,
+        -1,
+        0
+       ]
+      },
+      "selfProvider": {
+       "selfProvider": true
+      },
+      "viewDetails": "",
+      "value": 0
+     }
+    },
+    {
+     "tabId": "1f7894ac-ab74-4751-af11-c7efb5624f3a",
+     "id": "e409ed66-72c7-4741-bb3d-e7fcaa733b0d",
+     "type": "Heatmap",
+     "title": "pNIC RX errors",
+     "collapsed": false,
+     "state": "",
+     "height": 0,
+     "gridsterCoords": {
+      "x": 1,
+      "y": 11,
+      "w": 4,
+      "h": 5
+     },
+     "config": {
+      "configs": [
+       {
+        "colorBy": {
+         "value": "rxErr"
+        },
+        "sizeBy": {
+         "value": ""
+        },
+        "attributeKind": {
+         "value": "002015VsanHostMetricsVsanPnic"
+        },
+        "groupBy": {
+         "resourceKind": "HostSystem",
+         "adapterKind": "VMWARE",
+         "typeId": "resourceKind:id:0_::_",
+         "id": "004null002006VMWAREHostSystem",
+         "text": "HostSystem",
+         "type": "resourceKind",
+         "parentText": "vCenter",
+         "parentId": "VMWARE"
+        },
+        "color": {
+         "thresholds": {
+          "values": [
+           0,
+           1,
+           10
+          ],
+          "colors": [
+           "#67CA16",
+           "#FFDB24",
+           "#FF4D2E"
+          ]
+         }
+        },
+        "focusOnGroups": true,
+        "relationalGrouping": false,
+        "solidColoring": false,
+        "filterMode": "tagPicker",
+        "nameLocalized": "name",
+        "name": "name",
+        "nameOrig": "name",
+        "thenBy": null,
+        "mode": {
+         "mode": false
+        },
+        "resourceKind": null,
+        "id": "extModel-e409ed66"
+       }
+      ],
+      "refreshInterval": 300,
+      "widgetId": "e409ed66-72c7-4741-bb3d-e7fcaa733b0d",
+      "title": "pNIC RX errors",
+      "description": "",
+      "mode": "resource",
+      "depth": 10,
+      "refreshContent": {
+       "refreshContent": true
+      },
+      "relationshipMode": {
+       "relationshipMode": [
+        1,
+        -1,
+        0
+       ]
+      },
+      "selfProvider": {
+       "selfProvider": true
+      },
+      "viewDetails": "",
+      "value": 0
+     }
+    },
+    {
+     "tabId": "1f7894ac-ab74-4751-af11-c7efb5624f3a",
+     "id": "aafcf2f5-2eb3-4da2-b1bb-aabe49becfd0",
+     "type": "Heatmap",
+     "title": "vSwitch port RX drops (per-mille)",
+     "collapsed": false,
+     "state": "",
+     "height": 0,
+     "gridsterCoords": {
+      "x": 5,
+      "y": 11,
+      "w": 4,
+      "h": 5
+     },
+     "config": {
+      "configs": [
+       {
+        "colorBy": {
+         "value": "portRxDrops"
+        },
+        "sizeBy": {
+         "value": ""
+        },
+        "attributeKind": {
+         "value": "002015VsanHostMetricsVsanPnic"
+        },
+        "groupBy": {
+         "resourceKind": "HostSystem",
+         "adapterKind": "VMWARE",
+         "typeId": "resourceKind:id:0_::_",
+         "id": "004null002006VMWAREHostSystem",
+         "text": "HostSystem",
+         "type": "resourceKind",
+         "parentText": "vCenter",
+         "parentId": "VMWARE"
+        },
+        "color": {
+         "thresholds": {
+          "values": [
+           0,
+           1,
+           10
+          ],
+          "colors": [
+           "#67CA16",
+           "#FFDB24",
+           "#FF4D2E"
+          ]
+         }
+        },
+        "focusOnGroups": true,
+        "relationalGrouping": false,
+        "solidColoring": false,
+        "filterMode": "tagPicker",
+        "nameLocalized": "name",
+        "name": "name",
+        "nameOrig": "name",
+        "thenBy": null,
+        "mode": {
+         "mode": false
+        },
+        "resourceKind": null,
+        "id": "extModel-aafcf2f5"
+       }
+      ],
+      "refreshInterval": 300,
+      "widgetId": "aafcf2f5-2eb3-4da2-b1bb-aabe49becfd0",
+      "title": "vSwitch port RX drops (per-mille)",
+      "description": "",
+      "mode": "resource",
+      "depth": 10,
+      "refreshContent": {
+       "refreshContent": true
+      },
+      "relationshipMode": {
+       "relationshipMode": [
+        1,
+        -1,
+        0
+       ]
+      },
+      "selfProvider": {
+       "selfProvider": true
+      },
+      "viewDetails": "",
+      "value": 0
+     }
+    },
+    {
+     "tabId": "1f7894ac-ab74-4751-af11-c7efb5624f3a",
+     "id": "01fed29d-a511-4672-aaa4-0116ad41b86c",
+     "type": "Heatmap",
+     "title": "vSwitch port TX drops (per-mille)",
+     "collapsed": false,
+     "state": "",
+     "height": 0,
+     "gridsterCoords": {
+      "x": 9,
+      "y": 11,
+      "w": 4,
+      "h": 5
+     },
+     "config": {
+      "configs": [
+       {
+        "colorBy": {
+         "value": "portTxDrops"
+        },
+        "sizeBy": {
+         "value": ""
+        },
+        "attributeKind": {
+         "value": "002015VsanHostMetricsVsanPnic"
+        },
+        "groupBy": {
+         "resourceKind": "HostSystem",
+         "adapterKind": "VMWARE",
+         "typeId": "resourceKind:id:0_::_",
+         "id": "004null002006VMWAREHostSystem",
+         "text": "HostSystem",
+         "type": "resourceKind",
+         "parentText": "vCenter",
+         "parentId": "VMWARE"
+        },
+        "color": {
+         "thresholds": {
+          "values": [
+           0,
+           1,
+           10
+          ],
+          "colors": [
+           "#67CA16",
+           "#FFDB24",
+           "#FF4D2E"
+          ]
+         }
+        },
+        "focusOnGroups": true,
+        "relationalGrouping": false,
+        "solidColoring": false,
+        "filterMode": "tagPicker",
+        "nameLocalized": "name",
+        "name": "name",
+        "nameOrig": "name",
+        "thenBy": null,
+        "mode": {
+         "mode": false
+        },
+        "resourceKind": null,
+        "id": "extModel-01fed29d"
+       }
+      ],
+      "refreshInterval": 300,
+      "widgetId": "01fed29d-a511-4672-aaa4-0116ad41b86c",
+      "title": "vSwitch port TX drops (per-mille)",
+      "description": "",
+      "mode": "resource",
+      "depth": 10,
+      "refreshContent": {
+       "refreshContent": true
+      },
+      "relationshipMode": {
+       "relationshipMode": [
+        1,
+        -1,
+        0
+       ]
+      },
+      "selfProvider": {
+       "selfProvider": true
+      },
+      "viewDetails": "",
+      "value": 0
+     }
+    },
+    {
+     "tabId": "1f7894ac-ab74-4751-af11-c7efb5624f3a",
+     "id": "13403f24-2a04-472c-b2e8-e09d98e7f515",
+     "type": "Heatmap",
+     "title": "802.3x pause rate",
+     "collapsed": false,
+     "state": "",
+     "height": 0,
+     "gridsterCoords": {
+      "x": 1,
+      "y": 16,
+      "w": 4,
+      "h": 5
+     },
+     "config": {
+      "configs": [
+       {
+        "colorBy": {
+         "value": "pauseCount"
+        },
+        "sizeBy": {
+         "value": ""
+        },
+        "attributeKind": {
+         "value": "002015VsanHostMetricsVsanPnic"
+        },
+        "groupBy": {
+         "resourceKind": "HostSystem",
+         "adapterKind": "VMWARE",
+         "typeId": "resourceKind:id:0_::_",
+         "id": "004null002006VMWAREHostSystem",
+         "text": "HostSystem",
+         "type": "resourceKind",
+         "parentText": "vCenter",
+         "parentId": "VMWARE"
+        },
+        "color": {
+         "thresholds": {
+          "values": [
+           0,
+           1,
+           10
+          ],
+          "colors": [
+           "#67CA16",
+           "#FFDB24",
+           "#FF4D2E"
+          ]
+         }
+        },
+        "focusOnGroups": true,
+        "relationalGrouping": false,
+        "solidColoring": false,
+        "filterMode": "tagPicker",
+        "nameLocalized": "name",
+        "name": "name",
+        "nameOrig": "name",
+        "thenBy": null,
+        "mode": {
+         "mode": false
+        },
+        "resourceKind": null,
+        "id": "extModel-13403f24"
+       }
+      ],
+      "refreshInterval": 300,
+      "widgetId": "13403f24-2a04-472c-b2e8-e09d98e7f515",
+      "title": "802.3x pause rate",
+      "description": "",
+      "mode": "resource",
+      "depth": 10,
+      "refreshContent": {
+       "refreshContent": true
+      },
+      "relationshipMode": {
+       "relationshipMode": [
+        1,
+        -1,
+        0
+       ]
+      },
+      "selfProvider": {
+       "selfProvider": true
+      },
+      "viewDetails": "",
+      "value": 0
+     }
+    },
+    {
+     "tabId": "1f7894ac-ab74-4751-af11-c7efb5624f3a",
+     "id": "46e88a9f-7d1a-4d03-9a23-60e3aa72d7cc",
+     "type": "Heatmap",
+     "title": "PFC count",
+     "collapsed": false,
+     "state": "",
+     "height": 0,
+     "gridsterCoords": {
+      "x": 5,
+      "y": 16,
+      "w": 4,
+      "h": 5
+     },
+     "config": {
+      "configs": [
+       {
+        "colorBy": {
+         "value": "pfcCount"
+        },
+        "sizeBy": {
+         "value": ""
+        },
+        "attributeKind": {
+         "value": "002015VsanHostMetricsVsanPnic"
+        },
+        "groupBy": {
+         "resourceKind": "HostSystem",
+         "adapterKind": "VMWARE",
+         "typeId": "resourceKind:id:0_::_",
+         "id": "004null002006VMWAREHostSystem",
+         "text": "HostSystem",
+         "type": "resourceKind",
+         "parentText": "vCenter",
+         "parentId": "VMWARE"
+        },
+        "color": {
+         "thresholds": {
+          "values": [
+           0,
+           1,
+           10
+          ],
+          "colors": [
+           "#67CA16",
+           "#FFDB24",
+           "#FF4D2E"
+          ]
+         }
+        },
+        "focusOnGroups": true,
+        "relationalGrouping": false,
+        "solidColoring": false,
+        "filterMode": "tagPicker",
+        "nameLocalized": "name",
+        "name": "name",
+        "nameOrig": "name",
+        "thenBy": null,
+        "mode": {
+         "mode": false
+        },
+        "resourceKind": null,
+        "id": "extModel-46e88a9f"
+       }
+      ],
+      "refreshInterval": 300,
+      "widgetId": "46e88a9f-7d1a-4d03-9a23-60e3aa72d7cc",
+      "title": "PFC count",
+      "description": "",
+      "mode": "resource",
+      "depth": 10,
+      "refreshContent": {
+       "refreshContent": true
+      },
+      "relationshipMode": {
+       "relationshipMode": [
+        1,
+        -1,
+        0
+       ]
+      },
+      "selfProvider": {
+       "selfProvider": true
+      },
+      "viewDetails": "",
+      "value": 0
+     }
+    },
+    {
+     "tabId": "1f7894ac-ab74-4751-af11-c7efb5624f3a",
+     "id": "c98ada80-5d37-4b17-a849-9c73a5fac183",
+     "type": "Heatmap",
+     "title": "TCP retransmit rate",
+     "collapsed": false,
+     "state": "",
+     "height": 0,
+     "gridsterCoords": {
+      "x": 9,
+      "y": 16,
+      "w": 4,
+      "h": 5
+     },
+     "config": {
+      "configs": [
+       {
+        "colorBy": {
+         "value": "tcpTxRexmitRate"
+        },
+        "sizeBy": {
+         "value": ""
+        },
+        "attributeKind": {
+         "value": "002015VsanHostMetricsVsanHostNet"
+        },
+        "groupBy": {
+         "resourceKind": "HostSystem",
+         "adapterKind": "VMWARE",
+         "typeId": "resourceKind:id:0_::_",
+         "id": "004null002006VMWAREHostSystem",
+         "text": "HostSystem",
+         "type": "resourceKind",
+         "parentText": "vCenter",
+         "parentId": "VMWARE"
+        },
+        "color": {
+         "thresholds": {
+          "values": [
+           0,
+           5,
+           10
+          ],
+          "colors": [
+           "#67CA16",
+           "#FFDB24",
+           "#FF4D2E"
+          ]
+         }
+        },
+        "focusOnGroups": true,
+        "relationalGrouping": false,
+        "solidColoring": false,
+        "filterMode": "tagPicker",
+        "nameLocalized": "name",
+        "name": "name",
+        "nameOrig": "name",
+        "thenBy": null,
+        "mode": {
+         "mode": false
+        },
+        "resourceKind": null,
+        "id": "extModel-c98ada80"
+       }
+      ],
+      "refreshInterval": 300,
+      "widgetId": "c98ada80-5d37-4b17-a849-9c73a5fac183",
+      "title": "TCP retransmit rate",
+      "description": "",
+      "mode": "resource",
+      "depth": 10,
+      "refreshContent": {
+       "refreshContent": true
+      },
+      "relationshipMode": {
+       "relationshipMode": [
+        1,
+        -1,
+        0
+       ]
+      },
+      "selfProvider": {
+       "selfProvider": true
+      },
+      "viewDetails": "",
+      "value": 0
+     }
+    },
+    {
+     "tabId": "1f7894ac-ab74-4751-af11-c7efb5624f3a",
+     "id": "beb066a4-a867-422d-8b3b-35f40e536445",
+     "type": "Heatmap",
+     "title": "TCP RX error rate",
+     "collapsed": false,
+     "state": "",
+     "height": 0,
+     "gridsterCoords": {
+      "x": 1,
+      "y": 21,
+      "w": 4,
+      "h": 5
+     },
+     "config": {
+      "configs": [
+       {
+        "colorBy": {
+         "value": "tcpRxErrRate"
+        },
+        "sizeBy": {
+         "value": ""
+        },
+        "attributeKind": {
+         "value": "002015VsanHostMetricsVsanHostNet"
+        },
+        "groupBy": {
+         "resourceKind": "HostSystem",
+         "adapterKind": "VMWARE",
+         "typeId": "resourceKind:id:0_::_",
+         "id": "004null002006VMWAREHostSystem",
+         "text": "HostSystem",
+         "type": "resourceKind",
+         "parentText": "vCenter",
+         "parentId": "VMWARE"
+        },
+        "color": {
+         "thresholds": {
+          "values": [
+           0,
+           1,
+           10
+          ],
+          "colors": [
+           "#67CA16",
+           "#FFDB24",
+           "#FF4D2E"
+          ]
+         }
+        },
+        "focusOnGroups": true,
+        "relationalGrouping": false,
+        "solidColoring": false,
+        "filterMode": "tagPicker",
+        "nameLocalized": "name",
+        "name": "name",
+        "nameOrig": "name",
+        "thenBy": null,
+        "mode": {
+         "mode": false
+        },
+        "resourceKind": null,
+        "id": "extModel-beb066a4"
+       }
+      ],
+      "refreshInterval": 300,
+      "widgetId": "beb066a4-a867-422d-8b3b-35f40e536445",
+      "title": "TCP RX error rate",
+      "description": "",
+      "mode": "resource",
+      "depth": 10,
+      "refreshContent": {
+       "refreshContent": true
+      },
+      "relationshipMode": {
+       "relationshipMode": [
+        1,
+        -1,
+        0
+       ]
+      },
+      "selfProvider": {
+       "selfProvider": true
+      },
+      "viewDetails": "",
+      "value": 0
+     }
+    },
+    {
+     "tabId": "1f7894ac-ab74-4751-af11-c7efb5624f3a",
+     "id": "f1f06a29-64f3-4860-94e7-ce4322cf53f8",
+     "type": "Heatmap",
+     "title": "RX packet loss rate",
+     "collapsed": false,
+     "state": "",
+     "height": 0,
+     "gridsterCoords": {
+      "x": 5,
+      "y": 21,
+      "w": 4,
+      "h": 5
+     },
+     "config": {
+      "configs": [
+       {
+        "colorBy": {
+         "value": "rxPacketsLossRate"
+        },
+        "sizeBy": {
+         "value": ""
+        },
+        "attributeKind": {
+         "value": "002015VsanHostMetricsVsanPnic"
+        },
+        "groupBy": {
+         "resourceKind": "HostSystem",
+         "adapterKind": "VMWARE",
+         "typeId": "resourceKind:id:0_::_",
+         "id": "004null002006VMWAREHostSystem",
+         "text": "HostSystem",
+         "type": "resourceKind",
+         "parentText": "vCenter",
+         "parentId": "VMWARE"
+        },
+        "color": {
+         "thresholds": {
+          "values": [
+           0,
+           1,
+           10
+          ],
+          "colors": [
+           "#67CA16",
+           "#FFDB24",
+           "#FF4D2E"
+          ]
+         }
+        },
+        "focusOnGroups": true,
+        "relationalGrouping": false,
+        "solidColoring": false,
+        "filterMode": "tagPicker",
+        "nameLocalized": "name",
+        "name": "name",
+        "nameOrig": "name",
+        "thenBy": null,
+        "mode": {
+         "mode": false
+        },
+        "resourceKind": null,
+        "id": "extModel-f1f06a29"
+       }
+      ],
+      "refreshInterval": 300,
+      "widgetId": "f1f06a29-64f3-4860-94e7-ce4322cf53f8",
+      "title": "RX packet loss rate",
+      "description": "",
+      "mode": "resource",
+      "depth": 10,
+      "refreshContent": {
+       "refreshContent": true
+      },
+      "relationshipMode": {
+       "relationshipMode": [
+        1,
+        -1,
+        0
+       ]
+      },
+      "selfProvider": {
+       "selfProvider": true
+      },
+      "viewDetails": "",
+      "value": 0
+     }
+    },
+    {
+     "tabId": "1f7894ac-ab74-4751-af11-c7efb5624f3a",
+     "id": "1cac1f8b-22de-4fe0-9998-f26fc314ea1a",
+     "type": "Heatmap",
+     "title": "TX packet loss rate",
+     "collapsed": false,
+     "state": "",
+     "height": 0,
+     "gridsterCoords": {
+      "x": 9,
+      "y": 21,
+      "w": 4,
+      "h": 5
+     },
+     "config": {
+      "configs": [
+       {
+        "colorBy": {
+         "value": "txPacketsLossRate"
+        },
+        "sizeBy": {
+         "value": ""
+        },
+        "attributeKind": {
+         "value": "002015VsanHostMetricsVsanPnic"
+        },
+        "groupBy": {
+         "resourceKind": "HostSystem",
+         "adapterKind": "VMWARE",
+         "typeId": "resourceKind:id:0_::_",
+         "id": "004null002006VMWAREHostSystem",
+         "text": "HostSystem",
+         "type": "resourceKind",
+         "parentText": "vCenter",
+         "parentId": "VMWARE"
+        },
+        "color": {
+         "thresholds": {
+          "values": [
+           0,
+           1,
+           10
+          ],
+          "colors": [
+           "#67CA16",
+           "#FFDB24",
+           "#FF4D2E"
+          ]
+         }
+        },
+        "focusOnGroups": true,
+        "relationalGrouping": false,
+        "solidColoring": false,
+        "filterMode": "tagPicker",
+        "nameLocalized": "name",
+        "name": "name",
+        "nameOrig": "name",
+        "thenBy": null,
+        "mode": {
+         "mode": false
+        },
+        "resourceKind": null,
+        "id": "extModel-1cac1f8b"
+       }
+      ],
+      "refreshInterval": 300,
+      "widgetId": "1cac1f8b-22de-4fe0-9998-f26fc314ea1a",
+      "title": "TX packet loss rate",
+      "description": "",
+      "mode": "resource",
+      "depth": 10,
+      "refreshContent": {
+       "refreshContent": true
+      },
+      "relationshipMode": {
+       "relationshipMode": [
+        1,
+        -1,
+        0
+       ]
+      },
+      "selfProvider": {
+       "selfProvider": true
+      },
+      "viewDetails": "",
+      "value": 0
+     }
+    }
+   ]
+  }
+ ],
+ "uuid": "07af1a1a-f28a-47e8-b94a-370f59940fe8"
+}
