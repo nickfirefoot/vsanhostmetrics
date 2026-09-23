@@ -857,7 +857,7 @@ ENTITIES: Dict[str, dict] = {
     'vsan-dp-historical-stats': {
         'kind': 'VsanDpHistoricalStats',
         'label': 'Vsan Dp Historical Stats',
-        'identity': ['host_uuid'],
+        'identity': ['cluster_uuid'],
         'objects_observed': 1,
         'metrics': [
             'totalSnapshotCapacity',

@@ -68,10 +68,18 @@ class ObjectKey:
     entity: str
     idents: Tuple[Tuple[str, str], ...]
 
-    def display(self, name_hint: str = "") -> str:
-        vals = [v for _, v in self.idents]
-        head = name_hint or (vals[0] if vals else self.entity)
-        rest = vals[1:] if name_hint else vals[1:]
+    def display(self, names: Optional[Dict[str, str]] = None) -> str:
+        """Human-readable object name.
+
+        perfsvc identifies everything by UUID and, unlike the host exposition,
+        returns no friendly name alongside it. Without resolution every object
+        in Operations reads as a bare UUID, which is unusable in a dashboard.
+        `names` maps uuid -> label; anything unresolved falls back to the raw
+        value rather than being hidden.
+        """
+        names = names or {}
+        vals = [names.get(v, v) for _, v in self.idents]
+        head, rest = vals[0], [v for v in vals[1:] if v and v != AGGREGATE]
         return f"{head} [{'/'.join(rest)}]" if rest else head
 
 
@@ -122,6 +130,64 @@ def connect(host: str, user: str, password: str, verify: bool = False):
         si._stub, context=ctx,
         version=vsanapiutils.GetLatestVmodlVersion(host))
     return si, clusters, mos
+
+
+def build_name_map(service_instance, clusters, perf) -> Dict[str, str]:
+    """uuid -> human label, for every identifier type we can resolve.
+
+    Best effort throughout: a lookup that fails leaves the UUID in place rather
+    than failing the collection. Unresolvable ids are normal -- perfsvc retains
+    entities after they leave inventory, so a deleted VM still has metrics.
+    """
+    names: Dict[str, str] = {}
+
+    for cluster in clusters:
+        try:
+            names[cluster.name] = cluster.name          # harmless self-map
+            for node in (perf.VsanPerfQueryNodeInformation(cluster) or []):
+                uuid = getattr(node, "vsanNodeUuid", None)
+                hostname = getattr(node, "hostname", None)
+                if uuid and hostname:
+                    names[uuid] = hostname
+        except Exception:                                # noqa: BLE001
+            pass
+        try:
+            cfg = getattr(getattr(cluster, "configurationEx", None),
+                          "vsanConfigInfo", None)
+            uuid = getattr(getattr(cfg, "defaultConfig", None), "uuid", None)
+            if uuid:
+                names[uuid] = cluster.name
+        except Exception:                                # noqa: BLE001
+            pass
+
+    # ContainerView rather than walking childEntity: folder recursion missed
+    # VMs (22 found against 30 referenced by perfsvc), which left vscsi and
+    # virtual-machine objects named by bare UUID.
+    view = None
+    try:
+        content = service_instance.RetrieveContent()
+        view = content.viewManager.CreateContainerView(
+            content.rootFolder, [vim.VirtualMachine], True)
+        for vm in view.view:
+            cfg = getattr(vm, "config", None)
+            if not cfg:
+                continue
+            # perfsvc references VMs by instanceUuid; config.uuid is the SMBIOS
+            # id and matched nothing. Map both, instanceUuid last so it wins.
+            for attr in ("uuid", "instanceUuid"):
+                value = getattr(cfg, attr, None)
+                if value:
+                    names[value] = vm.name
+    except Exception:                                    # noqa: BLE001
+        pass
+    finally:
+        if view is not None:
+            try:
+                view.DestroyView()
+            except Exception:                            # noqa: BLE001
+                pass
+
+    return names
 
 
 def parse_ref(ref: str) -> Optional[ObjectKey]:

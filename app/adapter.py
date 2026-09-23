@@ -229,6 +229,12 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
                     "Read-only role is propagated from the vCenter root.")
             perf = mos["vsan-performance-manager"]
 
+            # perfsvc identifies everything by UUID and returns no friendly
+            # name alongside it, unlike the host exposition. Without this every
+            # object in Operations reads as a bare UUID.
+            names = perfsvc.build_name_map(si, clusters, perf)
+            logger.info("resolved %d identifier names", len(names))
+
             total_problems: List[str] = []
             for cluster in clusters:
                 objs, problems = perfsvc.collect(perf, cluster)
@@ -238,7 +244,7 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
                     obj = result.object(
                         ADAPTER_KIND,
                         spec["kind"],
-                        key.display(),
+                        key.display(names),
                         identifiers=[Identifier(name, value)
                                      for name, value in key.idents],
                     )
@@ -246,7 +252,8 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
                         obj.with_metric(metric, value)
                     for name, value in grouped.props.items():
                         if value:
-                            obj.with_property(f"{name}_prop", value)
+                            obj.with_property(f"{name}_prop",
+                                              names.get(value, value))
 
             if total_problems:
                 # Loud on purpose. A silently dropped sample is how the io_type
