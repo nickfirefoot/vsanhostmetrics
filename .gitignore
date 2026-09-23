@@ -2,3 +2,6 @@
 .venv/
 __pycache__/
 *.pak
+
+# Release bundles are build output, regenerate with tools/build_release_bundle.py
+dist/
