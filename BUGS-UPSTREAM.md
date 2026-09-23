@@ -168,11 +168,20 @@ a real fault. It also forces a full ~624 KB `GET` just to check the endpoint is 
   So entries are added and removed by something, and a consumer holding a token
   can have it invalidated underneath it within hours. Open questions:
 
-  * What creates a subscription, and what removes one? Nothing we did registers
-    a consumer -- the adapter simply presents a bearer token.
-  * Is there a supported way to *create* a subscription for a known consumer,
-    rather than reading somebody else's token out of configstore? That is what
-    a management pack actually needs.
+  * **Answered 2026-09-23.** A subscription is a `vim.vsan.MetricProfile` in
+    the cluster's `MetricsConfig.profiles` list, created through vCenter with
+    `VsanClusterConfigSystem.ReconfigureEx` and the `Host.Inventory.EditCluster`
+    privilege. The client generates the token itself as `uuid.uuid4()[:30]` --
+    which is why these are 30 characters and look like truncated UUIDs.
+    Reference: `vmware-archive/vsan-integration-for-prometheus`,
+    `vsan-prometheus-setup/vsanSetupToken.py`.
+  * **The reference implementation looks unsafe for multi-consumer clusters.**
+    `SetupClusterMetricSpec()` builds `MetricsConfig(profiles=[])`, appends one
+    profile, and calls `ReconfigureEx` -- never reading the existing profiles.
+    If that replaces the list, running the supported setup tool silently breaks
+    every other subscriber. Is `ReconfigureEx` on `metricsConfig` additive or
+    replacing? Is there an append-only API, or must consumers race on a
+    read-modify-write of a shared list?
   * What is the intended lifetime? An observed invalidation inside ~9 hours
     makes a pasted credential unworkable for unattended monitoring.
   * Can a consumer detect impending invalidation? Combined with issue 4, it

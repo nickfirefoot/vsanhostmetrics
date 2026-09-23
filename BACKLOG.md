@@ -63,40 +63,63 @@ obvious since-boot ramp; the reverse would be a plausible-looking wrong number,
 which is why the default leans this way. Worth eyeballing the low-confidence
 list against real graphs once data accumulates.
 
-**Token rotation detection. OBSERVED 2026-09-22, no longer theoretical.**
-A token that worked at 03:16 and again around 12:30 returned 403 by 21:41 the
-same day. Both the token in `~/esxi.env` and the older one stored in
-`connections.json` failed simultaneously, so this was rotation at the host, not
-a stale copy.
+**Token invalidation: the mechanism is now understood, and it is overwriting
+rather than expiry.** Corrects the earlier "rotation" framing.
 
-What the adapter did, and why it is not good enough:
+Source: `vmware-archive/vsan-integration-for-prometheus`,
+`vsan-prometheus-setup/vsanSetupToken.py`.
 
+```python
+def GenerateRandomToken():
+   return str(uuid.uuid4())[:30]           # truncated UUID -- hence 30 chars
+
+def SetupClusterMetricSpec(token):
+   metricsConfig = vim.vsan.MetricsConfig(profiles=[])    # starts EMPTY
+   metricsConfig.profiles.append(vim.vsan.MetricProfile(authToken=token))
+   spec = vim.vsan.ReconfigSpec()
+   spec.metricsConfig = metricsConfig
+   return spec
+
+clusterConfigSystem.ReconfigureEx(cluster, spec)          # vCenter, per cluster
 ```
-ERROR scrape failed for esxi01.example.com: HTTP Error 403: Forbidden
-INFO  Finished 'Collection' in 0.05s
-{"nonExistingObjects": [], "relationships": [], "result": []}
-```
 
-The error handling worked as designed -- the host was skipped rather than
-failing the whole collection -- but the collection then returned **empty and
-successful**. In Operations that is a silently non-collecting adapter: no
-error surfaced, no alert, objects simply stop receiving data. Someone would
-notice days later from a flat graph.
+What this establishes:
 
-Made worse by the host answering 403 for every authentication failure and never
-401 (`BUGS-UPSTREAM.md` item 4), so a rotated token is indistinguishable from a
-permissions problem without out-of-band knowledge.
+* A subscription is a `vim.vsan.MetricProfile` in the cluster's
+  `MetricsConfig.profiles` **list**. Multiple profiles coexist and every
+  token is valid simultaneously -- which is why `metric_subscriptions` had two
+  entries.
+* Registration happens **through vCenter**, per cluster, via
+  `VsanClusterConfigSystem.ReconfigureEx`, requiring the
+  `Host.Inventory.EditCluster` privilege. Not on the host.
+* **The client generates the token**, so a consumer can register a
+  subscription it owns rather than borrowing one.
+* Tokens do **not** expire. Upstream documentation states a token is valid
+  "unless it has been overwritten by a new one".
 
-Minimum fix: when **every** configured host fails to scrape, the collection
-should surface a specific error rather than returning an empty success. A 403
-specifically should say "credential rejected -- the bearer token may have
-rotated; re-read it with `configstorecli ... -n`", because that is the actual
-cause far more often than a genuine permissions change.
+So the 403 on 2026-09-22 was our token being **overwritten**, not expiring. Note
+the reference tool builds `profiles=[]` and appends a single token without ever
+reading the existing profiles first -- so running it is at best ambiguous about
+preserving other consumers' subscriptions, and is the likely cause.
 
-Still unknown and worth finding out: **what rotates these tokens and on what
-schedule.** A ~9-hour lifetime would make manual credential entry unworkable
-at any scale, and would change the design -- the adapter might need to read the
-token itself rather than take it as configuration.
+**What this pack should do about it**, in increasing order of effort:
+
+1. *Minimum, and still required regardless:* when every host fails to scrape,
+   surface a specific error rather than an empty successful collection. A 403
+   should say the token may have been overwritten and name the fix. Today the
+   adapter reports success with no objects, which is invisible in Operations.
+2. *Better:* register our own `MetricProfile` at configuration time, so the
+   pack owns its subscription instead of borrowing one. Costs a vCenter
+   credential and the `Host.Inventory.EditCluster` privilege, which is a real
+   escalation from the current read-only-against-a-host design and crosses
+   `HANDOFF.md` fence #3. A deliberate decision, not a quiet one.
+3. *Necessary if we ever do (2):* read existing profiles and append, never
+   replace. Whatever overwrote our token did the wrong thing here and we should
+   not repeat it -- it would break every other consumer on the cluster.
+
+Open question for the vendor, now sharper: is there an append-only way to add a
+subscription, or must every consumer read-modify-write a shared list and race
+each other?
 
 **`verify_certs: true` is untested, and the reasoning behind it may be wrong.**
 See the note under Blocking, above -- accepted certs land in Operations' trust
