@@ -1,0 +1,437 @@
+{
+   "entries": {
+      "resourceKind": [{
+         "resourceKindKey": "ClusterComputeResource",
+         "internalId": "resourceKind:id:0_::_",
+         "adapterKindKey": "VMWARE"
+      }],
+      "resource": [
+         {
+            "resourceKindKey": "HostSystem",
+            "internalId": "resource:id:1_::_",
+            "adapterKindKey": "VMWARE",
+            "identifiers": [
+               {
+                  "value": "host-27",
+                  "key": "VMEntityObjectID"
+               },
+               {
+                  "value": "a6283d65-9225-4782-a612-35deb597a5a3",
+                  "key": "VMEntityVCID"
+               }
+            ],
+            "name": "esxi03.denick.lab"
+         },
+         {
+            "resourceKindKey": "VCENTER_HEALTH_SERVICES",
+            "internalId": "resource:id:2_::_",
+            "adapterKindKey": "VMWARE_INFRA_HEALTH",
+            "identifiers": [
+               {
+                  "value": "vc01.denick.lab",
+                  "key": "VCHOST"
+               },
+               {
+                  "value": "vsan-health",
+                  "key": "VCSERVICE"
+               }
+            ],
+            "name": "vsan-health"
+         },
+         {
+            "resourceKindKey": "TransportNode",
+            "internalId": "resource:id:0_::_",
+            "adapterKindKey": "NSXTAdapter",
+            "identifiers": [
+               {
+                  "value": "8e75cbcb-bee2-437c-ae55-1e4664fab823",
+                  "key": "ID"
+               },
+               {
+                  "value": "c9b5faa4-4f67-4ebf-bcf5-a3aeab2f1506",
+                  "key": "MANAGEMENT_CLUSTER_UUID"
+               },
+               {
+                  "value": "",
+                  "key": "TransportNodeZoneID"
+               }
+            ],
+            "name": "esxi03.denick.lab"
+         }
+      ]
+   },
+   "dashboards": [{
+      "shared": true,
+      "hidden": false,
+      "creationTime": 0,
+      "autoswitchEnabled": false,
+      "importAttempts": 0,
+      "lastUpdateUserId": "833b693b-0960-4d05-b868-f14446488fc3",
+      "columnProportion": "1",
+      "importComplete": true,
+      "description": "",
+      "columnCount": 0,
+      "widgets": [
+         {
+            "tabId": "bb08d16d-3149-4c84-b8e9-4b7697cecd23",
+            "collapsed": false,
+            "id": "f21655d1-0dce-4719-8d7e-c17732c9a89a",
+            "gridsterCoords": {
+               "w": 4,
+               "x": 1,
+               "h": 6,
+               "y": 19
+            },
+            "state": "",
+            "type": "PropertyList",
+            "title": "Property List",
+            "config": {
+               "titleLocalized": "Property List",
+               "title": "Property List"
+            },
+            "height": 0
+         },
+         {
+            "tabId": "bb08d16d-3149-4c84-b8e9-4b7697cecd23",
+            "collapsed": false,
+            "id": "8fdc28ca-ff81-453e-8806-fd8fe16c6dfe",
+            "gridsterCoords": {
+               "w": 4,
+               "x": 1,
+               "h": 6,
+               "y": 25
+            },
+            "state": "",
+            "type": "ResourceRelationshipAdvanced",
+            "title": "Object Relationship (Advanced)",
+            "config": {
+               "visualTheme": false,
+               "resourceId": null,
+               "refreshInterval": 300,
+               "widgetId": "8fdc28ca-ff81-453e-8806-fd8fe16c6dfe",
+               "traversalSpecId": "",
+               "refreshContent": {"refreshContent": true},
+               "relationshipMode": "",
+               "description": "",
+               "resourceName": null,
+               "title": "Object Relationship (Advanced)",
+               "filterMode": "tagPicker",
+               "tagFilter": null,
+               "paginationNumber": 5,
+               "depth": "1,1",
+               "titleLocalized": "Object Relationship (Advanced)",
+               "customFilter": {
+                  "filter": [],
+                  "filterMode": "tagPicker",
+                  "excludedResources": null,
+                  "includedResources": null
+               },
+               "selectFirstRow": {"selectFirstRow": true},
+               "viewDetails": "",
+               "selfProvider": {"selfProvider": true}
+            },
+            "height": 0
+         },
+         {
+            "tabId": "bb08d16d-3149-4c84-b8e9-4b7697cecd23",
+            "collapsed": false,
+            "id": "2ad50e35-904a-4cc8-b974-c3e5d5b918af",
+            "gridsterCoords": {
+               "w": 4,
+               "x": 1,
+               "h": 6,
+               "y": 31
+            },
+            "state": "",
+            "type": "HealthChart",
+            "title": "Health Chart",
+            "config": {
+               "metricName": "",
+               "relationshipMode": {"relationshipMode": 0},
+               "description": "",
+               "sortByDir": {"orderByDir": "asc"},
+               "title": "Health Chart",
+               "showResourceName": {"showResourceName": true},
+               "chartHeight": 135,
+               "metricUnit": {
+                  "metricUnitId": null,
+                  "metricUnitName": ""
+               },
+               "undefined": null,
+               "mode": "resource",
+               "metricType": {"metricType": "health"},
+               "filterMode": "tagPicker",
+               "tagFilter": null,
+               "paginationNumber": 15,
+               "titleLocalized": "Health Chart",
+               "customFilter": {
+                  "filter": [],
+                  "filterMode": "tagPicker",
+                  "excludedResources": null,
+                  "includedResources": null
+               },
+               "selectFirstRow": {"selectFirstRow": false},
+               "sortBy": "metricValue",
+               "viewDetails": "",
+               "selfProvider": {"selfProvider": true},
+               "refreshInterval": 300,
+               "resource": [{
+                  "name": "esxi03.denick.lab",
+                  "id": "resource:id:0_::_"
+               }],
+               "widgetId": "2ad50e35-904a-4cc8-b974-c3e5d5b918af",
+               "refreshContent": {"refreshContent": true},
+               "showMetricLabel": {"showMetricLabel": false},
+               "depth": 1,
+               "metricLabel": ""
+            },
+            "height": 0,
+            "states": [{
+               "value": "s%3A%7B%22dateRange%22%3A%22dashboardTime%22%2C%22dateFrom%22%3Anull%2C%22dateTo%22%3Anull%2C%22timeFrom%22%3Anull%2C%22timeTo%22%3Anull%7D",
+               "key": "permDateRange_HealthChart_widget_bb08d16d-3149-4c84-b8e9-4b7697cecd23_2ad50e35-904a-4cc8-b974-c3e5d5b918af"
+            }]
+         },
+         {
+            "tabId": "bb08d16d-3149-4c84-b8e9-4b7697cecd23",
+            "collapsed": false,
+            "id": "68e43def-dc61-4680-8d24-d5ec55991165",
+            "gridsterCoords": {
+               "w": 4,
+               "x": 1,
+               "h": 6,
+               "y": 37
+            },
+            "state": "",
+            "type": "MetricChart",
+            "title": "Metric Chart",
+            "config": {
+               "refreshInterval": 300,
+               "resource": [],
+               "widgetId": "68e43def-dc61-4680-8d24-d5ec55991165",
+               "refreshContent": {"refreshContent": false},
+               "relationshipMode": {"relationshipMode": 0},
+               "description": "",
+               "title": "Metric Chart",
+               "depth": 1,
+               "metric": {
+                  "mode": "resource",
+                  "resourceMetrics": [{
+                     "yellowBound": null,
+                     "metricUnitId": "percent",
+                     "resourceId": "resource:id:1_::_",
+                     "metricName": "CPU|Demand",
+                     "metricKey": "cpu|demandPct",
+                     "handleOldColoring": false,
+                     "resourceName": "esxi03.denick.lab",
+                     "isStringMetric": false,
+                     "resourceKindId": "002006VMWAREHostSystem",
+                     "orangeBound": null,
+                     "metricUnit": "%",
+                     "unit": "%",
+                     "redBound": null,
+                     "id": "extModel9062-1",
+                     "colorMethod": 2
+                  }],
+                  "resourceKindMetrics": []
+               },
+               "titleLocalized": "Metric Chart",
+               "customFilter": {
+                  "filter": [],
+                  "excludedResources": null,
+                  "includedResources": null
+               },
+               "viewDetails": "",
+               "selfProvider": {"selfProvider": true},
+               "resInteractionMode": null
+            },
+            "height": 0,
+            "states": [
+               {
+                  "value": "o%3A",
+                  "key": "permMetricChart_widget_bb08d16d-3149-4c84-b8e9-4b7697cecd23_68e43def-dc61-4680-8d24-d5ec55991165"
+               },
+               {
+                  "value": "b%3A0",
+                  "key": "permBtn_zoomAllGraphs_permMetricChart_widget_bb08d16d-3149-4c84-b8e9-4b7697cecd23_68e43def-dc61-4680-8d24-d5ec55991165"
+               },
+               {
+                  "value": "s%3A%7B%22dateRange%22%3A%22dashboardTime%22%2C%22dateFrom%22%3Anull%2C%22dateTo%22%3Anull%2C%22timeFrom%22%3Anull%2C%22timeTo%22%3Anull%7D",
+                  "key": "permDateRange1_permMetricChart_widget_bb08d16d-3149-4c84-b8e9-4b7697cecd23_68e43def-dc61-4680-8d24-d5ec55991165"
+               },
+               {
+                  "value": "b%3A0",
+                  "key": "permBtn_pan_permMetricChart_widget_bb08d16d-3149-4c84-b8e9-4b7697cecd23_68e43def-dc61-4680-8d24-d5ec55991165"
+               }
+            ]
+         },
+         {
+            "tabId": "bb08d16d-3149-4c84-b8e9-4b7697cecd23",
+            "collapsed": false,
+            "id": "6beb5c8c-ad7f-4ba4-af3d-61270e6d7c8a",
+            "gridsterCoords": {
+               "w": 4,
+               "x": 6,
+               "h": 6,
+               "y": 1
+            },
+            "state": "",
+            "type": "Heatmap",
+            "title": "Heatmap",
+            "config": {
+               "configs": [{
+                  "colorBy": {"value": ""},
+                  "focusOnGroups": true,
+                  "color": {"thresholds": {
+                     "values": [
+                        0,
+                        50,
+                        100
+                     ],
+                     "colors": [
+                        "#67CA16",
+                        "#FFDB24",
+                        "#FF4D2E"
+                     ]
+                  }},
+                  "sizeBy": {"value": ""},
+                  "relationalGrouping": false,
+                  "groupBy": {
+                     "resourceKind": "ClusterComputeResource",
+                     "adapterKind": "VMWARE",
+                     "typeId": "resourceKind:id:0_::_",
+                     "id": "004null002006VMWAREClusterComputeResource",
+                     "text": "Cluster Compute Resource",
+                     "type": "resourceKind",
+                     "parentText": "vCenter",
+                     "parentId": "VMWARE"
+                  },
+                  "nameLocalized": "name",
+                  "attributeKind": {"value": ""},
+                  "thenBy": null,
+                  "mode": {"mode": false},
+                  "resourceKind": null,
+                  "filterMode": "tagPicker",
+                  "solidColoring": false,
+                  "name": "name",
+                  "id": "extModel20754-1",
+                  "nameOrig": "name"
+               }],
+               "refreshInterval": 300,
+               "resource": [{
+                  "name": "vsan-health",
+                  "id": "resource:id:2_::_"
+               }],
+               "widgetId": "6beb5c8c-ad7f-4ba4-af3d-61270e6d7c8a",
+               "refreshContent": {"refreshContent": false},
+               "relationshipMode": {"relationshipMode": [
+                  1,
+                  -1,
+                  0
+               ]},
+               "description": "",
+               "title": "Heatmap",
+               "mode": "resource",
+               "depth": 10,
+               "viewDetails": "",
+               "selfProvider": {"selfProvider": true},
+               "value": 0
+            },
+            "height": 0,
+            "states": [{
+               "value": "o%3A",
+               "key": "perm_HeatMap_widget_bb08d16d-3149-4c84-b8e9-4b7697cecd23_6beb5c8c-ad7f-4ba4-af3d-61270e6d7c8a"
+            }]
+         },
+         {
+            "tabId": "bb08d16d-3149-4c84-b8e9-4b7697cecd23",
+            "collapsed": false,
+            "id": "54507cdf-930e-4bb0-b343-13956a7f1e04",
+            "gridsterCoords": {
+               "w": 4,
+               "x": 1,
+               "h": 6,
+               "y": 13
+            },
+            "state": "",
+            "type": "Heatmap",
+            "title": "Heatmap",
+            "config": {"title": "Heatmap"},
+            "height": 0,
+            "states": [{
+               "value": "o%3A",
+               "key": "perm_HeatMap_widget_bb08d16d-3149-4c84-b8e9-4b7697cecd23_54507cdf-930e-4bb0-b343-13956a7f1e04"
+            }]
+         },
+         {
+            "tabId": "bb08d16d-3149-4c84-b8e9-4b7697cecd23",
+            "collapsed": false,
+            "id": "f310264e-c129-4e8f-8ba1-6b8bccbe03a1",
+            "gridsterCoords": {
+               "w": 4,
+               "x": 1,
+               "h": 6,
+               "y": 7
+            },
+            "state": "",
+            "type": "TextDisplay",
+            "title": "Text Display",
+            "config": {
+               "locationUrl": "",
+               "locationFile": "",
+               "refreshInterval": 300,
+               "widgetId": "f310264e-c129-4e8f-8ba1-6b8bccbe03a1",
+               "refreshContent": {"refreshContent": false},
+               "description": "asdf",
+               "viewDetails": "",
+               "title": "Text Display",
+               "viewModeHTML": true
+            },
+            "height": 0
+         },
+         {
+            "tabId": "bb08d16d-3149-4c84-b8e9-4b7697cecd23",
+            "collapsed": false,
+            "id": "08dc5a22-c408-4a74-a527-77ba25369157",
+            "gridsterCoords": {
+               "w": 4,
+               "x": 1,
+               "h": 6,
+               "y": 1
+            },
+            "state": "",
+            "type": "View",
+            "title": "New Text view",
+            "config": {
+               "refreshInterval": 300,
+               "resource": null,
+               "widgetId": "08dc5a22-c408-4a74-a527-77ba25369157",
+               "traversalSpecId": "",
+               "refreshContent": {"refreshContent": false},
+               "description": "",
+               "isUpdatedView": true,
+               "title": "New Text view",
+               "viewDefinitionId": "32128493-e801-415c-a3dd-8e3f32a9ebe8",
+               "viewType": "TEXT",
+               "chartViewItems": [],
+               "selectFirstRow": {"selectFirstRow": false},
+               "viewDetails": "",
+               "selfProvider": {"selfProvider": false}
+            },
+            "height": 0
+         }
+      ],
+      "userId": "833b693b-0960-4d05-b868-f14446488fc3",
+      "states": [],
+      "editAllowed": true,
+      "homeTab": true,
+      "name": "sample",
+      "gridsterMaxColumns": 12,
+      "rank": 0,
+      "disabled": false,
+      "id": "bb08d16d-3149-4c84-b8e9-4b7697cecd23",
+      "locked": false,
+      "dashboardNavigations": {},
+      "lastUpdateTime": 1790202030673
+   }],
+   "uuid": "0fb4cf46-18e7-48be-87b2-9ff70d258643"
+}

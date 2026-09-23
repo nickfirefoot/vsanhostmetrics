@@ -127,29 +127,100 @@ Generic config keys that appear on every configured widget: `refreshInterval`
 
 `MetricChart`, `HealthChart`, `ResourceRelationshipAdvanced`, `PropertyList`.
 
-Not yet seen, and both needed: **Text** and **Heatmap**.
+`Heatmap`, `TextDisplay`, `View`.
+
+## The text widget: `TextDisplay`
+
+```json
+{
+  "type": "TextDisplay",
+  "config": {
+    "description":  "inline text, shown when no location is set",
+    "locationUrl":  "",        // fetch the body from a URL instead
+    "locationFile": "",        // or from an uploaded file
+    "viewModeHTML": true,      // render as HTML -- hyperlinks work
+    "refreshInterval": 300
+  }
+}
+```
+
+Three ways to supply the body, and the choice matters:
+
+- **`description`** -- inline. Travels with the dashboard, works with no
+  egress, but changing it means re-importing the dashboard everywhere.
+- **`locationUrl`** -- fetched at render time. Points at e.g.
+  `https://raw.githubusercontent.com/nickfirefoot/vsanhostmetrics/main/content/help/network-rapid.html`,
+  so guidance can be corrected in the repo and every customer picks it up on
+  next render, with no redeploy. Requires egress **from the browser**, and
+  degrades to an empty panel without it.
+- **`locationFile`** -- an uploaded file.
+
+`viewModeHTML: true` means KB links and formatting work.
+
+This matters more than convenience: the SDK gives metrics a label but **no
+description field** (`define_metric` has no such parameter, and `add_attribute`
+writes only a nameKey), so there is nowhere per-metric to hang "what this
+means". A TextDisplay widget is the only place interpretation can live.
+
+Sensible split: essentials inline via `description`, depth via `locationUrl`.
+
+## The heatmap: `Heatmap`
+
+```json
+"config": {
+  "configs": [{
+    "groupBy": { "adapterKind": "VMWARE", "resourceKind": "ClusterComputeResource",
+                 "id": "004null002006VMWAREClusterComputeResource",
+                 "type": "resourceKind", "text": "Cluster Compute Resource" },
+    "colorBy": { "value": "" },          // the metric to colour cells by
+    "sizeBy":  { "value": "" },
+    "color": { "thresholds": { "values": [0, 50, 100],
+                               "colors": ["#67CA16", "#FFDB24", "#FF4D2E"] } },
+    "solidColoring": false, "relationalGrouping": false, "focusOnGroups": true
+  }],
+  "refreshInterval": 300, "mode": "resource", "depth": 10
+}
+```
+
+Thresholds and colours are per-widget, so a panel carries its own banding with
+no alert definition behind it -- useful while thresholds are deliberately
+deferred. Green/amber/red are `#67CA16`, `#FFDB24`, `#FF4D2E`.
+
+### The `resourceKindId` encoding, decoded
+
+Resource kinds are referenced by an encoded id, not the plain key:
+
+```
+002 + <3-digit length of adapterKind> + <adapterKind> + <resourceKind>
+```
+
+Verified against both observed samples:
+
+| Encoded | adapterKind | resourceKind |
+|---|---|---|
+| `002006VMWAREHostSystem` | `VMWARE` (6) | `HostSystem` |
+| `002006VMWAREClusterComputeResource` | `VMWARE` (6) | `ClusterComputeResource` |
+
+`groupBy.id` prefixes that with `004null`. For this pack, `adapterKind` is
+`VsanHostMetrics` (15 characters), so:
+
+```
+VsanPnic     -> 002015VsanHostMetricsVsanPnic
+VsanHostNet  -> 002015VsanHostMetricsVsanHostNet
+VsanTcpIp    -> 002015VsanHostMetricsVsanTcpIp
+```
+
+## Importing: UI only
+
+`POST /api/content/operations/import` rejects a UI-exported dashboard zip with
+`INVALID_FILE_FORMAT` -- tested with an untouched export straight from the UI,
+so the API's content format is **not** the UI's dashboard format, and the API
+cannot be used to ship or test dashboards. Use **Dashboards -> Import** in the
+UI, or ship them inside the pak under `content/dashboards/<name>/<name>.json`.
 
 ## What is still unknown
 
-Two gaps block generating a rapid dashboard:
-
-1. **The Text widget.** Never present in any export so far, so its `type`
-   string is unknown, as is whether the body is inline in `config` or
-   references a file under `content/files/txtwidget/`. This is what carries
-   interpretation guidance and KB links -- and it matters more than usual
-   because the SDK gives metrics a label but **no description field**, so a
-   text widget is the only place that guidance can live.
-2. **`resourceKindMetrics`.** Binding by *kind* rather than by instance is the
-   whole point of a rapid dashboard. Every sample has it empty, so the element
-   shape is unknown, as is how `resourceKindId` encodes a custom adapter kind.
-   A configured **Heatmap** would show both at once, since a heatmap is
-   inherently kind-scoped.
-
-Everything else -- envelope, layout, state encoding, metric keys, colour bounds
--- is now known well enough to generate from.
-
-## Note on the UI bundle
-
-Widget type names are presumably enumerated in the dashboard app's JavaScript,
-but `/vcf-operations/ui/` serves only the login page unauthenticated; the app
-bundle loads after session auth. Not reachable with an API token.
+`colorBy.value` and `sizeBy.value` were empty in the sample -- the heatmaps
+were placed and grouped but never pointed at a metric. The field exists and is
+named; its populated form (a bare attribute key, or an encoded id like
+`groupBy.id`) has not been observed.
