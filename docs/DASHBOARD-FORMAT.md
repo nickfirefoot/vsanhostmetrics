@@ -81,26 +81,75 @@ perm<StateName>_<WidgetType>_widget_<dashboardId>_<widgetId>
 so state keys have to be rewritten whenever a widget or dashboard id changes.
 That is the main hazard in hand-authoring these.
 
+## Metric binding
+
+From a *configured* `MetricChart` (`docs/assets/dashboard.sample-configured.json`):
+
+```json
+"metric": {
+  "mode": "resource",
+  "resourceMetrics": [{
+    "metricKey":      "cpu|demandPct",
+    "metricName":     "CPU|Demand",
+    "resourceId":     "resource:id:0_::_",
+    "resourceName":   "esxi03.example.com",
+    "resourceKindId": "002006VMWAREHostSystem",
+    "metricUnitId":   "percent",
+    "unit":           "%",
+    "redBound": null, "orangeBound": null, "yellowBound": null,
+    "colorMethod": 2, "isStringMetric": false
+  }],
+  "resourceKindMetrics": []
+}
+```
+
+The important parts:
+
+- **`metricKey`** is the attribute key as the adapter defines it. For this pack
+  that is the raw perfsvc id -- `rxMissErr`, `txSbSpaceMin` -- and `metricName`
+  is the display path.
+- **`resourceKindId`** is an internal encoded id (`002006VMWAREHostSystem`),
+  *not* the plain adapter kind key. How that encoding is derived for a custom
+  adapter kind such as `VsanPnic` is **[unverified]**.
+- **`resourceMetrics` binds specific objects; `resourceKindMetrics` binds a
+  whole kind.** The second is what a rapid dashboard needs -- every vmnic in
+  the cluster, not one hand-picked instance -- and it is empty in every sample
+  so far, so its element shape is unknown.
+- Colour bounds (`redBound`/`orangeBound`/`yellowBound`) are per-widget, so a
+  panel can carry thresholds without any alert definition. Useful given
+  thresholds are deliberately deferred.
+
+Generic config keys that appear on every configured widget: `refreshInterval`
+(seconds), `widgetId` (must equal the widget's own `id`), `selfProvider`,
+`customFilter`, `relationshipMode`, `description`.
+
 ## Widget types seen
 
 `MetricChart`, `HealthChart`, `ResourceRelationshipAdvanced`, `PropertyList`.
 
+Not yet seen, and both needed: **Text** and **Heatmap**.
+
 ## What is still unknown
 
-The sample widgets were placed but never configured, so `config` is just
-`{"title": ...}` and the `o:` state is empty. Two things we still cannot write:
+Two gaps block generating a rapid dashboard:
 
-1. **The Text widget.** Its `type` string is unconfirmed, as is whether its
-   body is inline in `config` or references a file under
-   `content/files/txtwidget/`. This is what a rapid dashboard needs for
-   interpretation guidance and KB links — and it matters because the SDK gives
-   metrics a label but no description field, so a text widget is the only place
-   that guidance can live.
-2. **Metric binding.** No sample shows how a widget names a resource kind and
-   an attribute key. Without it, a heatmap cannot be pointed at
-   `VsanPnic` / `rxMissErr`.
+1. **The Text widget.** Never present in any export so far, so its `type`
+   string is unknown, as is whether the body is inline in `config` or
+   references a file under `content/files/txtwidget/`. This is what carries
+   interpretation guidance and KB links -- and it matters more than usual
+   because the SDK gives metrics a label but **no description field**, so a
+   text widget is the only place that guidance can live.
+2. **`resourceKindMetrics`.** Binding by *kind* rather than by instance is the
+   whole point of a rapid dashboard. Every sample has it empty, so the element
+   shape is unknown, as is how `resourceKindId` encodes a custom adapter kind.
+   A configured **Heatmap** would show both at once, since a heatmap is
+   inherently kind-scoped.
 
-To close both, export one dashboard containing a **configured** Text widget
-(with some text and a hyperlink) and a **configured** Heatmap (any object type
-and metric). Configured, not merely dropped on the canvas — an unconfigured
-widget carries none of the information we are missing.
+Everything else -- envelope, layout, state encoding, metric keys, colour bounds
+-- is now known well enough to generate from.
+
+## Note on the UI bundle
+
+Widget type names are presumably enumerated in the dashboard app's JavaScript,
+but `/vcf-operations/ui/` serves only the login page unauthenticated; the app
+bundle loads after session auth. Not reachable with an API token.
