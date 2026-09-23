@@ -112,23 +112,23 @@ store, or set the field to false. If left true the field must hold the **FQDN**
 -- an IP fails hostname matching even once the root is trusted. The adapter's
 error message names both causes; see `README.md` step 6.
 
-### The workload-network trap
+### If you host the image on a private registry inside vSphere
 
-If Harbor runs as a Supervisor Service, its images are pulled by the **ESXi
-image fetcher**, which is a CRX VM (`/var/run/crx/imgfetcher-*`) attached to
-the **Supervisor workload network** — not the ESXi management network. On
-`example.com` that was `<workload-net-ip>/24` via gateway `<workload-net-ip>` on
-`dvportgroup-8016`.
+Only relevant if you choose to mirror the adapter image into a registry that
+runs *as a Supervisor Service* rather than pulling from a public one. Recorded
+because it cost a day to diagnose.
+
+Such a registry's own images are pulled by the **ESXi image fetcher**, which is
+a CRX VM (`/var/run/crx/imgfetcher-*`) attached to the **Supervisor workload
+network** -- not the ESXi management network.
 
 Consequence: every shell-based reachability test on an ESXi host (`nc`,
 `openssl s_client`) sources from the management network and **passes while the
-fetcher fails**. Do not use them to validate this path. To test it honestly,
-source traffic from the workload subnet.
-
-On `example.com` the failure was a firewall auto-blocking newly-discovered
-devices. Each fetcher is a fresh MAC living ~90 seconds, so they could never
-age into being trusted, and per-device allow rules could never catch them. The
-fix has to be scoped to the network, not to devices.
+fetcher fails**. Do not use them to validate that path. To test it honestly,
+source traffic from the workload subnet. Each fetcher is also a fresh MAC
+living about ninety seconds, so any firewall policy that auto-blocks unknown
+devices will block them permanently and no per-device allow rule can ever
+catch up -- the rule has to be scoped to the network.
 
 ### DNS and TLS
 

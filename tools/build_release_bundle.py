@@ -168,17 +168,20 @@ Performance Service through vCenter.
 **Read `QUICKSTART.md` first.** It is the shortest correct path from nothing to
 a collecting adapter.
 
-## Read this before you plan anything
+## The one network requirement
 
-**This pak is not portable.** It does not contain the adapter code — it
-contains a *pointer* to the container image above, which is roughly 99 MB and
-lives in a registry. The pak itself is ~145 KB and holds only the schema,
-labels and icon.
+This pak does not contain the adapter code. It is ~145 KB of schema and a
+pointer to the container image above; the adapter itself is a ~100 MB image.
+Operations installs the schema, and the **Cloud Proxy** pulls that image once
+per version.
 
-Operations installs the schema; the **Cloud Proxy** pulls that image and runs
-it. So `{registry}` must be reachable and trusted **from your Cloud Proxy**. If
-it is not — and if it is not your registry, it is not — you must rebuild
-against a registry of your own. `QUICKSTART.md` section 2 covers it.
+So the Cloud Proxy needs **outbound 443 to `{registry}`**. That is the whole
+network ask. It is a public registry with a publicly trusted certificate, so
+there is no CA to install and no DNS to add.
+
+If your Cloud Proxy has no internet access at all, see `docs/OFFLINE-DELIVERY.md`
+— that case needs a registry inside your environment, and it is the same for
+any container-based management pack.
 
 ## What it collects
 
