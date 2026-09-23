@@ -69,15 +69,48 @@ host (to push) and from the Cloud Proxy (to pull), with TLS both trust.
 
 ## 3. Network requirements
 
-These are the ones that actually bite. Each was a real failure during bring-up.
+Verified 2026-09-23 against `example.com`.
 
-| From | To | Why |
-|---|---|---|
-| Build host | ESXi host `:443` | `mp-test` scrapes `/vsanmetrics` directly |
-| Build host | registry `:443` | `mp-build` pushes the image |
-| Cloud Proxy | registry `:443` | pulls the adapter image by digest |
-| Cloud Proxy | ESXi hosts `:443` | the adapter scrapes from inside the container |
-| **Supervisor workload network** | **internet `:443`** | **only if the registry is a Supervisor Service** |
+**Runtime needs exactly one destination: vCenter on 443.** The adapter opens no
+other connection. Confirmed by reading every outbound call in the active path
+(`perfsvc.connect` -> `SmartConnect`, and `get_endpoints` which only echoes the
+same URL), and confirmed in production: the deployed instance collects 848
+objects with `vcenter_host=vcenter.example.com` and no host credentials at all.
+
+The vSAN Performance Service is reached over the *same* connection -- the vSAN
+management endpoint is a path (`/vsanHealth`) on vCenter's 443, not a separate
+port. No extra rule is needed for it.
+
+| From | To | Port | Why | Verified |
+|---|---|---|---|---|
+| Cloud Proxy | **vCenter** | 443 | the only runtime dependency: login, inventory, Performance Service | yes -- instance collecting, `lastCollected` current |
+| Cloud Proxy | registry | 443 | pulls the adapter image by digest, once per version | yes |
+| Build host | vCenter | 443 | `mp-test` and the model generator query live | yes -- TCP open, API reachable |
+| Build host | registry | 443 | `mp-build` pushes | yes -- manifest HTTP 200 |
+| Supervisor workload network | internet | 443 | **only** if the registry is a Supervisor Service | yes -- see below |
+
+**No longer required:** any path to ESXi hosts. The host-scrape path is dormant
+(`docs/COLLECTION-DESIGN.md`), so the firewall surface is one vCenter rather
+than every host in every cluster. That is the main operational argument for the
+Performance Service rebuild at fleet scale -- one rule per site, not N.
+
+### vCenter certificate
+
+`Verify vCenter certificate` defaults to **true and does not work unmodified**.
+vCenter presents a VMCA-issued certificate:
+
+```
+subject= CN = vcenter.example.com
+issuer = CN = CA, DC = vsphere, DC = local
+Verify return code: 21 (unable to verify the first certificate)
+```
+
+Nothing in the adapter's base image trusts the VMCA, so a stock install that
+accepts the defaults fails with `CERTIFICATE_VERIFY_FAILED`. Either import the
+VMCA root from `https://<vcenter>/certs/download.zip` into the container trust
+store, or set the field to false. If left true the field must hold the **FQDN**
+-- an IP fails hostname matching even once the root is trusted. The adapter's
+error message names both causes; see `README.md` step 6.
 
 ### The workload-network trap
 
@@ -117,7 +150,8 @@ fix has to be scoped to the network, not to devices.
 
 | Credential | Used by | Stored | Scope |
 |---|---|---|---|
-| ESXi bearer token | the adapter, at collection time | Operations adapter instance | **cluster-wide** (verified) |
+| **vCenter account** | the adapter, at collection time | Operations adapter instance (credential) | read-only, propagated from the vCenter root |
+| ESXi bearer token | dormant host path only -- not used at runtime | n/a | **cluster-wide** (verified) |
 | Registry push credential | `mp-build` on the build host | `~/harbor.env`, mode 600, **outside this repo** | project-scoped robot recommended |
 | Registry pull credential | Cloud Proxy | `/root/.docker/config.json` on the proxy | pull-only is sufficient |
 | Operations admin | pak install | not stored | UI or API |
@@ -151,39 +185,58 @@ unquoted `$project` is eaten by shell expansion and produces a baffling
 ## 5. Repeatability checklist
 
 In order. Each step is verifiable before the next, which is the point.
+Verified end-to-end 2026-09-23 against `example.com`.
 
 1. Build host prerequisites installed; `docker ps` works as the build user
-2. `python3 test_vsanmetrics.py` → **8/8**. If not, stop — the rate math is
-   wrong and nothing downstream matters
-3. `curl -sk -o /dev/null -w '%{http_code}\n' -H "Authorization: Bearer $TOK" https://<esxi>/vsanmetrics` → **200**
-4. SDK project created (`scaffold_project.py` or `mp-init`), adapter files
-   copied in, container builds
-5. `mp-test -c <conn> collect` **twice** — run 1 emits no rates *by design*
-   (counters have no baseline); run 2 emits one `VsanHostTcpIp` object with
-   9 rates + 4 percentages
-6. Registry reachable by hostname from the build host, TLS verifying
-7. `mp-build --no-ttl` → image pushed, `.pak` produced, digest in the pak's
-   `.conf` matching the registry artifact
-8. Cloud Proxy: DNS resolves the registry, CA trusted, `docker pull` by digest
-   succeeds and reports the same digest
-9. Pak installed, collector restarted, adapter instance created against the
-   Cloud Proxy as collector
-10. Objects appear with real identifiers — not `unknown`, not a hostname
-    fallback
+2. `python3 test_perfsvc.py` -> **21/21** and `python3 test_vsanmetrics.py` ->
+   **16/16**. If not, stop
+3. vCenter reachable and the account can read the Performance Service:
+   ```sh
+   python3 -c "import sys;sys.path[:0]=['app','app/vendor'];import perfsvc,os;\
+   si,c,m=perfsvc.connect(os.environ['VC_HOST'],os.environ['VC_USER'],os.environ['VC_PASS'],False);\
+   o,p=perfsvc.collect(m['vsan-performance-manager'],c[0]);print(len(o),'objects',len(p),'problems')"
+   ```
+   Expect **847 objects, 0 problems** on a 4-host cluster; any cluster should
+   return hundreds and zero problems. Zero objects raises `PerfSvcError`
+   deliberately rather than reporting an empty success
+4. SDK project created (`scaffold_project.py`, **not** `mp-init` -- it
+   self-deletes its project on this host), adapter files copied in
+5. Icon regenerated if the artwork changed:
+   `python3 tools/make_pak_icon.py docs/assets/pak_icon_source.png pak_icon.png`
+   -- asserts 256x256 PNG, which `mp-build` does not check
+6. `version` bumped in `manifest.txt` -- Operations handles same-version
+   reinstalls badly
+7. Registry reachable by hostname from the build host, TLS verifying
+8. `mp-build --no-ttl` -> image pushed, `.pak` produced. Confirm the digest in
+   `adapter.zip!VsanHostMetrics.conf` resolves in the registry:
+   ```sh
+   curl -s -o /dev/null -w '%{http_code}\n' -u "$HARBOR_USER:$HARBOR_PASS" \
+     -H 'Accept: application/vnd.oci.image.manifest.v1+json' \
+     "https://<registry>/v2/<project>/<repo>/manifests/sha256:<digest>"   # -> 200
+   ```
+9. Cloud Proxy: DNS resolves the registry, CA trusted, `docker pull` by digest
+   returns the same digest
+10. Pak installed; adapter instance created **against the Cloud Proxy** as
+    collector, with `Verify vCenter certificate` false (see section 3)
+11. Objects appear with real names -- not UUIDs. Verified through the
+    Operations API rather than by eye:
+    ```sh
+    curl -sk -H "Authorization: vRealizeOpsToken $TOK" \
+      "https://<ops>/suite-api/api/resources?pageSize=10000" \
+    | python3 -c "import sys,json,collections;r=[x for x in json.load(sys.stdin)['resourceList'] \
+      if x['resourceKey'].get('adapterKindKey')=='VsanHostMetrics'];\
+      print(len(r),collections.Counter(x['resourceStatusStates'][0]['resourceStatus'] for x in r))"
+    ```
+    Expect every object `STARTED` / `DATA_RECEIVING`.
 
-All ten steps were verified on 2026-09-22 against `example.com`.
+Step 11 evidence, 2026-09-23: **848 objects across 32 resource kinds, all
+`DATA_RECEIVING`** -- the 847 the collector produces plus the adapter instance
+object, matching a local `perfsvc.collect()` exactly. Names resolve to
+`esxi01.example.com [vmnic0]`, `NVMe INTEL SSDPE2KE016T8 00011773C1E4D25C
+(esxi04.example.com)`, `license02 [scsi0:0]`.
 
-Step 10 evidence: two `VsanHostTcpIp` objects
-(`esxi01.example.com [defaultTcpipStack]`, `esxi02.example.com [defaultTcpipStack]`),
-real `host_uuid` identifiers, 9 rate metrics plus 4 percentages each, values
-cross-checked against an independent computation run outside Operations and
-agreeing within sampling variance.
-
-Note that agreement confirms the *pipeline*, not the *correctness of two of the
-metrics* -- see `BACKLOG.md` on the `io_type` collision, which both
-implementations reproduce identically because they share the same defect.
-
----
+Known exception: `VsanVirtualDisk` objects still name themselves by UUID --
+they are CNS volumes whose filenames genuinely are UUIDs. See `BACKLOG.md`.
 
 ## 6. Known-good versions, for pinning
 
