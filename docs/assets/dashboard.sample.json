@@ -1,0 +1,111 @@
+{
+   "entries": {},
+   "dashboards": [{
+      "shared": true,
+      "hidden": false,
+      "creationTime": 0,
+      "autoswitchEnabled": false,
+      "importAttempts": 0,
+      "lastUpdateUserId": "833b693b-0960-4d05-b868-f14446488fc3",
+      "columnProportion": "1",
+      "importComplete": true,
+      "description": "",
+      "columnCount": 0,
+      "widgets": [
+         {
+            "tabId": "bb08d16d-3149-4c84-b8e9-4b7697cecd23",
+            "collapsed": false,
+            "id": "68e43def-dc61-4680-8d24-d5ec55991165",
+            "gridsterCoords": {
+               "w": 4,
+               "x": 1,
+               "h": 6,
+               "y": 19
+            },
+            "state": "",
+            "type": "MetricChart",
+            "title": "Metric Chart",
+            "config": {"title": "Metric Chart"},
+            "height": 0,
+            "states": [
+               {
+                  "value": "o%3A",
+                  "key": "permMetricChart_widget_bb08d16d-3149-4c84-b8e9-4b7697cecd23_68e43def-dc61-4680-8d24-d5ec55991165"
+               },
+               {
+                  "value": "s%3A%7B%22dateRange%22%3A%22dashboardTime%22%2C%22dateFrom%22%3Anull%2C%22dateTo%22%3Anull%2C%22timeFrom%22%3Anull%2C%22timeTo%22%3Anull%7D",
+                  "key": "permDateRange1_permMetricChart_widget_bb08d16d-3149-4c84-b8e9-4b7697cecd23_68e43def-dc61-4680-8d24-d5ec55991165"
+               }
+            ]
+         },
+         {
+            "tabId": "bb08d16d-3149-4c84-b8e9-4b7697cecd23",
+            "collapsed": false,
+            "id": "2ad50e35-904a-4cc8-b974-c3e5d5b918af",
+            "gridsterCoords": {
+               "w": 4,
+               "x": 1,
+               "h": 6,
+               "y": 13
+            },
+            "state": "",
+            "type": "HealthChart",
+            "title": "Health Chart",
+            "config": {
+               "title": "Health Chart",
+               "undefined": null
+            },
+            "height": 0,
+            "states": [{
+               "value": "s%3A%7B%22dateRange%22%3A%22dashboardTime%22%2C%22dateFrom%22%3Anull%2C%22dateTo%22%3Anull%2C%22timeFrom%22%3Anull%2C%22timeTo%22%3Anull%7D",
+               "key": "permDateRange_HealthChart_widget_bb08d16d-3149-4c84-b8e9-4b7697cecd23_2ad50e35-904a-4cc8-b974-c3e5d5b918af"
+            }]
+         },
+         {
+            "tabId": "bb08d16d-3149-4c84-b8e9-4b7697cecd23",
+            "collapsed": false,
+            "id": "8fdc28ca-ff81-453e-8806-fd8fe16c6dfe",
+            "gridsterCoords": {
+               "w": 4,
+               "x": 1,
+               "h": 6,
+               "y": 7
+            },
+            "state": "",
+            "type": "ResourceRelationshipAdvanced",
+            "title": "Object Relationship (Advanced)",
+            "config": {"title": "Object Relationship (Advanced)"},
+            "height": 0
+         },
+         {
+            "tabId": "bb08d16d-3149-4c84-b8e9-4b7697cecd23",
+            "collapsed": false,
+            "id": "f21655d1-0dce-4719-8d7e-c17732c9a89a",
+            "gridsterCoords": {
+               "w": 4,
+               "x": 1,
+               "h": 6,
+               "y": 1
+            },
+            "state": "",
+            "type": "PropertyList",
+            "title": "Property List",
+            "config": {"title": "Property List"},
+            "height": 0
+         }
+      ],
+      "userId": "833b693b-0960-4d05-b868-f14446488fc3",
+      "states": [],
+      "editAllowed": true,
+      "homeTab": true,
+      "name": "sample",
+      "gridsterMaxColumns": 12,
+      "rank": 0,
+      "disabled": false,
+      "id": "bb08d16d-3149-4c84-b8e9-4b7697cecd23",
+      "locked": false,
+      "dashboardNavigations": {},
+      "lastUpdateTime": 1790185498722
+   }],
+   "uuid": "d8b911cb-ea13-41ea-9490-c92b4a99a699"
+}
