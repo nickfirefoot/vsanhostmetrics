@@ -196,6 +196,18 @@ def official_names(path="docs/assets/perfsvc_schema.json"):
     return out
 
 
+# Metrics whose unit cannot be settled from the name and which the Performance
+# Service does not document. A wrong unit is worse than none -- Operations will
+# scale and render it confidently -- so these stay dimensionless.
+AMBIGUOUS_UNIT = {
+    # "average percent time to peak" or "average time to peak, in percent"?
+    # HCIBench charts it in microseconds, the id says percent, and nothing
+    # upstream adjudicates. It is the only *Pct metric not resolving to a
+    # ratio, which is itself the smell.
+    "avgPctTimeToPeak",
+}
+
+
 def main() -> None:
     hcib = json.load(open(sys.argv[1])) if len(sys.argv) > 1 else {}
     sys.path.insert(0, "app")
@@ -215,7 +227,7 @@ def main() -> None:
         mapped = UNIT_MAP.get(raw, (None, ""))
         if not mapped[0]:
             mapped = (_unit_from_name(m), "")
-        if mapped[0]:
+        if mapped[0] and m not in AMBIGUOUS_UNIT:
             units[m] = mapped[0]
             stats[raw] += 1
         else:

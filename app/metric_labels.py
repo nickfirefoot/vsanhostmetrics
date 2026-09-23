@@ -762,7 +762,6 @@ UNITS: Dict[str, str] = {
     'avgDeltaCreationDomActiveLatency': 'TIME.SECONDS',
     'avgDeltaCreationDomCreationLatency': 'TIME.SECONDS',
     'avgLatency': 'TIME.MICROSECONDS',
-    'avgPctTimeToPeak': 'TIME.MICROSECONDS',
     'avgRunPct': 'RATIO.PERCENT',
     'avgUsedPct': 'RATIO.PERCENT',
     'cacheUpdateLatency': 'TIME.MICROSECONDS',

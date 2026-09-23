@@ -559,7 +559,7 @@ perfsvc entity `host-domclient` · identified by `host_uuid` · 4 objects observ
 | `avgBurstPeakOutstandingKbMultiObj` | Burst peak outstanding kb multi obj (average) |  | *(derived)* |
 | `avgBurstTotalTime` | Burst total time (average) | `microseconds` | *(derived)* |
 | `avgBurstTotalTimeMultiObj` | Burst total time multi obj (average) |  | *(derived)* |
-| `avgPctTimeToPeak` | Percent time to peak (average) | `microseconds` | *(derived)* |
+| `avgPctTimeToPeak` | Percent time to peak (average) |  | *(derived)* |
 | `avgPctTimeToPeakMultiObj` | Percent time to peak multi obj (average) |  | *(derived)* |
 | `bandwidthWithinBursts` | Bandwidth within bursts |  | *(derived)* |
 | `bandwidthWithinBurstsExclFirstObj` | Bandwidth within bursts excl first obj |  | *(derived)* |

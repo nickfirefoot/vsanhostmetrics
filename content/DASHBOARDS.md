@@ -1,5 +1,160 @@
 # Dashboard and alerting design
 
+> **Sections below "What we have to work with" describe the retired host-scrape
+> model** (`vmware_esx_*` resource kinds) and are kept for the threshold and
+> HCIBench research in them. The current model is the Performance Service one;
+> see "Rapid dashboards" immediately below and the metric reference in
+> `README.md`.
+
+## Rapid dashboards
+
+A *rapid* dashboard answers one question -- "is this subsystem bad right now?"
+-- across every object at once. It is explicitly **not** for root cause. Its job
+is to catch **grey-state failure**: the partial, degraded condition that leaves
+everything nominally up.
+
+That framing decides the metric selection, and it argues against the obvious
+choice. A NIC dropping 0.1% of frames still moves traffic at line rate, so a
+dashboard built from throughput and latency shows green through the exact
+failure it exists to catch. **Rapid dashboards are built from error, loss and
+congestion signals; throughput appears only as context.**
+
+Shared shape:
+
+- One heatmap per signal family, every object as a cell. Non-zero is the catch.
+- No drill-down, no topology, no time-series-per-object. Those are cause tools.
+- Sorted so the worst cell is top-left; an all-green screen is the normal state.
+
+### 1. Network rapid — READY
+
+| Panel | Metrics | Catches |
+|---|---|---|
+| pNIC hardware errors | `rxCrcErr`, `rxFrmErr`, `rxLgtErr`, `rxOvErr`, `rxFifoErr`, `txCarErr`, `txWinErr`, `txHeartErr`, `txAbortErr` | bad cable, bad optic, bad port, failing NIC |
+| Ring overrun | `rxMissErr` | NIC being overrun -- ring had no descriptor |
+| Drop/discard rates | `portRxDrops`, `portTxDrops`, `rxPacketsLossRate`, `txPacketsLossRate`, `ioChainRxdrops`, `ioChainTxdrops` | loss above the driver |
+| Fabric backpressure | `pauseCount`, `pfcCount` | congested fabric rather than broken NIC |
+| TCP health | `tcpRcvoopackRate`, `tcpTxRexmitRate`, `tcpRcvdupackRate`, `tcpRxErrRate` | path quality, reordering, retransmission |
+| Context (small) | `rxThroughput`, `txThroughput` | is this link even carrying traffic |
+
+Resource kinds: `VsanPnic` (per vmnic), `VsanHostNet`, `VsanTcpIp`, `VsanVnic`.
+
+Note the drop/discard and pause metrics are **per-mille**; see `BACKLOG.md`.
+A value of 1 is 0.1%, which is already Broadcom's warning threshold for
+out-of-order. Do not read them as packet counts.
+
+### 2. vSAN backpressure rapid — READY
+
+Congestion is vSAN's own "I am overloaded" signal and is the storage-path
+equivalent of pause frames. Available on ESA through the DOM entities.
+
+| Panel | Metrics | Catches |
+|---|---|---|
+| Congestion by type | `congestion`, `readCongestion`, `writeCongestion`, `unmapCongestion`, `recoveryWriteCongestion`, `segCleanerUnmapCongestion` | which layer is pushing back |
+| Component/shared | `componentCongestion`, `sharedCongestion`, `resyncReadCongestion` | contention vs resync interference |
+| RDT pressure | `txSbSpaceMin`, `rxSbSpaceMin`, `txCtxQMax`, `txQLatAvg`, `numReadyDelay`, `kaReset` | vSAN's own transport stalling |
+
+Resource kinds: `VsanHostDomclient`, `VsanHostDomcompmgr`, `VsanHostDomowner`,
+`VsanRdtLatency`, `VsanVnicRdtLatency`.
+
+`kaReset` (keepalive reset) is worth a panel of its own -- RDT connections
+resetting is a strong grey-state signal that survives a healthy-looking NIC.
+
+### 3. Disk rapid — READY, but not the way you would expect
+
+**There are no disk error counters anywhere in the Performance Service.**
+Verified across `vsan-esa-disk-layer`, `vsan-esa-disk-scsifw`, `capacity-disk`,
+`cache-disk`, `ddh-disk` and `disk-group`: zero metrics matching
+error/fail/retry/timeout/smart/media/realloc. The service is a *performance*
+service; media health is not in it.
+
+NVMe media errors, reallocated blocks and SMART thresholds live on the host
+(`esxcli storage core device smart get`). Collecting them means a second
+gathering point, which `docs/COLLECTION-DESIGN.md` forbids without retiring the
+overlap first. That is a deliberate decision, not an oversight.
+
+So a disk rapid dashboard detects a sick device by **latency behaviour**, which
+is how a failing NVMe actually presents before it fails outright:
+
+| Panel | Metrics | Catches |
+|---|---|---|
+| Service-time outliers | `maxReadTimePerf`, `maxWriteTimePerf`, `maxReadTimeCapacity`, `maxWriteTimeCapacity` | the one slow IO a mean hides -- the strongest available signal |
+| Device vs guest divergence | `latencyDevDAvg` vs `latencyDevGAvg`, `latencyDevKAvg` | queueing above the device: kernel latency rising while device latency does not |
+| Physical vs vSAN layer | `latencyDevRead/Write` vs `avgLatReadCapacity`/`avgLatWriteCapacity` | isolates the drive from the vSAN layer above it |
+| Queue depth | `outstandingCmdCount` | saturation |
+| Context | `iopsDevRead/Write`, `throughputDevRead/Write` | is it even being asked to do work |
+
+Resource kinds: `VsanEsaDiskLayer`, `VsanEsaDiskScsifw`, both per physical disk
+with the disk named `NVMe <model> <serial> (<host>)`.
+
+The tell for a dying NVMe is `maxWriteTimePerf` spiking while median latency and
+IOPS stay flat. A mean-based panel will not show it; use max, and compare each
+disk against its siblings on the same host rather than a fixed threshold.
+
+### 4. HBA / OSA rapid — BLOCKED, schema exists
+
+The OSA entity types are advertised and modelled but return nothing on an ESA
+cluster, so none of this can be built or tested on `example.com`:
+`disk-group` (38 metrics), `capacity-disk` (13), `cache-disk` (8),
+`ddh-disk` (10), `clom-disk` (3).
+
+They are the right source when an OSA cluster is available. The OSA grey-state
+signals are different from ESA's and better: `disk-group` carries
+`diskgroupCongestionReadSched`/`WriteSched`, `componentCongestionReadSched`,
+`iopsDelayPctSched` and `latencySched`, plus a full resync breakdown by *reason*
+(`...Decom`, `...FixComp`, `...Policy`, `...Rebalance`). `capacity-disk` adds
+`deleteCongestion` and both physical- and vSAN-layer latency on the same object,
+and `ddh-disk` adds `logCongestion`.
+
+Still no error counters -- same conclusion as ESA.
+
+**Blocked on:** an OSA cluster to generate data against. Until then the model
+entries are unverified.
+
+### 5. File services — BLOCKED, and thin
+
+`vsan-file-service` exists in the schema with **8 metrics**: `readLatency`,
+`writeLatency`, `readOpTotal`, `writeOpTotal`, `readRequested`,
+`writeRequested`, `readTransferred`, `writeTransferred`. Silent here because
+file services are not enabled.
+
+Requested vs transferred bytes is the one genuinely interesting pair -- a
+persistent gap means the protocol layer is not delivering what was asked for.
+Otherwise this is a performance view, not a health one: no share, quota,
+session, protocol-error or NFS/SMB-specific metrics at all. A file services
+rapid dashboard is possible but will be weak.
+
+Related and also silent: `vsan-iscsi-host`, `vsan-iscsi-target`,
+`vsan-iscsi-lun` (10 metrics each, IOPS/bandwidth/latency plus `queueDepth`).
+
+**Blocked on:** enabling file services on a cluster.
+
+### 6. S3 / object store — NOT AVAILABLE
+
+Searched all 69 advertised entity types and all 839 documented metric ids,
+names and descriptions for `s3`, `bucket`, `object store`, `objectstore`.
+**Zero matches.** Nothing in this Performance Service version corresponds to an
+object store.
+
+If a future release adds it, the expected shape is a new entity type appearing
+in `VsanPerfGetSupportedEntityTypes`. `tools/model_from_perfsvc.py` regenerates
+the model from a live service, so it would be picked up by re-running it
+against a cluster on that release -- the pack does not need code changes to
+*discover* new entity types, only to name and label them.
+
+### Other candidates worth considering
+
+- **Resync / rebuild rapid.** `VsanHostDomowner` carries 71 resync-related
+  metrics including `numPendingDecomResyncJobs`, `avgResyncParallelism` and
+  `numInflightPriorityResyncJobs`. Answers "is this cluster rebuilding, why,
+  and is it keeping up" -- the question after a host or disk drops out.
+- **Capacity rapid.** `VsanClusterCapacity` is only 6 metrics (`total`, `used`,
+  `free`, `dedupRatio`, `savedByDedup`, `totalDpOverhead`) but capacity
+  exhaustion is the failure that takes a cluster read-only.
+- **Memory / heap rapid.** `VsanMemory` (50 metrics) and `VsanSystemMemory`.
+  Heap exhaustion is a classic grey failure: everything works until an
+  allocation fails.
+
+
 Groundwork for the content that ships in the pak's `content/` directory.
 Nothing here is built yet — this is the plan, written before the panels so the
 metric model can be checked against what the dashboards actually need.

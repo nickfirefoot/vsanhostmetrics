@@ -299,6 +299,47 @@ def test_vmdk_paths_register_both_slash_forms():
     assert "/" + path.lstrip("/") == "/82caad6a-7fbc/ubuntuclaud.vmdk"
 
 
+def test_units_do_not_contradict_what_the_metric_is():
+    """Logic check: if the name says latency the unit must be a time, if it
+    says throughput a rate, and so on.  Guards against a plausible-looking but
+    wrong unit, which is worse than none because Operations scales and renders
+    it confidently.
+
+    Precedence matters. A percent qualifier outranks an embedded noun --
+    netSchedBWDiscoveryStopsDueToHighLatencyPct is a percentage that happens to
+    mention latency, not a duration.
+    """
+    import json
+    import re
+    import metric_labels as ml
+
+    schema = {}
+    try:
+        for metrics in json.load(open("docs/assets/perfsvc_schema.json")).values():
+            for mid, d in metrics.items():
+                schema.setdefault(mid, d)
+    except FileNotFoundError:
+        pass
+
+    EXPECT = [                                    # first match wins
+        (r"percent|percentage|pct\b", "RATIO"),
+        (r"latency|\blat\b|\bqlat\b", "TIME"),
+        (r"throughput|bandwidth", "DATA_RATE"),
+        (r"\biops\b", "MISC"),
+        (r"\bbytes\b|\bsize\b|\bsb ?space\b", "DATA_SIZE"),
+    ]
+    contradictions = []
+    for mid, unit in ml.UNITS.items():
+        text = " ".join([(schema.get(mid) or {}).get("name") or "",
+                         ml.LABELS.get(mid, ""), mid]).lower()
+        for rx, want in EXPECT:
+            if re.search(rx, text):
+                if unit.split(".")[0] != want:
+                    contradictions.append((mid, ml.LABELS.get(mid), unit, want))
+                break
+    assert not contradictions, contradictions[:5]
+
+
 def test_model_is_non_trivial():
     assert len(perfsvc.MODEL.ENTITIES) >= 20
     t = perfsvc.MODEL.ENTITIES["vsan-tcpip-stats"]
