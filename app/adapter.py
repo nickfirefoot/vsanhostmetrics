@@ -1,14 +1,24 @@
 #  Copyright 2022-2023 VMware, Inc.
 #  SPDX-License-Identifier: Apache-2.0
 """
-VCF Operations adapter -- vSAN host TCP/IP metrics (beta scope).
+VCF Operations adapter -- vSAN metrics from the Performance Service.
 
-Scrapes https://<esxi>/vsanmetrics directly from each host, converts the
-cumulative TCP counters to rates, and emits one VsanHostTcpIp object per
-(host, tcpip stack).
+Collects via vCenter's VsanPerfQueryPerf rather than scraping each ESXi host.
+One source: never two gathering points for the same metric.  See
+docs/COLLECTION-DESIGN.md for why, and what that costs.
 
-Import block and main() dispatch are taken verbatim from the mp-init
-generated adapter.py (SDK 1.3.1 / lib 1.1.0), which is ground truth.
+The object schema is GENERATED from app/perfsvc_model.py, which is itself
+derived from a live Performance Service -- 31 entity types, 1,035 metric
+definitions.  Hand-writing that does not scale and would drift every time the
+API changes.
+
+The host-scrape path (vsanmetrics.py, model.py) is retained but DORMANT.
+Nothing imports it.  It exists so that reviving a family perfsvc does not serve
+-- heaps, slabs, CMMDS workload, memory detail, ESA internals -- is a routing
+change rather than archaeology.
+
+Import block and main() dispatch are taken verbatim from the mp-init generated
+adapter.py (SDK 1.3.1 / lib 1.1.0), which is ground truth.
 """
 import os
 import sys
@@ -26,25 +36,14 @@ from aria.ops.result import TestResult
 from aria.ops.timer import Timer
 from constants import ADAPTER_KIND
 from constants import ADAPTER_NAME
-from constants import HOSTS_PARAM
-from constants import TOKEN_CRED
+from constants import VC_HOST_PARAM
+from constants import VC_USER_PARAM
+from constants import VC_PASS_CRED
 from constants import VERIFY_PARAM
 
-import vsanmetrics as vm
+import perfsvc
 
 logger = logging.getLogger(__name__)
-
-# commands.cfg runs `python app/adapter.py collect` once per collection, so this
-# module is re-imported in a BRAND NEW interpreter every interval.  A purely
-# in-memory cache is therefore always empty and no rate is ever emitted; the
-# baseline has to live on the container filesystem.  See RateCache docstring.
-# /tmp, not /var/log: mp-test bind-mounts the project's logs/ over /var/log, and
-# the adapter runs as uid 1000 while that directory is owned by the host user, so
-# /var/log is read-only in practice.  /tmp is container-local and always writable,
-# which is exactly the container-lifetime scope we want.
-_RATES = vm.RateCache(
-    path=os.getenv("VSAN_RATE_CACHE", "/tmp/vsan_rate_cache.json")
-)
 
 
 # ---------------------------------------------------------------------------
@@ -55,99 +54,68 @@ def get_adapter_definition() -> AdapterDefinition:
         d = AdapterDefinition(ADAPTER_KIND, ADAPTER_NAME)
 
         d.define_string_parameter(
-            HOSTS_PARAM,
-            label="ESXi hosts",
-            description="Comma-separated FQDNs or IPs of the vSAN hosts to scrape.",
+            VC_HOST_PARAM,
+            label="vCenter Server",
+            description="FQDN or IP of the vCenter Server managing the vSAN cluster.",
             required=True,
         )
-        # NOTE: lib 1.1.0 has no define_bool_parameter.  An enum of "true"/"false"
-        # is the supported equivalent; _verify() already parses the string form.
+        d.define_string_parameter(
+            VC_USER_PARAM,
+            label="vCenter username",
+            description="Read-only is sufficient. Needs System.View and System.Read "
+                        "propagated from the vCenter root -- no cluster edit rights.",
+            required=True,
+        )
+        # NOTE: lib 1.1.0 has no define_bool_parameter; an enum of "true"/"false"
+        # is the supported equivalent.
         d.define_enum_parameter(
             VERIFY_PARAM,
             values=["true", "false"],
-            label="Verify host certificates",
+            label="Verify vCenter certificate",
             description="Leave enabled. Disable only for initial bring-up.",
             default="true",
         )
-
-        # Special key read by the VCF Operations collector to size the adapter
-        # container.  Kept from the generated template: removing it removes the
-        # ability to tune container memory at configuration time.
+        # Special key read by the collector to size the adapter container.
         d.define_int_parameter(
             "container_memory_limit",
             label="Adapter Memory Limit (MB)",
-            description="Sets the maximum amount of memory VMware Aria Operations can "
-            "allocate to the container running this adapter instance.",
+            description="Maximum memory VCF Operations may allocate to the "
+                        "container running this adapter instance.",
             required=True,
             advanced=True,
             default=1024,
         )
 
-        cred = d.define_credential_type("vsanmetrics_token", "vSAN metrics token")
-        # NOTE: credential parameters in lib 1.1.0 take no `description` kwarg
-        # (only key/label/required), so the retrieval hint lives in the label.
-        # Full command, on any host in the cluster -- note the -n, without it
-        # the token comes back masked:
-        #   configstorecli config current get -c vsan -g system -k vsan -n
-        #     -> metric_subscriptions[].auth_token
-        #
-        # metric_subscriptions is a LIST, and every entry's token is valid
-        # simultaneously (verified 2026-09-22: two entries, both returning 200
-        # on two hosts).  Do not assume index 0 -- entries are added and removed
-        # over time, and a token observed earlier the same day had already been
-        # invalidated.  Any current entry will do.
+        cred = d.define_credential_type("vsan_vc_credential", "vCenter credential")
+        # NOTE: credential parameters in lib 1.1.0 take only key/label/required.
         cred.define_password_parameter(
-            TOKEN_CRED,
-            label="Bearer token (vsan/system/vsan -> any metric_subscriptions[].auth_token)",
+            VC_PASS_CRED,
+            label="vCenter password",
             required=True,
         )
 
         # ------------------------------------------------------------------
-        # Object types are GENERATED from app/model.py, which is itself derived
-        # from a real /vsanmetrics exposition.  Hand-writing 385 metric
-        # definitions across 16 resource kinds does not scale and would drift
-        # every time ESXi changes the endpoint.
-        #
-        # Identity vs metric key is the rule that matters here:
-        #   * identity labels split objects   (stack, vmnic, world_id, ...)
-        #   * measurement labels join the key (io_type -> total|rx, total|tx)
-        # The second is why the io_type collision cannot recur.
+        # Object types are GENERATED from app/perfsvc_model.py.
+        # Identity comes from parsing entityRefId, which is regular across
+        # every entity type: "<type>:<uuid>[|<part>[|<part>]]".
         # ------------------------------------------------------------------
-        for fam in sorted(vm.MODEL.FAMILIES):
-            spec = vm.MODEL.FAMILIES[fam]
+        for entity in sorted(perfsvc.MODEL.ENTITIES):
+            spec = perfsvc.MODEL.ENTITIES[entity]
             ot = d.define_object_type(spec["kind"], spec["label"])
 
-            # host_uuid is always part of identity: every sample carries it and
-            # objects must not merge across hosts.
-            ot.define_string_identifier("host_uuid", "Host UUID",
-                                        is_part_of_uniqueness=True)
-            for lab in spec["identity"]:
-                ot.define_string_identifier(lab, _label_for(lab),
+            for label in spec["identity"]:
+                ot.define_string_identifier(label, _label_for(label),
                                             is_part_of_uniqueness=True)
+            for label in spec["identity"]:
+                # identity values are also exposed as properties so they are
+                # visible without reading the object name
+                ot.define_string_property(f"{label}_prop", _label_for(label))
 
-            ot.define_string_property("hostname", "Host name")
-            ot.define_string_property("vsan_cluster_uuid", "vSAN cluster UUID")
-            for prop in spec["properties"]:
-                if prop in ("hostname", "vsan_cluster_uuid", "host_uuid"):
-                    continue
-                ot.define_string_property(prop, _label_for(prop))
-
-            for key, _src, _vals, kind, help_text in spec["metrics"]:
-                label = _metric_label(key, help_text)
-                if kind == "counter":
-                    # Counters are cumulative since boot; we emit a rate.
-                    # NOTE Units.RATE.PER_SECOND -- lib 1.1.0 has no
-                    # Units.RATIO.PER_SECOND; Ratio only defines PERCENT.
-                    ot.define_metric(key, label, unit=Units.RATE.PER_SECOND)
-                else:
-                    ot.define_metric(key, label)
-
-            # Derived percentages live only on the TCP/IP kind for now; they
-            # are what symptom definitions can actually alert on, since a
-            # symptom cannot divide two metrics itself.
-            if fam == "vmware_esx_tcppkt":
-                for key, lbl in vm.DERIVED_LABELS.items():
-                    ot.define_metric(key, lbl, unit=Units.RATIO.PERCENT)
+            for metric in spec["metrics"]:
+                # Every perfsvc metric is a point value: the service has already
+                # reduced into 5-minute buckets, so nothing here is a rate we
+                # compute or a counter we difference.
+                ot.define_metric(metric, _metric_label(metric))
 
         logger.debug(f"Returning adapter definition: {d.to_json()}")
         return d
@@ -157,15 +125,11 @@ def get_adapter_definition() -> AdapterDefinition:
 # Helpers
 # ---------------------------------------------------------------------------
 _LABEL_OVERRIDES = {
-    "host_uuid": "Host UUID", "hostname": "Host name",
-    "vsan_cluster_uuid": "vSAN cluster UUID", "stack": "TCP/IP stack",
-    "vmnic": "Physical NIC", "world_id": "World ID", "name": "Name",
-    "heap_id": "Heap ID", "heap_name": "Heap name", "slab": "Slab",
-    "cpu": "CPU", "disk_uuid": "Disk UUID", "objuuid": "Object UUID",
-    "objpath": "Object path", "vm_name": "VM name",
-    "vm_instance_uuid": "VM instance UUID", "vscsi_name": "vSCSI device",
-    "splinter_uuid": "Splinter UUID", "splinter_db_name": "Splinter DB",
-    "sink_type": "Sink type", "subsystem": "Subsystem", "role": "Role",
+    "host_uuid": "Host UUID", "cluster_uuid": "Cluster UUID",
+    "vm_uuid": "VM UUID", "vdisk_uuid": "Virtual disk UUID",
+    "disk_uuid": "Disk UUID", "stack": "TCP/IP stack",
+    "vmnic": "Physical NIC", "vmknic": "VMkernel NIC", "cpu": "CPU",
+    "device": "Device", "world_name": "World name", "world_id": "World ID",
 }
 
 
@@ -173,153 +137,139 @@ def _label_for(key: str) -> str:
     return _LABEL_OVERRIDES.get(key, key.replace("_", " ").capitalize())
 
 
-def _metric_label(key: str, help_text: str) -> str:
-    """Readable label for a generated metric key.
-
-    `total|rx` -> "Total (rx)".  Operations builds its metric tree from the
-    '|' separators, so the label only needs to read well as a leaf.
-    """
-    parts = key.split("|")
-    base = parts[0].replace("_total", "").replace("_", " ").strip().capitalize()
-    if len(parts) > 1:
-        base = f"{base} ({', '.join(parts[1:])})"
-    return base or key
+def _metric_label(key: str) -> str:
+    """camelCase metric id -> readable label.  tcpRxPackets -> 'Tcp rx packets'."""
+    out = []
+    for i, ch in enumerate(key):
+        if ch.isupper() and i and not key[i - 1].isupper():
+            out.append(" ")
+        out.append(ch)
+    return "".join(out).replace("_", " ").capitalize()
 
 
-def _hosts(adapter_instance: AdapterInstance) -> List[str]:
-    raw = adapter_instance.get_identifier_value(HOSTS_PARAM) or ""
-    return [h.strip() for h in raw.split(",") if h.strip()]
-
-
-def _token(adapter_instance: AdapterInstance) -> str:
-    return adapter_instance.get_credential_value(TOKEN_CRED) or ""
+def _cfg(adapter_instance: AdapterInstance, key: str, default: str = "") -> str:
+    return adapter_instance.get_identifier_value(key) or default
 
 
 def _verify(adapter_instance: AdapterInstance) -> bool:
-    v = adapter_instance.get_identifier_value(VERIFY_PARAM)
-    return True if v is None else str(v).lower() in ("true", "1", "yes")
+    return _cfg(adapter_instance, VERIFY_PARAM, "true").strip().lower() in (
+        "true", "1", "yes")
+
+
+def _password(adapter_instance: AdapterInstance) -> str:
+    return adapter_instance.get_credential_value(VC_PASS_CRED) or ""
+
+
+def _connect(adapter_instance: AdapterInstance):
+    return perfsvc.connect(
+        _cfg(adapter_instance, VC_HOST_PARAM),
+        _cfg(adapter_instance, VC_USER_PARAM),
+        _password(adapter_instance),
+        verify=_verify(adapter_instance),
+    )
 
 
 # ---------------------------------------------------------------------------
-# test / get_endpoints / collect
+# Test
 # ---------------------------------------------------------------------------
 def test(adapter_instance: AdapterInstance) -> TestResult:
     with Timer(logger, "Test"):
         result = TestResult()
-        hosts = _hosts(adapter_instance)
-        if not hosts:
-            result.with_error("No hosts configured.")
+        host = _cfg(adapter_instance, VC_HOST_PARAM)
+        if not host:
+            result.with_error("No vCenter Server configured.")
             return result
-
-        token = _token(adapter_instance)
-        verify = _verify(adapter_instance)
-        for host in hosts:
-            try:
-                text = vm.scrape(host, token, verify=verify, timeout=20)
-                found = list(vm.parse(text, keep=vm.ALL_NAMES))
-                if not found:
-                    result.with_error(
-                        f"{host}: scrape succeeded but contained none of the "
-                        f"{len(vm.ALL_NAMES)} metrics this adapter knows. "
-                        f"Different ESXi build?"
-                    )
-                    continue
-                objs, unknown = vm.group(found)
-                logger.info("%s: %d samples -> %d objects across %d kinds",
-                            host, len(found), len(objs),
-                            len({o.family for o in objs}))
-                if unknown:
-                    # Surfaced in the connection test, not just the log: a new
-                    # ESXi build adding metrics is something the operator wants
-                    # to know at configuration time, not months later.
-                    logger.warning("%s: %d unrecognised sample(s): %s",
-                                   host, len(unknown), unknown[:5])
-            except Exception as exc:
-                result.with_error(f"{host}: {exc}")
+        si = None
+        try:
+            si, clusters, mos = _connect(adapter_instance)
+            if not clusters:
+                result.with_error(
+                    "Connected to vCenter but no clusters are visible. The "
+                    "account likely lacks Read-only propagated from the root.")
+                return result
+            objs, problems = perfsvc.collect(mos["vsan-performance-manager"],
+                                             clusters[0])
+            logger.info("%s: %d clusters, %d objects, %d metrics",
+                        host, len(clusters), len(objs),
+                        sum(len(g.gauges) for g in objs.values()))
+            if problems:
+                logger.warning("%s: %d problem(s): %s", host, len(problems),
+                               problems[:5])
+        except perfsvc.PerfSvcError as exc:
+            result.with_error(str(exc))
+        except Exception as exc:                    # noqa: BLE001
+            result.with_error(f"{host}: {type(exc).__name__}: {exc}")
+        finally:
+            _safe_disconnect(si)
         return result
 
 
 def get_endpoints(adapter_instance: AdapterInstance) -> EndpointResult:
-    """Hand each host's cert to Operations so it lands in the trust store."""
+    """Hand vCenter's cert to Operations so it lands in the trust store."""
     with Timer(logger, "Get Endpoints"):
         result = EndpointResult()
-        for host in _hosts(adapter_instance):
+        host = _cfg(adapter_instance, VC_HOST_PARAM)
+        if host:
             result.with_endpoint(f"https://{host}")
         return result
 
 
+# ---------------------------------------------------------------------------
+# Collect
+# ---------------------------------------------------------------------------
 def collect(adapter_instance: AdapterInstance) -> CollectResult:
     with Timer(logger, "Collection"):
         result = CollectResult()
-        token = _token(adapter_instance)
-        verify = _verify(adapter_instance)
+        si = None
+        try:
+            si, clusters, mos = _connect(adapter_instance)
+            if not clusters:
+                raise perfsvc.PerfSvcError(
+                    "No clusters visible to this account -- check that the "
+                    "Read-only role is propagated from the vCenter root.")
+            perf = mos["vsan-performance-manager"]
 
-        for host in _hosts(adapter_instance):
-            try:
-                text = vm.scrape(host, token, verify=verify)
-            except Exception as exc:
-                # Partial failure: one unreachable host must not fail the whole
-                # collection.  Operations shows the object as not-collecting.
-                logger.error("scrape failed for %s: %s", host, exc)
-                continue
+            total_problems: List[str] = []
+            for cluster in clusters:
+                objs, problems = perfsvc.collect(perf, cluster)
+                total_problems.extend(problems)
+                for key, grouped in objs.items():
+                    spec = perfsvc.MODEL.ENTITIES[key.entity]
+                    obj = result.object(
+                        ADAPTER_KIND,
+                        spec["kind"],
+                        key.display(),
+                        identifiers=[Identifier(name, value)
+                                     for name, value in key.idents],
+                    )
+                    for metric, value in grouped.gauges.items():
+                        obj.with_metric(metric, value)
+                    for name, value in grouped.props.items():
+                        if value:
+                            obj.with_property(f"{name}_prop", value)
 
-            samples = list(vm.parse(text, keep=vm.ALL_NAMES))
-            if not samples:
-                logger.warning("%s: no known samples in response", host)
-                continue
-
-            objs, unknown = vm.group(samples)
-            if unknown:
-                # Loud on purpose.  A silently dropped sample is how the
-                # io_type collision survived a green test suite; an ESXi
-                # upgrade adding a metric or a new label value should show up
-                # here rather than as quietly missing data.
-                logger.warning("%s: %d unrecognised sample(s); first few: %s",
-                               host, len(unknown), unknown[:5])
-
-            rates, resets = _RATES.rates_for_objects(host, objs)
-            if resets:
-                logger.warning("%s: %d counter resets this interval", host, resets)
-
-            for okey, g in objs.items():
-                spec = vm.MODEL.FAMILIES[okey.family]
-                hostname = g.props.get("hostname", host)
-
-                obj = result.object(
-                    ADAPTER_KIND,
-                    spec["kind"],
-                    okey.display(hostname),
-                    identifiers=[Identifier("host_uuid", okey.host_uuid)]
-                    + [Identifier(k, v) for k, v in okey.idents],
-                )
-
-                # Gauges are point-in-time and need no baseline, so objects
-                # appear on the very first collection rather than waiting an
-                # interval.  Only counter-derived rates need two samples.
-                for k, v in g.gauges.items():
-                    obj.with_metric(k, v)
-
-                counter_rates = rates.get(okey, {})
-                for k, v in counter_rates.items():
-                    obj.with_metric(k, v)
-
-                if okey.family == "vmware_esx_tcppkt":
-                    for k, v in vm.derive_percentages(counter_rates).items():
-                        obj.with_metric(k, v)
-
-                for k, v in g.props.items():
-                    if v:
-                        obj.with_property(k, v)
-
-                # TODO cross-adapter relationship to the vCenter adapter's
-                # HostSystem, so these are navigable from the host in
-                # Operations.  Biggest usability gap -- see BACKLOG.md.
+            if total_problems:
+                # Loud on purpose. A silently dropped sample is how the io_type
+                # collision survived a green test suite.
+                logger.warning("%d collection problem(s); first few: %s",
+                               len(total_problems), total_problems[:5])
+        finally:
+            _safe_disconnect(si)
 
         logger.debug(f"Returning collection result {result.get_json()}")
         return result
 
 
-# Main entry point of the adapter. You should not need to modify anything below this line.
+def _safe_disconnect(si) -> None:
+    if si is None:
+        return
+    try:
+        from pyVim.connect import Disconnect
+        Disconnect(si)
+    except Exception:                                # noqa: BLE001
+        pass
+
+
 def main(argv: List[str]) -> None:
     logging.setup_logging("adapter.log")
     # Start a new log file by calling 'rotate'. By default, the last five calls will be
