@@ -1,5 +1,24 @@
 # BACKLOG
 
+## Pending next release — batched, do not ship individually
+
+Changes committed to source but **not yet in a published pak**. Batch these
+into one release rather than cutting a version per fix.
+
+| Item | Status | Needs |
+|---|---|---|
+| Real EULA (`eula.txt`) | committed | rebuild — the scaffold placeholder left the install form's agreement box empty |
+| Network rapid dashboard | generated, imports, panels error | `colorBy` binding confirmed against a working example |
+| `TextDisplay` inline body | does not render | a configured example; `description` was assumed to be the body field |
+| `TextDisplay` `locationUrl` | "URL is not available" | lab egress is fine (Cloud Proxy reaches raw.githubusercontent 200/56ms), so the suspect is `text/plain` + `nosniff` being rejected in HTML view mode. GitHub Pages would serve `text/html` and settle it |
+| Backpressure + disk rapid dashboards | designed, not built | the same `colorBy` fix; then ~20 min each |
+
+**Blocking all dashboard work:** the lab still runs **1.1.9**, which collects
+nothing (`ObjectKeyAlreadyExistsException`, fixed in 1.2.0). With zero
+`VsanPnic` objects the panels cannot render, so a correct dashboard and a
+broken one look identical. Install 1.2.0 before drawing any conclusion.
+
+
 Work not done, roughly in the order it becomes worth doing. Items move out of
 here when they land in a commit.
 
