@@ -106,6 +106,22 @@ def connect(host: str, user: str, password: str, verify: bool = False):
     ctx = ssl.create_default_context() if verify else ssl._create_unverified_context()
     try:
         si = SmartConnect(host=host, user=user, pwd=password, sslContext=ctx)
+    except ssl.SSLCertVerificationError as exc:
+        # Reached with the DEFAULT configuration, so the message has to carry
+        # the remedy. vCenter presents a VMCA-issued certificate, and nothing
+        # in the adapter's base image trusts the VMCA. Verification also needs
+        # the FQDN: an IP address fails hostname matching even once the root
+        # is trusted, and that failure looks identical to an untrusted chain.
+        raise PerfSvcError(
+            f"vCenter certificate verification failed for {host}: {exc}. "
+            f"'Verify vCenter certificate' is on. vCenter's certificate is "
+            f"issued by the VMCA, which this adapter container does not trust "
+            f"by default. Either import the VMCA root "
+            f"(https://{host}/certs/download.zip) into the container trust "
+            f"store, or set 'Verify vCenter certificate' to false. If it is "
+            f"already trusted, check that this field holds the FQDN and not "
+            f"an IP address."
+        ) from exc
     except Exception as exc:
         raise PerfSvcError(
             f"vCenter login failed for {user}@{host}: {exc}. "

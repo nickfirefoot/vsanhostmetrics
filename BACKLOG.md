@@ -224,3 +224,30 @@ genuinely dimensionless counts or unknown, and are deliberately left unitless.
 A wrong unit is worse than none, because Operations will scale and render it
 confidently. Improving this means finding a second authority, not loosening
 the heuristics.
+
+## Known metric gaps
+
+**No NIC ring buffer utilisation.** Searched all 730 modelled metrics: zero
+matches for ring/descriptor/buffer/watermark/occupancy. The Performance
+Service exposes the *consequence* of the RX ring filling -- `rxMissErr`,
+`rxOvErr`, `rxFifoErr` -- but not its depth, so there is no early warning,
+only loss after the fact.
+
+This is probably not routable around. ESXi exposes configured ring *size* via
+`esxcli network nic ring current get -n vmnicX`, which is static config rather
+than a series, and instantaneous occupancy does not appear to be exported at
+all. Collecting it would also mean standing up a second gathering point for
+NIC data that `vsan-pnic-net` already owns, which the collection rule forbids
+(see docs/COLLECTION-DESIGN.md). If it is ever wanted, the right shape is a
+config *property* on the existing pnic object, not a parallel collector.
+
+Practical substitute for "is this link bad": `rxMissErr` rate over `rxPackets`
+as a loss ratio, alongside `pauseCount`/`pfcCount` to separate a congested
+fabric from a failing NIC.
+
+**`rxMissErr` semantics are conventional, not documented.** The label reads
+"RX missed errors (ring buffer full)", following the standard
+`rx_missed_errors` driver convention. ESXi passes this through from the driver
+and the precise meaning varies by vendor. It is the best available signal, but
+it is an interpretation -- worth confirming against a driver that documents it
+before an alert definition depends on the exact wording.

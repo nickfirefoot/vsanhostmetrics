@@ -235,6 +235,29 @@ def test_cache_miss_is_not_pluralised_into_missed():
     assert not wrong, wrong[:5]
 
 
+def test_cert_failure_names_the_remedy():
+    """The DEFAULT config hits this path -- verify_certs defaults to true and
+    vCenter presents a VMCA-issued cert nothing trusts -- so the message has to
+    say what to do, not just that verification failed."""
+    import ssl as _ssl
+
+    def _boom(**kwargs):
+        raise _ssl.SSLCertVerificationError("certificate verify failed")
+
+    real = perfsvc.SmartConnect
+    perfsvc.SmartConnect = _boom
+    try:
+        perfsvc.connect("vc01.example.com", "u", "p", verify=True)
+        raise AssertionError("expected PerfSvcError")
+    except perfsvc.PerfSvcError as exc:
+        text = str(exc)
+        assert "VMCA" in text, text
+        assert "Verify vCenter certificate" in text, text
+        assert "FQDN" in text, text
+    finally:
+        perfsvc.SmartConnect = real
+
+
 def test_model_is_non_trivial():
     assert len(perfsvc.MODEL.ENTITIES) >= 20
     t = perfsvc.MODEL.ENTITIES["vsan-tcpip-stats"]
