@@ -277,5 +277,103 @@ def probe():
                      widgets)
 
 
+# ---------------------------------------------------------------------------
+# Scope probes. A self-providing Scoreboard enumerates objects by name, which
+# cannot ship. These three variants test ways to scope by KIND or by
+# RELATIONSHIP instead. Broadcom's own dashboards use a View as the root
+# provider, but a View needs a separate viewDefinitionId, so the question is
+# whether anything simpler works.
+
+
+def scoreboard_kind_scoped(dash_id, title, resource_kind, kind_name, metrics,
+                           x, y, w=6, h=6):
+    """A: resource as a kind-scoped DICT, the shape the root View uses."""
+    wid = str(uuid.uuid4())
+    sb = scoreboard(dash_id, title, kind_name, metrics, x, y, w, h)
+    sb["config"]["resource"] = {
+        "resourceId": "resource:id:0_::_",
+        "resourceKindId": kind_id(resource_kind),
+        "resourceName": kind_name,
+        "traversalSpecId": "",
+    }
+    return sb
+
+
+def scoreboard_relationship(dash_id, title, kind_name, metrics, x, y,
+                            w=6, h=6, depth=1):
+    """C: a receiver -- no objects of its own, fed by a provider widget."""
+    sb = scoreboard(dash_id, title, kind_name, metrics, x, y, w, h,
+                    self_provider=False)
+    sb["config"]["resource"] = []
+    sb["config"]["relationshipMode"] = {"relationshipMode": 0}
+    sb["config"]["depth"] = depth
+    return sb
+
+
+def host_provider(dash_id, title, x, y, w=12, h=5):
+    """Root provider: every vCenter HostSystem, scoped by kind not enumerated."""
+    wid = str(uuid.uuid4())
+    return {
+        "tabId": dash_id, "id": wid, "type": "ResourceRelationshipAdvanced",
+        "title": title, "collapsed": False, "state": "", "height": 0,
+        "states": None, "gridsterCoords": {"x": x, "y": y, "w": w, "h": h},
+        "config": {
+            "title": title, "refreshInterval": 300, "depth": "1,1",
+            "resourceId": None, "resourceName": None, "traversalSpecId": "",
+            "filterMode": "tagPicker", "tagFilter": None,
+            "customFilter": {"filter": [], "excludedResources": None,
+                             "includedResources": None},
+            "selectFirstRow": {"selectFirstRow": True},
+            "selfProvider": {"selfProvider": True},
+            "refreshContent": {"refreshContent": False},
+            "resource": {"resourceId": "resource:id:0_::_",
+                         "resourceKindId": kind_id("HostSystem", "VMWARE"),
+                         "resourceName": "Host System", "traversalSpecId": ""},
+        },
+    }
+
+
+def scope_probe():
+    """Three scoping hypotheses in one dashboard, so one import settles it."""
+    metrics = [("rxMissErr", "RX missed errors (ring full)", 1, 5, 10),
+               ("rxCrcErr", "RX CRC errors", 1, 5, 10),
+               ("portRxDrops", "vSwitch RX drops (%)", 1, 5, 10)]
+    for m, *_ in metrics:
+        validate("VsanPnic", m)
+
+    def widgets(did):
+        prov = host_provider(did, "A/C provider - pick a host", 1, 1)
+        recv = scoreboard_relationship(
+            did, "C: receiver, children of selected host",
+            kind_label("VsanPnic"), metrics, 7, 6)
+        ws = [
+            text(did, "What this is testing",
+                 "<p><b>A</b> kind-scoped dict &mdash; shows every vSAN Physical NIC "
+                 "with no object list.<br><b>C</b> relationship &mdash; pick a host "
+                 "above, the panel shows that host's NICs.<br>Whichever renders is "
+                 "the shape rapid dashboards can ship.</p>", 1, 6, w=12, h=3),
+            prov,
+            scoreboard_kind_scoped(did, "A: kind-scoped (all pNICs)", "VsanPnic",
+                                   kind_label("VsanPnic"), metrics, 1, 9),
+            recv,
+        ]
+        return ws
+
+    doc = dashboard("Rapid vSAN Scope Probe",
+                    "Three scoping hypotheses. Safe to delete.", widgets)
+    db = doc["dashboards"][0]
+    prov = next(w for w in db["widgets"] if w["type"] == "ResourceRelationshipAdvanced")
+    recv = next(w for w in db["widgets"]
+                if w["type"] == "Scoreboard" and w["title"].startswith("C:"))
+    db["widgetInteractions"] = [{"widgetIdProvider": prov["id"],
+                                 "type": "resourceId",
+                                 "widgetIdReceiver": recv["id"]}]
+    db["dashboardNavigations"] = {
+        prov["id"]: [{"id": str(uuid.uuid4()),
+                      "widgets": [{"interactionType": "resourceId",
+                                   "id": recv["id"]}]}]}
+    return doc
+
+
 if __name__ == "__main__":
-    write(probe(), "rapid-probe")
+    write(scope_probe(), "rapid-scope-probe")
