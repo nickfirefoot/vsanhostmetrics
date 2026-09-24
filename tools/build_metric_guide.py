@@ -102,7 +102,8 @@ and why.
 **Provisional.** Metrics are the *advertised* set, which understates what the
 service returns, and identity is inferred. Model a real OSA cluster with
 `tools/model_from_perfsvc.py` and fold the result in.""",
-     ["disk-group", "cache-disk", "capacity-disk", "cluster-resync"]),
+     ["disk-group", "cache-disk", "capacity-disk", "cluster-resync",
+      "clom-disk", "clom-host", "ddh-disk"]),
 
     ("Storage — physical disks (ESA)",
      """Two views of the same NVMe device, and the distinction matters when
@@ -128,7 +129,8 @@ multicast updates.
 Elevated CMMDS traffic without a corresponding change in workload usually means
 membership churn or an object being reconfigured, and it precedes visible
 trouble.""",
-     ["cmmds-net", "vsan-cluster-capacity", "vsan-dp-historical-stats"]),
+     ["cmmds-net", "cmmds-workload", "vsan-cluster-capacity",
+      "vsan-dp-historical-stats"]),
 
     ("Compute and memory",
      """vSAN's own CPU and memory consumption, not the host's. `dom-world-cpu`
@@ -139,7 +141,43 @@ is per-world (per-process) detail and is by far the largest object family --
 exhaustion is a classic grey failure: everything works normally until an
 allocation fails.""",
      ["vsan-cpu", "host-cpu", "dom-world-cpu", "lsom-world-cpu",
-      "vsan-memory", "system-mem"]),
+      "vsan-memory", "system-mem", "heap-memory", "slab-memory"]),
+
+    ("Optional features — present only if configured",
+     """Families that exist only when the corresponding feature is enabled.
+Every advertised entity type is modelled so any supported configuration is
+covered; on a cluster without the feature they simply return nothing, and the
+collector reports one summary line naming them rather than a fault per family.
+
+- **ESA dedup** (`*-esa-dedup-*`): the chunk and hash services behind
+  deduplication, at cluster and host scope.
+- **File services** (`vsan-file-service`): read/write latency, IOPS, and
+  requested-versus-transferred bytes. A persistent gap between requested and
+  transferred means the protocol layer is not delivering what was asked.
+- **iSCSI** (`vsan-iscsi-host`, `-target`, `-lun`): IOPS, bandwidth, latency
+  and queue depth per LUN.
+- **Stretched cluster and HCI Mesh** (`*remotedomclient`, `remote-*`): IO
+  served across sites or to remote clusters.
+- **PMem** (`cluster-pmem`, `host-pmem`).
+- **vSAN Direct** (`vsan-direct-cluster`, `-host`).
+- **IOInsight** (`ioinsight`, 82 metrics): on-demand IO profiling, populated
+  only while a profiling session is running.
+
+These are **provisional** -- metrics are the advertised set, which understates
+what the service returns, and identity is inferred. Run
+`tools/model_from_perfsvc.py` against a cluster that has the feature and fold
+the result into `perfsvc_model.py`.""",
+     ["cluster-esa-dedup-domclient-io", "cluster-esa-dedup-domcompmgr-io",
+      "cluster-esa-dedup-domowner-io", "cluster-esa-dedup-store-chunksvc",
+      "cluster-esa-dedup-store-hashsvc", "host-esa-dedup-domclient-io",
+      "host-esa-dedup-domcompmgr-io", "host-esa-dedup-domowner-io",
+      "host-esa-dedup-store-chunksvc", "host-esa-dedup-store-hashsvc",
+      "vsan-file-service", "vsan-iscsi-host", "vsan-iscsi-target",
+      "vsan-iscsi-lun", "cluster-remotedomclient", "host-remotedomclient",
+      "computeCluster-remotedomclient", "computeHost-remotedomclient",
+      "remote-virtual-disk", "remote-virtual-machine", "remote-vscsi",
+      "cluster-pmem", "host-pmem", "vsan-direct-cluster", "vsan-direct-host",
+      "ioinsight", "vsan-distribution"]),
 
     ("Virtual machines and their disks",
      """The guest-facing view. `vscsi` is the virtual SCSI controller per VM

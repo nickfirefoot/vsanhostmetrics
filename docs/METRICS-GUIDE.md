@@ -129,8 +129,11 @@ service returns, and identity is inferred. Model a real OSA cluster with
 | **VsanCacheDisk** | `cache-disk` | 8 | 0 | `disk_uuid` |
 | **VsanCapacityDisk** | `capacity-disk` | 13 | 0 | `disk_uuid` |
 | **VsanClusterResync** | `cluster-resync` | 24 | 0 | `cluster_uuid` |
+| **VsanClomDisk** | `clom-disk` | 3 | 0 | `disk_uuid` |
+| **VsanClomHost** | `clom-host` | 2 | 0 | `host_uuid` |
+| **VsanDdhDisk** | `ddh-disk` | 10 | 0 | `disk_uuid` |
 
-*83 attributes in this branch.*
+*98 attributes in this branch.*
 
 ## Storage — physical disks (ESA)
 
@@ -168,10 +171,11 @@ trouble.
 | Resource kind | perfsvc entity | Metrics | Objects | Identified by |
 |---|---|---|---|---|
 | **VsanCmmdsNet** | `cmmds-net` | 10 | 4 | `host_uuid` |
+| **VsanCmmdsWorkload** | `cmmds-workload` | 23 | 0 | `host_uuid` |
 | **VsanClusterCapacity** | `vsan-cluster-capacity` | 6 | 1 | `cluster_uuid` |
 | **VsanDpHistoricalStats** | `vsan-dp-historical-stats` | 1 | 1 | `cluster_uuid` |
 
-*17 attributes in this branch.*
+*40 attributes in this branch.*
 
 ## Compute and memory
 
@@ -191,8 +195,68 @@ allocation fails.
 | **VsanLsomWorldCpu** | `lsom-world-cpu` | 2 | 0 | `host_uuid`, `world_name`, `world_id` |
 | **VsanMemory** | `vsan-memory` | 50 | 4 | `host_uuid` |
 | **VsanSystemMemory** | `system-mem` | 3 | 4 | `host_uuid` |
+| **VsanHeapMemory** | `heap-memory` | 1 | 0 | `host_uuid`, `heap_name` |
+| **VsanSlabMemory** | `slab-memory` | 1 | 0 | `host_uuid`, `slab_name` |
 
-*68 attributes in this branch.*
+*70 attributes in this branch.*
+
+## Optional features — present only if configured
+
+Families that exist only when the corresponding feature is enabled.
+Every advertised entity type is modelled so any supported configuration is
+covered; on a cluster without the feature they simply return nothing, and the
+collector reports one summary line naming them rather than a fault per family.
+
+- **ESA dedup** (`*-esa-dedup-*`): the chunk and hash services behind
+  deduplication, at cluster and host scope.
+- **File services** (`vsan-file-service`): read/write latency, IOPS, and
+  requested-versus-transferred bytes. A persistent gap between requested and
+  transferred means the protocol layer is not delivering what was asked.
+- **iSCSI** (`vsan-iscsi-host`, `-target`, `-lun`): IOPS, bandwidth, latency
+  and queue depth per LUN.
+- **Stretched cluster and HCI Mesh** (`*remotedomclient`, `remote-*`): IO
+  served across sites or to remote clusters.
+- **PMem** (`cluster-pmem`, `host-pmem`).
+- **vSAN Direct** (`vsan-direct-cluster`, `-host`).
+- **IOInsight** (`ioinsight`, 82 metrics): on-demand IO profiling, populated
+  only while a profiling session is running.
+
+These are **provisional** -- metrics are the advertised set, which understates
+what the service returns, and identity is inferred. Run
+`tools/model_from_perfsvc.py` against a cluster that has the feature and fold
+the result into `perfsvc_model.py`.
+
+| Resource kind | perfsvc entity | Metrics | Objects | Identified by |
+|---|---|---|---|---|
+| **VsanClusterEsaDedupDomclientIo** | `cluster-esa-dedup-domclient-io` | 24 | 0 | `cluster_uuid` |
+| **VsanClusterEsaDedupDomcompmgrIo** | `cluster-esa-dedup-domcompmgr-io` | 24 | 0 | `cluster_uuid` |
+| **VsanClusterEsaDedupDomownerIo** | `cluster-esa-dedup-domowner-io` | 24 | 0 | `cluster_uuid` |
+| **VsanClusterEsaDedupStoreChunksvc** | `cluster-esa-dedup-store-chunksvc` | 27 | 0 | `cluster_uuid` |
+| **VsanClusterEsaDedupStoreHashsvc** | `cluster-esa-dedup-store-hashsvc` | 34 | 0 | `cluster_uuid` |
+| **VsanHostEsaDedupDomclientIo** | `host-esa-dedup-domclient-io` | 24 | 0 | `host_uuid` |
+| **VsanHostEsaDedupDomcompmgrIo** | `host-esa-dedup-domcompmgr-io` | 24 | 0 | `host_uuid` |
+| **VsanHostEsaDedupDomownerIo** | `host-esa-dedup-domowner-io` | 24 | 0 | `host_uuid` |
+| **VsanHostEsaDedupStoreChunksvc** | `host-esa-dedup-store-chunksvc` | 27 | 0 | `host_uuid` |
+| **VsanHostEsaDedupStoreHashsvc** | `host-esa-dedup-store-hashsvc` | 34 | 0 | `host_uuid` |
+| **VsanFileService** | `vsan-file-service` | 8 | 0 | `host_uuid` |
+| **VsanIscsiHost** | `vsan-iscsi-host` | 10 | 0 | `host_uuid` |
+| **VsanIscsiTarget** | `vsan-iscsi-target` | 10 | 0 | `host_uuid`, `target` |
+| **VsanIscsiLun** | `vsan-iscsi-lun` | 10 | 0 | `host_uuid`, `target`, `lun` |
+| **VsanClusterRemotedomclient** | `cluster-remotedomclient` | 8 | 0 | `cluster_uuid` |
+| **VsanHostRemotedomclient** | `host-remotedomclient` | 11 | 0 | `host_uuid` |
+| **VsanComputeClusterRemotedomclient** | `computeCluster-remotedomclient` | 8 | 0 | `cluster_uuid` |
+| **VsanComputeHostRemotedomclient** | `computeHost-remotedomclient` | 11 | 0 | `host_uuid` |
+| **VsanRemoteVirtualDisk** | `remote-virtual-disk` | 3 | 0 | `disk_uuid` |
+| **VsanRemoteVirtualMachine** | `remote-virtual-machine` | 6 | 0 | `vm_uuid` |
+| **VsanRemoteVscsi** | `remote-vscsi` | 6 | 0 | `vm_uuid`, `device` |
+| **VsanClusterPmem** | `cluster-pmem` | 8 | 0 | `cluster_uuid` |
+| **VsanHostPmem** | `host-pmem` | 8 | 0 | `host_uuid` |
+| **VsanDirectCluster** | `vsan-direct-cluster` | 8 | 0 | `host_uuid` |
+| **VsanDirectHost** | `vsan-direct-host` | 8 | 0 | `host_uuid` |
+| **VsanIoinsight** | `ioinsight` | 82 | 0 | `host_uuid` |
+| **VsanDistribution** | `vsan-distribution` | 5 | 0 | `host_uuid` |
+
+*476 attributes in this branch.*
 
 ## Virtual machines and their disks
 
@@ -211,44 +275,6 @@ only for VMs with snapshots.
 | **VsanHostVsansparse** | `host-vsansparse` | 21 | 4 | `host_uuid` |
 
 *44 attributes in this branch.*
-
-## Not yet categorised
-
-Present in the model but not placed in a branch above:
-
-- `clom-disk` — VsanClomDisk, 3 metrics
-- `clom-host` — VsanClomHost, 2 metrics
-- `cluster-esa-dedup-domclient-io` — VsanClusterEsaDedupDomclientIo, 24 metrics
-- `cluster-esa-dedup-domcompmgr-io` — VsanClusterEsaDedupDomcompmgrIo, 24 metrics
-- `cluster-esa-dedup-domowner-io` — VsanClusterEsaDedupDomownerIo, 24 metrics
-- `cluster-esa-dedup-store-chunksvc` — VsanClusterEsaDedupStoreChunksvc, 27 metrics
-- `cluster-esa-dedup-store-hashsvc` — VsanClusterEsaDedupStoreHashsvc, 34 metrics
-- `cluster-pmem` — VsanClusterPmem, 8 metrics
-- `cluster-remotedomclient` — VsanClusterRemotedomclient, 8 metrics
-- `cmmds-workload` — VsanCmmdsWorkload, 23 metrics
-- `computeCluster-remotedomclient` — VsanComputeClusterRemotedomclient, 8 metrics
-- `computeHost-remotedomclient` — VsanComputeHostRemotedomclient, 11 metrics
-- `ddh-disk` — VsanDdhDisk, 10 metrics
-- `heap-memory` — VsanHeapMemory, 1 metrics
-- `host-esa-dedup-domclient-io` — VsanHostEsaDedupDomclientIo, 24 metrics
-- `host-esa-dedup-domcompmgr-io` — VsanHostEsaDedupDomcompmgrIo, 24 metrics
-- `host-esa-dedup-domowner-io` — VsanHostEsaDedupDomownerIo, 24 metrics
-- `host-esa-dedup-store-chunksvc` — VsanHostEsaDedupStoreChunksvc, 27 metrics
-- `host-esa-dedup-store-hashsvc` — VsanHostEsaDedupStoreHashsvc, 34 metrics
-- `host-pmem` — VsanHostPmem, 8 metrics
-- `host-remotedomclient` — VsanHostRemotedomclient, 11 metrics
-- `ioinsight` — VsanIoinsight, 82 metrics
-- `remote-virtual-disk` — VsanRemoteVirtualDisk, 3 metrics
-- `remote-virtual-machine` — VsanRemoteVirtualMachine, 6 metrics
-- `remote-vscsi` — VsanRemoteVscsi, 6 metrics
-- `slab-memory` — VsanSlabMemory, 1 metrics
-- `vsan-direct-cluster` — VsanDirectCluster, 8 metrics
-- `vsan-direct-host` — VsanDirectHost, 8 metrics
-- `vsan-distribution` — VsanDistribution, 5 metrics
-- `vsan-file-service` — VsanFileService, 8 metrics
-- `vsan-iscsi-host` — VsanIscsiHost, 10 metrics
-- `vsan-iscsi-lun` — VsanIscsiLun, 10 metrics
-- `vsan-iscsi-target` — VsanIscsiTarget, 10 metrics
 
 ## Reading any of these
 
