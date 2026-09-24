@@ -45,7 +45,7 @@ for _n in ("stableVersions", "publicVersions"):
 import vsanmgmtObjects        # noqa: E402,F401  registers the vSAN types
 import vsanapiutils           # noqa: E402
 from pyVim.connect import SmartConnect, Disconnect   # noqa: E402
-from pyVmomi import vim                              # noqa: E402
+from pyVmomi import vim, vmodl                       # noqa: E402
 
 try:
     from . import perfsvc_model as _model            # type: ignore
@@ -572,6 +572,7 @@ def collect(perf, cluster, window_minutes: int = 15
     start = now - datetime.timedelta(minutes=window_minutes)
     out: Dict[ObjectKey, Grouped] = {}
     problems: List[str] = []
+    unsupported: List[str] = []
 
     specs = [
         vim.cluster.VsanPerfQuerySpec(
@@ -581,6 +582,16 @@ def collect(perf, cluster, window_minutes: int = 15
     for spec in specs:
         try:
             results = perf.VsanPerfQueryPerf([spec], cluster) or []
+        except (vmodl.fault.InvalidArgument, vmodl.fault.NotSupported):
+            # Two ways an entity type says "not here": InvalidArgument when it
+            # rejects a wildcard query, NotSupported when the feature is absent
+            # (PMem on a cluster without it). Both are properties of the
+            # deployment, not faults. Every advertised entity type is modelled
+            # so any supported configuration is covered, so these are expected
+            # on any given cluster -- reporting each one every cycle would
+            # drown the real problems this list exists to surface.
+            unsupported.append(spec.entityRefId.split(":")[0])
+            continue
         except Exception as exc:
             problems.append(f"{spec.entityRefId}: {type(exc).__name__}: {exc}")
             continue
@@ -611,6 +622,13 @@ def collect(perf, cluster, window_minutes: int = 15
             for name, value in key.idents:
                 if value:
                     g.props[name] = value
+
+    if unsupported:
+        # One summary line, not one per entity per cycle.
+        problems.append(
+            f"{len(unsupported)} entity type(s) not available on this "
+            f"cluster (feature absent or wildcard unsupported): "
+            f"{', '.join(sorted(unsupported))}")
 
     if not out:
         raise PerfSvcError(

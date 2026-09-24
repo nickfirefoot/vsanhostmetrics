@@ -20,12 +20,15 @@ returns more than it advertises -- vsan-tcpip-stats advertises 16 and returns
 `tools/model_from_perfsvc.py` against it and folding the result into
 perfsvc_model.py. These entries are a starting point, not an authority.
 
-**Only entity types that accept a WILDCARD query are included.** Measured
-against a live service: clom-disk, clom-host, cmmds-workload, ddh-disk,
-heap-memory and slab-memory all reject `<entity>:*` with InvalidArgument, so
-including them would log a collection problem every cycle forever and mask real
-ones. They would need explicit entityRefIds, which means knowing the uuids in
-advance.
+**Every advertised entity type is included**, because not every deployment is
+configured alike: OSA disk groups, ESA dedup, file services, iSCSI, stretched
+cluster, PMem and vSAN Direct all appear here. A family absent from a given
+cluster simply returns nothing, which costs one query per collection.
+
+Some entity types reject a wildcard query outright (`clom-disk`, `ddh-disk`,
+`heap-memory` and others fault with InvalidArgument). They are still modelled --
+they may be queryable on a configuration that has them -- and `collect`
+suppresses the repeated fault so it cannot mask a real problem.
 
 **Identity is inferred**, from the entity name and from how the analogous ESA
 families are keyed. `parse_ref` pads variable arity, so a wrong guess produces
@@ -34,24 +37,50 @@ reported as a collection problem rather than dropped silently.
 """
 import json
 import re
+import sys
+
+sys.path.insert(0, "app")
 
 SCHEMA = "docs/assets/perfsvc_schema.json"
 OUT = "app/perfsvc_model_extra.py"
 
-# entity -> (identity components, human label). Identity is INFERRED; see the
-# module docstring. Chosen to match how the equivalent ESA family is keyed.
-WANTED = {
-    # --- OSA storage stack. The reason this file exists. ---
-    "disk-group":     (["disk_uuid"], "vSAN Disk Group (OSA)"),
-    "cache-disk":     (["disk_uuid"], "vSAN Cache Disk (OSA)"),
-    "capacity-disk":  (["disk_uuid"], "vSAN Capacity Disk (OSA)"),
+# Identity is INFERRED from the entity name. parse_ref pads variable arity, so
+# a wrong guess yields oddly-named identifiers rather than lost objects, and an
+# unmodelled shape is reported as a collection problem rather than dropped.
+# The fix for any of these is to run tools/model_from_perfsvc.py against a
+# cluster that actually has the feature and fold the result in.
+IDENTITY_RULES = [
+    (("world-cpu",),              ["host_uuid", "world_name", "world_id"]),
+    (("iscsi-lun",),              ["host_uuid", "target", "lun"]),
+    (("iscsi-target",),           ["host_uuid", "target"]),
+    (("heap-memory",),            ["host_uuid", "heap_name"]),
+    (("slab-memory",),            ["host_uuid", "slab_name"]),
+    (("disk",),                   ["disk_uuid"]),
+    (("vscsi",),                  ["vm_uuid", "device"]),
+    (("virtual-machine",),        ["vm_uuid"]),
+]
 
 
-    # --- cluster-wide families that return nothing on an idle ESA lab ---
-    "cluster-resync": (["cluster_uuid"], "vSAN Cluster Resync"),
+def identity_for(entity):
+    for needles, ident in IDENTITY_RULES:
+        if any(n in entity for n in needles):
+            return ident
+    # Fall back on scope: cluster-wide families key on the cluster, everything
+    # else on the host. These two cover the large majority.
+    if entity.startswith("cluster") or entity.startswith("computeCluster"):
+        return ["cluster_uuid"]
+    return ["host_uuid"]
 
-    "lsom-world-cpu": (["host_uuid", "world_name", "world_id"], "vSAN LSOM World CPU"),
-}
+
+def label_for(entity):
+    words = entity.replace("-", " ").replace("_", " ").split()
+    fixed = {"esa": "ESA", "osa": "OSA", "vsan": "vSAN", "io": "IO",
+             "cpu": "CPU", "pmem": "PMem", "iscsi": "iSCSI", "lun": "LUN",
+             "dom": "DOM", "clom": "CLOM", "lsom": "LSOM", "ddh": "Disk Health",
+             "cmmds": "CMMDS", "vtx": "VTX", "svc": "Service"}
+    out = [fixed.get(w.lower(), w[:1].upper() + w[1:]) for w in words]
+    text = " ".join(out)
+    return text if text.lower().startswith("vsan") else "vSAN " + text
 
 
 def kind_for(entity):
@@ -63,15 +92,18 @@ def kind_for(entity):
 
 def main() -> None:
     schema = json.load(open(SCHEMA))
+    import perfsvc_model as live
     entries = {}
-    for entity, (identity, label) in sorted(WANTED.items()):
-        metrics = sorted(schema.get(entity, {}))
+    for entity in sorted(schema):
+        if entity in live.ENTITIES:
+            continue                      # the live model is authoritative
+        metrics = sorted(schema[entity])
         if not metrics:
-            print(f"  SKIP {entity}: not in the advertised schema")
             continue
         entries[entity] = {
-            "kind": kind_for(entity), "label": label,
-            "identity": identity, "objects_observed": 0, "metrics": metrics,
+            "kind": kind_for(entity), "label": label_for(entity),
+            "identity": identity_for(entity), "objects_observed": 0,
+            "metrics": metrics,
         }
 
     with open(OUT, "w") as fh:
