@@ -59,6 +59,35 @@ MODEL = _model
 AGGREGATE = "(all)"
 
 
+# Short, readable suffix per entity type, appended when an object's identity
+# yields a bare name. Without it every host-scoped kind renders as just the
+# hostname -- a dozen children of one host, all reading "esxi02.example.com",
+# distinguishable only by icon. The generated model labels are title-cased
+# from the entity id ("Cmmds Net", "Vsan Esa Disk Layer"), so they are
+# overridden here rather than shown.
+KIND_SUFFIX = {
+    "cluster-domclient": "DOM Client", "cluster-domcompmgr": "DOM Comp Mgr",
+    "cluster-domowner": "DOM Owner", "cluster-rdt-network-latency": "RDT Latency",
+    "cluster-zdom-top-stats": "ZDOM Top Stats", "vsan-cluster-capacity": "Capacity",
+    "vsan-dp-historical-stats": "Data Protection",
+    "cmmds-net": "CMMDS Network", "host-domclient": "DOM Client",
+    "host-domcompmgr": "DOM Comp Mgr", "host-domowner": "DOM Owner",
+    "host-vsansparse": "vSAN Sparse", "host-zdom-top-stats": "ZDOM Top Stats",
+    "rdt-net": "RDT Network", "rdt-network-latency": "RDT Latency",
+    "system-mem": "System Memory", "vsan-cpu": "CPU",
+    "vsan-host-net": "Host Network", "vsan-memory": "Memory",
+    "vsan-esa-disk-layer": "ESA Disk Layer", "vsan-esa-disk-scsifw": "ESA Disk SCSI",
+    "virtual-disk": "Virtual Disk", "virtual-machine": "VM",
+    "vnic-rdt-network-latency": "vNIC RDT Latency",
+    # host-cpu carries a cpu identifier on scoped refs but arrives bare on the
+    # per-host aggregate; zdom-vtx is bare always. Without these two the
+    # aggregate collides with zdom-vtx on the plain hostname.
+    "host-cpu": "CPU (all)", "zdom-vtx": "ZDOM VTX",
+    "vsan-tcpip-stats": "TCP/IP", "vsan-vnic-net": "vNIC",
+    "vsan-pnic-net": "pNIC", "vsan-host-net": "Host Network",
+}
+
+
 @dataclass(frozen=True)
 class ObjectKey:
     """Identity of one Operations object, parsed from an entityRefId.
@@ -81,7 +110,10 @@ class ObjectKey:
         names = names or {}
         vals = [names.get(v, v) for _, v in self.idents]
         head, rest = vals[0], [v for v in vals[1:] if v and v != AGGREGATE]
-        return f"{head} [{'/'.join(rest)}]" if rest else head
+        if rest:
+            return f"{head} [{'/'.join(rest)}]"
+        suffix = KIND_SUFFIX.get(self.entity)
+        return f"{head} — {suffix}" if suffix else head
 
 
 @dataclass
