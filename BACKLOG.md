@@ -15,6 +15,58 @@ into one release rather than cutting a version per fix.
 
 | Cluster selector on rapid dashboards | requested | a populated `dashboardNavigations` — wire any two widgets in the UI and export. Heatmaps become `selfProvider: false` and receive the selected cluster; works because 1.2.0 parents every object to its `ClusterComputeResource` |
 
+### Rapid dashboards — the full set
+
+Designed in `content/DASHBOARDS.md`, blocked on the Scoreboard binding probe.
+Once that is confirmed, each is roughly twenty minutes: the panel selection and
+thresholds are already decided, only the widget envelope was wrong.
+
+A *rapid* dashboard answers "is this subsystem bad right now?" across every
+object at once. Not root cause. Built from **error, loss and congestion**
+signals, never throughput -- a NIC dropping 0.1% of frames still moves traffic
+at line rate, so a throughput panel shows green through the exact failure the
+screen exists to catch.
+
+| # | Dashboard | State | Signals |
+|---|---|---|---|
+| 1 | **Network rapid** | panels chosen, generator written | pNIC hardware errors (`rxCrcErr`, `rxFrmErr`, `rxLgtErr`, `rxOvErr`, `rxFifoErr`, `txCarErr`, `txWinErr`, `txHeartErr`, `txAbortErr`), ring overrun (`rxMissErr`), drop rates (`portRxDrops`, `portTxDrops`, `rxPacketsLossRate`, `txPacketsLossRate`, `ioChain*drops`), fabric backpressure (`pauseCount`, `pfcCount`), TCP health (`tcpRcvoopackRate`, `tcpTxRexmitRate`, `tcpRcvdupackRate`, `tcpRxErrRate`) |
+| 2 | **vSAN backpressure rapid** | designed | congestion by type (`congestion`, `readCongestion`, `writeCongestion`, `unmapCongestion`, `recoveryWriteCongestion`, `segCleanerUnmapCongestion`), contention vs resync (`componentCongestion`, `sharedCongestion`, `resyncReadCongestion`), RDT pressure (`txSbSpaceMin`, `rxSbSpaceMin`, `txCtxQMax`, `txQLatAvg`, `numReadyDelay`, `kaReset`) |
+| 3 | **Disk rapid** | designed | **not** error-based -- there are no disk error counters anywhere in the Performance Service. Detects a sick device by latency behaviour: service-time outliers (`maxReadTimePerf`, `maxWriteTimePerf`, `maxReadTimeCapacity`, `maxWriteTimeCapacity`), device-vs-guest divergence (`latencyDevDAvg` vs `latencyDevGAvg`, `latencyDevKAvg`), physical-vs-vSAN-layer latency, queue depth (`outstandingCmdCount`) |
+
+Notes that must survive into the built dashboards:
+
+- **`kaReset` deserves its own panel.** RDT keepalive resets are a strong
+  grey-state signal that survives a perfectly healthy-looking NIC.
+- **Disk panels must use max, not mean.** A dying NVMe shows as
+  `maxWriteTimePerf` spiking while median latency and IOPS stay flat; a
+  mean-based panel hides exactly that. Compare each disk against its siblings
+  on the same host rather than a fixed threshold.
+- **State the blind spot on the screen.** No disk media-error counters and no
+  NIC ring-buffer *utilisation* exist, so a green disk panel does not mean
+  healthy hardware. The text panel says so.
+
+### Blocked on hardware or configuration, not on work
+
+| Dashboard | Blocked by |
+|---|---|
+| **HBA / OSA rapid** | an OSA cluster. The schema is *richer* than ESA's -- `disk-group` carries scheduler congestion, `iopsDelayPctSched`, `latencySched`, and resync broken out by reason (evacuation / repair / policy / rebalance); `capacity-disk` adds `deleteCongestion` plus physical- and vSAN-layer latency on one object; `ddh-disk` adds `logCongestion`. All silent on ESA, so unverifiable here. Still no error counters |
+| **File services** | vSAN file services enabled somewhere. Only 8 metrics (`readLatency`, `writeLatency`, `readOpTotal`, `writeOpTotal`, `requested`/`transferred` bytes). Requested vs transferred is the one genuinely useful pair; no share, quota, session or protocol-error metrics exist, so it will be weak |
+| **iSCSI** | iSCSI enabled. `vsan-iscsi-host` / `-target` / `-lun`, 10 metrics each |
+| **S3 / object store** | nothing to build. Searched all 69 entity types and 839 documented metrics for s3/bucket/object store: zero matches. A future release would surface as a new entity type that `tools/model_from_perfsvc.py` picks up without code changes |
+
+### Lower priority, worth considering
+
+- **Resync / rebuild rapid.** `VsanHostDomowner` carries 71 resync metrics
+  including `numPendingDecomResyncJobs`, `avgResyncParallelism` and
+  `numInflightPriorityResyncJobs`. Answers "is it rebuilding, why, and is it
+  keeping up" -- the question immediately after a host or disk drops out.
+- **Capacity rapid.** `VsanClusterCapacity` is only 6 metrics (`total`, `used`,
+  `free`, `dedupRatio`, `savedByDedup`, `totalDpOverhead`), but capacity
+  exhaustion is the failure that takes a cluster read-only.
+- **Memory / heap rapid.** `VsanMemory` (50 metrics) and `VsanSystemMemory`.
+  Heap exhaustion is the classic grey failure: everything works until an
+  allocation does not.
+
 ### Scale notes (from the collector-binding question)
 
 An adapter instance is **pinned to one collector** — all collection for that
