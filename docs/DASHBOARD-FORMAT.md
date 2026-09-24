@@ -224,3 +224,70 @@ UI, or ship them inside the pak under `content/dashboards/<name>/<name>.json`.
 were placed and grouped but never pointed at a metric. The field exists and is
 named; its populated form (a bare attribute key, or an encoded id like
 `groupBy.id`) has not been observed.
+
+
+## Scoreboard: object-enumerated, and why that rules it out for a shipped pack
+
+A Scoreboard completed through the UI (`docs/assets/dashboard.scoreboard-working.json`)
+settles how object scope works, and it is not what `mode: "resourceKind"`
+suggests:
+
+```json
+"selfProvider": {"selfProvider": true},
+"metric": {"mode": "resourceKind", "resourceKindMetrics": [...]},
+"resource": [
+  {"name": "esxi03.example.com [vmnic2]", "id": "resource:id:0_::_"},
+  {"name": "esxi04.example.com [vmnic2]", "id": "resource:id:1_::_"}
+]
+```
+
+**`mode: "resourceKind"` only selects which kind's metrics are offered. The
+objects come from `resource[]`, enumerated by name**, with index-placeholder
+ids (`resource:id:N_::_`). A self-providing Scoreboard therefore contains a
+hand-picked object list.
+
+Consequences, and they are decisive:
+
+- It **cannot ship in a pak**. The names are specific to the estate it was
+  built in; a customer would import references to NICs that do not exist.
+- It **does not scale**. Add a host and the dashboard must be edited.
+- It gives **no scope control** -- every enumerated object appears at once,
+  which is what "all NICs on all hosts in one jumbled scoreboard" looks like.
+
+An empty `resource: []` is what Operations means by "widget configuration is
+not complete": the widget has no objects, so there is nothing to render.
+
+### Therefore
+
+| Need | Widget |
+|---|---|
+| Scan every object of a kind at once | **Heatmap** -- kind-scoped via `groupBy` + `attributeKind`, never enumerates objects |
+| Key figures for a *selected* object | **Scoreboard with `selfProvider: false`**, fed by a provider widget |
+
+This is exactly the layout Broadcom's own vSAN dashboard uses, and the reason
+is now clear rather than stylistic: their fifteen Scoreboards are all
+`selfProvider: false` precisely because enumerating objects does not survive
+being shipped to someone else's environment.
+
+### Metric entry, as the UI writes it
+
+```json
+{ "metricKey": "rxMissErr",
+  "metricName": "pNIC RX missed error (ring buffer full)",
+  "resourceKindName": "vSAN Physical NIC",
+  "resourceKindId": "resourceKind:id:0_::_",
+  "yellowBound": null, "orangeBound": null, "redBound": null,
+  "colorMethod": 1, "handleOldColoring": false,
+  "isStringMetric": false, "link": "", "id": "extModel3435-1" }
+```
+
+Note `metricName` is our generated label, confirming the adapter's labels flow
+through to dashboard content. Bounds default to `null` (no banding) and must be
+set explicitly.
+
+## Still unknown
+
+The **provider widget**. Broadcom's is a `View` with a `viewDefinitionId`,
+which is separate shippable content. Whether a simpler provider exists that
+needs no view definition -- and its config shape -- has not been observed. This
+is the last gap before dashboards can ship in the pak.

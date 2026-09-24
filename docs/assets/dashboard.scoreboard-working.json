@@ -1,0 +1,379 @@
+{
+   "entries": {
+      "resourceKind": [{
+         "resourceKindKey": "VsanPnic",
+         "internalId": "resourceKind:id:0_::_",
+         "adapterKindKey": "VsanHostMetrics"
+      }],
+      "resource": [
+         {
+            "resourceKindKey": "VsanPnic",
+            "internalId": "resource:id:3_::_",
+            "adapterKindKey": "VsanHostMetrics",
+            "identifiers": [
+               {
+                  "value": "6a46db86-350f-f7e5-653d-9c6b00c512b6",
+                  "key": "host_uuid"
+               },
+               {
+                  "value": "vmnic2",
+                  "key": "vmnic"
+               }
+            ],
+            "name": "esxi01.denick.lab [vmnic2]"
+         },
+         {
+            "resourceKindKey": "VsanPnic",
+            "internalId": "resource:id:4_::_",
+            "adapterKindKey": "VsanHostMetrics",
+            "identifiers": [
+               {
+                  "value": "6a46db57-a6df-a022-ec68-9c6b00c51395",
+                  "key": "host_uuid"
+               },
+               {
+                  "value": "vmnic0",
+                  "key": "vmnic"
+               }
+            ],
+            "name": "esxi03.denick.lab [vmnic0]"
+         },
+         {
+            "resourceKindKey": "VsanPnic",
+            "internalId": "resource:id:0_::_",
+            "adapterKindKey": "VsanHostMetrics",
+            "identifiers": [
+               {
+                  "value": "6a46db57-a6df-a022-ec68-9c6b00c51395",
+                  "key": "host_uuid"
+               },
+               {
+                  "value": "vmnic2",
+                  "key": "vmnic"
+               }
+            ],
+            "name": "esxi03.denick.lab [vmnic2]"
+         },
+         {
+            "resourceKindKey": "VsanPnic",
+            "internalId": "resource:id:6_::_",
+            "adapterKindKey": "VsanHostMetrics",
+            "identifiers": [
+               {
+                  "value": "6a46db54-fcda-0cff-37e5-9c6b00c5139c",
+                  "key": "host_uuid"
+               },
+               {
+                  "value": "vmnic0",
+                  "key": "vmnic"
+               }
+            ],
+            "name": "esxi04.denick.lab [vmnic0]"
+         },
+         {
+            "resourceKindKey": "VsanPnic",
+            "internalId": "resource:id:5_::_",
+            "adapterKindKey": "VsanHostMetrics",
+            "identifiers": [
+               {
+                  "value": "6a46db86-350f-f7e5-653d-9c6b00c512b6",
+                  "key": "host_uuid"
+               },
+               {
+                  "value": "vmnic0",
+                  "key": "vmnic"
+               }
+            ],
+            "name": "esxi01.denick.lab [vmnic0]"
+         },
+         {
+            "resourceKindKey": "VsanPnic",
+            "internalId": "resource:id:1_::_",
+            "adapterKindKey": "VsanHostMetrics",
+            "identifiers": [
+               {
+                  "value": "6a46db54-fcda-0cff-37e5-9c6b00c5139c",
+                  "key": "host_uuid"
+               },
+               {
+                  "value": "vmnic2",
+                  "key": "vmnic"
+               }
+            ],
+            "name": "esxi04.denick.lab [vmnic2]"
+         },
+         {
+            "resourceKindKey": "VsanPnic",
+            "internalId": "resource:id:2_::_",
+            "adapterKindKey": "VsanHostMetrics",
+            "identifiers": [
+               {
+                  "value": "6a46db5d-1276-eb38-abf4-9c6b00c51303",
+                  "key": "host_uuid"
+               },
+               {
+                  "value": "vmnic2",
+                  "key": "vmnic"
+               }
+            ],
+            "name": "esxi02.denick.lab [vmnic2]"
+         }
+      ]
+   },
+   "dashboards": [{
+      "shared": false,
+      "hidden": false,
+      "creationTime": 1790219677077,
+      "autoswitchEnabled": false,
+      "importAttempts": 0,
+      "lastUpdateUserId": "833b693b-0960-4d05-b868-f14446488fc3",
+      "columnProportion": "1",
+      "importComplete": true,
+      "description": "Three widgets to verify Scoreboard bindings. Safe to delete.",
+      "columnCount": 0,
+      "widgets": [
+         {
+            "tabId": "20228aa8-009d-4c61-aac2-f0add1ca8a65",
+            "collapsed": false,
+            "id": "6e8ca591-8261-476e-a818-6afd19857278",
+            "gridsterCoords": {
+               "w": 12,
+               "x": 1,
+               "h": 3,
+               "y": 1
+            },
+            "state": "",
+            "type": "TextDisplay",
+            "title": "Text Display",
+            "config": {
+               "locationUrl": "",
+               "locationFile": "",
+               "refreshInterval": 300,
+               "widgetId": "6e8ca591-8261-476e-a818-6afd19857278",
+               "refreshContent": {"refreshContent": false},
+               "description": "",
+               "viewDetails": "",
+               "title": "Text Display",
+               "viewModeHTML": true
+            },
+            "height": 0
+         },
+         {
+            "tabId": "20228aa8-009d-4c61-aac2-f0add1ca8a65",
+            "collapsed": false,
+            "id": "8ca1cfb2-9150-48e9-8a0f-4d2e2f381197",
+            "gridsterCoords": {
+               "w": 6,
+               "x": 1,
+               "h": 6,
+               "y": 4
+            },
+            "state": "",
+            "type": "Scoreboard",
+            "title": "Scoreboard",
+            "config": {
+               "maxCellCount": 100,
+               "oldMetricValues": false,
+               "relationshipMode": {"relationshipMode": 0},
+               "description": "",
+               "valueSize": 24,
+               "title": "Scoreboard",
+               "boxHeight": null,
+               "showResourceName": {"showResourceName": false},
+               "roundDecimals": null,
+               "mode": {"layoutMode": "fixedView"},
+               "labelSize": 16,
+               "customFilter": {
+                  "filter": [],
+                  "excludedResources": null,
+                  "includedResources": null
+               },
+               "viewDetails": "",
+               "selfProvider": {"selfProvider": true},
+               "resInteractionMode": null,
+               "visualTheme": 3,
+               "showMetricName": {"showMetricName": true},
+               "refreshInterval": 300,
+               "resource": [
+                  {
+                     "name": "esxi03.denick.lab [vmnic2]",
+                     "id": "resource:id:0_::_"
+                  },
+                  {
+                     "name": "esxi04.denick.lab [vmnic2]",
+                     "id": "resource:id:1_::_"
+                  },
+                  {
+                     "name": "esxi02.denick.lab [vmnic2]",
+                     "id": "resource:id:2_::_"
+                  },
+                  {
+                     "name": "esxi01.denick.lab [vmnic2]",
+                     "id": "resource:id:3_::_"
+                  },
+                  {
+                     "name": "esxi03.denick.lab [vmnic0]",
+                     "id": "resource:id:4_::_"
+                  },
+                  {
+                     "name": "esxi01.denick.lab [vmnic0]",
+                     "id": "resource:id:5_::_"
+                  },
+                  {
+                     "name": "esxi04.denick.lab [vmnic0]",
+                     "id": "resource:id:6_::_"
+                  }
+               ],
+               "widgetId": "8ca1cfb2-9150-48e9-8a0f-4d2e2f381197",
+               "showDT": {"showDT": false},
+               "showRemaining": false,
+               "refreshContent": {"refreshContent": false},
+               "focusOnPercent": false,
+               "showMetricUnit": {"showMetricUnit": true},
+               "depth": 1,
+               "metric": {
+                  "mode": "resourceKind",
+                  "resourceMetrics": [],
+                  "resourceKindMetrics": [
+                     {
+                        "yellowBound": null,
+                        "metricName": "pNIC RX missed error (ring buffer full)",
+                        "metricKey": "rxMissErr",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "resourceKindName": "vSAN Physical NIC",
+                        "isStringMetric": false,
+                        "resourceKindId": "resourceKind:id:0_::_",
+                        "redBound": null,
+                        "id": "extModel3435-1",
+                        "orangeBound": null,
+                        "colorMethod": 1
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricName": "pNIC RX CRC Error",
+                        "metricKey": "rxCrcErr",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "resourceKindName": "vSAN Physical NIC",
+                        "isStringMetric": false,
+                        "resourceKindId": "resourceKind:id:0_::_",
+                        "redBound": null,
+                        "id": "extModel3435-2",
+                        "orangeBound": null,
+                        "colorMethod": 1
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricName": "RX CRC errors (actual)",
+                        "metricKey": "rxCrcErrActual",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "resourceKindName": "vSAN Physical NIC",
+                        "isStringMetric": false,
+                        "resourceKindId": "resourceKind:id:0_::_",
+                        "redBound": null,
+                        "id": "extModel3435-3",
+                        "orangeBound": null,
+                        "colorMethod": 1
+                     },
+                     {
+                        "yellowBound": null,
+                        "metricName": "Port RX drops (actual)",
+                        "metricKey": "portRxDropsActual",
+                        "handleOldColoring": false,
+                        "link": "",
+                        "resourceKindName": "vSAN Physical NIC",
+                        "isStringMetric": false,
+                        "resourceKindId": "resourceKind:id:0_::_",
+                        "redBound": null,
+                        "id": "extModel3435-4",
+                        "orangeBound": null,
+                        "colorMethod": 1
+                     }
+                  ]
+               },
+               "showSparkline": {"showSparkline": false},
+               "showPercentText": false,
+               "boxColumns": 2,
+               "periodLength": null
+            },
+            "height": 0,
+            "states": [{
+               "value": "b%3A0",
+               "key": "perm_toolbarVisible_widget_20228aa8-009d-4c61-aac2-f0add1ca8a65_8ca1cfb2-9150-48e9-8a0f-4d2e2f381197"
+            }]
+         },
+         {
+            "tabId": "20228aa8-009d-4c61-aac2-f0add1ca8a65",
+            "collapsed": false,
+            "id": "e5f11c2f-b8ed-4577-962d-454a72323560",
+            "gridsterCoords": {
+               "w": 6,
+               "x": 7,
+               "h": 6,
+               "y": 4
+            },
+            "state": "",
+            "type": "Scoreboard",
+            "title": "Scoreboard",
+            "config": {
+               "maxCellCount": 100,
+               "oldMetricValues": false,
+               "relationshipMode": {"relationshipMode": 0},
+               "description": "",
+               "valueSize": 24,
+               "title": "Scoreboard",
+               "boxHeight": null,
+               "showResourceName": {"showResourceName": false},
+               "roundDecimals": null,
+               "mode": {"layoutMode": "fixedView"},
+               "labelSize": 16,
+               "customFilter": {
+                  "filter": [],
+                  "excludedResources": null,
+                  "includedResources": null
+               },
+               "viewDetails": "",
+               "selfProvider": {"selfProvider": true},
+               "resInteractionMode": null,
+               "visualTheme": 3,
+               "showMetricName": {"showMetricName": true},
+               "refreshInterval": 300,
+               "resource": [],
+               "widgetId": "e5f11c2f-b8ed-4577-962d-454a72323560",
+               "showDT": {"showDT": false},
+               "showRemaining": false,
+               "refreshContent": {"refreshContent": false},
+               "focusOnPercent": false,
+               "showMetricUnit": {"showMetricUnit": true},
+               "depth": 1,
+               "metric": {
+                  "mode": "resourceKind",
+                  "resourceMetrics": [],
+                  "resourceKindMetrics": [],
+                  "subMode": "resourceKindAll"
+               },
+               "showSparkline": {"showSparkline": false},
+               "showPercentText": false,
+               "boxColumns": 2,
+               "periodLength": null
+            },
+            "height": 0
+         }
+      ],
+      "userId": "833b693b-0960-4d05-b868-f14446488fc3",
+      "states": [],
+      "editAllowed": true,
+      "homeTab": false,
+      "name": "Rapid vSAN Probe (binding test)",
+      "gridsterMaxColumns": 12,
+      "rank": 0,
+      "disabled": false,
+      "id": "20228aa8-009d-4c61-aac2-f0add1ca8a65",
+      "locked": false,
+      "dashboardNavigations": {},
+      "lastUpdateTime": 1790220639584
+   }],
+   "uuid": "1036b9f0-dad0-473c-8d51-07f7412615c3"
+}
