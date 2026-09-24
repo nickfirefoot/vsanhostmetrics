@@ -19,11 +19,25 @@ dashboard built from throughput and latency shows green through the exact
 failure it exists to catch. **Rapid dashboards are built from error, loss and
 congestion signals; throughput appears only as context.**
 
-**Naming.** Every rapid dashboard is prefixed `Rapid ` -- `Rapid Network`,
-`Rapid Disk`, `Rapid Backpressure`. They then sort together in the dashboard
-list and, more usefully, typing "rapid" in the search box surfaces the whole
-family at once. Under pressure nobody navigates a folder tree; they type three
-letters.
+**Naming: `Rapid <domain> <subject>`.**
+
+```
+Rapid vSAN Network      Rapid vSAN Disk        Rapid vSAN Backpressure
+Rapid vSAN Capacity     Rapid vSAN Resync      Rapid vSAN Memory
+```
+
+Three reasons, in order of how much they matter:
+
+1. **Typing "rapid" surfaces the whole family.** Under pressure nobody
+   navigates a folder tree; they type three letters. These are the screens
+   someone opens when something is already wrong.
+2. **The domain segment keeps families distinct as more packs arrive.** A
+   separate network-statistics pack contributes `Rapid Network ...` without
+   colliding, and typing "rapid vsan" narrows to this one.
+3. They sort together in the dashboard list.
+
+Keep the prefix even when it reads redundantly inside a vSAN-only pack. The
+convention is for the operator's search box, not for this repository.
 
 Shared shape:
 
