@@ -19,6 +19,12 @@ dashboard built from throughput and latency shows green through the exact
 failure it exists to catch. **Rapid dashboards are built from error, loss and
 congestion signals; throughput appears only as context.**
 
+**Naming.** Every rapid dashboard is prefixed `Rapid ` -- `Rapid Network`,
+`Rapid Disk`, `Rapid Backpressure`. They then sort together in the dashboard
+list and, more usefully, typing "rapid" in the search box surfaces the whole
+family at once. Under pressure nobody navigates a folder tree; they type three
+letters.
+
 Shared shape:
 
 - One heatmap per signal family, every object as a cell. Non-zero is the catch.

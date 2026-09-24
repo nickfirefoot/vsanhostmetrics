@@ -166,7 +166,7 @@ def network_rapid():
                 y += 5
             w.append(heatmap(did, title, kind, metric, x, y, thresholds=thr))
         return w
-    return dashboard("vSAN Network Rapid",
+    return dashboard("Rapid Network",
                      "Grey-state detection for vSAN networking. Non-zero is the catch.",
                      widgets)
 
@@ -263,10 +263,10 @@ def probe():
                 ("tcpRxErrRate",    "TCP RX error rate",   1, 5, 10),
             ], 7, 4, w=6, h=6),
         ]
-    return dashboard("vSAN Rapid — binding probe",
+    return dashboard("Rapid Probe (binding test)",
                      "Three widgets to verify Scoreboard bindings. Safe to delete.",
                      widgets)
 
 
 if __name__ == "__main__":
-    write(probe(), "vsan-rapid-probe")
+    write(probe(), "rapid-probe")
