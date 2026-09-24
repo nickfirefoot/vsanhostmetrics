@@ -444,6 +444,52 @@ def build_parent_map(service_instance, clusters, perf,
     return out
 
 
+# Metrics the Performance Service reports in PER-MILLE (parts per thousand),
+# converted to percent on collection.
+#
+# Confirmed twice over: the service schema marks these permille, and
+# tcpRcvdupackRate read 1-2 here while an independent host scrape measured
+# 0.122 percent for the same quantity. Broadcom publish thresholds in PERCENT
+# (out-of-order warning 0.1, critical 1.0), so a raw value of 1 sits on the
+# warning line while looking like a count of one.
+#
+# Emitting percent means the number disagrees with the vSphere UI, which shows
+# per-mille. That is the deliberate trade: a correct number that differs from
+# the UI beats an ambiguous one that matches it. Labels carry "(%)" so the
+# unit is visible without consulting documentation.
+PERMILLE = {
+    "ip6Errs",
+    "ipErrs",
+    "pauseCount",
+    "pctMemUsed",
+    "portRxDrops",
+    "portTxDrops",
+    "rxCrcErr",
+    "rxErr",
+    "rxFifoErr",
+    "rxMissErr",
+    "rxOvErr",
+    "rxPacketsLossRate",
+    "tcpErrs",
+    "tcpHalfopenDropRate",
+    "tcpRcvdupackRate",
+    "tcpRcvduppackRate",
+    "tcpRcvoopackRate",
+    "tcpSackRcvBlocksRate",
+    "tcpSackRexmitsRate",
+    "tcpSackSendBlocksRate",
+    "tcpTimeoutDropRate",
+    "txCarErr",
+    "txErr",
+    "txPacketsLossRate",
+}
+
+
+def to_percent(metric: str, value: float) -> float:
+    """Per-mille -> percent. Parts per thousand over ten is parts per hundred."""
+    return value / 10.0 if metric in PERMILLE else value
+
+
 def metrics_for(entity: str) -> List[str]:
     """Metrics worth collecting for an entity type.
 
@@ -538,7 +584,7 @@ def collect(perf, cluster, window_minutes: int = 15
                     continue                     # identical to its base
                 last = _last_number(raw)
                 if last is not None:
-                    g.gauges[label] = last
+                    g.gauges[label] = to_percent(label, last)
             for name, value in key.idents:
                 if value:
                     g.props[name] = value

@@ -208,6 +208,21 @@ AMBIGUOUS_UNIT = {
 }
 
 
+def permille_metrics():
+    """Metrics the service reports in per-mille; see perfsvc.PERMILLE."""
+    import json
+    try:
+        sch = json.load(open("docs/assets/perfsvc_schema.json"))
+    except FileNotFoundError:
+        return set()
+    out = set()
+    for metrics in sch.values():
+        for mid, d in metrics.items():
+            if d.get("unit") == "permille":
+                out.add(mid)
+    return out
+
+
 def main() -> None:
     hcib = json.load(open(sys.argv[1])) if len(sys.argv) > 1 else {}
     sys.path.insert(0, "app")
@@ -215,11 +230,18 @@ def main() -> None:
     official = official_names()
 
     metrics = sorted({m for d in P.ENTITIES.values() for m in d["metrics"]})
+    permille = permille_metrics()
     labels, units = {}, {}
     stats = collections.Counter()
     for m in metrics:
         # hand-curated > Broadcom's own > derived from the id
         labels[m] = OVERRIDE.get(m) or official.get(m) or label_for(m)
+        # The adapter converts these to percent, so say so in the name --
+        # otherwise a bare "1" reads as a count when it means 1%.
+        if m in permille:
+            if "%" not in labels[m]:
+                labels[m] = f"{labels[m]} (%)"
+            units[m] = "RATIO.PERCENT"
         raw = (hcib.get(m) or {}).get("unit", "")
         # *Actual twins carry the same unit as their base metric
         if not raw and m.endswith("Actual"):

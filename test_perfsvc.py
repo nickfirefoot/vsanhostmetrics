@@ -225,10 +225,12 @@ def test_nic_error_counters_are_readable():
     metrics the schema does not document."""
     import metric_labels as ml
     # Curated: the official name omits what was missed.
-    assert ml.LABELS["rxMissErr"] == "pNIC RX missed error (ring buffer full)"
-    # Official: documented in the Performance Service schema.
-    assert ml.LABELS["rxCrcErr"] == "pNIC RX CRC Error"
-    assert ml.LABELS["txCarErr"] == "pNIC TX Carrier Error"
+    assert ml.LABELS["rxMissErr"] == "pNIC RX missed error (ring buffer full) (%)"
+    # Official, plus the "(%)" the per-mille conversion adds so the unit is
+    # visible in the name -- a bare "1" would read as a count, not 1%.
+    assert ml.LABELS["rxCrcErr"] == "pNIC RX CRC Error (%)"
+    assert ml.LABELS["txCarErr"] == "pNIC TX Carrier Error (%)"
+    assert ml.UNITS["rxCrcErr"] == "RATIO.PERCENT"
     # Derived: undocumented upstream, so our token rules have to carry it.
     assert ml.LABELS["rxLgtErr"] == "RX length errors"
     assert ml.LABELS["rxFrmErr"] == "RX frame alignment errors"
@@ -405,6 +407,22 @@ def test_actual_duplicates_are_not_collected():
     pnic = set(perfsvc.metrics_for("vsan-pnic-net"))
     assert "rxMissErr" in pnic and "rxMissErrActual" not in pnic
     assert "rxMissErrRaw" in pnic
+
+
+def test_permille_is_converted_to_percent():
+    """The service reports these in parts per thousand. Broadcom publish their
+    thresholds in percent, so a raw 1 sits on the out-of-order warning line
+    while looking like a count of one."""
+    assert perfsvc.to_percent("portRxDrops", 1.0) == 0.1
+    assert perfsvc.to_percent("rxCrcErr", 25.0) == 2.5
+    # anything not per-mille passes through untouched
+    assert perfsvc.to_percent("rxThroughput", 1000000.0) == 1000000.0
+    assert perfsvc.to_percent("rxPackets", 42.0) == 42.0
+    import metric_labels as ml
+    for m in perfsvc.PERMILLE:
+        if m in ml.LABELS:
+            assert "%" in ml.LABELS[m], f"{m} converted but label hides it"
+            assert ml.UNITS.get(m) == "RATIO.PERCENT", m
 
 
 def test_model_is_non_trivial():
