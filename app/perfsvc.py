@@ -306,7 +306,14 @@ def build_parent_map(service_instance, clusters, perf,
     failed collection.
     """
     out: Dict[str, Dict[str, str]] = {"hosts": {}, "vms": {}, "clusters": {},
-                                      "disks": {}, "vdisks": {}}
+                                      "disks": {}, "vdisks": {},
+                                      # moid -> the object's REAL name in
+                                      # vCenter. Without this the adapter
+                                      # supplies a name of its own and
+                                      # Operations overwrites the vCenter
+                                      # object's, renaming every host to its
+                                      # managed object reference.
+                                      "names": {}}
     vcid = ""
     try:
         content = service_instance.RetrieveContent()
@@ -325,6 +332,7 @@ def build_parent_map(service_instance, clusters, perf,
             cuuid = getattr(getattr(cfg, "defaultConfig", None), "uuid", None)
             if cuuid:
                 out["clusters"][cuuid] = cluster._moId
+            out["names"][cluster._moId] = cluster.name
         except Exception:                                # noqa: BLE001
             pass
 
@@ -335,6 +343,7 @@ def build_parent_map(service_instance, clusters, perf,
         for host in (getattr(cluster, "host", None) or []):
             try:
                 by_name[host.name] = host._moId
+                out["names"][host._moId] = host.name
             except Exception:                            # noqa: BLE001
                 pass
         try:
@@ -362,6 +371,7 @@ def build_parent_map(service_instance, clusters, perf,
                             uuid = getattr(entry, "vsanUuid", None)
                             if uuid:
                                 out["disks"][uuid] = host._moId
+                                out["names"][host._moId] = host.name
     except Exception:                                    # noqa: BLE001
         pass
 
@@ -378,6 +388,7 @@ def build_parent_map(service_instance, clusters, perf,
                     value = getattr(cfg, attr, None)
                     if value:
                         out["vms"][value] = vm._moId
+                out["names"][vm._moId] = vm.name
                 # A virtual-disk object is identified by its datastore path,
                 # which is the attached VM's backing fileName. Both slash
                 # forms, as in build_name_map.

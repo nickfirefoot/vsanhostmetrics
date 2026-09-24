@@ -171,10 +171,13 @@ def _vc_parent(cache, parents, bucket, uuid):
     # which aborts the entire collection.
     ckey = (VC_KINDS[bucket], moid)
     if ckey not in cache:
+        # Use the object's REAL vCenter name. Supplying anything else renames
+        # the object in Operations -- passing the MoRef turned every host into
+        # "host-27" and the cluster into "domain-c9".
         cache[ckey] = Object(Key(
             adapter_kind=VC_ADAPTER,
             object_kind=VC_KINDS[bucket],
-            name=moid,
+            name=parents.get("names", {}).get(moid) or moid,
             identifiers=[Identifier("VMEntityObjectID", moid),
                          Identifier("VMEntityVCID", vcid)],
         ))
