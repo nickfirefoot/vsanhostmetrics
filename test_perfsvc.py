@@ -388,6 +388,25 @@ def test_one_vcenter_object_yields_one_parent():
     assert len(cache) == 2, cache.keys()
 
 
+def test_actual_duplicates_are_not_collected():
+    """*Actual is the same measurement under a second name -- measured across a
+    full collection, 201 pairs, 201 identical values, zero differences. *Raw is
+    NOT a duplicate: it is the cumulative since-boot counter and differs in
+    practice (pauseCountRaw 224 against pauseCount 0)."""
+    for entity, spec in perfsvc.MODEL.ENTITIES.items():
+        kept = set(perfsvc.metrics_for(entity))
+        present = set(spec["metrics"])
+        for m in present:
+            if m.endswith("Actual") and m[:-6] in present:
+                assert m not in kept, f"{entity}: {m} duplicates {m[:-6]}"
+            if m.endswith("Raw"):
+                assert m in kept, f"{entity}: {m} must be kept"
+    # pnic is the worst offender and a good canary
+    pnic = set(perfsvc.metrics_for("vsan-pnic-net"))
+    assert "rxMissErr" in pnic and "rxMissErrActual" not in pnic
+    assert "rxMissErrRaw" in pnic
+
+
 def test_model_is_non_trivial():
     assert len(perfsvc.MODEL.ENTITIES) >= 20
     t = perfsvc.MODEL.ENTITIES["vsan-tcpip-stats"]

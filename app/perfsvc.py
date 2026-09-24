@@ -444,6 +444,24 @@ def build_parent_map(service_instance, clusters, perf,
     return out
 
 
+def metrics_for(entity: str) -> List[str]:
+    """Metrics worth collecting for an entity type.
+
+    Drops every `<name>Actual` whose `<name>` is also present. Measured across
+    a full collection: 201 such pairs, 201 identical values, zero differences.
+    They are the same measurement under two names, so collecting both doubles
+    the attribute count on the busiest entity types and puts two identical
+    panels in front of an operator.
+
+    `<name>Raw` is NOT dropped -- it differs from its base in practice
+    (pauseCountRaw 224 against pauseCount 0) because it is the cumulative
+    since-boot counter rather than the per-interval value.
+    """
+    metrics = set(MODEL.ENTITIES[entity]["metrics"])
+    return sorted(m for m in metrics
+                  if not (m.endswith("Actual") and m[:-6] in metrics))
+
+
 def parse_ref(ref: str) -> Optional[ObjectKey]:
     """'<entity>:<uuid>|<part>' -> ObjectKey, or None if unmodeled."""
     if ":" not in ref:
@@ -509,12 +527,15 @@ def collect(perf, cluster, window_minutes: int = 15
                 problems.append(f"unmodeled entityRefId: {res.entityRefId}")
                 continue
             g = out.setdefault(key, Grouped())
+            keep = set(MODEL.ENTITIES[key.entity]["metrics"])
             for val in (getattr(res, "value", []) or []):
                 mid = getattr(val, "metricId", None)
                 label = getattr(mid, "label", None)
                 raw = (getattr(val, "values", "") or "").strip()
                 if not label or not raw:
                     continue
+                if label.endswith("Actual") and label[:-6] in keep:
+                    continue                     # identical to its base
                 last = _last_number(raw)
                 if last is not None:
                     g.gauges[label] = last

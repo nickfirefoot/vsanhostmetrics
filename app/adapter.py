@@ -112,7 +112,7 @@ def get_adapter_definition() -> AdapterDefinition:
                 # visible without reading the object name
                 ot.define_string_property(f"{label}_prop", _label_for(label))
 
-            for metric in spec["metrics"]:
+            for metric in perfsvc.metrics_for(ent):
                 # Every perfsvc metric is a point value: the service has already
                 # reduced into 5-minute buckets, so nothing here is a rate we
                 # compute or a counter we difference.
