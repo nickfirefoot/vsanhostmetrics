@@ -51,7 +51,7 @@ def heatmap(dash_id, title, resource_kind, metric, x, y, w=4, h=5,
     wid = str(uuid.uuid4())
     return {
         "tabId": dash_id, "id": wid, "type": "Heatmap", "title": title,
-        "collapsed": False, "state": "", "height": 0,
+        "collapsed": False, "state": "", "height": 0, "states": None,
         "gridsterCoords": {"x": x, "y": y, "w": w, "h": h},
         "config": {
             "configs": [{
@@ -86,7 +86,7 @@ def text(dash_id, title, body_html, x, y, w=12, h=4, url=""):
     wid = str(uuid.uuid4())
     return {
         "tabId": dash_id, "id": wid, "type": "TextDisplay", "title": title,
-        "collapsed": False, "state": "", "height": 0,
+        "collapsed": False, "state": "", "height": 0, "states": None,
         "gridsterCoords": {"x": x, "y": y, "w": w, "h": h},
         "config": {
             "description": body_html, "locationUrl": url, "locationFile": "",
@@ -105,10 +105,17 @@ def dashboard(name, description, widgets_fn):
             "id": did, "name": name, "description": description,
             "shared": True, "hidden": False, "creationTime": 0,
             "autoswitchEnabled": False, "importAttempts": 0,
-            "columnProportion": "1", "importComplete": True, "columnCount": 0,
+            "columnProportion": "1-1", "importComplete": True, "columnCount": 1,
             "gridsterMaxColumns": 12, "rank": 0, "disabled": False,
             "locked": False, "homeTab": False, "editAllowed": True,
             "states": [], "dashboardNavigations": {},
+            # Present in every working export; omitting them left the UI
+            # import spinning rather than failing.
+            "widgetInteractions": [],
+            "adapterName": "vSAN Host Metrics",
+            "docCenterKey": "", "namePath": "",
+            "userId": "", "lastUpdateUserId": "",
+            "lastUpdateTime": int(__import__("time").time() * 1000),
             "widgets": widgets_fn(did),
         }],
         "uuid": str(uuid.uuid4()),
@@ -213,10 +220,12 @@ def scoreboard(dash_id, title, resource_kind_name, metrics, x, y, w=4, h=5,
         })
     return {
         "tabId": dash_id, "id": wid, "type": "Scoreboard", "title": title,
-        "collapsed": False, "state": "", "height": 0,
+        "collapsed": False, "state": "", "height": 0, "states": None,
         "gridsterCoords": {"x": x, "y": y, "w": w, "h": h},
         "config": {
-            "title": title, "widgetId": wid, "refreshInterval": 300,
+            "title": title, "refreshInterval": 300,
+            "boxColumns": 4, "periodLength": "dashboardTime",
+            "showSparkline": {"showSparkline": True},
             "metric": {"mode": "resourceKind", "resourceMetrics": [],
                        "resourceKindMetrics": entries},
             "selfProvider": {"selfProvider": self_provider},
