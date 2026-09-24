@@ -84,6 +84,26 @@ symptoms.
 adjacent family); the `*-top-stats` families are the summarised view.""",
      ["zdom-vtx", "host-zdom-top-stats", "cluster-zdom-top-stats"]),
 
+    ("Storage — physical disks (OSA)",
+     """The OSA disk stack, silent on an ESA cluster and the reason
+`perfsvc_model_extra.py` exists -- the live model was generated against ESA, so
+these were absent entirely and an OSA cluster would have collected none of it.
+
+A **disk group** is OSA's unit of storage: one cache device fronting several
+capacity devices. `cache-disk` and `capacity-disk` are the two tiers;
+`disk-group` carries the scheduler and congestion view, which is *richer* than
+anything ESA exposes -- `diskgroupCongestionReadSched`, `iopsDelayPctSched`,
+`latencySched`, plus resync broken out by cause (evacuation, repair, policy
+change, rebalance).
+
+`cluster-resync` is the cluster-wide rebuild picture: how much is outstanding
+and why.
+
+**Provisional.** Metrics are the *advertised* set, which understates what the
+service returns, and identity is inferred. Model a real OSA cluster with
+`tools/model_from_perfsvc.py` and fold the result in.""",
+     ["disk-group", "cache-disk", "capacity-disk", "cluster-resync"]),
+
     ("Storage — physical disks (ESA)",
      """Two views of the same NVMe device, and the distinction matters when
 diagnosing.
@@ -118,7 +138,8 @@ is per-world (per-process) detail and is by far the largest object family --
 `vsan-memory` covers heap and slab consumption by vSAN's own components. Heap
 exhaustion is a classic grey failure: everything works normally until an
 allocation fails.""",
-     ["vsan-cpu", "host-cpu", "dom-world-cpu", "vsan-memory", "system-mem"]),
+     ["vsan-cpu", "host-cpu", "dom-world-cpu", "lsom-world-cpu",
+      "vsan-memory", "system-mem"]),
 
     ("Virtual machines and their disks",
      """The guest-facing view. `vscsi` is the virtual SCSI controller per VM

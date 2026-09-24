@@ -229,7 +229,12 @@ def main() -> None:
     import perfsvc_model as P
     official = official_names()
 
-    metrics = sorted({m for d in P.ENTITIES.values() for m in d["metrics"]})
+    try:
+        import perfsvc_model_extra as X
+        extra = {m for d in X.ENTITIES.values() for m in d["metrics"]}
+    except ImportError:
+        extra = set()
+    metrics = sorted({m for d in P.ENTITIES.values() for m in d["metrics"]} | extra)
     permille = permille_metrics()
     labels, units = {}, {}
     stats = collections.Counter()

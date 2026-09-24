@@ -54,6 +54,21 @@ except ImportError:                                  # flat, as the container ru
 
 MODEL = _model
 
+# Entity types the live model omits because they returned nothing on the
+# cluster it was generated against -- every OSA family is silent on ESA. Merged
+# in so they are queried wherever they exist; absent ones simply return no
+# data. See app/perfsvc_model_extra.py, which is explicitly provisional.
+try:
+    from . import perfsvc_model_extra as _extra      # type: ignore
+except ImportError:                                  # flat, as the container runs
+    try:
+        import perfsvc_model_extra as _extra         # type: ignore
+    except ImportError:
+        _extra = None                                # type: ignore
+if _extra is not None:
+    for _e, _spec in _extra.ENTITIES.items():
+        MODEL.ENTITIES.setdefault(_e, _spec)         # live model always wins
+
 # Placeholder for an identity component an entityRefId does not carry.  See
 # parse_ref: entity types mix aggregate and scoped refs.
 AGGREGATE = "(all)"
@@ -84,6 +99,8 @@ KIND_SUFFIX = {
     # aggregate collides with zdom-vtx on the plain hostname.
     "host-cpu": "CPU (all)", "zdom-vtx": "ZDOM VTX",
     "vsan-tcpip-stats": "TCP/IP", "vsan-vnic-net": "vNIC",
+    "cluster-resync": "Resync", "disk-group": "Disk Group",
+    "cache-disk": "Cache Disk", "capacity-disk": "Capacity Disk",
     "vsan-pnic-net": "pNIC", "vsan-host-net": "Host Network",
 }
 
@@ -568,7 +585,13 @@ def collect(perf, cluster, window_minutes: int = 15
             problems.append(f"{spec.entityRefId}: {type(exc).__name__}: {exc}")
             continue
         for res in results:
-            key = parse_ref(getattr(res, "entityRefId", "") or "")
+            ref = getattr(res, "entityRefId", "") or ""
+            # An entity type with no objects echoes the query back verbatim --
+            # "disk-group:*". Parsing that yields an object whose identifier is
+            # literally "*". Skip it; it is an empty result, not an object.
+            if "*" in ref:
+                continue
+            key = parse_ref(ref)
             if key is None:
                 problems.append(f"unmodeled entityRefId: {res.entityRefId}")
                 continue
