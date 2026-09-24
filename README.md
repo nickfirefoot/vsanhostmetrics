@@ -1293,19 +1293,19 @@ perfsvc entity `vsan-host-net` · identified by `host_uuid` · 4 objects observe
 |---|---|---|---|
 | `ioChainRxdrops` | IO chain RX drops |  | *(derived)* |
 | `ioChainTxdrops` | IO chain TX drops |  | *(derived)* |
-| `portRxDrops` | Inbound Packet Drop Rate of vSwitch Port |  | Percentage of VMkernel Network vSwitch Port Inbound Packet Drop Rate. |
+| `portRxDrops` | Inbound Packet Drop Rate of vSwitch Port | `percent` | Percentage of VMkernel Network vSwitch Port Inbound Packet Drop Rate. |
 | `portRxpkts` | Port RX packets |  | *(derived)* |
-| `portTxDrops` | Outbound Packet Drop Rate of vSwitch Port |  | Percentage of VMkernel Network vSwitch Port Outbound Packet Drop Rate. |
+| `portTxDrops` | Outbound Packet Drop Rate of vSwitch Port | `percent` | Percentage of VMkernel Network vSwitch Port Outbound Packet Drop Rate. |
 | `portTxpkts` | Port TX packets |  | *(derived)* |
 | `rxPackets` | Inbound Packets Per Second |  | VMkernel Network Adapter Inbound Packets Per Second. |
-| `rxPacketsLossRate` | Inbound Packet Discard Rate |  | Percentage of VMkernel Network Adapter Inbound Packet Discard Rate. |
+| `rxPacketsLossRate` | Inbound Packet Discard Rate | `percent` | Percentage of VMkernel Network Adapter Inbound Packet Discard Rate. |
 | `rxThroughput` | Throughput Inbound | `bibyte_per_second` | VMkernel Network Adapter Throughput Inbound. |
 | `tcpRxErrRate` | TCP RX errors (rate) |  | *(derived)* |
 | `tcpRxPackets` | TCP Inbound Packets |  | VMkernel Network Adapter TCP inbound packets. |
 | `tcpTxPackets` | TCP Outbound Packets |  | VMkernel Network Adapter TCP outbound packets. |
 | `tcpTxRexmitRate` | TCP TX retransmit (rate) |  | *(derived)* |
 | `txPackets` | Outbound Packets Per Second |  | VMkernel Network Adapter Outbound Packets Per Second. |
-| `txPacketsLossRate` | Outbound Packet Discard Rate |  | Percentage of VMkernel Network Adapter Outbound Packet Discard Rate. |
+| `txPacketsLossRate` | Outbound Packet Discard Rate | `percent` | Percentage of VMkernel Network Adapter Outbound Packet Discard Rate. |
 | `txThroughput` | Throughput Outbound | `bibyte_per_second` | VMkernel Network Adapter Throughput Outbound. |
 
 ### vSAN Memory — `VsanMemory`
@@ -1377,52 +1377,52 @@ perfsvc entity `vsan-pnic-net` · identified by `host_uuid`, `vmnic` · 7 object
 | `ioChainRxdropsActual` | IO chain RX drops (actual) |  | *(derived)* |
 | `ioChainTxdrops` | IO chain TX drops |  | *(derived)* |
 | `ioChainTxdropsActual` | IO chain TX drops (actual) |  | *(derived)* |
-| `pauseCount` | pNic 802.3x Pause Rate |  | Percentage of Physical NIC 802.3x Pause Rate. |
+| `pauseCount` | pNic 802.3x Pause Rate | `percent` | Percentage of Physical NIC 802.3x Pause Rate. |
 | `pauseCountActual` | Pause count (actual) |  | *(derived)* |
 | `pauseCountRaw` | Pause count raw |  | *(derived)* |
 | `pfcCount` | PFC count |  | *(derived)* |
 | `pfcCountActual` | PFC count (actual) |  | *(derived)* |
 | `pfcCountRaw` | PFC count raw |  | *(derived)* |
-| `portRxDrops` | Inbound Packet Drop Rate of vSwitch Port |  | Percentage of VMkernel Network vSwitch Port Inbound Packet Drop Rate. |
+| `portRxDrops` | Inbound Packet Drop Rate of vSwitch Port | `percent` | Percentage of VMkernel Network vSwitch Port Inbound Packet Drop Rate. |
 | `portRxDropsActual` | Port RX drops (actual) |  | *(derived)* |
 | `portRxpkts` | Port RX packets |  | *(derived)* |
-| `portTxDrops` | Outbound Packet Drop Rate of vSwitch Port |  | Percentage of VMkernel Network vSwitch Port Outbound Packet Drop Rate. |
+| `portTxDrops` | Outbound Packet Drop Rate of vSwitch Port | `percent` | Percentage of VMkernel Network vSwitch Port Outbound Packet Drop Rate. |
 | `portTxDropsActual` | Port TX drops (actual) |  | *(derived)* |
 | `portTxpkts` | Port TX packets |  | *(derived)* |
-| `rxCrcErr` | pNIC RX CRC Error |  | Percentage of Physical NIC RX CRC Error. |
+| `rxCrcErr` | pNIC RX CRC Error | `percent` | Percentage of Physical NIC RX CRC Error. |
 | `rxCrcErrActual` | RX CRC errors (actual) |  | *(derived)* |
 | `rxCrcErrRaw` | RX CRC errors raw |  | *(derived)* |
 | `rxDrp` | RX dropped |  | *(derived)* |
 | `rxDrpActual` | RX dropped (actual) |  | *(derived)* |
-| `rxErr` | pNIC RX Generic Error |  | Percentage of Physical NIC RX Generic Error. |
+| `rxErr` | pNIC RX Generic Error | `percent` | Percentage of Physical NIC RX Generic Error. |
 | `rxErrActual` | RX errors (actual) |  | *(derived)* |
 | `rxErrRaw` | RX errors raw |  | *(derived)* |
-| `rxFifoErr` | pNIC RX FIFO Error |  | Percentage of Physical NIC RX FIFO Error. |
+| `rxFifoErr` | pNIC RX FIFO Error | `percent` | Percentage of Physical NIC RX FIFO Error. |
 | `rxFifoErrActual` | RX FIFO errors (actual) |  | *(derived)* |
 | `rxFifoErrRaw` | RX FIFO errors raw |  | *(derived)* |
 | `rxFrmErr` | RX frame alignment errors |  | *(derived)* |
 | `rxFrmErrActual` | RX frame alignment errors (actual) |  | *(derived)* |
 | `rxLgtErr` | RX length errors |  | *(derived)* |
 | `rxLgtErrActual` | RX length errors (actual) |  | *(derived)* |
-| `rxMissErr` | pNIC RX Missed Error |  | Percentage of Physical NIC RX Missed Error. |
+| `rxMissErr` | pNIC RX Missed Error | `percent` | Percentage of Physical NIC RX Missed Error. |
 | `rxMissErrActual` | pNIC RX missed error (ring buffer full) (actual) |  | *(derived)* |
 | `rxMissErrRaw` | pNIC RX missed error (ring buffer full) (raw) |  | *(derived)* |
-| `rxOvErr` | pNIC RX Buffer Overflow Error |  | Percentage of Physical NIC RX Buffer Overflow Error. |
+| `rxOvErr` | pNIC RX Buffer Overflow Error | `percent` | Percentage of Physical NIC RX Buffer Overflow Error. |
 | `rxOvErrActual` | RX overrun errors (actual) |  | *(derived)* |
 | `rxOvErrRaw` | RX overrun errors raw |  | *(derived)* |
 | `rxPackets` | Inbound Packets Per Second |  | VMkernel Network Adapter Inbound Packets Per Second. |
-| `rxPacketsLossRate` | Inbound Packet Discard Rate |  | Percentage of VMkernel Network Adapter Inbound Packet Discard Rate. |
+| `rxPacketsLossRate` | Inbound Packet Discard Rate | `percent` | Percentage of VMkernel Network Adapter Inbound Packet Discard Rate. |
 | `rxPacketsLossRateActual` | RX packets loss (rate, actual) |  | *(derived)* |
 | `rxPktRaw` | RX packet raw |  | *(derived)* |
 | `rxThroughput` | Throughput Inbound | `bibyte_per_second` | VMkernel Network Adapter Throughput Inbound. |
 | `txAbortErr` | TX aborted errors |  | *(derived)* |
 | `txAbortErrActual` | TX aborted errors (actual) |  | *(derived)* |
-| `txCarErr` | pNIC TX Carrier Error |  | Percentage of Physical NIC TX Carrier Error. |
+| `txCarErr` | pNIC TX Carrier Error | `percent` | Percentage of Physical NIC TX Carrier Error. |
 | `txCarErrActual` | TX carrier errors (actual) |  | *(derived)* |
 | `txCarErrRaw` | TX carrier errors raw |  | *(derived)* |
 | `txDrp` | TX dropped |  | *(derived)* |
 | `txDrpActual` | TX dropped (actual) |  | *(derived)* |
-| `txErr` | pNIC TX Generic Error |  | Percentage of Physical NIC TX Generics Error. |
+| `txErr` | pNIC TX Generic Error | `percent` | Percentage of Physical NIC TX Generics Error. |
 | `txErrActual` | TX errors (actual) |  | *(derived)* |
 | `txErrRaw` | TX errors raw |  | *(derived)* |
 | `txFifoErr` | TX FIFO errors |  | *(derived)* |
@@ -1430,7 +1430,7 @@ perfsvc entity `vsan-pnic-net` · identified by `host_uuid`, `vmnic` · 7 object
 | `txHeartErr` | TX heartbeat errors |  | *(derived)* |
 | `txHeartErrActual` | TX heartbeat errors (actual) |  | *(derived)* |
 | `txPackets` | Outbound Packets Per Second |  | VMkernel Network Adapter Outbound Packets Per Second. |
-| `txPacketsLossRate` | Outbound Packet Discard Rate |  | Percentage of VMkernel Network Adapter Outbound Packet Discard Rate. |
+| `txPacketsLossRate` | Outbound Packet Discard Rate | `percent` | Percentage of VMkernel Network Adapter Outbound Packet Discard Rate. |
 | `txPacketsLossRateActual` | TX packets loss (rate, actual) |  | *(derived)* |
 | `txPktRaw` | TX packet raw |  | *(derived)* |
 | `txThroughput` | Throughput Outbound | `bibyte_per_second` | VMkernel Network Adapter Throughput Outbound. |
@@ -1444,33 +1444,33 @@ perfsvc entity `vsan-tcpip-stats` · identified by `host_uuid`, `stack` · 4 obj
 | Metric | Name | Unit | Definition |
 |---|---|---|---|
 | `arpDropRate` | ARP drop (rate) |  | *(derived)* |
-| `ip6Errs` | IPv6 Errors |  | VMkernel Network Adapter IPv6 error rate. |
+| `ip6Errs` | IPv6 Errors | `percent` | VMkernel Network Adapter IPv6 error rate. |
 | `ip6Total` | IP6 (total) |  | *(derived)* |
-| `ipErrs` | IPv4 Errors |  | VMkernel Network Adapter IPv4 error rate. |
+| `ipErrs` | IPv4 Errors | `percent` | VMkernel Network Adapter IPv4 error rate. |
 | `ipTotal` | IP (total) |  | *(derived)* |
 | `tcpEcnCe` | TCP ECN ce |  | *(derived)* |
-| `tcpErrs` | TCP Errors |  | VMkernel Network Adapter TCP error rate. |
+| `tcpErrs` | TCP Errors | `percent` | VMkernel Network Adapter TCP error rate. |
 | `tcpErrsActual` | TCP errors (actual) |  | *(derived)* |
-| `tcpHalfopenDropRate` | Half Open Drop Rate |  | VMkernel Network Adapter half open drop rate. |
+| `tcpHalfopenDropRate` | Half Open Drop Rate | `percent` | VMkernel Network Adapter half open drop rate. |
 | `tcpHalfopenDropRateActual` | TCP halfopen drop (rate, actual) |  | *(derived)* |
-| `tcpRcvdupackRate` | Received Duplicate Acknowledge Rate |  | VMkernel Network Adapter received duplicate acknowledge rate. |
+| `tcpRcvdupackRate` | Received Duplicate Acknowledge Rate | `percent` | VMkernel Network Adapter received duplicate acknowledge rate. |
 | `tcpRcvdupackRateActual` | TCP received duplicate ACKs (rate, actual) |  | *(derived)* |
-| `tcpRcvduppackRate` | Received Duplicate Packets Rate |  | VMkernel Network Adapter received duplicate packets rate. |
+| `tcpRcvduppackRate` | Received Duplicate Packets Rate | `percent` | VMkernel Network Adapter received duplicate packets rate. |
 | `tcpRcvduppackRateActual` | TCP received duplicate packets (rate, actual) |  | *(derived)* |
-| `tcpRcvoopackRate` | Received Out-of-order Packets Rate |  | VMkernel Network Adapter received out-of-order packets rate. |
+| `tcpRcvoopackRate` | Received Out-of-order Packets Rate | `percent` | VMkernel Network Adapter received out-of-order packets rate. |
 | `tcpRcvoopackRateActual` | TCP received out-of-order packets (rate, actual) |  | *(derived)* |
 | `tcpRxErrRate` | TCP RX errors (rate) |  | *(derived)* |
 | `tcpRxPackets` | TCP Inbound Packets |  | VMkernel Network Adapter TCP inbound packets. |
 | `tcpRxThroughput` | TCP Inbound Throughout | `bibyte_per_second` | VMkernel Network Adapter TCP inbound throughout. |
-| `tcpSackRcvBlocksRate` | Sack Received Blocks Rate |  | VMkernel Network Adapter sack received blocks rate. |
+| `tcpSackRcvBlocksRate` | Sack Received Blocks Rate | `percent` | VMkernel Network Adapter sack received blocks rate. |
 | `tcpSackRcvBlocksRateActual` | TCP SACK received blocks (rate, actual) |  | *(derived)* |
-| `tcpSackRexmitsRate` | Sack Rexmits Rate |  | VMkernel Network Adapter sack rexmits rate. |
+| `tcpSackRexmitsRate` | Sack Rexmits Rate | `percent` | VMkernel Network Adapter sack rexmits rate. |
 | `tcpSackRexmitsRateActual` | TCP SACK retransmits (rate, actual) |  | *(derived)* |
-| `tcpSackSendBlocksRate` | Sack Send Blocks Rate |  | VMkernel Network Adapter sack send blocks rate. |
+| `tcpSackSendBlocksRate` | Sack Send Blocks Rate | `percent` | VMkernel Network Adapter sack send blocks rate. |
 | `tcpSackSendBlocksRateActual` | TCP SACK send blocks (rate, actual) |  | *(derived)* |
 | `tcpSndZeroWin` | TCP Send Zero Window |  | VMkernel Network Adapter TCP send zero window. |
 | `tcpSndZeroWinActual` | TCP sent zero window (actual) |  | *(derived)* |
-| `tcpTimeoutDropRate` | Timeout Drop Rate |  | VMkernel Network Adapter timeout drop rate. |
+| `tcpTimeoutDropRate` | Timeout Drop Rate | `percent` | VMkernel Network Adapter timeout drop rate. |
 | `tcpTimeoutDropRateActual` | TCP timeout drop (rate, actual) |  | *(derived)* |
 | `tcpTxPackets` | TCP Outbound Packets |  | VMkernel Network Adapter TCP outbound packets. |
 | `tcpTxRexmitRate` | TCP TX retransmit (rate) |  | *(derived)* |
@@ -1489,18 +1489,18 @@ perfsvc entity `vsan-vnic-net` · identified by `host_uuid`, `stack`, `vmknic` �
 | `ioChainRxdropsActual` | IO chain RX drops (actual) |  | *(derived)* |
 | `ioChainTxdrops` | IO chain TX drops |  | *(derived)* |
 | `ioChainTxdropsActual` | IO chain TX drops (actual) |  | *(derived)* |
-| `ip6Errs` | IPv6 Errors |  | VMkernel Network Adapter IPv6 error rate. |
+| `ip6Errs` | IPv6 Errors | `percent` | VMkernel Network Adapter IPv6 error rate. |
 | `ip6Total` | IP6 (total) |  | *(derived)* |
-| `ipErrs` | IPv4 Errors |  | VMkernel Network Adapter IPv4 error rate. |
+| `ipErrs` | IPv4 Errors | `percent` | VMkernel Network Adapter IPv4 error rate. |
 | `ipTotal` | IP (total) |  | *(derived)* |
-| `portRxDrops` | Inbound Packet Drop Rate of vSwitch Port |  | Percentage of VMkernel Network vSwitch Port Inbound Packet Drop Rate. |
+| `portRxDrops` | Inbound Packet Drop Rate of vSwitch Port | `percent` | Percentage of VMkernel Network vSwitch Port Inbound Packet Drop Rate. |
 | `portRxDropsActual` | Port RX drops (actual) |  | *(derived)* |
 | `portRxpkts` | Port RX packets |  | *(derived)* |
-| `portTxDrops` | Outbound Packet Drop Rate of vSwitch Port |  | Percentage of VMkernel Network vSwitch Port Outbound Packet Drop Rate. |
+| `portTxDrops` | Outbound Packet Drop Rate of vSwitch Port | `percent` | Percentage of VMkernel Network vSwitch Port Outbound Packet Drop Rate. |
 | `portTxDropsActual` | Port TX drops (actual) |  | *(derived)* |
 | `portTxpkts` | Port TX packets |  | *(derived)* |
 | `rxPackets` | Inbound Packets Per Second |  | VMkernel Network Adapter Inbound Packets Per Second. |
-| `rxPacketsLossRate` | Inbound Packet Discard Rate |  | Percentage of VMkernel Network Adapter Inbound Packet Discard Rate. |
+| `rxPacketsLossRate` | Inbound Packet Discard Rate | `percent` | Percentage of VMkernel Network Adapter Inbound Packet Discard Rate. |
 | `rxPacketsLossRateActual` | RX packets loss (rate, actual) |  | *(derived)* |
 | `rxThroughput` | Throughput Inbound | `bibyte_per_second` | VMkernel Network Adapter Throughput Inbound. |
 | `tcpBadrst` | TCP badrst |  | *(derived)* |
@@ -1509,8 +1509,8 @@ perfsvc entity `vsan-vnic-net` · identified by `host_uuid`, `stack`, `vmknic` �
 | `tcpConnects` | TCP connects |  | *(derived)* |
 | `tcpDrops` | TCP drops |  | *(derived)* |
 | `tcpEcnCe` | TCP ECN ce |  | *(derived)* |
-| `tcpErrs` | TCP Errors |  | VMkernel Network Adapter TCP error rate. |
-| `tcpHalfopenDropRate` | Half Open Drop Rate |  | VMkernel Network Adapter half open drop rate. |
+| `tcpErrs` | TCP Errors | `percent` | VMkernel Network Adapter TCP error rate. |
+| `tcpHalfopenDropRate` | Half Open Drop Rate | `percent` | VMkernel Network Adapter half open drop rate. |
 | `tcpKeepdrops` | TCP keepdrops |  | *(derived)* |
 | `tcpKeeptimeo` | TCP keeptimeo |  | *(derived)* |
 | `tcpPersisttimeo` | TCP persisttimeo |  | *(derived)* |
@@ -1518,32 +1518,32 @@ perfsvc entity `vsan-vnic-net` · identified by `host_uuid`, `stack`, `vmknic` �
 | `tcpRcvbadoff` | TCP received badoff |  | *(derived)* |
 | `tcpRcvbadsum` | TCP received badsum |  | *(derived)* |
 | `tcpRcvdupack` | TCP received duplicate ACKs |  | *(derived)* |
-| `tcpRcvdupackRate` | Received Duplicate Acknowledge Rate |  | VMkernel Network Adapter received duplicate acknowledge rate. |
+| `tcpRcvdupackRate` | Received Duplicate Acknowledge Rate | `percent` | VMkernel Network Adapter received duplicate acknowledge rate. |
 | `tcpRcvduppack` | TCP received duplicate packets |  | *(derived)* |
-| `tcpRcvduppackRate` | Received Duplicate Packets Rate |  | VMkernel Network Adapter received duplicate packets rate. |
+| `tcpRcvduppackRate` | Received Duplicate Packets Rate | `percent` | VMkernel Network Adapter received duplicate packets rate. |
 | `tcpRcvmemdrop` | TCP received memdrop |  | *(derived)* |
 | `tcpRcvoopack` | TCP received out-of-order packets |  | *(derived)* |
-| `tcpRcvoopackRate` | Received Out-of-order Packets Rate |  | VMkernel Network Adapter received out-of-order packets rate. |
+| `tcpRcvoopackRate` | Received Out-of-order Packets Rate | `percent` | VMkernel Network Adapter received out-of-order packets rate. |
 | `tcpRcvshort` | TCP received short |  | *(derived)* |
 | `tcpRexmttimeo` | TCP rexmttimeo |  | *(derived)* |
 | `tcpRxErrRate` | TCP RX errors (rate) |  | *(derived)* |
 | `tcpRxPackets` | TCP Inbound Packets |  | VMkernel Network Adapter TCP inbound packets. |
 | `tcpRxThroughput` | TCP Inbound Throughout | `bibyte_per_second` | VMkernel Network Adapter TCP inbound throughout. |
 | `tcpSackRcvBlocks` | TCP SACK received blocks |  | *(derived)* |
-| `tcpSackRcvBlocksRate` | Sack Received Blocks Rate |  | VMkernel Network Adapter sack received blocks rate. |
+| `tcpSackRcvBlocksRate` | Sack Received Blocks Rate | `percent` | VMkernel Network Adapter sack received blocks rate. |
 | `tcpSackRexmits` | TCP SACK retransmits |  | *(derived)* |
-| `tcpSackRexmitsRate` | Sack Rexmits Rate |  | VMkernel Network Adapter sack rexmits rate. |
+| `tcpSackRexmitsRate` | Sack Rexmits Rate | `percent` | VMkernel Network Adapter sack rexmits rate. |
 | `tcpSackSendBlocks` | TCP SACK send blocks |  | *(derived)* |
-| `tcpSackSendBlocksRate` | Sack Send Blocks Rate |  | VMkernel Network Adapter sack send blocks rate. |
+| `tcpSackSendBlocksRate` | Sack Send Blocks Rate | `percent` | VMkernel Network Adapter sack send blocks rate. |
 | `tcpSndZeroWin` | TCP Send Zero Window |  | VMkernel Network Adapter TCP send zero window. |
 | `tcpSndacks` | TCP sent ACKS |  | *(derived)* |
-| `tcpTimeoutDropRate` | Timeout Drop Rate |  | VMkernel Network Adapter timeout drop rate. |
+| `tcpTimeoutDropRate` | Timeout Drop Rate | `percent` | VMkernel Network Adapter timeout drop rate. |
 | `tcpTimeoutdrop` | TCP timeoutdrop |  | *(derived)* |
 | `tcpTxPackets` | TCP Outbound Packets |  | VMkernel Network Adapter TCP outbound packets. |
 | `tcpTxRexmitRate` | TCP TX retransmit (rate) |  | *(derived)* |
 | `tcpTxThroughput` | TCP Outbound Throughout | `bibyte_per_second` | VMkernel Network Adapter TCP outbound throughout. |
 | `txPackets` | Outbound Packets Per Second |  | VMkernel Network Adapter Outbound Packets Per Second. |
-| `txPacketsLossRate` | Outbound Packet Discard Rate |  | Percentage of VMkernel Network Adapter Outbound Packet Discard Rate. |
+| `txPacketsLossRate` | Outbound Packet Discard Rate | `percent` | Percentage of VMkernel Network Adapter Outbound Packet Discard Rate. |
 | `txPacketsLossRateActual` | TX packets loss (rate, actual) |  | *(derived)* |
 | `txThroughput` | Throughput Outbound | `bibyte_per_second` | VMkernel Network Adapter Throughput Outbound. |
 

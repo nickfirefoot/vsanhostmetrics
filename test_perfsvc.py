@@ -425,6 +425,26 @@ def test_permille_is_converted_to_percent():
             assert ml.UNITS.get(m) == "RATIO.PERCENT", m
 
 
+def test_adapter_definition_actually_builds():
+    """mp-build reports a broken definition only as "adapterDefinition endpoint
+    returned no response", with no traceback -- a NameError in the definition
+    loop cost a full build cycle to find. Build it here, where the error is
+    visible."""
+    try:
+        from aria.ops.definition.units import Units  # noqa: F401
+    except ImportError:
+        return                                        # SDK absent: offline run
+    saved = sys.argv
+    sys.argv = ["adapter.py", "adapter_definition", "in", "out"]
+    try:
+        import adapter
+        definition = adapter.get_adapter_definition()
+        assert definition is not None
+        assert definition.to_json()
+    finally:
+        sys.argv = saved
+
+
 def test_model_is_non_trivial():
     assert len(perfsvc.MODEL.ENTITIES) >= 20
     t = perfsvc.MODEL.ENTITIES["vsan-tcpip-stats"]
