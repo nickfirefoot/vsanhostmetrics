@@ -11,6 +11,7 @@ into one release rather than cutting a version per fix.
 | Drop `Actual`/`Raw` duplicate metrics | proposed | ~50 metrics, identical to their base in every observed pair; pure clutter on a dashboard |
 | Per-mille to percent conversion | proposed | `portRxDrops = 1` means 0.1% and nothing says so. Evidence settled; needs the go-ahead since it changes emitted values |
 | Derived error ratios | proposed | raw counters have no perspective -- 4 errors against 1M packets is noise, against 1K it is a fire. Compute `*PerMillionPackets` in the adapter where numerator and denominator are both already in hand |
+| **Namespace metric keys into a tree** | proposed, **breaking** | keys are flat (`rxMissErr`). Operations renders `\|`-separated keys as a tree, so `Network\|pNIC\|Errors\|RX missed` would fan 994 attributes into browsable branches instead of one list. Changing a key orphans its history and breaks any dashboard or symptom referencing it, so it is a major-version change, not a tidy-up |
 | Real EULA (`eula.txt`) | committed | rebuild — the scaffold placeholder left the install form's agreement box empty |
 | Network rapid dashboard | generated, imports, panels error | `colorBy` binding confirmed against a working example |
 | `TextDisplay` inline body | does not render | a configured example; `description` was assumed to be the body field |
