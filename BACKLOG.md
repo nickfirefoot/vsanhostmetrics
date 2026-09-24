@@ -7,6 +7,10 @@ into one release rather than cutting a version per fix.
 
 | Item | Status | Needs |
 |---|---|---|
+| **Object-name overwrite** | **fixed, needs rebuild** | the pack renamed every vCenter HostSystem to its MoRef; names correct themselves once redeployed |
+| Drop `Actual`/`Raw` duplicate metrics | proposed | ~50 metrics, identical to their base in every observed pair; pure clutter on a dashboard |
+| Per-mille to percent conversion | proposed | `portRxDrops = 1` means 0.1% and nothing says so. Evidence settled; needs the go-ahead since it changes emitted values |
+| Derived error ratios | proposed | raw counters have no perspective -- 4 errors against 1M packets is noise, against 1K it is a fire. Compute `*PerMillionPackets` in the adapter where numerator and denominator are both already in hand |
 | Real EULA (`eula.txt`) | committed | rebuild — the scaffold placeholder left the install form's agreement box empty |
 | Network rapid dashboard | generated, imports, panels error | `colorBy` binding confirmed against a working example |
 | `TextDisplay` inline body | does not render | a configured example; `description` was assumed to be the body field |
@@ -45,19 +49,19 @@ Notes that must survive into the built dashboards:
   NIC ring-buffer *utilisation* exist, so a green disk panel does not mean
   healthy hardware. The text panel says so.
 
-### Out of scope — separate packs
+### Out of scope — separate packs, separate streams
 
-Same `Rapid <domain> <subject>` convention, different repositories, so the
-families stay distinct in an operator's search box.
+Context for both has been handed off to their own agents and removed from here,
+so this backlog stays about the vSAN pack.
 
-- **Network statistics pack.** Will contribute `Rapid Network ...` dashboards.
-  Shares this pack's naming and the rapid-dashboard principle (error, loss and
-  congestion signals; never throughput as the primary), but is its own
-  adapter and its own repo.
-- **Memory tiering.** Wanted, and explicitly another repository. Note that
-  `VsanMemory` (50 metrics) and `VsanSystemMemory` in *this* pack cover vSAN's
-  own heap and slab consumption, which is a different thing from memory
-  tiering and should not be confused with it when that work starts.
+| Pack | Directory | Dashboards will be |
+|---|---|---|
+| vSphere network statistics | `~/vsphere-net-stats-mp/` | `Rapid Network <subject>` |
+| Memory tiering | `~/vsan-mem-tier-mp/` | `Rapid MemTier <subject>` |
+
+Note for whoever picks up memory tiering: this pack's `VsanMemory` (50 metrics)
+and `VsanSystemMemory` cover vSAN's own heap and slab consumption, which is a
+different subsystem from memory tiering. Do not conflate them.
 
 ### Blocked on hardware or configuration, not on work
 
