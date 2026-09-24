@@ -12,6 +12,8 @@ into one release rather than cutting a version per fix.
 | Per-mille to percent conversion | proposed | `portRxDrops = 1` means 0.1% and nothing says so. Evidence settled; needs the go-ahead since it changes emitted values |
 | Derived error ratios | proposed | raw counters have no perspective -- 4 errors against 1M packets is noise, against 1K it is a fire. Compute `*PerMillionPackets` in the adapter where numerator and denominator are both already in hand |
 | **Namespace metric keys into a tree** | proposed, **breaking** | keys are flat (`rxMissErr`). Operations renders `\|`-separated keys as a tree, so `Network\|pNIC\|Errors\|RX missed` would fan 994 attributes into browsable branches instead of one list. Changing a key orphans its history and breaks any dashboard or symptom referencing it, so it is a major-version change, not a tidy-up |
+| **Per-family collection toggles, `host-cpu` off by default** | proposed | `VsanHostCpu` is 244 objects for `coreUtilPct`/`pcpuUsedPct`/`pcpuUtilPct` -- generic per-core host CPU the built-in vCenter adapter already collects. With `VsanDomWorld` (315) that is 66% of all objects for 24% of the series. `vsan-cpu` (4 objects, includes `readyPct`) answers "is vSAN CPU-starved" and should stay on |
+| **Restructure into fewer top-level branches** | proposed | a host currently fans straight out into ~5 network families and 6 DOM families. Target: Network / Storage / Cluster / Compute / VM at the top, everything else nested beneath. Cosmetic in the guide, structural if done via metric keys -- see the namespacing row |
 | Real EULA (`eula.txt`) | committed | rebuild — the scaffold placeholder left the install form's agreement box empty |
 | Network rapid dashboard | generated, imports, panels error | `colorBy` binding confirmed against a working example |
 | `TextDisplay` inline body | does not render | a configured example; `description` was assumed to be the body field |
@@ -338,6 +340,26 @@ genuinely dimensionless counts or unknown, and are deliberately left unitless.
 A wrong unit is worse than none, because Operations will scale and render it
 confidently. Improving this means finding a second authority, not loosening
 the heuristics.
+
+## Open question — retransmits and DOM world stalls
+
+Hypothesis worth testing when a cluster is under real load: **do network
+retransmits stall a DOM world while the stream is rebuilt?**
+
+The data to test it is already collected. `dom-world-cpu` carries `readyPct`
+per world -- ready to run, waiting for a scheduler slot -- and
+`vsan-tcpip-stats` carries `tcpTxRexmitRate`. If the mechanism is real, the two
+should rise together on the same host, and specific worlds should show it
+rather than all of them.
+
+Competing explanation to rule out: the stall may be RDT-level rather than CPU.
+`txSbSpaceMin` reaching zero and `kaReset` incrementing would indicate the
+transport is blocked without any world being CPU-starved. Those are different
+remedies -- more CPU versus more socket buffer or a network fix -- so
+distinguishing them matters.
+
+**Unverified.** The lab is too idle to produce either signal. Needs a cluster
+doing real work, ideally one with a known-marginal link.
 
 ## Known metric gaps
 
