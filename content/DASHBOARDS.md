@@ -9,179 +9,95 @@
 ## Rapid dashboards
 
 A *rapid* dashboard answers one question -- "is this subsystem bad right now?"
--- across every object at once. It is explicitly **not** for root cause. Its job
-is to catch **grey-state failure**: the partial, degraded condition that leaves
-everything nominally up.
+-- and it answers it **for a cluster**. It is explicitly **not** for root
+cause. Its job is to catch **grey-state failure**: partial degradation that
+leaves everything nominally up.
 
-That framing decides the metric selection, and it argues against the obvious
-choice. A NIC dropping 0.1% of frames still moves traffic at line rate, so a
-dashboard built from throughput and latency shows green through the exact
-failure it exists to catch. **Rapid dashboards are built from error, loss and
-congestion signals; throughput appears only as context.**
+### Cluster first, always
 
-**Naming: `Rapid <domain> <subject>`.**
+The IO path is a cluster-wide object graph. A slow VM's DOM Client runs on one
+host, its DOM Owner on another, its components on several more; a host-first
+view fragments the very thing being diagnosed. So **every rapid dashboard
+carries a cluster selector**, and every panel is scoped to the selected
+cluster through the widget's Input Transformation.
+
+That works because of the relationships the adapter builds. From a selected
+`ClusterComputeResource`:
 
 ```
-Rapid vSAN Network      Rapid vSAN Disk        Rapid vSAN Backpressure
-Rapid vSAN Capacity     Rapid vSAN Resync      Rapid vSAN Memory
+depth 1 -> our cluster-scoped objects   DOM roll-ups, RDT latency, ZDOM,
+                                        capacity, resync
+depth 2 -> HostSystem -> host-scoped    pNICs, disks, per-host DOM, worlds
 ```
 
-Three reasons, in order of how much they matter:
+One selector reaches every object in the pack without a single enumerated
+name -- which is also why self-providing Scoreboards (which enumerate) cannot
+ship. See `docs/DASHBOARD-FORMAT.md`.
 
-1. **Typing "rapid" surfaces the whole family.** Under pressure nobody
-   navigates a folder tree; they type three letters. These are the screens
-   someone opens when something is already wrong.
-2. **The domain segment keeps families distinct as more packs arrive.** A
-   separate network-statistics pack contributes `Rapid Network ...` without
-   colliding, and typing "rapid vsan" narrows to this one.
-3. They sort together in the dashboard list.
+**Naming: `Rapid <domain> <subject>`** -- `Rapid vSAN Overview`, `Rapid vSAN
+Disk`. Typing "rapid" surfaces every family across every pack; the domain
+segment keeps them distinct; they sort together. Keep the prefix even where it
+reads redundantly inside a vSAN-only pack -- it serves the operator's search
+box, not this repository.
 
-Keep the prefix even when it reads redundantly inside a vSAN-only pack. The
-convention is for the operator's search box, not for this repository.
+### Who opens which screen
 
-Shared shape:
-
-- One heatmap per signal family, every object as a cell. Non-zero is the catch.
-- No drill-down, no topology, no time-series-per-object. Those are cause tools.
-- Sorted so the worst cell is top-left; an all-green screen is the normal state.
-
-### 1. Network rapid — READY
-
-| Panel | Metrics | Catches |
+| Audience | Moment | Screen |
 |---|---|---|
-| pNIC hardware errors | `rxCrcErr`, `rxFrmErr`, `rxLgtErr`, `rxOvErr`, `rxFifoErr`, `txCarErr`, `txWinErr`, `txHeartErr`, `txAbortErr` | bad cable, bad optic, bad port, failing NIC |
-| Ring overrun | `rxMissErr` | NIC being overrun -- ring had no descriptor |
-| Drop/discard rates | `portRxDrops`, `portTxDrops`, `rxPacketsLossRate`, `txPacketsLossRate`, `ioChainRxdrops`, `ioChainTxdrops` | loss above the driver |
-| Fabric backpressure | `pauseCount`, `pfcCount` | congested fabric rather than broken NIC |
-| TCP health | `tcpRcvoopackRate`, `tcpTxRexmitRate`, `tcpRcvdupackRate`, `tcpRxErrRate` | path quality, reordering, retransmission |
-| Context (small) | `rxThroughput`, `txThroughput` | is this link even carrying traffic |
+| NOC / on-call | pager fires | **Overview** -- which layer, in 60 seconds, then hand off |
+| Helpdesk | "my VM is slow" | **VM** -- is this VM's storage actually slow |
+| Storage admin | after a host or disk loss | **Resync** -- is it rebuilding, is it keeping up |
+| Network team | storage blames the network | **Physical Network** -- their vocabulary, not ours |
+| Anyone drilling down | a spoke lit up | **Host** -- everything hanging off one host |
 
-Resource kinds: `VsanPnic` (per vmnic), `VsanHostNet`, `VsanTcpIp`, `VsanVnic`.
+### Shared skeleton
 
-Note the drop/discard and pause metrics are **per-mille**; see `BACKLOG.md`.
-A value of 1 is 0.1%, which is already Broadcom's warning threshold for
-out-of-order. Do not read them as packet counts.
+Every screen, identical layout, so learning one is learning all:
 
-### 2. vSAN backpressure rapid — READY
+1. **Cluster selector** top-left (the provider; `selfProvider: true`,
+   kind-scoped to `ClusterComputeResource`).
+2. **"How to read this"** text panel top-right -- what the signals mean, the
+   per-mille note, and the screen's own blind spots. Shipped inside the pak at
+   `ContentPack/VsanHostMetrics/conf/pages/<screen>/index.html`.
+3. Panels **ordered worst-first**, built from error, loss and congestion
+   signals. **Never throughput as the primary** -- a NIC dropping 0.1% still
+   moves traffic at line rate, so throughput shows green through the exact
+   failure the screen exists to catch.
+4. Every spoke links to **Overview** and to **Host**, so the path is always
+   Overview -> something is red -> spoke -> which host -> Host. Three clicks.
 
-Congestion is vSAN's own "I am overloaded" signal and is the storage-path
-equivalent of pause frames. Available on ESA through the DOM entities.
+### The set
 
-| Panel | Metrics | Catches |
-|---|---|---|
-| Congestion by type | `congestion`, `readCongestion`, `writeCongestion`, `unmapCongestion`, `recoveryWriteCongestion`, `segCleanerUnmapCongestion` | which layer is pushing back |
-| Component/shared | `componentCongestion`, `sharedCongestion`, `resyncReadCongestion` | contention vs resync interference |
-| RDT pressure | `txSbSpaceMin`, `rxSbSpaceMin`, `txCtxQMax`, `txQLatAvg`, `numReadyDelay`, `kaReset` | vSAN's own transport stalling |
+| # | Screen | Scope | Signals | State |
+|---|---|---|---|---|
+| 1 | **Rapid vSAN Overview** | cluster | worst-of tile per subsystem, each linking to its spoke; capacity (`free`, `dedupRatio`) lives here -- exhaustion takes a cluster read-only | design |
+| 2 | **Rapid vSAN Physical Network** | cluster -> hosts -> pNIC/vNIC/TCP | CRC/frame/length/FIFO/carrier errors, `rxMissErr` ring overrun, drop rates, pause/PFC, retransmits | generator written, binding pending |
+| 3 | **Rapid vSAN Transport** | cluster -> RDT | `txSbSpaceMin`, `rxSbSpaceMin`, `txCtxQMax`, `txQLatAvg`, `numReadyDelay`, **`kaReset` on its own panel** -- RDT stalling under a NIC that looks fine | design |
+| 4 | **Rapid vSAN Disk** | cluster -> hosts -> disks | service-time **max** outliers, physical-vs-vSAN-layer divergence, queue depth. **States on screen: no media-error counters exist** | design |
+| 5 | **Rapid vSAN DOM** | cluster roll-ups + per host | the three roles side by side; congestion by type. Answers *client, owner or component manager?* | design |
+| 6 | **Rapid vSAN Resync** | cluster | `numPendingDecomResyncJobs`, `avgResyncParallelism`, inflight priority/shared jobs, throughput by cause | design |
+| 7 | **Rapid vSAN VM** | cluster -> VMs | per-VM `vscsi` read/write latency and IOPS, worst-N first | design |
+| 8 | **Rapid vSAN Host** | one host, everything | the drill-down every spoke links to; relationship-scoped | design |
+| 9 | **Rapid vSAN OSA** | cluster -> disk groups | `diskgroupCongestion*Sched`, `iopsDelayPctSched`, `latencySched`, resync by cause (evacuation / repair / policy / rebalance) | blocked: needs an OSA cluster |
+| 10 | **Rapid vSAN ESA** | cluster | ZDOM segment cleaning (`zdom-vtx`, top-stats), dedup chunk and hash services, capacity savings. **There are no compression metrics**; `savedByDedup` is dedup-and-compression as one ESA policy | design |
 
-Resource kinds: `VsanHostDomclient`, `VsanHostDomcompmgr`, `VsanHostDomowner`,
-`VsanRdtLatency`, `VsanVnicRdtLatency`.
+Blocked on hardware or configuration rather than work: file services (8
+metrics, weak), iSCSI (10 per object). S3 / object store: nothing exists to
+build against.
 
-`kaReset` (keepalive reset) is worth a panel of its own -- RDT connections
-resetting is a strong grey-state signal that survives a healthy-looking NIC.
+### Widget choice
 
-### 3. Disk rapid — READY, but not the way you would expect
+- **Scoreboard** for a *selected* object's key figures (`selfProvider: false`,
+  fed by the selector; per-metric colour bounds).
+- **Heatmap** for scanning every object of a kind at once, grouped by host.
+- A self-providing Scoreboard enumerates objects by name and **cannot ship**.
 
-**There are no disk error counters anywhere in the Performance Service.**
-Verified across `vsan-esa-disk-layer`, `vsan-esa-disk-scsifw`, `capacity-disk`,
-`cache-disk`, `ddh-disk` and `disk-group`: zero metrics matching
-error/fail/retry/timeout/smart/media/realloc. The service is a *performance*
-service; media health is not in it.
+### Gating item
 
-NVMe media errors, reallocated blocks and SMART thresholds live on the host
-(`esxcli storage core device smart get`). Collecting them means a second
-gathering point, which `docs/COLLECTION-DESIGN.md` forbids without retiring the
-overlap first. That is a deliberate decision, not an oversight.
-
-So a disk rapid dashboard detects a sick device by **latency behaviour**, which
-is how a failing NVMe actually presents before it fails outright:
-
-| Panel | Metrics | Catches |
-|---|---|---|
-| Service-time outliers | `maxReadTimePerf`, `maxWriteTimePerf`, `maxReadTimeCapacity`, `maxWriteTimeCapacity` | the one slow IO a mean hides -- the strongest available signal |
-| Device vs guest divergence | `latencyDevDAvg` vs `latencyDevGAvg`, `latencyDevKAvg` | queueing above the device: kernel latency rising while device latency does not |
-| Physical vs vSAN layer | `latencyDevRead/Write` vs `avgLatReadCapacity`/`avgLatWriteCapacity` | isolates the drive from the vSAN layer above it |
-| Queue depth | `outstandingCmdCount` | saturation |
-| Context | `iopsDevRead/Write`, `throughputDevRead/Write` | is it even being asked to do work |
-
-Resource kinds: `VsanEsaDiskLayer`, `VsanEsaDiskScsifw`, both per physical disk
-with the disk named `NVMe <model> <serial> (<host>)`.
-
-The tell for a dying NVMe is `maxWriteTimePerf` spiking while median latency and
-IOPS stay flat. A mean-based panel will not show it; use max, and compare each
-disk against its siblings on the same host rather than a fixed threshold.
-
-### 4. HBA / OSA rapid — BLOCKED, schema exists
-
-The OSA entity types are advertised and modelled but return nothing on an ESA
-cluster, so none of this can be built or tested on `example.com`:
-`disk-group` (38 metrics), `capacity-disk` (13), `cache-disk` (8),
-`ddh-disk` (10), `clom-disk` (3).
-
-They are the right source when an OSA cluster is available. The OSA grey-state
-signals are different from ESA's and better: `disk-group` carries
-`diskgroupCongestionReadSched`/`WriteSched`, `componentCongestionReadSched`,
-`iopsDelayPctSched` and `latencySched`, plus a full resync breakdown by *reason*
-(`...Decom`, `...FixComp`, `...Policy`, `...Rebalance`). `capacity-disk` adds
-`deleteCongestion` and both physical- and vSAN-layer latency on the same object,
-and `ddh-disk` adds `logCongestion`.
-
-Still no error counters -- same conclusion as ESA.
-
-**Blocked on:** an OSA cluster to generate data against. Until then the model
-entries are unverified.
-
-### 5. File services — BLOCKED, and thin
-
-`vsan-file-service` exists in the schema with **8 metrics**: `readLatency`,
-`writeLatency`, `readOpTotal`, `writeOpTotal`, `readRequested`,
-`writeRequested`, `readTransferred`, `writeTransferred`. Silent here because
-file services are not enabled.
-
-Requested vs transferred bytes is the one genuinely interesting pair -- a
-persistent gap means the protocol layer is not delivering what was asked for.
-Otherwise this is a performance view, not a health one: no share, quota,
-session, protocol-error or NFS/SMB-specific metrics at all. A file services
-rapid dashboard is possible but will be weak.
-
-Related and also silent: `vsan-iscsi-host`, `vsan-iscsi-target`,
-`vsan-iscsi-lun` (10 metrics each, IOPS/bandwidth/latency plus `queueDepth`).
-
-**Blocked on:** enabling file services on a cluster.
-
-### 6. S3 / object store — NOT AVAILABLE
-
-Searched all 69 advertised entity types and all 839 documented metric ids,
-names and descriptions for `s3`, `bucket`, `object store`, `objectstore`.
-**Zero matches.** Nothing in this Performance Service version corresponds to an
-object store.
-
-If a future release adds it, the expected shape is a new entity type appearing
-in `VsanPerfGetSupportedEntityTypes`. `tools/model_from_perfsvc.py` regenerates
-the model from a live service, so it would be picked up by re-running it
-against a cluster on that release -- the pack does not need code changes to
-*discover* new entity types, only to name and label them.
-
-### Other candidates worth considering
-
-- **Resync / rebuild rapid.** `VsanHostDomowner` carries 71 resync-related
-  metrics including `numPendingDecomResyncJobs`, `avgResyncParallelism` and
-  `numInflightPriorityResyncJobs`. Answers "is this cluster rebuilding, why,
-  and is it keeping up" -- the question after a host or disk drops out.
-- **Capacity rapid.** `VsanClusterCapacity` is only 6 metrics (`total`, `used`,
-  `free`, `dedupRatio`, `savedByDedup`, `totalDpOverhead`) but capacity
-  exhaustion is the failure that takes a cluster read-only.
-- **Memory / heap rapid.** `VsanMemory` (50 metrics) and `VsanSystemMemory`.
-  Heap exhaustion is a classic grey failure: everything works until an
-  allocation fails.
-
-
-Groundwork for the content that ships in the pak's `content/` directory.
-Nothing here is built yet — this is the plan, written before the panels so the
-metric model can be checked against what the dashboards actually need.
-
-Metrics with no symptoms attached are just storage. This is gap #3 in
-`README.md`, and at 385 metrics across 16 resource kinds it stops being
-optional: nobody navigates that by hand.
+`rapid-scope-probe.zip` -- one import establishes whether receivers can be
+kind-scoped directly or must be wired through the selector, and what the
+populated Input Transformation looks like. Every screen above depends on the
+answer. Build order once it lands: Overview, Physical Network, VM.
 
 ## What we have to work with
 
