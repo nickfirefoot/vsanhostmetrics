@@ -22,7 +22,7 @@ into one release rather than cutting a version per fix.
 | `TextDisplay` `locationUrl` | "URL is not available" | lab egress is fine (Cloud Proxy reaches raw.githubusercontent 200/56ms), so the suspect is `text/plain` + `nosniff` being rejected in HTML view mode. GitHub Pages would serve `text/html` and settle it |
 | Backpressure + disk rapid dashboards | designed, not built | the same `colorBy` fix; then ~20 min each |
 
-| Cluster selector on rapid dashboards | requested | a populated `dashboardNavigations` — wire any two widgets in the UI and export. Heatmaps become `selfProvider: false` and receive the selected cluster; works because 1.2.0 parents every object to its `ClusterComputeResource` |
+| **Cluster selector on rapid dashboards** | **schema confirmed 2026-09-25** | Object List (cluster, selfProvider on) → Scoreboard (selfProvider off, `relationshipMode -1`, `depth 4`, `subMode resourceKindAll`) wired by one `widgetInteractions` entry; `dashboardNavigations` stays empty. Proven in the UI on a cluster-scoped kind; `docs/assets/dashboard.interaction-working.json`. Builder emits it (`scoreboard_receiver`, `object_list_pinned`). **Open:** (1) whether depth 4 reaches host-scoped kinds (pNIC is cluster → host → pNIC) — `dist/dashboards/rapid-receiver-probe.zip` answers it; (2) the *generic* cluster-list provider — the export is pinned to one cluster by MoRef, which only resolves on the system it came from. Needs one more UI export with the Object List rooted at vSphere World / vCenter filtered to Cluster Compute Resource |
 
 ### Rapid dashboards — the full set
 
@@ -271,6 +271,69 @@ See the note under Blocking, above -- accepted certs land in Operations' trust
 store while `scrape()` runs inside the container with its own CA bundle.
 
 ## Completeness
+
+**Eleven zDOM families the service returns but never advertises.** The
+Performance Service advertises 69 entity types; the ESA zDOM catalogue
+(`docs/assets/zdom-metrics-catalogue.csv`, 361 rows) lists 18 sections, and
+querying the 11 it has that the schema does not (`zdom-io:*` etc.) returns
+live data on the lab ESA cluster (2026-09-25):
+
+| Family | Objects | Metrics | Note |
+|---|---|---|---|
+| `zdom-io` | 4 | 82 | per host; IOPS/throughput/latency by zDOM stage (bank, durable log, flush, btree) |
+| `zdom-overview` | 4 | 50 | per host; bank/flush in-flight, bypass, errors |
+| `zdom-seg-cleaning` | 48 | 35 | per disk?; segment-cleaner goodness |
+| `zdom-seg-check` | 48 | 19 | per disk?; lookup timing |
+| `zdom-btree` | 4 | 16 | logical/middle tree insert/remove |
+| `zdom-llp` | 4 | 9 | VAT write-back |
+| `zdom-snapshot` | 4 | 9 | snapshot create/delete log sizes |
+| `vsan-zdom-gsc` | 7 | 9 | global segment cleaner, capacity goodness |
+| `zdom-compression` | 4 | 8 | LZ4 / ZSTD throughput |
+| `cluster-zdom-io-cost` | 1 | 1 | `ioCostEMA` |
+| `zdom-world-cpu` | 201 | 3 | per world — the per-thread noise already ruled out; skip |
+
+**What in those families is worth collecting** (reviewed 2026-09-25 against
+live values; ranked by operator value, not by count):
+
+| Family | Collect | Why |
+|---|---|---|
+| `zdom-overview` (per host) | `bankFlushError`, `lookupError`, `bypassWritePercent`, `bypassWriteFallbackPercent`, `bypassWriteIneligiblePercent`, `numZdomObjects` | the only **error counters** in the zDOM path. `lookupError` reads a constant 20 on one lab host (cumulative, from boot) — a read-path lookup failing is a grey-state signal. Bypass-write is the 9.0 fast path; its fallback rate says whether hosts are getting it |
+| `vsan-zdom-gsc` (per capacity disk, 7 objects) | `physDiskFullnessPctCapacity`, `rawDiskFullnessPctCapacity`, `reactiveCleaningRateCapacity`, `proactiveCleaningRateCapacity`, `currentWriteRateCapacity` | **per-disk fullness** and whether the segment cleaner is running *reactively* — the ESA equivalent of "disk full and the cleaner is behind". Nothing else in the pack gives fullness per disk |
+| `zdom-io` (per host) | `latencyAvgDurableLog` / `latencyMaxDurableLog` (write commit path), `latencyAvgBankFlushFSW` / max, `latencyAvgLookup` / max (read path), `iops`, `oioDLog`, `oioBankWriter`, `oioLookupDOM` | splits a slow write into log-commit vs bank-flush and a slow read into lookup vs backend; the stage latencies a rapid dashboard needs to say *where* in the host the time goes |
+| `zdom-compression` (per host) | all 8 | `CompressTput` ÷ `CompressedTput` is the **compression ratio** per host (lab ZSTD: 3.2 MB/s in, 0.77 MB/s out, 4.1×). Also proves compression is actually active |
+| `cluster-zdom-top-stats` | `ioCount`, `readCount`, `writeCount`, `unmapCount` (catalogue-only, verify live) | complete the family already collected |
+| `zdom-vtx` | `rateBankFlushCacheMiss`, `rateLookUpCacheMiss`, `ratePrefetchCacheMiss`, `rateSegCleaningCtxDataCacheMiss` (catalogue-only, verify live) | cache-miss rate by transaction type; misses on the lookup path are read latency |
+| `cluster-zdom-io-cost` | `ioCostEMA` | one number, reads 0 in the lab; unknown semantics, cheap to keep |
+| **Skip** | `zdom-world-cpu` (201 per-world objects), `zdom-btree`, `zdom-snapshot`, `zdom-llp`, `zdom-seg-check` (48), `zdom-seg-cleaning` (48) | engineering counters with no operator action; the two 48-object families are per-disk-per-something and would add ~100 objects per host for cleaner internals. `numSegsFreed` / `latAvgPassRuntime` are the only two worth reconsidering |
+
+**The catalogue's unit column, checked against live values.** It is inferred
+from naming (`ends in Pct`, `starts with iops`), and two of its rules are wrong
+for this service:
+
+| Catalogue says | Live says | Evidence |
+|---|---|---|
+| `latencyAvg*` / `latencyStddev*` / `latAvg*` are **milliseconds** (69 rows) | **microseconds** | `cluster-zdom-top-stats.latencyAvgRead` 593 beside `readLatencyMaxUs` 565,482; `cluster-domclient.latencyAvgRead` 808; `zdom-io.latencyAvgBankWrite` 13–46 with max 6,938. Same conclusion as the `time_ms` adjudication in *Unit conflicts* below |
+| `tput*` / throughput "likely KB/s" (41 rows) | **bytes/s** | `currentWriteRateCapacity` 664,576 on an idle lab disk is 650 KB/s, not 650 MB/s; `ZSTD_CompressTput` 3,197,256 is 3 MB/s |
+| `bypassWriteFallbackPercent` percent | not a bounded percent | reads 285 on one host; a ratio of fallbacks to attempts can exceed 100 only if the denominator is something else. Unknown until documented |
+| `missesPerIO` count/sec | count per IO (ratio) | the name; a per-IO figure is not a rate |
+| `checkpointWorkerWakeupMs` (ours: µs) | **ms** — fixed | constant 20000: a 20 s wakeup |
+| `iopsCacheMissRate` / `tputCacheMissRate` (ours: IOPS / rate) | **percent** — fixed | official name "Cache Miss Per IOPS" and schema unit `percentage` agree it is a ratio |
+
+Where it is right and we were empty: `oio*`, `*Count`, `num*` → count;
+`rate*` → per second; `*Us` / `*USec` → microseconds (three were missing —
+fixed by the camel-case suffix rule); `*Pct` → percent; `avgGoodness*` → a
+score. Those fills are the same rules already proposed for the 182
+undocumented metrics, so the catalogue corroborates rather than changes them.
+The Confluence descriptions (115 rows) are the durable value and should feed
+`docs/METRICS-GUIDE.md` when these families are modelled.
+
+240 metrics excluding world-cpu. Identity (entityRefId shape) is not yet
+captured; `tools/model_from_perfsvc.py` only walks advertised types, so it
+needs an explicit extra list. The catalogue carries the Confluence
+descriptions for 115 of them — the rest are name-decomposition. **Its unit
+column is inferred from naming conventions** (the "Unit Inference Basis"
+column says so: `name starts with 'iops'`, `ends in 'Pct'`), so it corroborates
+the same rules held for the 182 undocumented metrics but is not an authority.
 
 **No relationship to the vCenter adapter's `HostSystem`.** Without it these
 objects are an island nobody can navigate to from the rest of Operations. See

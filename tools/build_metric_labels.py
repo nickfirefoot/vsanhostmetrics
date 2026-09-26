@@ -15,7 +15,7 @@ HCIBench's titles are panel-level and shared across several metrics
 ("Space Available In RX Socket/TX Socket And TX Context Queue").
 
 Usage:
-    python3 tools/build_metric_labels.py /tmp/hcib_labels.json
+    python3 tools/build_metric_labels.py   # units from docs/assets/hcibench_units.json
 """
 from __future__ import annotations
 import json, re, sys, collections
@@ -99,6 +99,15 @@ def _unit_from_name(metric: str):
     Operations will render and scale it confidently.
     """
     low = metric.lower()
+    # An explicit camel-case suffix outranks the family default:
+    # checkpointWorkerWakeupMs reads 20000 live -- a 20 s wakeup in ms; as µs
+    # it would be 20 ms. Case-sensitive on purpose: the latency histogram
+    # buckets (rlat5_10ms, wlat0_1us) end the same way in lower case and are
+    # percentages of IOs, not times.
+    if metric.endswith("Ms"):
+        return "TIME.MILLISECONDS"
+    if metric.endswith(("Us", "USec")):
+        return "TIME.MICROSECONDS"
     if "latency" in low or low.endswith("lat") or "qlat" in low:
         return "TIME.MICROSECONDS"
     if "throughput" in low or low.endswith("bytespersec"):
@@ -140,6 +149,17 @@ def _expand(token: str) -> str:
 # entry is a hand-maintained claim that has to stay true.
 # These outrank even the official schema name, so keep the list short and the
 # reason explicit: each one adds meaning the official name leaves out.
+# Units the name rules get wrong. Each entry cites its evidence.
+UNIT_OVERRIDE = {
+    # Official name "Cache Miss Per IOPS" / "Cache Miss Per Throughput" and the
+    # schema unit ("percentage") agree: a ratio, not an IOPS/throughput figure.
+    "iopsCacheMissRate": "RATIO.PERCENT",
+    "tputCacheMissRate": "RATIO.PERCENT",
+    # HCIBench charts it in µs; the id says ms and the live value is a
+    # constant 20000 -- a 20 s periodic wakeup, not 20 ms.
+    "checkpointWorkerWakeupMs": "TIME.MILLISECONDS",
+}
+
 OVERRIDE = {
     # Official name is "pNIC RX Missed Error", which does not say what was
     # missed. The NIC ring buffer had no free descriptor, so the packet was
@@ -224,7 +244,10 @@ def permille_metrics():
 
 
 def main() -> None:
-    hcib = json.load(open(sys.argv[1])) if len(sys.argv) > 1 else {}
+    # HCIBench units, harvested once from its Grafana dashboards and committed
+    # so the generator is reproducible without the harvest step.
+    hcib_path = sys.argv[1] if len(sys.argv) > 1 else "docs/assets/hcibench_units.json"
+    hcib = json.load(open(hcib_path))
     sys.path.insert(0, "app")
     import perfsvc_model as P
     official = official_names()
@@ -252,7 +275,9 @@ def main() -> None:
         if not raw and m.endswith("Actual"):
             raw = (hcib.get(m[:-6]) or {}).get("unit", "")
         mapped = UNIT_MAP.get(raw, (None, ""))
-        if not mapped[0]:
+        if m in UNIT_OVERRIDE:
+            mapped = (UNIT_OVERRIDE[m], "")
+        elif not mapped[0]:
             mapped = (_unit_from_name(m), "")
         if mapped[0] and m not in AMBIGUOUS_UNIT:
             units[m] = mapped[0]
@@ -263,7 +288,7 @@ def main() -> None:
     with open("app/metric_labels.py", "w") as fh:
         fh.write('"""GENERATED -- do not edit by hand.\n\n')
         fh.write("Regenerate:\n")
-        fh.write("    python3 tools/build_metric_labels.py /tmp/hcib_labels.json\n\n")
+        fh.write("    python3 tools/build_metric_labels.py\n\n")
         fh.write("Units are harvested from HCIBench's Grafana dashboards, which\n")
         fh.write("cover the same underlying vSAN stats. Labels are expanded here\n")
         fh.write("because HCIBench's titles are panel-level and shared across\n")

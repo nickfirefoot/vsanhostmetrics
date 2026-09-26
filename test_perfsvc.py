@@ -324,7 +324,9 @@ def test_units_do_not_contradict_what_the_metric_is():
         pass
 
     EXPECT = [                                    # first match wins
-        (r"percent|percentage|pct\b", "RATIO"),
+        # "(%)" is the converted per-mille suffix; "X per Y" is a ratio
+        # (Cache Miss Per IOPS) even when Y is a throughput or IOPS noun.
+        (r"percent|percentage|pct\b|%|\bper (iops|throughput)\b", "RATIO"),
         (r"latency|\blat\b|\bqlat\b", "TIME"),
         (r"throughput|bandwidth", "DATA_RATE"),
         (r"\biops\b", "MISC"),
@@ -334,9 +336,16 @@ def test_units_do_not_contradict_what_the_metric_is():
     for mid, unit in ml.UNITS.items():
         text = " ".join([(schema.get(mid) or {}).get("name") or "",
                          ml.LABELS.get(mid, ""), mid]).lower()
+        official = (schema.get(mid) or {}).get("unit")
         for rx, want in EXPECT:
             if re.search(rx, text):
-                if unit.split(".")[0] != want:
+                got = unit.split(".")[0]
+                # "Requested bytes for read" is officially rate_bytes and
+                # HCIBench charts it as a rate: a rate named in bytes, not a
+                # size. Both authorities agree, so the noun loses.
+                if want == "DATA_SIZE" and got == "DATA_RATE" and official == "rate_bytes":
+                    break
+                if got != want:
                     contradictions.append((mid, ml.LABELS.get(mid), unit, want))
                 break
     assert not contradictions, contradictions[:5]

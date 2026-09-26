@@ -1,7 +1,7 @@
 """GENERATED -- do not edit by hand.
 
 Regenerate:
-    python3 tools/build_metric_labels.py /tmp/hcib_labels.json
+    python3 tools/build_metric_labels.py
 
 Units are harvested from HCIBench's Grafana dashboards, which
 cover the same underlying vSAN stats. Labels are expanded here
@@ -1037,7 +1037,7 @@ UNITS: Dict[str, str] = {
     'bandwidthTotal': 'DATA_RATE.BIBYTE_PER_SECOND',
     'bandwidthWrite': 'DATA_RATE.BIBYTE_PER_SECOND',
     'cacheUpdateLatency': 'TIME.MICROSECONDS',
-    'checkpointWorkerWakeupMs': 'TIME.MICROSECONDS',
+    'checkpointWorkerWakeupMs': 'TIME.MILLISECONDS',
     'clientCacheHits': 'MISC.IO_OPERATIONS_PER_SECOND',
     'clomdConsumedSize': 'DATA_SIZE.BYTE',
     'clomdReservedSize': 'DATA_SIZE.BYTE',
@@ -1068,7 +1068,7 @@ UNITS: Dict[str, str] = {
     'highOIOThroughputRead': 'DATA_RATE.BIBYTE_PER_SECOND',
     'highOIOThroughputWrite': 'DATA_RATE.BIBYTE_PER_SECOND',
     'iops': 'MISC.IO_OPERATIONS_PER_SECOND',
-    'iopsCacheMissRate': 'MISC.IO_OPERATIONS_PER_SECOND',
+    'iopsCacheMissRate': 'RATIO.PERCENT',
     'iopsDedupChunkObjRead': 'MISC.IO_OPERATIONS_PER_SECOND',
     'iopsDedupChunkObjWrite': 'MISC.IO_OPERATIONS_PER_SECOND',
     'iopsDedupEngineRead': 'MISC.IO_OPERATIONS_PER_SECOND',
@@ -1215,8 +1215,10 @@ UNITS: Dict[str, str] = {
     'numNetSchedCompResyncReadTpThrottled': 'DATA_RATE.BIBYTE_PER_SECOND',
     'numNetSchedCompTpThrottled': 'DATA_RATE.BIBYTE_PER_SECOND',
     'numNetSchedControllerIopsLimit': 'MISC.IO_OPERATIONS_PER_SECOND',
+    'numNetSchedGuestLTLatUs': 'TIME.MICROSECONDS',
     'numNetSchedHighBandSec': 'TIME.SECONDS',
     'numNetSchedLowBandSec': 'TIME.SECONDS',
+    'numNetSchedLowBandThreshUs': 'TIME.MICROSECONDS',
     'numNetSchedMidBandSec': 'TIME.SECONDS',
     'numNetSchedOwnerIops': 'MISC.IO_OPERATIONS_PER_SECOND',
     'numNetSchedOwnerIopsLimit': 'MISC.IO_OPERATIONS_PER_SECOND',
@@ -1353,6 +1355,7 @@ UNITS: Dict[str, str] = {
     'totalDeltaCreationDomActiveLatency': 'TIME.MICROSECONDS',
     'totalDeltaCreationDomCreationLatency': 'TIME.MICROSECONDS',
     'totalMbMemUsed': 'DATA_SIZE.MEGABYTE',
+    'tputCacheMissRate': 'RATIO.PERCENT',
     'tputRead': 'DATA_RATE.BIBYTE_PER_SECOND',
     'tputRecUnmap': 'DATA_RATE.BIBYTE_PER_SECOND',
     'tputRecWrite': 'DATA_RATE.BIBYTE_PER_SECOND',
@@ -1402,6 +1405,7 @@ UNITS: Dict[str, str] = {
     'txnCacheFlushMaxLatUs': 'TIME.MICROSECONDS',
     'txnDLogMaxLatUs': 'TIME.MICROSECONDS',
     'txnDelExtMiddleTreeMaxLatUs': 'TIME.MICROSECONDS',
+    'txnLookupMaxLatUs': 'TIME.MICROSECONDS',
     'txnPrefetchMaxLatUs': 'TIME.MICROSECONDS',
     'txnSegCtxDataMaxLatUs': 'TIME.MICROSECONDS',
     'txnSegCtxLLPMaxLatUs': 'TIME.MICROSECONDS',

@@ -1,0 +1,6094 @@
+{
+ "IOPSWithinBursts": {
+  "title": "IOPS Within Bursts",
+  "unit": "iops"
+ },
+ "IOPSWithinBurstsExclFirstObj": {
+  "title": "IOPS Within Bursts Excl First Obj",
+  "unit": "iops"
+ },
+ "IOPSWithinBurstsMultiObj": {
+  "title": "IOPS Within Bursts Multi Obj",
+  "unit": "iops"
+ },
+ "NIOPS": {
+  "title": "IOPS Limit",
+  "unit": "iops"
+ },
+ "NIOPSDelayed": {
+  "title": "IOPS Limit",
+  "unit": "iops"
+ },
+ "actualBytesMoving": {
+  "title": "actualBytesMoving",
+  "unit": "short"
+ },
+ "actualBytesSchedToMove": {
+  "title": "actualBytesSchedToMove",
+  "unit": "short"
+ },
+ "addToFreeListApiTput": {
+  "title": "Allocator API Throughput",
+  "unit": "iops"
+ },
+ "advtDataDestageRateAvg": {
+  "title": "Elevator Advertized Capability",
+  "unit": "binBps"
+ },
+ "advtDataDestageRateCur": {
+  "title": "Elevator Advertized Capability",
+  "unit": "binBps"
+ },
+ "advtZeroDestageRateAvg": {
+  "title": "Elevator Advertized Capability",
+  "unit": "binBps"
+ },
+ "advtZeroDestageRateCur": {
+  "title": "Elevator Advertized Capability",
+  "unit": "binBps"
+ },
+ "agentBatchesSent": {
+  "title": "Batch Stats",
+  "unit": "short"
+ },
+ "align": {
+  "title": "PSA Split Stats",
+  "unit": "short"
+ },
+ "aligned4kRatio": {
+  "title": "4K Aligned & Unaligned IO Ratio",
+  "unit": "short"
+ },
+ "aligned4kReadRatio": {
+  "title": "4K Aligned & Unaligned IO Ratio",
+  "unit": "short"
+ },
+ "aligned4kWriteRatio": {
+  "title": "4K Aligned & Unaligned IO Ratio",
+  "unit": "short"
+ },
+ "allEvictions": {
+  "title": "RC Evictions",
+  "unit": "short"
+ },
+ "allOpCacheMaxGetLatUSec": {
+  "title": "Overall Block Cache Get Latency",
+  "unit": "\u00b5s"
+ },
+ "allocBlockApiTput": {
+  "title": "Allocator API Throughput",
+  "unit": "iops"
+ },
+ "allocLatencyAvg": {
+  "title": "Allocator Alloc/Free Latency",
+  "unit": "ns"
+ },
+ "allocLatencyMax": {
+  "title": "Allocator Alloc/Free Latency",
+  "unit": "ns"
+ },
+ "allocatedSpace": {
+  "title": "Allocated Space",
+  "unit": "percent"
+ },
+ "anchorCongestion": {
+  "title": "Congestion",
+  "unit": "short"
+ },
+ "anchorIoCount": {
+  "title": "IO Count",
+  "unit": "short"
+ },
+ "anchorIops": {
+  "title": "IOPs",
+  "unit": "iops"
+ },
+ "anchorIopsRWResync": {
+  "title": "IOPs",
+  "unit": "iops"
+ },
+ "anchorIopsRead": {
+  "title": "IOPs",
+  "unit": "iops"
+ },
+ "anchorIopsWrite": {
+  "title": "IOPs",
+  "unit": "iops"
+ },
+ "anchorLatencyAvg": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "anchorLatencyAvgRWResync": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "anchorLatencyAvgRead": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "anchorLatencyAvgWrite": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "anchorRWResyncCongestion": {
+  "title": "Congestion",
+  "unit": "short"
+ },
+ "anchorRWResyncCount": {
+  "title": "IO Count",
+  "unit": "short"
+ },
+ "anchorReadCongestion": {
+  "title": "Congestion",
+  "unit": "short"
+ },
+ "anchorReadCount": {
+  "title": "IO Count",
+  "unit": "short"
+ },
+ "anchorThroughput": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "anchorTputRWResync": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "anchorTputRead": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "anchorTputWrite": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "anchorWriteCongestion": {
+  "title": "Congestion",
+  "unit": "short"
+ },
+ "anchorWriteCount": {
+  "title": "IO Count",
+  "unit": "short"
+ },
+ "assocCount": {
+  "title": "Association Count",
+  "unit": "short"
+ },
+ "asyncLookupCacheMissAvg": {
+  "title": "Lookup Ops",
+  "unit": "iops"
+ },
+ "asyncLookupCacheMissMax": {
+  "title": "Lookup Ops (MAX)",
+  "unit": "iops"
+ },
+ "asyncLookupInvocationLatencyAvg": {
+  "title": "Lookup Latency",
+  "unit": "ns"
+ },
+ "asyncLookupInvocationLatencyMax": {
+  "title": "Lookup Latency (MAX)",
+  "unit": "ns"
+ },
+ "availTokens": {
+  "title": "Token Rate",
+  "unit": "short"
+ },
+ "avgAllocBlockTime": {
+  "title": "Allocator API Latency",
+  "unit": "ns"
+ },
+ "avgBurstArrivalTime": {
+  "title": "Burst Time",
+  "unit": "\u00b5s"
+ },
+ "avgBurstArrivalTimeMultiObjavgBurstCompletionTimeMultiObj": {
+  "title": "Burst Time Multi Obj",
+  "unit": "short"
+ },
+ "avgBurstCompletionTime": {
+  "title": "Burst Time",
+  "unit": "\u00b5s"
+ },
+ "avgBurstPeakOIO": {
+  "title": "Burst Peak OIO",
+  "unit": "short"
+ },
+ "avgBurstPeakOIOMultiObj": {
+  "title": "Burst Peak OIO Multi Obj",
+  "unit": "short"
+ },
+ "avgBurstPeakOutstandingKb": {
+  "title": "Burst Peak Outstanding KB",
+  "unit": "KBps"
+ },
+ "avgBurstPeakOutstandingKbMultiObj": {
+  "title": "Burst Peak Outstanding KB Multi Obj",
+  "unit": "short"
+ },
+ "avgBurstTotalTime": {
+  "title": "Burst Time",
+  "unit": "\u00b5s"
+ },
+ "avgBurstTotalTimeMultiObj": {
+  "title": "Burst Time Multi Obj",
+  "unit": "short"
+ },
+ "avgCheckpointTime": {
+  "title": "LSOM2 Transaction Time",
+  "unit": "ns"
+ },
+ "avgDdpCommitTime": {
+  "title": "DDP Write / Commit Time by Data Elevator",
+  "unit": "ns"
+ },
+ "avgDdpWriteTime": {
+  "title": "DDP Write / Commit Time by Data Elevator",
+  "unit": "ns"
+ },
+ "avgDeltaCreationDomActiveLatency": {
+  "title": "Delta Creation Latency",
+  "unit": "s"
+ },
+ "avgDeltaCreationDomCreationLatency": {
+  "title": "Delta Creation Latency",
+  "unit": "s"
+ },
+ "avgElevIoSize": {
+  "title": "DDP Data Elev IO Size",
+  "unit": "bytes"
+ },
+ "avgFinalizeBlockTime": {
+  "title": "Allocator API Latency",
+  "unit": "ns"
+ },
+ "avgFreeTime": {
+  "title": "Allocator API Latency",
+  "unit": "ns"
+ },
+ "avgGoodnessHigh": {
+  "title": "Avg Goodness of Bucket Number Entries",
+  "unit": "short"
+ },
+ "avgGoodnessHighest": {
+  "title": "Avg Goodness of Bucket Number Entries",
+  "unit": "short"
+ },
+ "avgGoodnessLow": {
+  "title": "Avg Goodness of Bucket Number Entries",
+  "unit": "short"
+ },
+ "avgGoodnessLowest": {
+  "title": "Avg Goodness of Bucket Number Entries",
+  "unit": "short"
+ },
+ "avgGoodnessMid": {
+  "title": "Avg Goodness of Bucket Number Entries",
+  "unit": "short"
+ },
+ "avgIdleTime": {
+  "title": "DDP Scheduling",
+  "unit": "ns"
+ },
+ "avgLatRead": {
+  "title": "LSOM2 Read/Write Latency",
+  "unit": "ns"
+ },
+ "avgLatUnmap": {
+  "title": "LSOM2 Read/Write Latency",
+  "unit": "ns"
+ },
+ "avgLatWrite": {
+  "title": "LSOM2 Read/Write Latency",
+  "unit": "ns"
+ },
+ "avgLatency": {
+  "title": "Network Latency & Outbound Queueing Latency",
+  "unit": "\u00b5s"
+ },
+ "avgLatencyNs": {
+  "title": "Latency (NS)",
+  "unit": "ns"
+ },
+ "avgPctTimeToPeak": {
+  "title": "Pct Time to Peak",
+  "unit": "\u00b5s"
+ },
+ "avgPctTimeToPeakMultiObj": {
+  "title": "Pct Time to Peak Multi Obj",
+  "unit": "short"
+ },
+ "avgPreReadTime": {
+  "title": "DDP Scheduling",
+  "unit": "ns"
+ },
+ "avgProactiveGoodnessCapacity": {
+  "title": "GSC goodness threshold",
+  "unit": "short"
+ },
+ "avgProcessFreeListTime": {
+  "title": "Allocator Process Free List Latency",
+  "unit": "ns"
+ },
+ "avgReactiveGoodnessCapacity": {
+  "title": "GSC goodness threshold",
+  "unit": "short"
+ },
+ "avgReadIOPS": {
+  "title": "IOPs",
+  "unit": "short"
+ },
+ "avgReadLatency": {
+  "title": "Latency",
+  "unit": "ns"
+ },
+ "avgReadTPut": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "avgReserveBlockTime": {
+  "title": "Allocator API Latency",
+  "unit": "ns"
+ },
+ "avgResyncParallelism": {
+  "title": "Parallel Resync",
+  "unit": "short"
+ },
+ "avgUnmapIOPS": {
+  "title": "IOPs",
+  "unit": "short"
+ },
+ "avgUnmapLatency": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "avgUnmapTput": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "avgWriteIOPS": {
+  "title": "IOPs",
+  "unit": "short"
+ },
+ "avgWriteLatency": {
+  "title": "Latency",
+  "unit": "ns"
+ },
+ "avgWriteTput": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "avgZeroElevDdpCommitTime": {
+  "title": "DDP Write / Commit Time by Zero Elevator",
+  "unit": "ns"
+ },
+ "avgZeroElevDdpWriteTime": {
+  "title": "DDP Write / Commit Time by Zero Elevator",
+  "unit": "ns"
+ },
+ "avgZeroElevIoSize": {
+  "title": "DDP Zero Elev IO Size",
+  "unit": "bytes"
+ },
+ "b0Data": {
+  "title": "PLOG bucket data usage",
+  "unit": "bytes"
+ },
+ "b1Data": {
+  "title": "PLOG bucket data usage",
+  "unit": "bytes"
+ },
+ "b2Data": {
+  "title": "PLOG bucket data usage",
+  "unit": "bytes"
+ },
+ "b3Data": {
+  "title": "PLOG bucket data usage",
+  "unit": "bytes"
+ },
+ "b4Data": {
+  "title": "PLOG bucket data usage",
+  "unit": "bytes"
+ },
+ "b5Data": {
+  "title": "PLOG bucket data usage",
+  "unit": "bytes"
+ },
+ "b6Data": {
+  "title": "PLOG bucket data usage",
+  "unit": "bytes"
+ },
+ "b7Data": {
+  "title": "PLOG bucket data usage",
+  "unit": "bytes"
+ },
+ "bandwidthRead": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "bandwidthTotal": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "bandwidthWithinBursts": {
+  "title": "Bandwidth Within Bursts",
+  "unit": "short"
+ },
+ "bandwidthWithinBurstsExclFirstObj": {
+  "title": "Bandwidth Within Bursts Excl First Obj",
+  "unit": "short"
+ },
+ "bandwidthWithinBurstsMultiObj": {
+  "title": "Bandwidth Within Bursts Multi Obj",
+  "unit": "short"
+ },
+ "bandwidthWrite": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "bankFlushError": {
+  "title": "ZDOM Overview",
+  "unit": "short"
+ },
+ "bankTxnCreateLat": {
+  "title": "Latency (Average)",
+  "unit": "\u00b5s"
+ },
+ "bankWriteRate": {
+  "title": "Unmap/SegWrite/Bankwrite Rate",
+  "unit": "iops"
+ },
+ "beData": {
+  "title": "LSOM2 Congestion",
+  "unit": "short"
+ },
+ "beDataAllocator": {
+  "title": "LSOM2 Congestion",
+  "unit": "short"
+ },
+ "bePolicyAllocator": {
+  "title": "LSOM2 Congestion",
+  "unit": "short"
+ },
+ "blkAttrCcheHitRt": {
+  "title": "Blk Attr cache hit rate",
+  "unit": "percent"
+ },
+ "blkAttrCcheSz": {
+  "title": "Block attribute cache size",
+  "unit": "mbytes"
+ },
+ "blkAttrFlshTime": {
+  "title": "Time in commit flusher",
+  "unit": "ms"
+ },
+ "blksAllocdTput": {
+  "title": "Allocator Block Throughput",
+  "unit": "iops"
+ },
+ "blksFinalizedTput": {
+  "title": "Allocator Block Throughput",
+  "unit": "iops"
+ },
+ "blksFreedTput": {
+  "title": "Allocator Block Throughput",
+  "unit": "iops"
+ },
+ "blksReservedTput": {
+  "title": "Allocator Block Throughput",
+  "unit": "iops"
+ },
+ "branchLookups": {
+  "title": "Lookup Ops",
+  "unit": "iops"
+ },
+ "bucketDataHigh": {
+  "title": "Data Bucket Number Entries",
+  "unit": "short"
+ },
+ "bucketDataHighest": {
+  "title": "Data Bucket Number Entries",
+  "unit": "short"
+ },
+ "bucketDataLow": {
+  "title": "Data Bucket Number Entries",
+  "unit": "short"
+ },
+ "bucketDataLowest": {
+  "title": "Data Bucket Number Entries",
+  "unit": "short"
+ },
+ "bucketDataMid": {
+  "title": "Data Bucket Number Entries",
+  "unit": "short"
+ },
+ "bucketHigh": {
+  "title": "Total Bucket Number Entries",
+  "unit": "short"
+ },
+ "bucketHighest": {
+  "title": "Total Bucket Number Entries",
+  "unit": "short"
+ },
+ "bucketLLPHigh": {
+  "title": "LLP Bucket Number Entries",
+  "unit": "short"
+ },
+ "bucketLLPHighest": {
+  "title": "LLP Bucket Number Entries",
+  "unit": "short"
+ },
+ "bucketLLPLow": {
+  "title": "LLP Bucket Number Entries",
+  "unit": "short"
+ },
+ "bucketLLPLowest": {
+  "title": "LLP Bucket Number Entries",
+  "unit": "short"
+ },
+ "bucketLLPMid": {
+  "title": "LLP Bucket Number Entries",
+  "unit": "short"
+ },
+ "bucketLow": {
+  "title": "Total Bucket Number Entries",
+  "unit": "short"
+ },
+ "bucketLowest": {
+  "title": "Total Bucket Number Entries",
+  "unit": "short"
+ },
+ "bucketMid": {
+  "title": "Total Bucket Number Entries",
+  "unit": "short"
+ },
+ "burstsPerSecond": {
+  "title": "Burst Per Second",
+  "unit": "short"
+ },
+ "burstsPerSecondMultiObj": {
+  "title": "Burst Per Second Multi Obj",
+  "unit": "short"
+ },
+ "bypassWritePercent": {
+  "title": "ZDOM Log Bypass Percent",
+  "unit": "percent"
+ },
+ "bytesOverwritten": {
+  "title": "Write Buffer Usage (bytes)",
+  "unit": "bytes"
+ },
+ "bytesPerSecondBandwidth": {
+  "title": "Congestion",
+  "unit": "short"
+ },
+ "cacheAllocFails": {
+  "title": "cacheAllocFails",
+  "unit": "short"
+ },
+ "cacheEntries": {
+  "title": "cacheEntries",
+  "unit": "short"
+ },
+ "cacheEvictAttempts": {
+  "title": "cacheEvictAttempts",
+  "unit": "short"
+ },
+ "cacheHRBranch": {
+  "title": "Cache Hit Rate",
+  "unit": "percent"
+ },
+ "cacheHRBranchRange": {
+  "title": "Cache Hit Rate",
+  "unit": "percent"
+ },
+ "cacheHRFilter": {
+  "title": "Cache Hit Rate",
+  "unit": "percent"
+ },
+ "cacheHRMisc": {
+  "title": "Cache Hit Rate",
+  "unit": "percent"
+ },
+ "cacheHitRate": {
+  "title": "Cache HitRate",
+  "unit": "short"
+ },
+ "cacheHitsBranch": {
+  "title": "Cache",
+  "unit": "short"
+ },
+ "cacheHitsBranchMeta": {
+  "title": "Cache",
+  "unit": "short"
+ },
+ "cacheHitsBranchRange": {
+  "title": "Cache",
+  "unit": "short"
+ },
+ "cacheHitsBranchRangeMeta": {
+  "title": "Cache",
+  "unit": "short"
+ },
+ "cacheHitsFilter": {
+  "title": "Cache",
+  "unit": "short"
+ },
+ "cacheHitsFilterMeta": {
+  "title": "Cache",
+  "unit": "short"
+ },
+ "cacheHitsMemtable": {
+  "title": "Cache",
+  "unit": "short"
+ },
+ "cacheHitsMemtableRange": {
+  "title": "Cache",
+  "unit": "short"
+ },
+ "cacheHitsMisc": {
+  "title": "Cache",
+  "unit": "short"
+ },
+ "cacheHitsTrunk": {
+  "title": "Cache",
+  "unit": "short"
+ },
+ "cacheInserts": {
+  "title": "cacheInserts",
+  "unit": "short"
+ },
+ "cacheLockContentions": {
+  "title": "cacheLockContentions",
+  "unit": "short"
+ },
+ "cacheMissTimeAvgBranch": {
+  "title": "Cache Latency",
+  "unit": "ns"
+ },
+ "cacheMissTimeAvgBranchRange": {
+  "title": "Cache Latency",
+  "unit": "ns"
+ },
+ "cacheMissTimeAvgFilter": {
+  "title": "Cache Latency",
+  "unit": "ns"
+ },
+ "cacheMissTimeAvgMisc": {
+  "title": "Cache Latency",
+  "unit": "ns"
+ },
+ "cacheMissTimeMaxBranch": {
+  "title": "Cache Latency (MAX)",
+  "unit": "ns"
+ },
+ "cacheMissTimeMaxBranchRange": {
+  "title": "Cache Latency (MAX)",
+  "unit": "ns"
+ },
+ "cacheMissTimeMaxFilter": {
+  "title": "Cache Latency (MAX)",
+  "unit": "ns"
+ },
+ "cacheMissTimeMaxMisc": {
+  "title": "Cache Latency (MAX)",
+  "unit": "ns"
+ },
+ "cacheMissesBranch": {
+  "title": "Cache",
+  "unit": "short"
+ },
+ "cacheMissesBranchRange": {
+  "title": "Cache",
+  "unit": "short"
+ },
+ "cacheMissesFilter": {
+  "title": "Cache",
+  "unit": "short"
+ },
+ "cacheMissesMisc": {
+  "title": "Cache",
+  "unit": "short"
+ },
+ "cacheRemoves": {
+  "title": "cacheRemoves",
+  "unit": "short"
+ },
+ "cacheUpdateLatency": {
+  "title": "cacheUpdateLatency",
+  "unit": "short"
+ },
+ "capacity": {
+  "title": "Capacity",
+  "unit": "bytes"
+ },
+ "capacityCompressed": {
+  "title": "Capacity",
+  "unit": "bytes"
+ },
+ "capacityTotal": {
+  "title": "LSOM2 WAL Utilization",
+  "unit": "bytes"
+ },
+ "capacityUsed": {
+  "title": "Capacity",
+  "unit": "bytes"
+ },
+ "cfTime": {
+  "title": "Time in commit flusher",
+  "unit": "ms"
+ },
+ "changePendingSuccessCount": {
+  "title": "changePendingSuccessCount",
+  "unit": "short"
+ },
+ "changeQueuedBytes": {
+  "title": "changeQueuedBytes",
+  "unit": "short"
+ },
+ "changeQueuedObjects": {
+  "title": "changeQueuedObjects",
+  "unit": "short"
+ },
+ "changeSuccessCount": {
+  "title": "changeSuccessCount",
+  "unit": "short"
+ },
+ "checkPointBatchesSent": {
+  "title": "Batch Stats",
+  "unit": "short"
+ },
+ "checkpointWorkerWakeupMs": {
+  "title": "Worker Wakeup Interval",
+  "unit": "\u00b5s"
+ },
+ "checkptCacheCopyLatencyAvg": {
+  "title": "Checkpoint Latency",
+  "unit": "ns"
+ },
+ "checkptCacheCopyLatencyMax": {
+  "title": "Checkpoint Latency (MAX)",
+  "unit": "ns"
+ },
+ "checkptCacheFlushLatencyAvg": {
+  "title": "Checkpoint Latency",
+  "unit": "ns"
+ },
+ "checkptCacheFlushLatencyMax": {
+  "title": "Checkpoint Latency (MAX)",
+  "unit": "ns"
+ },
+ "checkptWriteLatencyAvg": {
+  "title": "Checkpoint Latency",
+  "unit": "ns"
+ },
+ "checkptWriteLatencyMax": {
+  "title": "Checkpoint Latency (MAX)",
+  "unit": "ns"
+ },
+ "checksumErrors": {
+  "title": "Checksum Error (& Corrected)",
+  "unit": "short"
+ },
+ "checksumMismatchCount": {
+  "title": "Checksum Mismatch Count",
+  "unit": "short"
+ },
+ "cleanupSuccessCount": {
+  "title": "cleanupSuccessCount",
+  "unit": "short"
+ },
+ "clientCacheHitRate": {
+  "title": "Client In-Memory Read-Cache - HitRate",
+  "unit": "short"
+ },
+ "clientCacheHits": {
+  "title": "Client In-Memory Read-Cache - IOPS",
+  "unit": "iops"
+ },
+ "clomdConsumedSize": {
+  "title": "User World Consumed Breakdown",
+  "unit": "bytes"
+ },
+ "clomdReservedSize": {
+  "title": "User World Reserved Breakdown",
+  "unit": "bytes"
+ },
+ "cmmdsTimeMachineConsumedSize": {
+  "title": "User World Consumed Breakdown",
+  "unit": "bytes"
+ },
+ "cmmdsTimeMachineReservedSize": {
+  "title": "User World Reserved Breakdown",
+  "unit": "bytes"
+ },
+ "cmmdsdConsumedSize": {
+  "title": "User World Consumed Breakdown",
+  "unit": "bytes"
+ },
+ "cmmdsdReservedSize": {
+  "title": "User World Reserved Breakdown",
+  "unit": "bytes"
+ },
+ "commitFlusherComponentsToFlush": {
+  "title": "Commit Flusher Components",
+  "unit": "short"
+ },
+ "commitFlusherExtentSizeProcessed": {
+  "title": "Commit Flusher Extents",
+  "unit": "short"
+ },
+ "commitFlusherExtentsProcessed": {
+  "title": "Commit Flusher Extents",
+  "unit": "short"
+ },
+ "commitTblCnt": {
+  "title": "Write Buffer Entry Count",
+  "unit": "short"
+ },
+ "compCongestion": {
+  "title": "Congestion",
+  "unit": "short"
+ },
+ "compCongestionLocalMax": {
+  "title": "Max Congestion during sampling period",
+  "unit": "short"
+ },
+ "compactionAvgTuples": {
+  "title": "Compaction",
+  "unit": "short"
+ },
+ "compactions": {
+  "title": "Compaction",
+  "unit": "short"
+ },
+ "complianceSuccessCount": {
+  "title": "complianceSuccessCount",
+  "unit": "short"
+ },
+ "componentCongestion": {
+  "title": "Congestion Grouped by Resources",
+  "unit": "short"
+ },
+ "componentCongestionReadSched": {
+  "title": "LSOM Congestion",
+  "unit": "short"
+ },
+ "componentCongestionWriteSched": {
+  "title": "LSOM Congestion",
+  "unit": "short"
+ },
+ "components": {
+  "title": "components",
+  "unit": "short"
+ },
+ "compressPct": {
+  "title": "Dedup Percentages",
+  "unit": "percent"
+ },
+ "compressionTime": {
+  "title": "Dedup Run Time",
+  "unit": "ns"
+ },
+ "concatQueuedBytes": {
+  "title": "concatQueuedBytes",
+  "unit": "short"
+ },
+ "concatQueuedObjects": {
+  "title": "concatQueuedObjects",
+  "unit": "short"
+ },
+ "concatSuccessCount": {
+  "title": "concatSuccessCount",
+  "unit": "short"
+ },
+ "congestion": {
+  "title": "congestion",
+  "unit": "short"
+ },
+ "consolidateQueuedBytes": {
+  "title": "consolidateQueuedBytes",
+  "unit": "short"
+ },
+ "consolidateQueuedObjects": {
+  "title": "consolidateQueuedObjects",
+  "unit": "short"
+ },
+ "coreUtilPct": {
+  "title": "CPU Core Utilization",
+  "unit": "percent"
+ },
+ "countFlushes": {
+  "title": "Flush",
+  "unit": "short"
+ },
+ "cpAvgCheckpointTime": {
+  "title": "Allocator Checkpoint Latency",
+  "unit": "ns"
+ },
+ "cpAvgCleanupTime": {
+  "title": "Allocator Checkpoint Latency",
+  "unit": "ns"
+ },
+ "cpAvgFlushPagesTime": {
+  "title": "Allocator Checkpoint Latency",
+  "unit": "ns"
+ },
+ "cpAvgMergeBitmapsTime": {
+  "title": "Allocator Checkpoint Latency",
+  "unit": "ns"
+ },
+ "cpAvgProcessFreeListTime": {
+  "title": "Allocator Checkpoint Latency",
+  "unit": "ns"
+ },
+ "cpMaxCheckpointTime": {
+  "title": "Allocator Checkpoint Latency",
+  "unit": "ns"
+ },
+ "cpMaxCleanupTime": {
+  "title": "Allocator Checkpoint Latency",
+  "unit": "ns"
+ },
+ "cpMaxFlushPagesTime": {
+  "title": "Allocator Checkpoint Latency (MAX)",
+  "unit": "ns"
+ },
+ "cpMaxMergeBitmapsTime": {
+  "title": "Allocator Checkpoint Latency",
+  "unit": "ns"
+ },
+ "cpMaxProcessFreeListTime": {
+  "title": "Allocator Checkpoint Latency",
+  "unit": "ns"
+ },
+ "cpMinCheckpointTime": {
+  "title": "Allocator Checkpoint Latency",
+  "unit": "ns"
+ },
+ "cpMinCleanupTime": {
+  "title": "Allocator Checkpoint Latency",
+  "unit": "ns"
+ },
+ "cpMinFlushPagesTime": {
+  "title": "Allocator Checkpoint Latency (MIN)",
+  "unit": "ns"
+ },
+ "cpMinMergeBitmapsTime": {
+  "title": "Allocator Checkpoint Latency",
+  "unit": "ns"
+ },
+ "cpMinProcessFreeListTime": {
+  "title": "Allocator Checkpoint Latency",
+  "unit": "ns"
+ },
+ "cpReadLockMaxNs": {
+  "title": "KVStore Checkpoint Stats",
+  "unit": "ns"
+ },
+ "cpWriteIOPS": {
+  "title": "Allocator Checkpoint Write IOPS",
+  "unit": "iops"
+ },
+ "cpWriteIOTput": {
+  "title": "Allocator Checkpoint Write Throughput",
+  "unit": "binBps"
+ },
+ "cpWriteLockAvgNs": {
+  "title": "KVStore Checkpoint Stats",
+  "unit": "ns"
+ },
+ "cpWriteLockMaxNs": {
+  "title": "KVStore Checkpoint Stats",
+  "unit": "ns"
+ },
+ "ctFlushAvgTime": {
+  "title": "Component Table Checkpoint Latency",
+  "unit": "ns"
+ },
+ "ctFlushMaxTime": {
+  "title": "Component Table Checkpoint Latency",
+  "unit": "ns"
+ },
+ "ctFlushMinTime": {
+  "title": "Component Table Checkpoint Latency",
+  "unit": "ns"
+ },
+ "ctNumActiveComp": {
+  "title": "Component Table Component Stats",
+  "unit": "short"
+ },
+ "ctNumDeletedComp": {
+  "title": "Component Table Component Stats",
+  "unit": "short"
+ },
+ "ctNumFailedReserves": {
+  "title": "Component Table Component Stats",
+  "unit": "short"
+ },
+ "ctNumFreeComp": {
+  "title": "Component Table Component Stats",
+  "unit": "short"
+ },
+ "ctNumPagesFlushed": {
+  "title": "Component Table Checkpoint Pages Flushed",
+  "unit": "short"
+ },
+ "ctNumReservedComp": {
+  "title": "Component Table Component Stats",
+  "unit": "short"
+ },
+ "ctNumZombieComp": {
+  "title": "Component Table Component Stats",
+  "unit": "short"
+ },
+ "curBytesToSyncDecom": {
+  "title": "Bytes to Sync",
+  "unit": "bytes"
+ },
+ "curBytesToSyncFixComp": {
+  "title": "Bytes to Sync",
+  "unit": "bytes"
+ },
+ "curBytesToSyncPolicy": {
+  "title": "Bytes to Sync",
+  "unit": "bytes"
+ },
+ "curBytesToSyncRebalance": {
+  "title": "Bytes to Sync",
+  "unit": "bytes"
+ },
+ "curBytesToSyncRepair": {
+  "title": "Bytes to Sync",
+  "unit": "bytes"
+ },
+ "curWBBucket": {
+  "title": "PLOG Elevator Extra stats",
+  "unit": "short"
+ },
+ "currentDrainRate": {
+  "title": "oobLogCongestionMetrics",
+  "unit": "binBps"
+ },
+ "currentIncomingRate": {
+  "title": "oobLogCongestionMetrics",
+  "unit": "binBps"
+ },
+ "currentOutstandingTasks": {
+  "title": "Task",
+  "unit": "short"
+ },
+ "currentOverWriteFactor": {
+  "title": "overWriteFactorData",
+  "unit": "short"
+ },
+ "currentReadLatencyMean": {
+  "title": "Mean Latency",
+  "unit": "\u00b5s"
+ },
+ "currentTrueWBFillRate": {
+  "title": "oobLogCongestionMetrics",
+  "unit": "binBps"
+ },
+ "currentWriteLatencyMean": {
+  "title": "Mean Latency",
+  "unit": "\u00b5s"
+ },
+ "currentWriteRateCapacity": {
+  "title": "GSC cleaning rate",
+  "unit": "binBps"
+ },
+ "dataP": {
+  "title": "Elev throttling params",
+  "unit": "percent"
+ },
+ "dataWriteTime": {
+  "title": "Dedup Run Time",
+  "unit": "ns"
+ },
+ "ddpCommitRate": {
+  "title": "DDP Internal Rates",
+  "unit": "iops"
+ },
+ "ddpFreeCap": {
+  "title": "Dedup Capacity",
+  "unit": "bytes"
+ },
+ "ddpTotalCap": {
+  "title": "Dedup Capacity",
+  "unit": "bytes"
+ },
+ "ddpWriteRate": {
+  "title": "DDP Internal Rates",
+  "unit": "iops"
+ },
+ "decomQueuedBytes": {
+  "title": "decomQueuedBytes",
+  "unit": "short"
+ },
+ "decomQueuedObjects": {
+  "title": "decomQueuedObjects",
+  "unit": "short"
+ },
+ "decomSuccessCount": {
+  "title": "decomSuccessCount",
+  "unit": "short"
+ },
+ "dedupCcheHitRt": {
+  "title": "Dedup Percentages",
+  "unit": "percent"
+ },
+ "dedupPct": {
+  "title": "Dedup Percentages",
+  "unit": "percent"
+ },
+ "dedupRatio": {
+  "title": "dedupRatio",
+  "unit": "short"
+ },
+ "dedupTput": {
+  "title": "Dedup Throughput",
+  "unit": "binBps"
+ },
+ "dedupedBytes": {
+  "title": "Dedup Throughput",
+  "unit": "binBps"
+ },
+ "delSMActs": {
+  "title": "PLOG Data Elev OPs & Activations",
+  "unit": "short"
+ },
+ "deleteCongestion": {
+  "title": "Delete Congestion",
+  "unit": "bytes"
+ },
+ "deleteCongestionLocalMax": {
+  "title": "Delete Congestion",
+  "unit": "bytes"
+ },
+ "deleteLatencyAvg": {
+  "title": "Insert/Update/Delete Latency",
+  "unit": "ns"
+ },
+ "deleteLatencyMax": {
+  "title": "Insert/Update/Delete (MAX)",
+  "unit": "ns"
+ },
+ "deletions": {
+  "title": "Insert IOps",
+  "unit": "iops"
+ },
+ "deltaDecomSuccessCount": {
+  "title": "deltaDecomSuccessCount",
+  "unit": "short"
+ },
+ "destageSampleTime": {
+  "title": "Destage sampling correction (available only in verbose mode)",
+  "unit": "ns"
+ },
+ "dgTransientCapacityUsed": {
+  "title": "Transient Capacity Used",
+  "unit": "bytes"
+ },
+ "discardedDeletes": {
+  "title": "Split",
+  "unit": "short"
+ },
+ "diskCompCntRatio": {
+  "title": "diskCompCntRatio",
+  "unit": "short"
+ },
+ "diskDataCompCntRatio": {
+  "title": "diskDataCompCntRatio",
+  "unit": "short"
+ },
+ "diskFullness": {
+  "title": "diskFullness",
+  "unit": "short"
+ },
+ "diskFullnessPermil": {
+  "title": "Prev fullness (per-mille)",
+  "unit": "short"
+ },
+ "diskTransientCapacityUsed": {
+  "title": "Transient Capacity Used",
+  "unit": "bytes"
+ },
+ "diskgroupCongestionReadSched": {
+  "title": "LSOM Congestion",
+  "unit": "short"
+ },
+ "diskgroupCongestionWriteSched": {
+  "title": "LSOM Congestion",
+  "unit": "short"
+ },
+ "diskgrpDataCompCntRatio": {
+  "title": "diskgrpDataCompCntRatio",
+  "unit": "short"
+ },
+ "dmaBoundary": {
+  "title": "PSA Split Stats",
+  "unit": "short"
+ },
+ "domClients": {
+  "title": "domClients",
+  "unit": "short"
+ },
+ "domColocated": {
+  "title": "domColocated",
+  "unit": "short"
+ },
+ "domOwners": {
+  "title": "domOwners",
+  "unit": "short"
+ },
+ "ecCachedWriteCount": {
+  "title": "RAID-EC Stats",
+  "unit": "short"
+ },
+ "ecCachedWriteHits": {
+  "title": "RAID-EC Stats",
+  "unit": "short"
+ },
+ "ecFswCount": {
+  "title": "RAID-EC Stats",
+  "unit": "short"
+ },
+ "ecStridedWriteCount": {
+  "title": "RAID-EC Stats",
+  "unit": "short"
+ },
+ "ecStridedWriteHits": {
+  "title": "RAID-EC Stats",
+  "unit": "short"
+ },
+ "ecWriteCount": {
+  "title": "RAID-EC Stats",
+  "unit": "short"
+ },
+ "elapsedSecsInInterval": {
+  "title": "Interval",
+  "unit": "short"
+ },
+ "elevAlreadyRunning": {
+  "title": "PLOG Data Elev OPs & Activations",
+  "unit": "short"
+ },
+ "elevBHActivations": {
+  "title": "PLOG Data Elev OPs & Activations",
+  "unit": "short"
+ },
+ "elevCurBucket": {
+  "title": "PLOG Elevator Extra stats",
+  "unit": "short"
+ },
+ "elevMDWriteLatency": {
+  "title": "PLOG Data Elev Latency",
+  "unit": "\u00b5s"
+ },
+ "elevNextWindow": {
+  "title": "PLOG Elevator Extra stats",
+  "unit": "short"
+ },
+ "elevOffset": {
+  "title": "PLOG Elevator Extra stats",
+  "unit": "short"
+ },
+ "elevSMActs": {
+  "title": "PLOG Data Elev OPs & Activations",
+  "unit": "short"
+ },
+ "elevSSDReadLatency": {
+  "title": "PLOG Data Elev Latency",
+  "unit": "\u00b5s"
+ },
+ "elevStartThresh": {
+  "title": "Write Buffer usage (percentage)",
+  "unit": "percent"
+ },
+ "elevUnthrottleThresh": {
+  "title": "Write Buffer usage (percentage)",
+  "unit": "percent"
+ },
+ "elevWindow": {
+  "title": "PLOG Elevator Extra stats",
+  "unit": "short"
+ },
+ "elevatorWaitOnCFTime": {
+  "title": "PLOG Data Elevator Commit Related Timing",
+  "unit": "ns"
+ },
+ "emaLatencyNs": {
+  "title": "Latency (NS)",
+  "unit": "ns"
+ },
+ "epdConsumedSize": {
+  "title": "User World Consumed Breakdown",
+  "unit": "bytes"
+ },
+ "epdReservedSize": {
+  "title": "User World Reserved Breakdown",
+  "unit": "bytes"
+ },
+ "failedFlushes": {
+  "title": "Flush",
+  "unit": "short"
+ },
+ "filterAvgTuples": {
+  "title": "Filter",
+  "unit": "short"
+ },
+ "filterFalsePositives": {
+  "title": "Lookup Ops",
+  "unit": "iops"
+ },
+ "filterLookups": {
+  "title": "Lookup Ops",
+  "unit": "iops"
+ },
+ "filtersBuilt": {
+  "title": "Filter",
+  "unit": "short"
+ },
+ "finalizeBlockApiTput": {
+  "title": "Allocator API Throughput",
+  "unit": "iops"
+ },
+ "fitness": {
+  "title": "fitness",
+  "unit": "short"
+ },
+ "fixComplianceQueuedBytes": {
+  "title": "fixComplianceQueuedBytes",
+  "unit": "short"
+ },
+ "fixComplianceQueuedObjects": {
+  "title": "fixComplianceQueuedObjects",
+  "unit": "short"
+ },
+ "footprintBranch": {
+  "title": "Footprint",
+  "unit": "short"
+ },
+ "footprintBranchMeta": {
+  "title": "Footprint",
+  "unit": "short"
+ },
+ "footprintBranchRange": {
+  "title": "Footprint",
+  "unit": "short"
+ },
+ "footprintBranchRangeMeta": {
+  "title": "Footprint",
+  "unit": "short"
+ },
+ "footprintFilter": {
+  "title": "Footprint",
+  "unit": "short"
+ },
+ "footprintFilterMeta": {
+  "title": "Footprint",
+  "unit": "short"
+ },
+ "footprintMemtable": {
+  "title": "Footprint",
+  "unit": "short"
+ },
+ "footprintMemtableRange": {
+  "title": "Footprint",
+  "unit": "short"
+ },
+ "footprintTrunk": {
+  "title": "Footprint",
+  "unit": "short"
+ },
+ "forceRepairSuccessCount": {
+  "title": "forceRepairSuccessCount",
+  "unit": "short"
+ },
+ "freeApiTput": {
+  "title": "Allocator API Throughput",
+  "unit": "iops"
+ },
+ "freeLatencyAvg": {
+  "title": "Allocator Alloc/Free Latency",
+  "unit": "ns"
+ },
+ "freeLatencyMax": {
+  "title": "Allocator Alloc/Free Latency",
+  "unit": "ns"
+ },
+ "freeListsProcessedTput": {
+  "title": "Allocator FreeLists Processed Throughput",
+  "unit": "iops"
+ },
+ "freeingRate": {
+  "title": "Target/Free Rate",
+  "unit": "short"
+ },
+ "fullFlushes": {
+  "title": "Flush",
+  "unit": "short"
+ },
+ "global": {
+  "title": "LSOM2 Congestion",
+  "unit": "short"
+ },
+ "groupRx": {
+  "title": "Rx/Tx",
+  "unit": "short"
+ },
+ "groupRxThroughput": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "groupTxMcast": {
+  "title": "Rx/Tx",
+  "unit": "short"
+ },
+ "groupTxMcastThroughput": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "groupTxUcast": {
+  "title": "Rx/Tx",
+  "unit": "short"
+ },
+ "groupTxUcastThroughput": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "hashCalcTime": {
+  "title": "Dedup Run Time",
+  "unit": "ns"
+ },
+ "hashTput": {
+  "title": "Dedup Throughput",
+  "unit": "binBps"
+ },
+ "hashedBytes": {
+  "title": "Dedup Throughput",
+  "unit": "binBps"
+ },
+ "heapAllocFailures": {
+  "title": "Heap Allocation Failures",
+  "unit": "short"
+ },
+ "heapUtil": {
+  "title": "Heap Utilization",
+  "unit": "short"
+ },
+ "height": {
+  "title": "Overall",
+  "unit": "short"
+ },
+ "highOIOAvgDurationMs": {
+  "title": "High OIO Duration Metrics",
+  "unit": "ms"
+ },
+ "highOIOAvgDurationMsRead": {
+  "title": "High OIO Duration Metrics",
+  "unit": "ms"
+ },
+ "highOIOAvgDurationMsWrite": {
+  "title": "High OIO Duration Metrics",
+  "unit": "ms"
+ },
+ "highOIOAvgIOCountRead": {
+  "title": "Average Number of I/Os in a High OIO Period",
+  "unit": "short"
+ },
+ "highOIOAvgIOCountWrite": {
+  "title": "Average Number of I/Os in a High OIO Period",
+  "unit": "short"
+ },
+ "highOIOAvgOIO": {
+  "title": "Outstanding IO",
+  "unit": "short"
+ },
+ "highOIOAvgOIORead": {
+  "title": "Outstanding IO",
+  "unit": "short"
+ },
+ "highOIOAvgOIOWrite": {
+  "title": "Outstanding IO",
+  "unit": "short"
+ },
+ "highOIOBytesRead": {
+  "title": "Bytes from High OIO",
+  "unit": "bytes"
+ },
+ "highOIOBytesWrite": {
+  "title": "Bytes from High OIO",
+  "unit": "bytes"
+ },
+ "highOIODurationMs": {
+  "title": "High OIO Duration Metrics",
+  "unit": "ms"
+ },
+ "highOIODurationMsRead": {
+  "title": "High OIO Duration Metrics",
+  "unit": "ms"
+ },
+ "highOIODurationMsWrite": {
+  "title": "High OIO Duration Metrics",
+  "unit": "ms"
+ },
+ "highOIONumTimesRead": {
+  "title": "Number of High OIO Periods",
+  "unit": "short"
+ },
+ "highOIONumTimesWrite": {
+  "title": "Number of High OIO Periods",
+  "unit": "short"
+ },
+ "highOIOThroughputRead": {
+  "title": "Throughput derived from High OIO",
+  "unit": "binBps"
+ },
+ "highOIOThroughputWrite": {
+  "title": "Throughput derived from High OIO",
+  "unit": "binBps"
+ },
+ "inboundTraffic": {
+  "title": "inboundTraffic",
+  "unit": "short"
+ },
+ "indexSplits": {
+  "title": "Split",
+  "unit": "short"
+ },
+ "ingressLatencyNs": {
+  "title": "Latency (NS)",
+  "unit": "ns"
+ },
+ "ingressMigrations": {
+  "title": "Ingress",
+  "unit": "short"
+ },
+ "insertLatencyAvg": {
+  "title": "Insert/Update/Delete Latency",
+  "unit": "ns"
+ },
+ "insertLatencyMax": {
+  "title": "Insert/Update/Delete (MAX)",
+  "unit": "ns"
+ },
+ "insertions": {
+  "title": "Insert IOps",
+  "unit": "iops"
+ },
+ "intervalCount": {
+  "title": "Interval",
+  "unit": "short"
+ },
+ "ioChainDrops": {
+  "title": "IO Chain Drops (per-mille)",
+  "unit": "short"
+ },
+ "ioChainRxdrops": {
+  "title": "IO Chain Drops (per-mille)",
+  "unit": "short"
+ },
+ "ioChainTxdrops": {
+  "title": "IO Chain Drops (per-mille)",
+  "unit": "short"
+ },
+ "ioComponents": {
+  "title": "ioComponents",
+  "unit": "short"
+ },
+ "ioCount": {
+  "title": "IO Count",
+  "unit": "short"
+ },
+ "ioSizeTxnDelExtMiddleTreeLog": {
+  "title": "Snapshot Deletion Transaction Log Per Txn",
+  "unit": "short"
+ },
+ "ioSizeTxnSnapDelMetaUpdateLog": {
+  "title": "Snapshot Deletion Transaction Log Per Txn",
+  "unit": "short"
+ },
+ "ioSizeTxnSnapDeleteLog": {
+  "title": "Snapshot Deletion Transaction Log Per Txn",
+  "unit": "short"
+ },
+ "iops": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsBankBtree": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsBankFlushFSW": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsBankOverlap": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsBankReadWait": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsBankWrite": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsCongestion": {
+  "title": "Congestion",
+  "unit": "short"
+ },
+ "iopsCongestionLocalMax": {
+  "title": "Max Congestion during sampling period",
+  "unit": "short"
+ },
+ "iopsDelayPctSched": {
+  "title": "Percentage IO Delay",
+  "unit": "percent"
+ },
+ "iopsDevRead": {
+  "title": "Device IOPS",
+  "unit": "iops"
+ },
+ "iopsDevWrite": {
+  "title": "Device IOPS",
+  "unit": "iops"
+ },
+ "iopsDirectSched": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsDurableLog": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsGwe": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsLimit": {
+  "title": "IOPS Limit",
+  "unit": "iops"
+ },
+ "iopsLookup": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsMultiRead": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsRcMemReads": {
+  "title": "RC IOPs Breakdown (Hybrid Only)",
+  "unit": "iops"
+ },
+ "iopsRcRawar": {
+  "title": "RC IOPs Breakdown (Hybrid Only)",
+  "unit": "iops"
+ },
+ "iopsRcRead": {
+  "title": "LLOG IOPs",
+  "unit": "iops"
+ },
+ "iopsRcSsdReads": {
+  "title": "RC IOPs Breakdown (Hybrid Only)",
+  "unit": "iops"
+ },
+ "iopsRcTotalRead": {
+  "title": "RC IOPs Breakdown (Hybrid Only)",
+  "unit": "iops"
+ },
+ "iopsRcWrite": {
+  "title": "LLOG IOPs",
+  "unit": "iops"
+ },
+ "iopsRead": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsReadCompMgr": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsRecUnmap": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsRecWrite": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsRecoveryUnmapCompMgr": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsRecoveryWriteCompMgr": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsResyncRead": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsResyncReadDecom": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsResyncReadFixComp": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsResyncReadPolicy": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsResyncReadRebalance": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsResyncWrite": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsResyncWriteDecom": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsResyncWriteFixComp": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsResyncWritePolicy": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsResyncWriteRebalance": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsRmw": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsSched": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsSchedQueueMeta": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsSchedQueueNS": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsSchedQueueRec": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsSchedQueueVM": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsSnapCreate": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsSnapDelete": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsSnapLookup": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsTotal": {
+  "title": "IOPs",
+  "unit": "iops"
+ },
+ "iopsUnmap": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsUnmapCompMgr": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsWbRead": {
+  "title": "LLOG IOPs",
+  "unit": "iops"
+ },
+ "iopsWbWrite": {
+  "title": "LLOG IOPs",
+  "unit": "iops"
+ },
+ "iopsWrite": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsWriteCompMgr": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "iopsWriteConflicts": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "ioretryReadIopsAvg": {
+  "title": "PLOG IORetry IOPS",
+  "unit": "iops"
+ },
+ "ioretryReadIopsMvgAvg": {
+  "title": "PLOG IORetry IOPS Moving Avg",
+  "unit": "iops"
+ },
+ "ioretryReadLatencyUnwtdMvgAvg": {
+  "title": "PLOG IORetry Unweighted Moving Avg Latency",
+  "unit": "\u00b5s"
+ },
+ "ioretryReadLatencyUnwtdMvgStdDev": {
+  "title": "PLOG IORetry Unweighted Moving Avg Latency Std Dev",
+  "unit": "\u00b5s"
+ },
+ "ioretryWriteIopsAvg": {
+  "title": "PLOG IORetry IOPS",
+  "unit": "iops"
+ },
+ "ioretryWriteIopsMvgAvg": {
+  "title": "PLOG IORetry IOPS Moving Avg",
+  "unit": "iops"
+ },
+ "ioretryWriteLatencyUnwtdMvgAvg": {
+  "title": "PLOG IORetry Unweighted Moving Avg Latency",
+  "unit": "\u00b5s"
+ },
+ "ioretryWriteLatencyUnwtdMvgStdDev": {
+  "title": "PLOG IORetry Unweighted Moving Avg Latency Std Dev",
+  "unit": "\u00b5s"
+ },
+ "ip6Errs": {
+  "title": "TCP/IP Errors (per-mille)",
+  "unit": "short"
+ },
+ "ipErrs": {
+  "title": "TCP/IP Errors (per-mille)",
+  "unit": "short"
+ },
+ "kernelReservedSize": {
+  "title": "Kernel World Reserved",
+  "unit": "bytes"
+ },
+ "latAvgCacheGet": {
+  "title": "Overall Block Cache Get Latency",
+  "unit": "\u00b5s"
+ },
+ "latAvgMLogBarrierGatherVat": {
+  "title": "Barrier for Vat Gather Latency",
+  "unit": "\u00b5s"
+ },
+ "latAvgMpVatWriteBack": {
+  "title": "Latency of Vat WB",
+  "unit": "\u00b5s"
+ },
+ "latAvgPassRuntime": {
+  "title": "Latency of Segment Cleaning Ops",
+  "unit": "\u00b5s"
+ },
+ "latAvgResyncRead": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latAvgSleepTime": {
+  "title": "Latency of Segment Cleaning Ops",
+  "unit": "\u00b5s"
+ },
+ "latAvgSnapCreate": {
+  "title": "ZDOM Snapshot",
+  "unit": "short"
+ },
+ "latAvgSnapDelete": {
+  "title": "ZDOM Snapshot",
+  "unit": "short"
+ },
+ "latAvgTotalOpIO": {
+  "title": "Overall Block Cache Get Latency",
+  "unit": "\u00b5s"
+ },
+ "latAvgTruncVatWriteBack": {
+  "title": "Latency of Vat WB",
+  "unit": "\u00b5s"
+ },
+ "latAvgTruncVatWriteBackCopyOut": {
+  "title": "Barrier for Vat Gather Latency",
+  "unit": "\u00b5s"
+ },
+ "latAvgTxnBank": {
+  "title": "Bank Flush Per Txn Latency",
+  "unit": "\u00b5s"
+ },
+ "latAvgTxnBankTotalIO": {
+  "title": "Bank Flush Per Txn Latency",
+  "unit": "\u00b5s"
+ },
+ "latAvgTxnUnmap": {
+  "title": "Unmap Per Txn Latency",
+  "unit": "\u00b5s"
+ },
+ "latAvgTxnUnmapTotalIO": {
+  "title": "Unmap Per Txn Latency",
+  "unit": "\u00b5s"
+ },
+ "latAvgUnmapDispatchTime": {
+  "title": "Latency of Segment Cleaning Ops",
+  "unit": "\u00b5s"
+ },
+ "latRead": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latResyncRead": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latResyncReadDecom": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latResyncReadFixComp": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latResyncReadPolicy": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latResyncReadRebalance": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latResyncWrite": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latResyncWriteDecom": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latResyncWriteFixComp": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latResyncWritePolicy": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latResyncWriteRebalance": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latWrite": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyAvg": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyAvgBankBtree": {
+  "title": "Latency (Average)",
+  "unit": "\u00b5s"
+ },
+ "latencyAvgBankFlushFSW": {
+  "title": "Latency (Average)",
+  "unit": "\u00b5s"
+ },
+ "latencyAvgBankFlushFSWListWait": {
+  "title": "Latency (ListWait)",
+  "unit": "\u00b5s"
+ },
+ "latencyAvgBankWrite": {
+  "title": "Latency (Average)",
+  "unit": "\u00b5s"
+ },
+ "latencyAvgBankWriteListWait": {
+  "title": "Latency (ListWait)",
+  "unit": "\u00b5s"
+ },
+ "latencyAvgDurableLog": {
+  "title": "Latency (Average)",
+  "unit": "\u00b5s"
+ },
+ "latencyAvgDurableLogListWait": {
+  "title": "Latency (ListWait)",
+  "unit": "\u00b5s"
+ },
+ "latencyAvgLookup": {
+  "title": "Latency (Average)",
+  "unit": "\u00b5s"
+ },
+ "latencyAvgLookupListWait": {
+  "title": "Latency (ListWait)",
+  "unit": "\u00b5s"
+ },
+ "latencyAvgMultiRead": {
+  "title": "Latency (Average)",
+  "unit": "\u00b5s"
+ },
+ "latencyAvgRead": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyAvgRecUnmap": {
+  "title": "OIO",
+  "unit": "short"
+ },
+ "latencyAvgRecWrite": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyAvgResyncRead": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyAvgServiceVMRead": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyAvgServiceVMWrite": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyAvgSnapCreate": {
+  "title": "Latency (Average)",
+  "unit": "\u00b5s"
+ },
+ "latencyAvgSnapDelete": {
+  "title": "Latency (Average)",
+  "unit": "\u00b5s"
+ },
+ "latencyAvgSnapLookup": {
+  "title": "Latency (Average)",
+  "unit": "\u00b5s"
+ },
+ "latencyAvgUnmap": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyAvgWrite": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyCacheLookup": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyCumulativeUpdate": {
+  "title": "Average Updates Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyDelaySched": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyDevDAvg": {
+  "title": "Device Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyDevGAvg": {
+  "title": "Device Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyDevKAvg": {
+  "title": "Device Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyDevRead": {
+  "title": "Device Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyDevReadMax": {
+  "title": "Device Latency (MAX)",
+  "unit": "\u00b5s"
+ },
+ "latencyDevReadMin": {
+  "title": "Device Latency (MIN)",
+  "unit": "\u00b5s"
+ },
+ "latencyDevWrite": {
+  "title": "Device Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyDevWriteMax": {
+  "title": "Device Latency (MAX)",
+  "unit": "\u00b5s"
+ },
+ "latencyDevWriteMin": {
+  "title": "Device Latency (MIN)",
+  "unit": "\u00b5s"
+ },
+ "latencyGwe": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyIntervalSecs": {
+  "title": "Interval",
+  "unit": "short"
+ },
+ "latencyMaxBankBtree": {
+  "title": "Latency (Max)",
+  "unit": "\u00b5s"
+ },
+ "latencyMaxBankFlushFSW": {
+  "title": "Latency (Max)",
+  "unit": "\u00b5s"
+ },
+ "latencyMaxBankWrite": {
+  "title": "Latency (Max)",
+  "unit": "\u00b5s"
+ },
+ "latencyMaxDurableLog": {
+  "title": "Latency (Max)",
+  "unit": "\u00b5s"
+ },
+ "latencyMaxLookup": {
+  "title": "Latency (Max)",
+  "unit": "\u00b5s"
+ },
+ "latencyMaxMultiRead": {
+  "title": "Latency (Max)",
+  "unit": "\u00b5s"
+ },
+ "latencyMaxSnapCreate": {
+  "title": "Latency (Max)",
+  "unit": "\u00b5s"
+ },
+ "latencyMaxSnapDelete": {
+  "title": "Latency (Max)",
+  "unit": "\u00b5s"
+ },
+ "latencyMaxSnapLookup": {
+  "title": "Latency (Max)",
+  "unit": "\u00b5s"
+ },
+ "latencyMaxUpdate": {
+  "title": "Max Updates Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyMinUpdate": {
+  "title": "Min Updates Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyRcRdQ": {
+  "title": "LLOG Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyRcRead": {
+  "title": "LLOG Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyRcWrite": {
+  "title": "LLOG Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyRcWrtQ": {
+  "title": "LLOG Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyRead": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyReadCompMgr": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyRecoveryUnmapCompMgr": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyRecoveryWriteCompMgr": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencySched": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencySchedQueueMeta": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencySchedQueueNS": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencySchedQueueRec": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencySchedQueueVM": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyStddev": {
+  "title": "Latency Std Dev",
+  "unit": "\u00b5s"
+ },
+ "latencyStddevBankBtree": {
+  "title": "Latency (Standard deviation)",
+  "unit": "\u00b5s"
+ },
+ "latencyStddevBankFlushFSW": {
+  "title": "Latency (Standard deviation)",
+  "unit": "\u00b5s"
+ },
+ "latencyStddevBankWrite": {
+  "title": "Latency (Standard deviation)",
+  "unit": "\u00b5s"
+ },
+ "latencyStddevDurableLog": {
+  "title": "Latency (Standard deviation)",
+  "unit": "\u00b5s"
+ },
+ "latencyStddevLookup": {
+  "title": "Latency (Standard deviation)",
+  "unit": "\u00b5s"
+ },
+ "latencyStddevMultiRead": {
+  "title": "Latency (Standard deviation)",
+  "unit": "\u00b5s"
+ },
+ "latencyStddevRead": {
+  "title": "Latency Std Dev",
+  "unit": "\u00b5s"
+ },
+ "latencyStddevSnapCreate": {
+  "title": "Latency (Standard deviation)",
+  "unit": "\u00b5s"
+ },
+ "latencyStddevSnapDelete": {
+  "title": "Latency (Standard deviation)",
+  "unit": "\u00b5s"
+ },
+ "latencyStddevSnapLookup": {
+  "title": "Latency (Standard deviation)",
+  "unit": "\u00b5s"
+ },
+ "latencyStddevUnmap": {
+  "title": "Latency Std Dev",
+  "unit": "\u00b5s"
+ },
+ "latencyStddevWrite": {
+  "title": "Latency Std Dev",
+  "unit": "\u00b5s"
+ },
+ "latencyTotal": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyUnmapCompMgr": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyWbRdQ": {
+  "title": "LLOG Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyWbRead": {
+  "title": "LLOG Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyWbWrite": {
+  "title": "LLOG Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyWbWrtQ": {
+  "title": "LLOG Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyWrite": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyWriteCompMgr": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "latencyWriteLE": {
+  "title": "Device Latency",
+  "unit": "\u00b5s"
+ },
+ "leafSplits": {
+  "title": "Split",
+  "unit": "short"
+ },
+ "lessSkewedMultiBurstsPerSecond": {
+  "title": "Less  Skewed Multi Bursts Per Second",
+  "unit": "short"
+ },
+ "llogCurrentSegNo": {
+  "title": "Log Segment Number",
+  "unit": "short"
+ },
+ "llogData": {
+  "title": "Write Buffer Usage (bytes)",
+  "unit": "bytes"
+ },
+ "llogDataSpace": {
+  "title": "Write Buffer usage (percentage)",
+  "unit": "percent"
+ },
+ "llogLog": {
+  "title": "Write Buffer Usage (bytes)",
+  "unit": "bytes"
+ },
+ "llogLogSpace": {
+  "title": "Write Buffer usage (percentage)",
+  "unit": "percent"
+ },
+ "llogStartSegNo": {
+  "title": "Log Segment Number",
+  "unit": "short"
+ },
+ "localUpdatesCompleted": {
+  "title": "Updates Per Second",
+  "unit": "iops"
+ },
+ "localUpdatesReceived": {
+  "title": "Updates Per Second",
+  "unit": "iops"
+ },
+ "localUpdatesTransmitted": {
+  "title": "Updates Per Second",
+  "unit": "iops"
+ },
+ "logCongestion": {
+  "title": "Log Congestion",
+  "unit": "short"
+ },
+ "logCongestionLocalMax": {
+  "title": "Max Congestion during sampling period",
+  "unit": "short"
+ },
+ "logP": {
+  "title": "Elev throttling params",
+  "unit": "percent"
+ },
+ "logicalCapacityRequested": {
+  "title": "logicalCapacityRequested",
+  "unit": "short"
+ },
+ "logicalFullness": {
+  "title": "logicalFullness",
+  "unit": "short"
+ },
+ "logicalMapPagesDeleteCount": {
+  "title": "Logical Map pages deleted",
+  "unit": "short"
+ },
+ "logicalMapPagesReadCount": {
+  "title": "Logical Map pages read count",
+  "unit": "short"
+ },
+ "lookupLatencyAvg": {
+  "title": "Lookup Latency",
+  "unit": "ns"
+ },
+ "lookupLatencyMax": {
+  "title": "Lookup Latency (MAX)",
+  "unit": "ns"
+ },
+ "lookupRangeLatencyAvg": {
+  "title": "Lookup Latency",
+  "unit": "ns"
+ },
+ "lookupRangeLatencyMax": {
+  "title": "Lookup Latency (MAX)",
+  "unit": "ns"
+ },
+ "lruLockContentions": {
+  "title": "lruLockContentions",
+  "unit": "short"
+ },
+ "mappedBytesPerCommit": {
+  "title": "DDP Bytes per commit",
+  "unit": "bytes"
+ },
+ "masterBatchesRecved": {
+  "title": "Batch Stats",
+  "unit": "short"
+ },
+ "maxActResvSpaceUtil": {
+  "title": "maxActResvSpaceUtil",
+  "unit": "short"
+ },
+ "maxAssocCountReached": {
+  "title": "Maximum Association Count Reached",
+  "unit": "short"
+ },
+ "maxCheckpointTime": {
+  "title": "LSOM2 Transaction Time (MAX)",
+  "unit": "ns"
+ },
+ "maxComponents": {
+  "title": "maxComponents",
+  "unit": "short"
+ },
+ "maxDeleteCongestion": {
+  "title": "Congestion",
+  "unit": "short"
+ },
+ "maxDiscUsedPct": {
+  "title": "Space Usage",
+  "unit": "percent"
+ },
+ "maxLatency": {
+  "title": "Network Latency & Outbound Queueing Latency (MAX)",
+  "unit": "\u00b5s"
+ },
+ "maxOutstandingTasks": {
+  "title": "Task (MAX)",
+  "unit": "short"
+ },
+ "maxP": {
+  "title": "Elev throttling params",
+  "unit": "percent"
+ },
+ "maxProcessFreeListTime": {
+  "title": "Allocator Process Free List Latency",
+  "unit": "ns"
+ },
+ "maxRDTConnCountReached": {
+  "title": "Maximum RDT Connection Count Reached",
+  "unit": "short"
+ },
+ "maxReadLatency": {
+  "title": "LSOM2 IOLayer Maximum Read/Write Latency",
+  "unit": "ns"
+ },
+ "maxReadTime": {
+  "title": "LSOM2 Read/Write Latency (MAX)",
+  "unit": "ns"
+ },
+ "maxReserveBlockTime": {
+  "title": "Allocator Reserve Blocks Latency (MAX)",
+  "unit": "ns"
+ },
+ "maxRxBytes": {
+  "title": "Maximum Bytes Recieved",
+  "unit": "bytes"
+ },
+ "maxTaskLatencyNs": {
+  "title": "Task Latency (MAX)",
+  "unit": "ns"
+ },
+ "maxTokensAllowed": {
+  "title": "Token Rate",
+  "unit": "short"
+ },
+ "maxTxBytes": {
+  "title": "Maximum Bytes transferred",
+  "unit": "bytes"
+ },
+ "maxUnmapTime": {
+  "title": "LSOM2 Read/Write Latency (MAX)",
+  "unit": "ns"
+ },
+ "maxWriteLatency": {
+  "title": "LSOM2 IOLayer Maximum Read/Write Latency",
+  "unit": "ns"
+ },
+ "maxWriteRateCapacity": {
+  "title": "GSC cleaning rate",
+  "unit": "binBps"
+ },
+ "maxWriteTime": {
+  "title": "LSOM2 Read/Write Latency (MAX)",
+  "unit": "ns"
+ },
+ "maxXfer": {
+  "title": "PSA Split Stats",
+  "unit": "short"
+ },
+ "memCongestion": {
+  "title": "Congestion",
+  "unit": "short"
+ },
+ "memCongestionLocalMax": {
+  "title": "Max Congestion during sampling period",
+  "unit": "short"
+ },
+ "memP": {
+  "title": "Elev throttling params",
+  "unit": "percent"
+ },
+ "memtableFailedFlushes": {
+  "title": "Flush",
+  "unit": "short"
+ },
+ "memtableFlushes": {
+  "title": "Flush",
+  "unit": "short"
+ },
+ "memtableLookups": {
+  "title": "Lookup Ops",
+  "unit": "iops"
+ },
+ "memtablePendingTasks": {
+  "title": "Task",
+  "unit": "short"
+ },
+ "metadataBackpressureCongestionReadSched": {
+  "title": "Backpressure Congestion",
+  "unit": "short"
+ },
+ "metadataBackpressureCongestionWriteSched": {
+  "title": "Backpressure Congestion",
+  "unit": "short"
+ },
+ "metadataDispatchedCostRead": {
+  "title": "Normalized IO Cost",
+  "unit": "binBps"
+ },
+ "metadataDispatchedCostReadSched": {
+  "title": "Scheduler Cost Bandwidth",
+  "unit": "binBps"
+ },
+ "metadataDispatchedCostWrite": {
+  "title": "Normalized IO Cost",
+  "unit": "binBps"
+ },
+ "metadataDispatchedCostWriteSched": {
+  "title": "Scheduler Cost Bandwidth",
+  "unit": "binBps"
+ },
+ "metadataQueueDepthRead": {
+  "title": "Queue Depth (queued but not dispatched)",
+  "unit": "short"
+ },
+ "metadataQueueDepthReadSched": {
+  "title": "Scheduler Queue Depth",
+  "unit": "iops"
+ },
+ "metadataQueueDepthWrite": {
+  "title": "Queue Depth (queued but not dispatched)",
+  "unit": "short"
+ },
+ "metadataQueueDepthWriteSched": {
+  "title": "Scheduler Queue Depth",
+  "unit": "iops"
+ },
+ "metadataThroughputReadSched": {
+  "title": "Scheduler Bandwidth",
+  "unit": "binBps"
+ },
+ "metadataThroughputWriteSched": {
+  "title": "Scheduler Bandwidth",
+  "unit": "binBps"
+ },
+ "middleMapExtentsDeleteCount": {
+  "title": "MiddleMap Physical Extents Deleted",
+  "unit": "short"
+ },
+ "minCheckpointTime": {
+  "title": "LSOM2 Transaction Time (MIN)",
+  "unit": "ns"
+ },
+ "minLatency": {
+  "title": "Network Latency & Outbound Queueing Latency (MIN)",
+  "unit": "\u00b5s"
+ },
+ "minProcessFreeListTime": {
+  "title": "Allocator Process Free List Latency",
+  "unit": "ns"
+ },
+ "minReadTime": {
+  "title": "LSOM2 Read/Write Latency (MIN)",
+  "unit": "ns"
+ },
+ "minReserveBlockTime": {
+  "title": "Allocator Reserve Blocks Latency (MIN)",
+  "unit": "ns"
+ },
+ "minUnmapTime": {
+  "title": "LSOM2 Read/Write Latency (MIN)",
+  "unit": "ns"
+ },
+ "minWriteTime": {
+  "title": "LSOM2 Read/Write Latency (MIN)",
+  "unit": "ns"
+ },
+ "minimumReadIOsExceededCount": {
+  "title": "Exceed counts",
+  "unit": "short"
+ },
+ "minimumWriteIOsExceededCount": {
+  "title": "Exceed counts",
+  "unit": "short"
+ },
+ "moveQueuedBytes": {
+  "title": "moveQueuedBytes",
+  "unit": "short"
+ },
+ "moveQueuedObjects": {
+  "title": "moveQueuedObjects",
+  "unit": "short"
+ },
+ "multiElevAvgIdleTime": {
+  "title": "Multi Elevator IO Scheduling",
+  "unit": "ns"
+ },
+ "multiElevAvgPreReadTime": {
+  "title": "Multi Elevator IO Scheduling",
+  "unit": "ns"
+ },
+ "multiElevCompressPct": {
+  "title": "Multi Elevator Compression Percentage",
+  "unit": "percent"
+ },
+ "multiElevCompressionTime": {
+  "title": "Multi Elevator Compression Time",
+  "unit": "ns"
+ },
+ "multiElevDataWriteTime": {
+  "title": "Multi Elevator Run Time",
+  "unit": "ns"
+ },
+ "multiElevNumBitmapRd": {
+  "title": "Multi Elevator Metadata IO",
+  "unit": "bytes"
+ },
+ "multiElevNumBitmapWrt": {
+  "title": "Multi Elevator Metadata IO",
+  "unit": "bytes"
+ },
+ "multiElevNumCompressedBlocks": {
+  "title": "Multi Elevator Compression Blocks",
+  "unit": "short"
+ },
+ "multiElevNumDdpMetadataReads": {
+  "title": "Multi Elevator IO Distribution",
+  "unit": "short"
+ },
+ "multiElevNumDdpMetadataWrites": {
+  "title": "Multi Elevator IO Distribution",
+  "unit": "short"
+ },
+ "multiElevNumGuestReads": {
+  "title": "Multi Elevator IO Distribution",
+  "unit": "short"
+ },
+ "multiElevNumHashmapRd": {
+  "title": "Multi Elevator Metadata IO",
+  "unit": "bytes"
+ },
+ "multiElevNumHashmapWrt": {
+  "title": "Multi Elevator Metadata IO",
+  "unit": "bytes"
+ },
+ "multiElevNumUncompressedBlocks": {
+  "title": "Multi Elevator Compression Blocks",
+  "unit": "short"
+ },
+ "multiElevNumXMapRd": {
+  "title": "Multi Elevator Metadata IO",
+  "unit": "bytes"
+ },
+ "multiElevNumXMapWrt": {
+  "title": "Multi Elevator Metadata IO",
+  "unit": "bytes"
+ },
+ "multiElevPendingTxnReplayYields": {
+  "title": "Multi Elevator Txn Replay Optimization",
+  "unit": "short"
+ },
+ "multiElevTxnBuildTime": {
+  "title": "Multi Elevator Run Time",
+  "unit": "ns"
+ },
+ "multiElevTxnReplayBitmapTime": {
+  "title": "Multi Elevator Run Time",
+  "unit": "ns"
+ },
+ "multiElevTxnReplayHashmapTime": {
+  "title": "Multi Elevator Run Time",
+  "unit": "ns"
+ },
+ "multiElevTxnReplayReadIOHits": {
+  "title": "Multi Elevator Txn Replay Optimization",
+  "unit": "short"
+ },
+ "multiElevTxnReplayTime": {
+  "title": "Multi Elevator Run Time",
+  "unit": "ns"
+ },
+ "multiElevTxnReplayXmapTime": {
+  "title": "Multi Elevator Run Time",
+  "unit": "ns"
+ },
+ "multiElevTxnWriteTime": {
+  "title": "Multi Elevator Run Time",
+  "unit": "ns"
+ },
+ "multicastBytesReceived": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "multicastBytesSent": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "multicastMessagesReceived": {
+  "title": "Messages/sec",
+  "unit": "iops"
+ },
+ "multicastMessagesSent": {
+  "title": "Messages/sec",
+  "unit": "iops"
+ },
+ "namespaceBackpressureCongestionReadSched": {
+  "title": "Backpressure Congestion",
+  "unit": "short"
+ },
+ "namespaceBackpressureCongestionWriteSched": {
+  "title": "Backpressure Congestion",
+  "unit": "short"
+ },
+ "namespaceDispatchedCostRead": {
+  "title": "Normalized IO Cost",
+  "unit": "binBps"
+ },
+ "namespaceDispatchedCostReadSched": {
+  "title": "Scheduler Cost Bandwidth",
+  "unit": "binBps"
+ },
+ "namespaceDispatchedCostWrite": {
+  "title": "Normalized IO Cost",
+  "unit": "binBps"
+ },
+ "namespaceDispatchedCostWriteSched": {
+  "title": "Scheduler Cost Bandwidth",
+  "unit": "binBps"
+ },
+ "namespaceQueueDepthRead": {
+  "title": "Queue Depth (queued but not dispatched)",
+  "unit": "short"
+ },
+ "namespaceQueueDepthReadSched": {
+  "title": "Scheduler Queue Depth",
+  "unit": "iops"
+ },
+ "namespaceQueueDepthWrite": {
+  "title": "Queue Depth (queued but not dispatched)",
+  "unit": "short"
+ },
+ "namespaceQueueDepthWriteSched": {
+  "title": "Scheduler Queue Depth",
+  "unit": "iops"
+ },
+ "namespaceThroughputReadSched": {
+  "title": "Scheduler Bandwidth",
+  "unit": "binBps"
+ },
+ "namespaceThroughputWriteSched": {
+  "title": "Scheduler Bandwidth",
+  "unit": "binBps"
+ },
+ "negLookups": {
+  "title": "Lookup Ops",
+  "unit": "iops"
+ },
+ "netSchedAvgCompRecoveryWriteDelayMs": {
+  "title": "Average Applied Delay per Op",
+  "unit": "ms"
+ },
+ "netSchedAvgCompResyncReadDelayMs": {
+  "title": "Average Applied Delay per Op",
+  "unit": "ms"
+ },
+ "netSchedAvgOwnerRecoveryWriteDelayMs": {
+  "title": "Average Applied Delay per Op",
+  "unit": "ms"
+ },
+ "netSchedAvgOwnerResyncReadDelayMs": {
+  "title": "Average Applied Delay per Op",
+  "unit": "ms"
+ },
+ "netSchedBWDiscoveredPerDiscoverySession": {
+  "title": "Allocated Bandwidth Per Session (MB/s)",
+  "unit": "binBps"
+ },
+ "netSchedBWDiscoveryActions": {
+  "title": "Bandwidth Discovery/Reallocation Session Stats",
+  "unit": "short"
+ },
+ "netSchedBWDiscoveryAvgIntervalsUs": {
+  "title": "Bandwidth Discovery/Reallocation Intervals",
+  "unit": "\u00b5s"
+ },
+ "netSchedBWDiscoverySessions": {
+  "title": "Bandwidth Discovery/Reallocation Session Stats",
+  "unit": "short"
+ },
+ "netSchedBWDiscoveryStopsDueToGainsFromGuestPct": {
+  "title": "Bandwidth Discovery/Reallocation Stopping Conditions",
+  "unit": "percent"
+ },
+ "netSchedBWDiscoveryStopsDueToHighLatencyPct": {
+  "title": "Bandwidth Discovery/Reallocation Stopping Conditions",
+  "unit": "percent"
+ },
+ "netSchedBWDiscoveryStopsDueToLowUtilizationPct": {
+  "title": "Bandwidth Discovery/Reallocation Stopping Conditions",
+  "unit": "percent"
+ },
+ "netSchedBWDiscoveryUtilizationPct": {
+  "title": "Average Bandwidth Utilization",
+  "unit": "percent"
+ },
+ "netSchedBWReallocatedPerReallocationSession": {
+  "title": "Allocated Bandwidth Per Session (MB/s)",
+  "unit": "binBps"
+ },
+ "netSchedBWReallocationActions": {
+  "title": "Bandwidth Discovery/Reallocation Session Stats",
+  "unit": "short"
+ },
+ "netSchedBWReallocationAvgIntervalsUs": {
+  "title": "Bandwidth Discovery/Reallocation Intervals",
+  "unit": "\u00b5s"
+ },
+ "netSchedBWReallocationSessions": {
+  "title": "Bandwidth Discovery/Reallocation Session Stats",
+  "unit": "short"
+ },
+ "netSchedBWReallocationStopsDueToHighSharePct": {
+  "title": "Bandwidth Discovery/Reallocation Stopping Conditions",
+  "unit": "percent"
+ },
+ "netSchedBWReallocationStopsDueToLowUtilizationPct": {
+  "title": "Bandwidth Discovery/Reallocation Stopping Conditions",
+  "unit": "percent"
+ },
+ "netSchedBWReallocationUtilizationRatio": {
+  "title": "Average Bandwidth Utilization",
+  "unit": "percent"
+ },
+ "netSchedGuestIopsDecreasePerDiscoverySession": {
+  "title": "Guest/Resync Iops Session Stats",
+  "unit": "iops"
+ },
+ "netSchedGuestIopsIncreasePerReallocationSession": {
+  "title": "Guest/Resync Iops Session Stats",
+  "unit": "iops"
+ },
+ "netSchedLatencyIncreaseFromResyncPerDiscoverySessionPct": {
+  "title": "Latency increase percent per Discovery Session",
+  "unit": "percent"
+ },
+ "netSchedResyncIopsDecreasePerReallocationSession": {
+  "title": "Guest/Resync Iops Session Stats",
+  "unit": "iops"
+ },
+ "netSchedResyncIopsIncreasePerDiscoverySession": {
+  "title": "Guest/Resync Iops Session Stats",
+  "unit": "iops"
+ },
+ "nodeCompCntRatio": {
+  "title": "nodeCompCntRatio",
+  "unit": "short"
+ },
+ "nodeDataCompCntRatio": {
+  "title": "nodeDataCompCntRatio",
+  "unit": "short"
+ },
+ "numBitmapRd": {
+  "title": "Dedup Metadata IO",
+  "unit": "bytes"
+ },
+ "numBitmapWrt": {
+  "title": "Dedup Metadata IO",
+  "unit": "bytes"
+ },
+ "numBurstStatsSkipped": {
+  "title": "Skipped Bursts",
+  "unit": "short"
+ },
+ "numCFAct": {
+  "title": "Commit flusher run breakdown",
+  "unit": "short"
+ },
+ "numCheckpointTriggers": {
+  "title": "LSOM2 Transaction",
+  "unit": "short"
+ },
+ "numCheckpoints": {
+  "title": "LSOM2 Transaction",
+  "unit": "short"
+ },
+ "numCksumFlsh": {
+  "title": "Commit flusher run breakdown",
+  "unit": "short"
+ },
+ "numCompleteDeltaToBaseResyncOps": {
+  "title": "Number of Completed Resyncs",
+  "unit": "short"
+ },
+ "numCompleteFullResyncOps": {
+  "title": "Number of Completed Resyncs",
+  "unit": "short"
+ },
+ "numCompleteResyncOps": {
+  "title": "Parallel Resync",
+  "unit": "short"
+ },
+ "numCompleteResyncRwrBatches": {
+  "title": "Parallel Resync",
+  "unit": "short"
+ },
+ "numCompleteRwrOps": {
+  "title": "Parallel Resync",
+  "unit": "short"
+ },
+ "numCompleteSiblingToDeltaResyncOps": {
+  "title": "Number of Completed Resyncs",
+  "unit": "short"
+ },
+ "numComponents": {
+  "title": "numComponents",
+  "unit": "short"
+ },
+ "numCompressedHashBlocks": {
+  "title": "Compressed Blocks in Dedup",
+  "unit": "short"
+ },
+ "numDataSegsRead": {
+  "title": "Segment Cleaning Ops breakdown",
+  "unit": "short"
+ },
+ "numDataSegsWrite": {
+  "title": "Segment Cleaning Ops breakdown",
+  "unit": "short"
+ },
+ "numDdpMetadataReads": {
+  "title": "Dedup IO Distribution",
+  "unit": "short"
+ },
+ "numDdpMetadataWrites": {
+  "title": "Dedup IO Distribution",
+  "unit": "short"
+ },
+ "numDelCompleted": {
+  "title": "PLOG Data Elev OPs & Activations",
+  "unit": "short"
+ },
+ "numDelTasks": {
+  "title": "PLOG Data Elev OPs & Activations",
+  "unit": "short"
+ },
+ "numDelYields": {
+  "title": "PLOG Data Elev OPs & Activations",
+  "unit": "short"
+ },
+ "numFree": {
+  "title": "Segment Cleaning Ops Number Free",
+  "unit": "short"
+ },
+ "numGuestReads": {
+  "title": "Dedup IO Distribution",
+  "unit": "short"
+ },
+ "numHashmapRd": {
+  "title": "Dedup Metadata IO",
+  "unit": "bytes"
+ },
+ "numHashmapWrt": {
+  "title": "Dedup Metadata IO",
+  "unit": "bytes"
+ },
+ "numInflightPriorityResyncJobs": {
+  "title": "Number of various resync Jobs",
+  "unit": "short"
+ },
+ "numInflightSharedResyncJobs": {
+  "title": "Number of various resync Jobs",
+  "unit": "short"
+ },
+ "numLLPSegsRead": {
+  "title": "Segment Cleaning Ops breakdown",
+  "unit": "short"
+ },
+ "numLLPSegsWrite": {
+  "title": "Segment Cleaning Ops breakdown",
+  "unit": "short"
+ },
+ "numLbaEntriesInCurZeroBkt": {
+  "title": "PLOG Zero Elev OPs & Activations",
+  "unit": "short"
+ },
+ "numNetSchedCompIops": {
+  "title": "DOM Network Throttled Iops",
+  "unit": "iops"
+ },
+ "numNetSchedCompIopsLimit": {
+  "title": "DOM Network Applied Iops Limit",
+  "unit": "iops"
+ },
+ "numNetSchedCompRecoveryWriteIops": {
+  "title": "DOM Network Throttled Iops",
+  "unit": "iops"
+ },
+ "numNetSchedCompRecoveryWriteIopsLimit": {
+  "title": "DOM Network Applied Iops Limit",
+  "unit": "iops"
+ },
+ "numNetSchedCompRecoveryWriteTpThrottled": {
+  "title": "DOM Network Throttled Throughput",
+  "unit": "binBps"
+ },
+ "numNetSchedCompResyncReadIops": {
+  "title": "DOM Network Throttled Iops",
+  "unit": "iops"
+ },
+ "numNetSchedCompResyncReadIopsLimit": {
+  "title": "DOM Network Applied Iops Limit",
+  "unit": "iops"
+ },
+ "numNetSchedCompResyncReadTpThrottled": {
+  "title": "DOM Network Throttled Throughput",
+  "unit": "binBps"
+ },
+ "numNetSchedCompTpThrottled": {
+  "title": "DOM Network Throttled Throughput",
+  "unit": "binBps"
+ },
+ "numNetSchedControllerActivations": {
+  "title": "Controller Activations",
+  "unit": "short"
+ },
+ "numNetSchedControllerIopsLimit": {
+  "title": "Average Controller Iops Limit per Activation",
+  "unit": "short"
+ },
+ "numNetSchedHighBand": {
+  "title": "Number of Bands Controller when Throttling IOs",
+  "unit": "short"
+ },
+ "numNetSchedHighBandHighShare": {
+  "title": "Number of Bands Controller when Throttling IOs",
+  "unit": "short"
+ },
+ "numNetSchedHighBandLowLimit": {
+  "title": "Number of Bands Controller when Throttling IOs",
+  "unit": "short"
+ },
+ "numNetSchedHighBandSec": {
+  "title": "Time in Bands",
+  "unit": "s"
+ },
+ "numNetSchedLowBandHighLimit": {
+  "title": "Number of Bands Controller when Throttling IOs",
+  "unit": "short"
+ },
+ "numNetSchedLowBandSec": {
+  "title": "Time in Bands",
+  "unit": "s"
+ },
+ "numNetSchedLowdBand": {
+  "title": "Number of Bands Controller when Throttling IOs",
+  "unit": "short"
+ },
+ "numNetSchedMidBand": {
+  "title": "Number of Bands Controller when Throttling IOs",
+  "unit": "short"
+ },
+ "numNetSchedMidBandHighLimit": {
+  "title": "Number of Bands Controller when Throttling IOs",
+  "unit": "short"
+ },
+ "numNetSchedMidBandLowShare": {
+  "title": "Number of Bands Controller when Throttling IOs",
+  "unit": "short"
+ },
+ "numNetSchedMidBandSec": {
+  "title": "Time in Bands",
+  "unit": "s"
+ },
+ "numNetSchedOwnerIops": {
+  "title": "DOM Network Throttled Iops",
+  "unit": "iops"
+ },
+ "numNetSchedOwnerIopsLimit": {
+  "title": "DOM Network Applied Iops Limit",
+  "unit": "iops"
+ },
+ "numNetSchedOwnerRecoveryWriteIops": {
+  "title": "DOM Network Throttled Iops",
+  "unit": "iops"
+ },
+ "numNetSchedOwnerRecoveryWriteIopsLimit": {
+  "title": "DOM Network Applied Iops Limit",
+  "unit": "iops"
+ },
+ "numNetSchedOwnerRecoveryWriteTpThrottled": {
+  "title": "DOM Network Throttled Throughput",
+  "unit": "binBps"
+ },
+ "numNetSchedOwnerResyncReadIops": {
+  "title": "DOM Network Throttled Iops",
+  "unit": "iops"
+ },
+ "numNetSchedOwnerResyncReadIopsLimit": {
+  "title": "DOM Network Applied Iops Limit",
+  "unit": "iops"
+ },
+ "numNetSchedOwnerResyncReadTpThrottled": {
+  "title": "DOM Network Throttled Throughput",
+  "unit": "binBps"
+ },
+ "numNetSchedOwnerTpThrottled": {
+  "title": "DOM Network Throttled Throughput",
+  "unit": "binBps"
+ },
+ "numNetSchedResyncTotalSharePercent": {
+  "title": "Average Resync Share per Activation",
+  "unit": "percent"
+ },
+ "numNetSchedRollingAvgLatUs": {
+  "title": "DOM Network Latency",
+  "unit": "\u00b5s"
+ },
+ "numNetSchedSeenNonResyncTpBps": {
+  "title": "Scheduler Seen Throughtput per Activation",
+  "unit": "binBps"
+ },
+ "numNetSchedSeenResyncTpBps": {
+  "title": "Scheduler Seen Throughtput per Activation",
+  "unit": "binBps"
+ },
+ "numNetSchedSeenTotalTpBps": {
+  "title": "Scheduler Seen Throughtput per Activation",
+  "unit": "binBps"
+ },
+ "numNonZeroLbaEntriesSkipped": {
+  "title": "PLOG Zero Elev OPs & Activations",
+  "unit": "short"
+ },
+ "numOio": {
+  "title": "numOio",
+  "unit": "short"
+ },
+ "numOioRead": {
+  "title": "OIO number",
+  "unit": "short"
+ },
+ "numOioWrite": {
+  "title": "OIO number",
+  "unit": "short"
+ },
+ "numOpsAbortedRate": {
+  "title": "Ops Rate",
+  "unit": "iops"
+ },
+ "numPasses": {
+  "title": "Segment Cleaning Ops",
+  "unit": "short"
+ },
+ "numPendingDecomResyncJobs": {
+  "title": "Number of various resync Jobs",
+  "unit": "short"
+ },
+ "numPendingDeltaToBaseResyncJobs": {
+  "title": "Resync Scheduler Slots",
+  "unit": "short"
+ },
+ "numPendingFullResyncJobs": {
+  "title": "Resync Scheduler Slots",
+  "unit": "short"
+ },
+ "numPendingResyncJobs": {
+  "title": "Number of various resync Jobs",
+  "unit": "short"
+ },
+ "numPendingSiblingToDeltaResyncJobs": {
+  "title": "Resync Scheduler Slots",
+  "unit": "short"
+ },
+ "numPlogIOs": {
+  "title": "Commit flusher run breakdown",
+  "unit": "short"
+ },
+ "numRunningDeltaToBaseResyncJobs": {
+  "title": "Resync Scheduler Slots",
+  "unit": "short"
+ },
+ "numRunningFullResyncJobs": {
+  "title": "Resync Scheduler Slots",
+  "unit": "short"
+ },
+ "numRunningResyncJobs": {
+  "title": "Number of various resync Jobs",
+  "unit": "short"
+ },
+ "numRunningSiblingToDeltaResyncJobs": {
+  "title": "Resync Scheduler Slots",
+  "unit": "short"
+ },
+ "numSegsFreed": {
+  "title": "Segment Cleaning Ops",
+  "unit": "short"
+ },
+ "numSegsNotUnmappable": {
+  "title": "Segment Cleaning Ops",
+  "unit": "short"
+ },
+ "numSegsOverwrite": {
+  "title": "Segment Cleaning Ops",
+  "unit": "short"
+ },
+ "numSegsRead": {
+  "title": "Segment Cleaning Ops",
+  "unit": "short"
+ },
+ "numSegsUnmapped": {
+  "title": "Segment Cleaning Ops",
+  "unit": "short"
+ },
+ "numSegsWrite": {
+  "title": "Segment Cleaning Ops",
+  "unit": "short"
+ },
+ "numSuspendedDeltaToBaseResyncJobs": {
+  "title": "Resync Scheduler Slots",
+  "unit": "short"
+ },
+ "numSuspendedFullResyncJobs": {
+  "title": "Resync Scheduler Slots",
+  "unit": "short"
+ },
+ "numSuspendedPriorityResyncJobs": {
+  "title": "Number of various resync Jobs",
+  "unit": "short"
+ },
+ "numSuspendedResyncChangemaps": {
+  "title": "Number of various resync Jobs",
+  "unit": "short"
+ },
+ "numSuspendedResyncJobs": {
+  "title": "Number of various resync Jobs",
+  "unit": "short"
+ },
+ "numSuspendedSharedResyncJobs": {
+  "title": "Number of various resync Jobs",
+  "unit": "short"
+ },
+ "numSuspendedSiblingToDeltaResyncJobs": {
+  "title": "Resync Scheduler Slots",
+  "unit": "short"
+ },
+ "numThrottledOpsRate": {
+  "title": "Ops Rate",
+  "unit": "iops"
+ },
+ "numVrstBar": {
+  "title": "Commit flusher run breakdown",
+  "unit": "short"
+ },
+ "numXMapRd": {
+  "title": "Dedup Metadata IO",
+  "unit": "bytes"
+ },
+ "numXMapWrt": {
+  "title": "Dedup Metadata IO",
+  "unit": "bytes"
+ },
+ "numZdomObjects": {
+  "title": "ZDOM Overview",
+  "unit": "short"
+ },
+ "oio": {
+  "title": "oio",
+  "unit": "short"
+ },
+ "oioRead": {
+  "title": "OIO",
+  "unit": "short"
+ },
+ "oioReadCompMgr": {
+  "title": "OIO",
+  "unit": "short"
+ },
+ "oioRecoveryWriteCompMgr": {
+  "title": "OIO",
+  "unit": "short"
+ },
+ "oioUnmapCompMgr": {
+  "title": "OIO",
+  "unit": "short"
+ },
+ "oioWrite": {
+  "title": "OIO",
+  "unit": "short"
+ },
+ "oioWriteCompMgr": {
+  "title": "OIO",
+  "unit": "short"
+ },
+ "oobLogCongestionIOPS": {
+  "title": "oobLogCongestionIOPS",
+  "unit": "iops"
+ },
+ "osfsdConsumedSize": {
+  "title": "User World Consumed Breakdown",
+  "unit": "bytes"
+ },
+ "osfsdReservedSize": {
+  "title": "User World Reserved Breakdown",
+  "unit": "bytes"
+ },
+ "outboundTraffic": {
+  "title": "outboundTraffic",
+  "unit": "short"
+ },
+ "outstandingBytesSched": {
+  "title": "Bytes",
+  "unit": "bytes"
+ },
+ "overWriteFactorMovingAvg": {
+  "title": "overWriteFactorData",
+  "unit": "short"
+ },
+ "overcommitRatio": {
+  "title": "Tput",
+  "unit": "percentunit"
+ },
+ "overwritesIops": {
+  "title": "Over write Throughput",
+  "unit": "binBps"
+ },
+ "owner2PCCommitLatencyAvgUs": {
+  "title": "2PC Commit Latency",
+  "unit": "\u00b5s"
+ },
+ "ownerECCacheHitMissRatio": {
+  "title": "RAID-EC Cache Hit-Miss Ratio Percent",
+  "unit": "percent"
+ },
+ "ownerECCacheNumCachedObjects": {
+  "title": "RAID-EC Cache",
+  "unit": "short"
+ },
+ "ownerECCacheNumFailedAllocs": {
+  "title": "RAID-EC Cache",
+  "unit": "short"
+ },
+ "ownerECCacheNumSuccessAllocs": {
+  "title": "RAID-EC Cache",
+  "unit": "short"
+ },
+ "pae": {
+  "title": "PSA Split Stats",
+  "unit": "short"
+ },
+ "pauseCount": {
+  "title": "Flow Control (per-mille)",
+  "unit": "short"
+ },
+ "pbasAddedToFreeListTput": {
+  "title": "Allocator FreeLists Processed Throughput",
+  "unit": "iops"
+ },
+ "pcpuUsedPct": {
+  "title": "PCPU Used Percentage",
+  "unit": "percent"
+ },
+ "pcpuUtilPct": {
+  "title": "PCPU Util Percentage",
+  "unit": "percent"
+ },
+ "pctMemUsed": {
+  "title": "Percentage Memory Used",
+  "unit": "percent"
+ },
+ "pendingDelete": {
+  "title": "pendingDelete",
+  "unit": "short"
+ },
+ "pendingTxnReplayYields": {
+  "title": "Dedup Txn Replay Optimization",
+  "unit": "short"
+ },
+ "pendingWrites": {
+  "title": "pendingWrites",
+  "unit": "short"
+ },
+ "pfcCount": {
+  "title": "Flow Control (per-mille)",
+  "unit": "short"
+ },
+ "phyCapCF": {
+  "title": "DiskGroup Capacity Usage",
+  "unit": "percent"
+ },
+ "phyCapRsrvd": {
+  "title": "DiskGroup Capacity Usage",
+  "unit": "percent"
+ },
+ "phyCapRsrvdUsed": {
+  "title": "DiskGroup Capacity Usage",
+  "unit": "percent"
+ },
+ "phyCapT2": {
+  "title": "DiskGroup Capacity Usage",
+  "unit": "percent"
+ },
+ "phyCapUsed": {
+  "title": "DiskGroup Capacity Usage",
+  "unit": "percent"
+ },
+ "physDiskCapacityReserved": {
+  "title": "physDiskCapacityReserved",
+  "unit": "short"
+ },
+ "physDiskFullnessPctCapacity": {
+  "title": "GSC disk fullness",
+  "unit": "percent"
+ },
+ "physFreeCapacity": {
+  "title": "physFreeCapacity",
+  "unit": "short"
+ },
+ "physFullness": {
+  "title": "physFullness",
+  "unit": "short"
+ },
+ "placementGroup": {
+  "title": "placementGroup",
+  "unit": "short"
+ },
+ "plannedDeltaComponents": {
+  "title": "plannedDeltaComponents",
+  "unit": "short"
+ },
+ "plogCommitLogCbTime": {
+  "title": "PLOG Data Elevator Commit Related Timing",
+  "unit": "ns"
+ },
+ "plogCommitSMActs": {
+  "title": "PLOG Data Elev OPs & Activations",
+  "unit": "short"
+ },
+ "plogCumlEncRdLat": {
+  "title": "PLOG Cumulative Enc Latency",
+  "unit": "\u00b5s"
+ },
+ "plogCumlEncWrLat": {
+  "title": "PLOG Cumulative Enc Latency",
+  "unit": "\u00b5s"
+ },
+ "plogCurrentSegNo": {
+  "title": "Log Segment Number",
+  "unit": "short"
+ },
+ "plogDGDataUsage": {
+  "title": "PLOG Data Usage",
+  "unit": "bytes"
+ },
+ "plogDGZeroUsage": {
+  "title": "PLOG Zero Usage",
+  "unit": "bytes"
+ },
+ "plogData": {
+  "title": "Write Buffer Usage (bytes)",
+  "unit": "bytes"
+ },
+ "plogDataSpace": {
+  "title": "Write Buffer usage (percentage)",
+  "unit": "percent"
+ },
+ "plogElevCycles": {
+  "title": "PLOG Data Elev OPs & Activations",
+  "unit": "short"
+ },
+ "plogElevDoNotRun": {
+  "title": "PLOG Data Elev OPs & Activations",
+  "unit": "short"
+ },
+ "plogHelpRdQDepth": {
+  "title": "PLOG Average Queue Depth",
+  "unit": "short"
+ },
+ "plogHelpRdQLat": {
+  "title": "PLOG Latency",
+  "unit": "\u00b5s"
+ },
+ "plogHelpWrQDepth": {
+  "title": "PLOG Average Queue Depth",
+  "unit": "short"
+ },
+ "plogHelpWrQLat": {
+  "title": "PLOG Latency",
+  "unit": "\u00b5s"
+ },
+ "plogIOTime": {
+  "title": "Time in commit flusher",
+  "unit": "ms"
+ },
+ "plogInvalidated": {
+  "title": "Counters from the PLOG callback path to RC (Hybrid only)",
+  "unit": "short"
+ },
+ "plogInvalidationBitNotSet": {
+  "title": "Counters from the PLOG callback path to RC (Hybrid only)",
+  "unit": "short"
+ },
+ "plogLog": {
+  "title": "Write Buffer Usage (bytes)",
+  "unit": "bytes"
+ },
+ "plogLogSpace": {
+  "title": "Write Buffer usage (percentage)",
+  "unit": "percent"
+ },
+ "plogMDDataUsage": {
+  "title": "PLOG Data Usage",
+  "unit": "bytes"
+ },
+ "plogMDZeroUsage": {
+  "title": "PLOG Zero Usage",
+  "unit": "bytes"
+ },
+ "plogNumCommitLogs": {
+  "title": "PLOG Logs",
+  "unit": "short"
+ },
+ "plogNumElevMDWriteOPS": {
+  "title": "PLOG Data Elev OPs & Activations",
+  "unit": "short"
+ },
+ "plogNumElevMDWrites": {
+  "title": "PLOG Data Elev OPs & Activations",
+  "unit": "short"
+ },
+ "plogNumElevSSDReadOPS": {
+  "title": "PLOG Data Elev OPs & Activations",
+  "unit": "short"
+ },
+ "plogNumElevSSDReads": {
+  "title": "PLOG Data Elev OPs & Activations",
+  "unit": "short"
+ },
+ "plogNumFreedCommitLogs": {
+  "title": "PLOG Logs",
+  "unit": "short"
+ },
+ "plogNumFreedLogs": {
+  "title": "PLOG Logs",
+  "unit": "short"
+ },
+ "plogNumFreedZeroElevCommitLogs": {
+  "title": "PLOG Zero Elevator Commit Related Logs",
+  "unit": "short"
+ },
+ "plogNumFreedZeroElevPrepLogs": {
+  "title": "PLOG Zero Elevator Commit Related Logs",
+  "unit": "short"
+ },
+ "plogNumLbaEntriesInCurBkt": {
+  "title": "PLOG Data Elev OPs & Activations",
+  "unit": "short"
+ },
+ "plogNumLbaEntriesSkipped": {
+  "title": "PLOG Data Elev OPs & Activations",
+  "unit": "short"
+ },
+ "plogNumMDReadOPS": {
+  "title": "PLOG ReadOPS",
+  "unit": "iops"
+ },
+ "plogNumMDReads": {
+  "title": "PLOG ReadOPS",
+  "unit": "iops"
+ },
+ "plogNumOverlapRetired": {
+  "title": "PLOG Data Elevator Commit Related Logs",
+  "unit": "short"
+ },
+ "plogNumOverlapSkipped": {
+  "title": "PLOG Data Elevator Commit Related Logs",
+  "unit": "short"
+ },
+ "plogNumRCReadOPS": {
+  "title": "PLOG ReadOPS",
+  "unit": "iops"
+ },
+ "plogNumRCReads": {
+  "title": "PLOG ReadOPS",
+  "unit": "iops"
+ },
+ "plogNumSSDReadOPS": {
+  "title": "PLOG ReadOPS",
+  "unit": "iops"
+ },
+ "plogNumSSDReads": {
+  "title": "PLOG ReadOPS",
+  "unit": "iops"
+ },
+ "plogNumTotalReadOPS": {
+  "title": "PLOG ReadOPS",
+  "unit": "iops"
+ },
+ "plogNumTotalReads": {
+  "title": "PLOG ReadOPS",
+  "unit": "iops"
+ },
+ "plogNumVMFSReadOPS": {
+  "title": "PLOG ReadOPS",
+  "unit": "iops"
+ },
+ "plogNumVMFSReads": {
+  "title": "PLOG ReadOPS",
+  "unit": "iops"
+ },
+ "plogNumWriteLogs": {
+  "title": "PLOG Logs",
+  "unit": "short"
+ },
+ "plogNumZeroElevCommitLogs": {
+  "title": "PLOG Zero Elevator Commit Related Logs",
+  "unit": "short"
+ },
+ "plogNumZeroElevPrepLogs": {
+  "title": "PLOG Zero Elevator Commit Related Logs",
+  "unit": "short"
+ },
+ "plogPatched": {
+  "title": "Counters from the PLOG callback path to RC (Hybrid only)",
+  "unit": "short"
+ },
+ "plogPrepSMActs": {
+  "title": "PLOG Data Elev OPs & Activations",
+  "unit": "short"
+ },
+ "plogRclNotFound": {
+  "title": "Counters from the PLOG callback path to RC (Hybrid only)",
+  "unit": "short"
+ },
+ "plogReadQLatency": {
+  "title": "PLOG Latency",
+  "unit": "\u00b5s"
+ },
+ "plogSsdBytesDrained": {
+  "title": "Elevator Throughput",
+  "unit": "binBps"
+ },
+ "plogSsdTputDrained": {
+  "title": "Elevator Throughput",
+  "unit": "binBps"
+ },
+ "plogStartSegNo": {
+  "title": "Log Segment Number",
+  "unit": "short"
+ },
+ "plogTotalBytesDrained": {
+  "title": "Elevator Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalBytesRead": {
+  "title": "PLOG Read Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalBytesReadByRC": {
+  "title": "PLOG Read Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalBytesReadByVMFS": {
+  "title": "PLOG Read Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalBytesReadFromMD": {
+  "title": "PLOG Read Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalBytesReadFromSSD": {
+  "title": "PLOG Read Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalCFBytes": {
+  "title": "PLOG Write Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalCFTput": {
+  "title": "PLOG Write Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalCFUnmapBytes": {
+  "title": "PLOG Write Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalCFUnmapTput": {
+  "title": "PLOG Write Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalCSBytes": {
+  "title": "PLOG Write Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalCSTput": {
+  "title": "PLOG Write Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalDelBytes": {
+  "title": "PLOG Write Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalDelTput": {
+  "title": "PLOG Write Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalFSBytes": {
+  "title": "PLOG Write Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalFSTput": {
+  "title": "PLOG Write Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalFSUnmapBytes": {
+  "title": "PLOG Write Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalFSUnmapTput": {
+  "title": "PLOG Write Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalTputDrained": {
+  "title": "Elevator Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalTputRead": {
+  "title": "PLOG Read Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalTputReadByRC": {
+  "title": "PLOG Read Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalTputReadByVMFS": {
+  "title": "PLOG Read Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalTputReadFromMD": {
+  "title": "PLOG Read Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalTputReadFromSSD": {
+  "title": "PLOG Read Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalZeroBytes": {
+  "title": "PLOG Write Throughput",
+  "unit": "binBps"
+ },
+ "plogTotalZeroTput": {
+  "title": "PLOG Write Throughput",
+  "unit": "binBps"
+ },
+ "plogWindowCommitEnd": {
+  "title": "PLOG Data Elev OPs & Activations",
+  "unit": "short"
+ },
+ "plogWindowCommitStart": {
+  "title": "PLOG Data Elev OPs & Activations",
+  "unit": "short"
+ },
+ "plogWindowCommitTime": {
+  "title": "PLOG Data Elevator Commit Related Timing",
+  "unit": "ns"
+ },
+ "plogWriteQLatency": {
+  "title": "PLOG Latency",
+  "unit": "\u00b5s"
+ },
+ "plogZeroBytesDrained": {
+  "title": "Elevator Throughput",
+  "unit": "binBps"
+ },
+ "plogZeroElevCommitLogCbTime": {
+  "title": "PLOG Zero Elevator Commit Related Timing",
+  "unit": "ns"
+ },
+ "plogZeroElevCycles": {
+  "title": "PLOG Zero Elev OPs & Activations",
+  "unit": "short"
+ },
+ "plogZeroElevWindowCommitTime": {
+  "title": "PLOG Zero Elevator Commit Related Timing",
+  "unit": "ns"
+ },
+ "plogZeroTputDrained": {
+  "title": "Elevator Throughput",
+  "unit": "binBps"
+ },
+ "plogtotalRdLat": {
+  "title": "PLOG Latency",
+  "unit": "\u00b5s"
+ },
+ "plogtotalWrLat": {
+  "title": "PLOG Latency",
+  "unit": "\u00b5s"
+ },
+ "portRxDrops": {
+  "title": "vSwitch Port Drops (per-mille)",
+  "unit": "short"
+ },
+ "portTxDrops": {
+  "title": "vSwitch Port Drops (per-mille)",
+  "unit": "short"
+ },
+ "posLookups": {
+  "title": "Lookup Ops",
+  "unit": "iops"
+ },
+ "prefetchCacheMaxGetLatUs": {
+  "title": "Prefetch Cache Max Get Lat",
+  "unit": "\u00b5s"
+ },
+ "preminiAllocatedMemtablePages": {
+  "title": "Premini Page Usage",
+  "unit": "short"
+ },
+ "preminiAllocatedTrunkPages": {
+  "title": "Premini Page Usage",
+  "unit": "short"
+ },
+ "prepTblCnt": {
+  "title": "Write Buffer Entry Count",
+  "unit": "short"
+ },
+ "pri3ReceivedPFCFrames": {
+  "title": "PFC stats",
+  "unit": "short"
+ },
+ "pri3SentPFCFrames": {
+  "title": "PFC stats",
+  "unit": "short"
+ },
+ "pri4ReceivedPFCFrames": {
+  "title": "PFC stats",
+  "unit": "short"
+ },
+ "pri4SentPFCFrames": {
+  "title": "PFC stats",
+  "unit": "short"
+ },
+ "pri5ReceivedPFCFrames": {
+  "title": "PFC stats",
+  "unit": "short"
+ },
+ "pri5SentPFCFrames": {
+  "title": "PFC stats",
+  "unit": "short"
+ },
+ "proactiveCleaningRateCapacity": {
+  "title": "GSC cleaning rate",
+  "unit": "binBps"
+ },
+ "proactiveRebalanceSuccessCount": {
+  "title": "proactiveRebalanceSuccessCount",
+  "unit": "short"
+ },
+ "processFreeListApiTput": {
+  "title": "Allocator API Throughput",
+  "unit": "iops"
+ },
+ "proxyCongestion": {
+  "title": "Congestion",
+  "unit": "short"
+ },
+ "proxyIoCount": {
+  "title": "IO Count",
+  "unit": "short"
+ },
+ "proxyIops": {
+  "title": "IOPs",
+  "unit": "iops"
+ },
+ "proxyIopsRWResync": {
+  "title": "IOPs",
+  "unit": "iops"
+ },
+ "proxyIopsRead": {
+  "title": "IOPs",
+  "unit": "iops"
+ },
+ "proxyIopsWrite": {
+  "title": "IOPs",
+  "unit": "iops"
+ },
+ "proxyLatencyAvg": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "proxyLatencyAvgRWResync": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "proxyLatencyAvgRead": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "proxyLatencyAvgWrite": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "proxyRWResyncCongestion": {
+  "title": "Congestion",
+  "unit": "short"
+ },
+ "proxyRWResyncCount": {
+  "title": "IO Count",
+  "unit": "short"
+ },
+ "proxyReadCongestion": {
+  "title": "Congestion",
+  "unit": "short"
+ },
+ "proxyReadCount": {
+  "title": "IO Count",
+  "unit": "short"
+ },
+ "proxyThroughput": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "proxyTputRWResync": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "proxyTputRead": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "proxyTputWrite": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "proxyWriteCongestion": {
+  "title": "Congestion",
+  "unit": "short"
+ },
+ "proxyWriteCount": {
+  "title": "IO Count",
+  "unit": "short"
+ },
+ "queueDepth": {
+  "title": "Queue Depth",
+  "unit": "short"
+ },
+ "quotaEvictions": {
+  "title": "RC Evictions",
+  "unit": "short"
+ },
+ "randomRatio": {
+  "title": "Sequential & Random IO Ratio",
+  "unit": "short"
+ },
+ "randomReadRatio": {
+  "title": "Sequential & Random IO Ratio",
+  "unit": "short"
+ },
+ "randomWriteRatio": {
+  "title": "Sequential & Random IO Ratio",
+  "unit": "short"
+ },
+ "rangeDeleteClobberLatencyAvg": {
+  "title": "Range Delete Latency",
+  "unit": "ns"
+ },
+ "rangeDeleteClobberLatencyMax": {
+  "title": "Range Delete Latency (MAX)",
+  "unit": "ns"
+ },
+ "rangeDeleteLatencyAvg": {
+  "title": "Range Delete Latency",
+  "unit": "ns"
+ },
+ "rangeDeleteLatencyMax": {
+  "title": "Range Delete Latency (MAX)",
+  "unit": "ns"
+ },
+ "rangeQueryLatencyAvg": {
+  "title": "Lookup Latency",
+  "unit": "ns"
+ },
+ "rangeQueryLatencyMax": {
+  "title": "Lookup Latency (MAX)",
+  "unit": "ns"
+ },
+ "rateBankFlushCacheMiss": {
+  "title": "Overall Block Cache Miss",
+  "unit": "short"
+ },
+ "rateBankFlushTotalCacheRef": {
+  "title": "Overall Block Cache Ref",
+  "unit": "short"
+ },
+ "rateLookUpCacheMiss": {
+  "title": "Overall Block Cache Miss",
+  "unit": "short"
+ },
+ "rateMpVatWriteBackNumSegments": {
+  "title": "Cache WB Segment Bytes",
+  "unit": "binBps"
+ },
+ "rateObjGoodnessMapEntriesCapacity": {
+  "title": "GSC goodness map entries",
+  "unit": "short"
+ },
+ "ratePrefetchCacheMiss": {
+  "title": "Overall Block Cache Miss",
+  "unit": "short"
+ },
+ "rateSegCleaningCtxDataCacheMiss": {
+  "title": "Overall Block Cache Miss",
+  "unit": "short"
+ },
+ "rateSegCleaningCtxDataTotalCacheRef": {
+  "title": "Overall Block Cache Ref",
+  "unit": "short"
+ },
+ "rateTotalCacheMiss": {
+  "title": "Overall Block Cache Miss",
+  "unit": "short"
+ },
+ "rateTotalCacheRef": {
+  "title": "Overall Block Cache Ref",
+  "unit": "short"
+ },
+ "rateTruncVatWriteBackNumSegments": {
+  "title": "Cache WB Segment Bytes",
+  "unit": "binBps"
+ },
+ "rateTxnBankLogicalTreeCacheMiss": {
+  "title": "Bank Flush Cache Miss",
+  "unit": "short"
+ },
+ "rateTxnBankLogicalTreeCacheRef": {
+  "title": "Bank Flush Cache Ref",
+  "unit": "short"
+ },
+ "rateTxnBankMiddleTreeCacheMiss": {
+  "title": "Bank Flush Cache Miss",
+  "unit": "short"
+ },
+ "rateTxnBankMiddleTreeCacheRef": {
+  "title": "Bank Flush Cache Ref",
+  "unit": "short"
+ },
+ "rateTxnBankSutCacheMiss": {
+  "title": "Bank Flush Cache Miss",
+  "unit": "short"
+ },
+ "rateTxnBankSutCacheRef": {
+  "title": "Bank Flush Cache Ref",
+  "unit": "short"
+ },
+ "rateTxnBankTotalCacheMiss": {
+  "title": "Bank Flush Cache Miss",
+  "unit": "short"
+ },
+ "rateTxnBankTotalCacheRef": {
+  "title": "Bank Flush Cache Ref",
+  "unit": "short"
+ },
+ "rateTxnCreateOpBankCount": {
+  "title": "ZDOM VTX",
+  "unit": "short"
+ },
+ "rateTxnCreateOpSegMoveFreeCount": {
+  "title": "ZDOM VTX",
+  "unit": "short"
+ },
+ "rateTxnCreateOpUnmapCount": {
+  "title": "ZDOM VTX",
+  "unit": "short"
+ },
+ "rateTxnPrefetchLogicalTreeCacheMiss": {
+  "title": "Prefetch Cache Miss",
+  "unit": "short"
+ },
+ "rateTxnPrefetchLogicalTreeCacheRef": {
+  "title": "Prefetch Cache Ref",
+  "unit": "short"
+ },
+ "rateTxnPrefetchMiddleTreeCacheMiss": {
+  "title": "Prefetch Cache Miss",
+  "unit": "short"
+ },
+ "rateTxnPrefetchMiddleTreeCacheRef": {
+  "title": "Prefetch Cache Ref",
+  "unit": "short"
+ },
+ "rateTxnPrefetchSutCacheMiss": {
+  "title": "Prefetch Cache Miss",
+  "unit": "short"
+ },
+ "rateTxnPrefetchSutCacheRef": {
+  "title": "Prefetch Cache Ref",
+  "unit": "short"
+ },
+ "rateTxnPrefetchTotalCacheMiss": {
+  "title": "Prefetch Cache Miss",
+  "unit": "short"
+ },
+ "rateTxnPrefetchTotalCacheRef": {
+  "title": "Prefetch Cache Ref",
+  "unit": "short"
+ },
+ "rateTxnReadWrite": {
+  "title": "Overview",
+  "unit": "short"
+ },
+ "rateTxnSegCleaningCtxDataLogicalTreeCacheMiss": {
+  "title": "Seg Cleaning Cache Miss",
+  "unit": "short"
+ },
+ "rateTxnSegCleaningCtxDataLogicalTreeCacheRef": {
+  "title": "Seg Cleaning Cache Ref",
+  "unit": "short"
+ },
+ "rateTxnSegCleaningCtxDataMiddleTreeCacheMiss": {
+  "title": "Seg Cleaning Cache Miss",
+  "unit": "short"
+ },
+ "rateTxnSegCleaningCtxDataMiddleTreeCacheRef": {
+  "title": "Seg Cleaning Cache Ref",
+  "unit": "short"
+ },
+ "rateTxnSegCleaningCtxDataSutCacheMiss": {
+  "title": "Seg Cleaning Cache Miss",
+  "unit": "short"
+ },
+ "rateTxnSegCleaningCtxDataSutCacheRef": {
+  "title": "Seg Cleaning Cache Ref",
+  "unit": "short"
+ },
+ "rateTxnSegCleaningCtxDataTotalCacheMiss": {
+  "title": "Seg Cleaning Cache Miss",
+  "unit": "short"
+ },
+ "rateTxnSegCleaningCtxDataTotalCacheRef": {
+  "title": "Seg Cleaning Cache Ref",
+  "unit": "short"
+ },
+ "rateTxnUnmapLogicalTreeCacheMiss": {
+  "title": "Unmap Cache Miss",
+  "unit": "short"
+ },
+ "rateTxnUnmapMiddleTreeCacheMiss": {
+  "title": "Unmap Cache Miss",
+  "unit": "short"
+ },
+ "rateTxnUnmapSutCacheMiss": {
+  "title": "Unmap Cache Miss",
+  "unit": "short"
+ },
+ "rateTxnUnmapTotalCacheMiss": {
+  "title": "Unmap Cache Miss",
+  "unit": "short"
+ },
+ "rawDiskFullnessPctCapacity": {
+  "title": "GSC disk fullness",
+  "unit": "percent"
+ },
+ "rcHitRate": {
+  "title": "RC Hit Rate (Hybrid Only)",
+  "unit": "percent"
+ },
+ "rcHitRatePerMille": {
+  "title": "RC Hit Rate (Hybrid Only)(per-mille)",
+  "unit": "short"
+ },
+ "rcPartialMissRate": {
+  "title": "RC Hit Rate (Hybrid Only)",
+  "unit": "percent"
+ },
+ "rcResvUtil": {
+  "title": "rcResvUtil",
+  "unit": "short"
+ },
+ "rdtConnCount": {
+  "title": "RDT Connection Count",
+  "unit": "short"
+ },
+ "rdtRx": {
+  "title": "Rx/Tx",
+  "unit": "short"
+ },
+ "rdtRxThroughput": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "rdtTx": {
+  "title": "Rx/Tx",
+  "unit": "short"
+ },
+ "rdtTxThroughput": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "reactiveCleaningRateCapacity": {
+  "title": "GSC cleaning rate",
+  "unit": "binBps"
+ },
+ "reactiveRebalanceSuccessCount": {
+  "title": "reactiveRebalanceSuccessCount",
+  "unit": "short"
+ },
+ "readBytes": {
+  "title": "Bytes",
+  "unit": "binBps"
+ },
+ "readCongestion": {
+  "title": "congestion",
+  "unit": "short"
+ },
+ "readCount": {
+  "title": "RW Count",
+  "unit": "short"
+ },
+ "readCountDecom": {
+  "title": "Resync IO Count",
+  "unit": "short"
+ },
+ "readCountFixComp": {
+  "title": "Resync IO Count",
+  "unit": "short"
+ },
+ "readCountPolicy": {
+  "title": "Resync IO Count",
+  "unit": "short"
+ },
+ "readCountRebalance": {
+  "title": "Resync IO Count",
+  "unit": "short"
+ },
+ "readIOPS": {
+  "title": "LSOM2 IOLayer IOPS",
+  "unit": "iops"
+ },
+ "readInvalidatedBytesPatched": {
+  "title": "RC Bytes read from invalidated lines (Hybrid only)",
+  "unit": "bytes"
+ },
+ "readInvalidatedBytesRawar": {
+  "title": "RC Bytes read from invalidated lines (Hybrid only)",
+  "unit": "bytes"
+ },
+ "readInvalidatedBytesWastedPatched": {
+  "title": "RC Bytes read from invalidated lines (Hybrid only)",
+  "unit": "bytes"
+ },
+ "readIoSize": {
+  "title": "LSOM2 IOLayer Read/Write IO Size",
+  "unit": "bytes"
+ },
+ "readLatency": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "readLatencyExCount": {
+  "title": "Exceed counts",
+  "unit": "short"
+ },
+ "readLeafOwnerLatency": {
+  "title": "Leaf Owner Latency",
+  "unit": "\u00b5s"
+ },
+ "readLeafOwnerLatencyLocal": {
+  "title": "Leaf Owner Latency",
+  "unit": "\u00b5s"
+ },
+ "readLeafOwnerLatencyRemote": {
+  "title": "Leaf Owner Latency",
+  "unit": "\u00b5s"
+ },
+ "readLeafOwnerMaxLatencyAvgUs": {
+  "title": "Multi-leaf Owner Avg Max Latency",
+  "unit": "\u00b5s"
+ },
+ "readOIO": {
+  "title": "LSOM2 MDR Handle Read/Write OIO",
+  "unit": "short"
+ },
+ "readOpTotal": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "readRatio": {
+  "title": "Read & Write IO Ratio",
+  "unit": "short"
+ },
+ "readRequested": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "readThroughput": {
+  "title": "LSOM2 IOLayer Read/Write Throughput",
+  "unit": "binBps"
+ },
+ "readTime": {
+  "title": "Time",
+  "unit": "short"
+ },
+ "readTransferred": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "reads": {
+  "title": "IO",
+  "unit": "short"
+ },
+ "readsToLayer": {
+  "title": "readsToLayer",
+  "unit": "short"
+ },
+ "readyPct": {
+  "title": "CPU Ready Percentage",
+  "unit": "percent"
+ },
+ "rebalFullness": {
+  "title": "rebalFullness",
+  "unit": "short"
+ },
+ "rebalStatus": {
+  "title": "rebalStatus",
+  "unit": "short"
+ },
+ "rebalanceQueuedBytes": {
+  "title": "rebalanceQueuedBytes",
+  "unit": "short"
+ },
+ "rebalanceQueuedObjects": {
+  "title": "rebalanceQueuedObjects",
+  "unit": "short"
+ },
+ "recUnmapCongestion": {
+  "title": "congestion",
+  "unit": "short"
+ },
+ "recUnmapCount": {
+  "title": "IO Counts",
+  "unit": "short"
+ },
+ "recWriteCongestion": {
+  "title": "congestion",
+  "unit": "short"
+ },
+ "recWriteCount": {
+  "title": "IO Counts",
+  "unit": "short"
+ },
+ "recWriteCountDecom": {
+  "title": "Resync IO Count",
+  "unit": "short"
+ },
+ "recWriteCountFixComp": {
+  "title": "Resync IO Count",
+  "unit": "short"
+ },
+ "recWriteCountPolicy": {
+  "title": "Resync IO Count",
+  "unit": "short"
+ },
+ "recWriteCountRebalance": {
+  "title": "Resync IO Count",
+  "unit": "short"
+ },
+ "recoveryUnmapCongestion": {
+  "title": "congestion",
+  "unit": "short"
+ },
+ "recoveryUnmapLeafOwnerLatency": {
+  "title": "Leaf Owner Latency",
+  "unit": "\u00b5s"
+ },
+ "recoveryWriteCongestion": {
+  "title": "congestion",
+  "unit": "short"
+ },
+ "recoveryWriteLeafOwnerLatency": {
+  "title": "Leaf Owner Latency",
+  "unit": "\u00b5s"
+ },
+ "recoveryWriteLeafOwnerLatencyLocal": {
+  "title": "Leaf Owner Latency",
+  "unit": "\u00b5s"
+ },
+ "recoveryWriteLeafOwnerLatencyRemote": {
+  "title": "Leaf Owner Latency",
+  "unit": "\u00b5s"
+ },
+ "regulatorIopsRead": {
+  "title": "Bandwidth Limit",
+  "unit": "iops"
+ },
+ "regulatorIopsReadSched": {
+  "title": "IOPS Regulator",
+  "unit": "iops"
+ },
+ "regulatorIopsWrite": {
+  "title": "Bandwidth Limit",
+  "unit": "iops"
+ },
+ "regulatorIopsWriteSched": {
+  "title": "IOPS Regulator",
+  "unit": "iops"
+ },
+ "repairQueuedBytes": {
+  "title": "repairQueuedBytes",
+  "unit": "short"
+ },
+ "repairQueuedObjects": {
+  "title": "repairQueuedObjects",
+  "unit": "short"
+ },
+ "repairSuccessCount": {
+  "title": "repairSuccessCount",
+  "unit": "short"
+ },
+ "reserveBlockApiTput": {
+  "title": "Allocator API Throughput",
+  "unit": "iops"
+ },
+ "resourceStddevChange": {
+  "title": "resourceStddevChange",
+  "unit": "short"
+ },
+ "resyncBackpressureCongestionReadSched": {
+  "title": "Backpressure Congestion",
+  "unit": "short"
+ },
+ "resyncBackpressureCongestionWriteSched": {
+  "title": "Backpressure Congestion",
+  "unit": "short"
+ },
+ "resyncDispatchedCostRead": {
+  "title": "Normalized IO Cost",
+  "unit": "binBps"
+ },
+ "resyncDispatchedCostReadSched": {
+  "title": "Scheduler Cost Bandwidth",
+  "unit": "binBps"
+ },
+ "resyncDispatchedCostWrite": {
+  "title": "Normalized IO Cost",
+  "unit": "binBps"
+ },
+ "resyncDispatchedCostWriteSched": {
+  "title": "Scheduler Cost Bandwidth",
+  "unit": "binBps"
+ },
+ "resyncQueueDepthRead": {
+  "title": "Queue Depth (queued but not dispatched)",
+  "unit": "short"
+ },
+ "resyncQueueDepthReadSched": {
+  "title": "Scheduler Queue Depth",
+  "unit": "iops"
+ },
+ "resyncQueueDepthWrite": {
+  "title": "Queue Depth (queued but not dispatched)",
+  "unit": "short"
+ },
+ "resyncQueueDepthWriteSched": {
+  "title": "Scheduler Queue Depth",
+  "unit": "iops"
+ },
+ "resyncReadCongestion": {
+  "title": "congestion",
+  "unit": "short"
+ },
+ "resyncReadCount": {
+  "title": "IO Counts",
+  "unit": "short"
+ },
+ "resyncReadLeafOwnerLatencyLocal": {
+  "title": "Leaf Owner Latency",
+  "unit": "\u00b5s"
+ },
+ "resyncReadLeafOwnerLatencyRemote": {
+  "title": "Leaf Owner Latency",
+  "unit": "\u00b5s"
+ },
+ "resyncThroughputReadSched": {
+  "title": "Scheduler Bandwidth",
+  "unit": "binBps"
+ },
+ "resyncThroughputWriteSched": {
+  "title": "Scheduler Bandwidth",
+  "unit": "binBps"
+ },
+ "rootCompactionAvgTuples": {
+  "title": "Compaction",
+  "unit": "short"
+ },
+ "rootCompactions": {
+  "title": "Compaction",
+  "unit": "short"
+ },
+ "rootCountFlushes": {
+  "title": "Flush",
+  "unit": "short"
+ },
+ "rootFailedFlushes": {
+  "title": "Flush",
+  "unit": "short"
+ },
+ "rootFilterAvgTuples": {
+  "title": "Filter",
+  "unit": "short"
+ },
+ "rootFiltersBuilt": {
+  "title": "Filter",
+  "unit": "short"
+ },
+ "rootFullFlushes": {
+  "title": "Flush",
+  "unit": "short"
+ },
+ "runPct": {
+  "title": "CPU Run Percentage",
+  "unit": "percent"
+ },
+ "rxAccept": {
+  "title": "Rx Stats",
+  "unit": "short"
+ },
+ "rxAgentUpdateRequest": {
+  "title": "Rx Stats",
+  "unit": "short"
+ },
+ "rxCrcErr": {
+  "title": "Error Rate (per-mille)",
+  "unit": "short"
+ },
+ "rxErr": {
+  "title": "Error Rate (per-mille)",
+  "unit": "short"
+ },
+ "rxFifoErr": {
+  "title": "Error Rate (per-mille)",
+  "unit": "short"
+ },
+ "rxHeartbeatRequest": {
+  "title": "Rx Stats",
+  "unit": "short"
+ },
+ "rxMasterUpdate": {
+  "title": "Rx Stats",
+  "unit": "short"
+ },
+ "rxMisc": {
+  "title": "Rx Stats",
+  "unit": "short"
+ },
+ "rxMissErr": {
+  "title": "Error Rate (per-mille)",
+  "unit": "short"
+ },
+ "rxOvErr": {
+  "title": "Error Rate (per-mille)",
+  "unit": "short"
+ },
+ "rxPackets": {
+  "title": "Packets/sec (average)",
+  "unit": "short"
+ },
+ "rxPacketsErrorRate": {
+  "title": "Error Rate (per-mille)",
+  "unit": "short"
+ },
+ "rxPacketsLossRate": {
+  "title": "Discards Rate (per-mille)",
+  "unit": "short"
+ },
+ "rxRetransmitRequest": {
+  "title": "Rx Stats",
+  "unit": "short"
+ },
+ "rxSbSpaceAvg": {
+  "title": "Space Available In RX Socket/TX Socket And TX Context Queue",
+  "unit": "bytes"
+ },
+ "rxSbSpaceMax": {
+  "title": "Space Available In RX Socket/TX Socket And TX Context Queue (MAX)",
+  "unit": "bytes"
+ },
+ "rxSbSpaceMin": {
+  "title": "Space Available In RX Socket/TX Socket And TX Context Queue (MIN)",
+  "unit": "bytes"
+ },
+ "rxSnapshot": {
+  "title": "Rx Stats",
+  "unit": "short"
+ },
+ "rxThroughput": {
+  "title": "Throughput (average)",
+  "unit": "binBps"
+ },
+ "segWriteRate": {
+  "title": "Unmap/SegWrite/Bankwrite Rate",
+  "unit": "iops"
+ },
+ "sequentialRatio": {
+  "title": "Sequential & Random IO Ratio",
+  "unit": "short"
+ },
+ "sequentialReadRatio": {
+  "title": "Sequential & Random IO Ratio",
+  "unit": "short"
+ },
+ "sequentialWriteRatio": {
+  "title": "Sequential & Random IO Ratio",
+  "unit": "short"
+ },
+ "serverSwitchAvglatency": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "serverSwitchlatencyStddev": {
+  "title": "Latency Std Dev",
+  "unit": "\u00b5s"
+ },
+ "sgElemMultSectorSize": {
+  "title": "PSA Split Stats",
+  "unit": "short"
+ },
+ "sgElemSizeBounceBuffer": {
+  "title": "PSA Split Stats",
+  "unit": "short"
+ },
+ "sgElemSizeCloneBuffer": {
+  "title": "PSA Split Stats",
+  "unit": "short"
+ },
+ "sgSize": {
+  "title": "PSA Split Stats",
+  "unit": "short"
+ },
+ "sharedCongestion": {
+  "title": "Congestion Grouped by Resources",
+  "unit": "short"
+ },
+ "slabAllocFailures": {
+  "title": "Slab Allocation Failures",
+  "unit": "short"
+ },
+ "slabCongestion": {
+  "title": "Congestion",
+  "unit": "short"
+ },
+ "slabCongestionLocalMax": {
+  "title": "Max Congestion during sampling period",
+  "unit": "short"
+ },
+ "slabUtil": {
+  "title": "Slab Utilization",
+  "unit": "short"
+ },
+ "snapCreateCount": {
+  "title": "ZDOM Snapshot",
+  "unit": "short"
+ },
+ "snapDeleteCount": {
+  "title": "ZDOM Snapshot",
+  "unit": "short"
+ },
+ "snowpActualFlushes": {
+  "title": "Snowplough Stats",
+  "unit": "short"
+ },
+ "snowpClaimFailures": {
+  "title": "Snowplough Stats",
+  "unit": "short"
+ },
+ "snowpCurrentTasks": {
+  "title": "Snowplough Stats",
+  "unit": "short"
+ },
+ "snowpEmptyFlushes": {
+  "title": "Snowplough Stats",
+  "unit": "short"
+ },
+ "snowpFlushesAttempted": {
+  "title": "Snowplough Stats",
+  "unit": "short"
+ },
+ "snowpLeafSplits": {
+  "title": "Snowplough Stats",
+  "unit": "short"
+ },
+ "snowpLockTimeMsec": {
+  "title": "Snowplough Stats",
+  "unit": "short"
+ },
+ "snowpNoRoomFlushes": {
+  "title": "Snowplough Stats",
+  "unit": "short"
+ },
+ "snowpTotalRootLeaf": {
+  "title": "Snowplough Stats",
+  "unit": "short"
+ },
+ "snowpTotalScans": {
+  "title": "Snowplough Stats",
+  "unit": "short"
+ },
+ "snowpTotalTasks": {
+  "title": "Snowplough Stats",
+  "unit": "short"
+ },
+ "spaceCongestion": {
+  "title": "Congestion Stats",
+  "unit": "short"
+ },
+ "spacePendingFree": {
+  "title": "Allocated Space",
+  "unit": "percent"
+ },
+ "splAllocator": {
+  "title": "LSOM2 Congestion",
+  "unit": "short"
+ },
+ "splAttr": {
+  "title": "LSOM2 Congestion",
+  "unit": "short"
+ },
+ "splLogical": {
+  "title": "LSOM2 Congestion",
+  "unit": "short"
+ },
+ "splPrepare": {
+  "title": "LSOM2 Congestion",
+  "unit": "short"
+ },
+ "ssdCongestion": {
+  "title": "Congestion",
+  "unit": "short"
+ },
+ "ssdCongestionLocalMax": {
+  "title": "Max Congestion during sampling period",
+  "unit": "short"
+ },
+ "ssdP": {
+  "title": "Elev throttling params",
+  "unit": "percent"
+ },
+ "state": {
+  "title": "State",
+  "unit": "short"
+ },
+ "statsTime": {
+  "title": "statsTime",
+  "unit": "short"
+ },
+ "targetRate": {
+  "title": "Target/Free Rate",
+  "unit": "short"
+ },
+ "taskCongestion": {
+  "title": "Congestion Stats",
+  "unit": "short"
+ },
+ "taskRuntimeMaxNs": {
+  "title": "Task Latency (MAX)",
+  "unit": "ns"
+ },
+ "tcpBadrst": {
+  "title": "TCP/IP Errors (per-mille)",
+  "unit": "short"
+ },
+ "tcpBadsyn": {
+  "title": "TCP/IP Errors (per-mille)",
+  "unit": "short"
+ },
+ "tcpConndrops": {
+  "title": "TCP Connections (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpConnects": {
+  "title": "TCP Connections (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpDrops": {
+  "title": "TCP Connections (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpEcnCe": {
+  "title": "TCP Congestion (average)",
+  "unit": "short"
+ },
+ "tcpErrs": {
+  "title": "TCP/IP Errors (per-mille)",
+  "unit": "short"
+ },
+ "tcpHalfopenDropRate": {
+  "title": "TCP Connections (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpKeepdrops": {
+  "title": "TCP Connections (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpKeeptimeo": {
+  "title": "TCP Connections (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpPersisttimeo": {
+  "title": "TCP Connections (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpRcvackpack": {
+  "title": "TCP Transmission (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpRcvbadoff": {
+  "title": "TCP/IP Errors (per-mille)",
+  "unit": "short"
+ },
+ "tcpRcvbadsum": {
+  "title": "TCP/IP Errors (per-mille)",
+  "unit": "short"
+ },
+ "tcpRcvdupack": {
+  "title": "TCP Transmission (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpRcvdupackRate": {
+  "title": "TCP Transmission (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpRcvduppack": {
+  "title": "TCP Transmission (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpRcvduppackRate": {
+  "title": "TCP Transmission (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpRcvmemdrop": {
+  "title": "TCP Connections (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpRcvoopack": {
+  "title": "TCP Transmission (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpRcvoopackRate": {
+  "title": "TCP Transmission (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpRcvshort": {
+  "title": "TCP/IP Errors (per-mille)",
+  "unit": "short"
+ },
+ "tcpRexmttimeo": {
+  "title": "TCP Connections (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpRxErrRate": {
+  "title": "TcpRxErrRate Rate (per-mille)",
+  "unit": "short"
+ },
+ "tcpRxPackets": {
+  "title": "Packets/sec (average)",
+  "unit": "short"
+ },
+ "tcpRxThroughput": {
+  "title": "Throughput (average)",
+  "unit": "binBps"
+ },
+ "tcpSackRcvBlocks": {
+  "title": "TCP Transmission (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpSackRcvBlocksRate": {
+  "title": "TCP Transmission (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpSackRexmits": {
+  "title": "TCP Transmission (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpSackRexmitsRate": {
+  "title": "TCP Transmission (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpSackSendBlocks": {
+  "title": "TCP Transmission (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpSackSendBlocksRate": {
+  "title": "TCP Transmission (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpSndZeroWin": {
+  "title": "TCP Congestion (average)",
+  "unit": "short"
+ },
+ "tcpSndacks": {
+  "title": "TCP Transmission (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpTimeoutDropRate": {
+  "title": "TCP Connections (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpTimeoutdrop": {
+  "title": "TCP Connections (ikb 57375)",
+  "unit": "short"
+ },
+ "tcpTxPackets": {
+  "title": "Packets/sec (average)",
+  "unit": "short"
+ },
+ "tcpTxRexmitRate": {
+  "title": "TcpTxRexmit Rate (per-mille)",
+  "unit": "short"
+ },
+ "tcpTxThroughput": {
+  "title": "Throughput (average)",
+  "unit": "binBps"
+ },
+ "thickPlacementSuccessCount": {
+  "title": "thickPlacementSuccessCount",
+  "unit": "short"
+ },
+ "thinPlacementSuccessCount": {
+  "title": "thinPlacementSuccessCount",
+  "unit": "short"
+ },
+ "throughput": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "throughputDevRead": {
+  "title": "Device Throughput",
+  "unit": "binBps"
+ },
+ "throughputDevWrite": {
+  "title": "Device Throughput",
+  "unit": "binBps"
+ },
+ "throughputRandom": {
+  "title": "Sequential & Random Throughput",
+  "unit": "short"
+ },
+ "throughputRead": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "throughputReadCompMgr": {
+  "title": "Bandwidth",
+  "unit": "binBps"
+ },
+ "throughputRecUnmap": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "throughputRecWrite": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "throughputRecoveryUnmapCompMgr": {
+  "title": "Bandwidth",
+  "unit": "binBps"
+ },
+ "throughputRecoveryWriteCompMgr": {
+  "title": "Bandwidth",
+  "unit": "binBps"
+ },
+ "throughputSched": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "throughputSchedQueueMeta": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "throughputSchedQueueNS": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "throughputSchedQueueRec": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "throughputSchedQueueVM": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "throughputSequential": {
+  "title": "Sequential & Random Throughput",
+  "unit": "short"
+ },
+ "throughputTotal": {
+  "title": "Throughput",
+  "unit": "short"
+ },
+ "throughputUnmap": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "throughputUnmapCompMgr": {
+  "title": "Bandwidth",
+  "unit": "binBps"
+ },
+ "throughputWrite": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "throughputWriteCompMgr": {
+  "title": "Bandwidth",
+  "unit": "binBps"
+ },
+ "timeSleptInSample": {
+  "title": "Destage sampling correction (available only in verbose mode)",
+  "unit": "ns"
+ },
+ "timeToSleepMs": {
+  "title": "Elevator throttling sleep time",
+  "unit": "ms"
+ },
+ "timesOverWindowLimitRead": {
+  "title": "Times Over Window Limit",
+  "unit": "iops"
+ },
+ "timesOverWindowLimitWrite": {
+  "title": "Times Over Window Limit",
+  "unit": "iops"
+ },
+ "tokenWeight": {
+  "title": "Token Weight",
+  "unit": "short"
+ },
+ "tokensConsumedRate": {
+  "title": "Token Rate",
+  "unit": "short"
+ },
+ "totalBankLat": {
+  "title": "Latency (Average)",
+  "unit": "\u00b5s"
+ },
+ "totalCRCCorrected": {
+  "title": "Checksum Error (& Corrected)",
+  "unit": "short"
+ },
+ "totalCompressedBytes": {
+  "title": "Total Compressed Bytes",
+  "unit": "bytes"
+ },
+ "totalDATABlksCorrected": {
+  "title": "Checksum Error (& Corrected)",
+  "unit": "short"
+ },
+ "totalDeltasCreatedCount": {
+  "title": "Number of Deltas Created",
+  "unit": "short"
+ },
+ "totalMbMemUsed": {
+  "title": "Total Memory Used",
+  "unit": "mbytes"
+ },
+ "totalQueuedBytes": {
+  "title": "totalQueuedBytes",
+  "unit": "short"
+ },
+ "totalQueuedObjects": {
+  "title": "totalQueuedObjects",
+  "unit": "short"
+ },
+ "totalQueuedWorkItems": {
+  "title": "totalQueuedWorkItems",
+  "unit": "short"
+ },
+ "totalRxBytes": {
+  "title": "Total Bytes Recieved",
+  "unit": "bytes"
+ },
+ "totalSplits": {
+  "title": "PSA Split Stats",
+  "unit": "short"
+ },
+ "totalSuccessCount": {
+  "title": "totalSuccessCount",
+  "unit": "short"
+ },
+ "totalTaskLatencyNs": {
+  "title": "Task Latency",
+  "unit": "ns"
+ },
+ "totalTasks": {
+  "title": "Task",
+  "unit": "short"
+ },
+ "totalTxBytes": {
+  "title": "Total Bytes transferred",
+  "unit": "bytes"
+ },
+ "totalUncompressedBytes": {
+  "title": "Total Uncompressed Bytes",
+  "unit": "bytes"
+ },
+ "totalUpdInBatchCkpt": {
+  "title": "Batch Stats",
+  "unit": "short"
+ },
+ "totalUpdInMasterBatches": {
+  "title": "Batch Stats",
+  "unit": "short"
+ },
+ "totalUpdSentInAgentBatch": {
+  "title": "Batch Stats",
+  "unit": "short"
+ },
+ "tputAppend": {
+  "title": "LSOM2 WAL Density",
+  "unit": "binBps"
+ },
+ "tputBankBtree": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "tputBankFlush": {
+  "title": "ZOM IO",
+  "unit": "binBps"
+ },
+ "tputBankFlushFSW": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "tputBankOverlap": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "tputBankWrite": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "tputBypassWrite": {
+  "title": "ZDOM Log Bypass Throughput",
+  "unit": "binBps"
+ },
+ "tputDLogWrite": {
+  "title": "ZOM IO",
+  "unit": "binBps"
+ },
+ "tputDurableLog": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "tputLookup": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "tputMLogWrite": {
+  "title": "ZOM IO",
+  "unit": "binBps"
+ },
+ "tputMpVatWriteBack": {
+  "title": "Cache WB Segment Bytes",
+  "unit": "binBps"
+ },
+ "tputMultiRead": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "tputRead": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "tputReadDisk": {
+  "title": "LSOM2 Read/Write Throughput",
+  "unit": "binBps"
+ },
+ "tputRecUnmap": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "tputRecWrite": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "tputResyncRead": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "tputResyncReadDecom": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "tputResyncReadFixComp": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "tputResyncReadPolicy": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "tputResyncReadRebalance": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "tputResyncWrite": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "tputResyncWriteDecom": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "tputResyncWriteFixComp": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "tputResyncWritePolicy": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "tputResyncWriteRebalance": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "tputSegCleanRead": {
+  "title": "ZDOM Segment Cleaning",
+  "unit": "binBps"
+ },
+ "tputSegCleanUnmap": {
+  "title": "ZDOM Segment Cleaning",
+  "unit": "binBps"
+ },
+ "tputSegCleanWrite": {
+  "title": "ZDOM Segment Cleaning",
+  "unit": "binBps"
+ },
+ "tputServiceVMRead": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "tputServiceVMWrite": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "tputSnapCreate": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "tputSnapDelete": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "tputSnapLookup": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "tputTruncVatWriteBack": {
+  "title": "Cache WB Segment Bytes",
+  "unit": "binBps"
+ },
+ "tputTxnDelExtMiddleTreeLog": {
+  "title": "Snapshot Deletion Transaction Log Throughput",
+  "unit": "binBps"
+ },
+ "tputTxnSnapDelMetaUpdateLog": {
+  "title": "Snapshot Deletion Transaction Log Throughput",
+  "unit": "binBps"
+ },
+ "tputTxnSnapDeleteLog": {
+  "title": "Snapshot Deletion Transaction Log Throughput",
+  "unit": "binBps"
+ },
+ "tputUnmap": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "tputVatWriteback": {
+  "title": "ZDOM LLP",
+  "unit": "short"
+ },
+ "tputWrite": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "tputWriteLsom2Partition": {
+  "title": "LSOM2 WAL Density",
+  "unit": "binBps"
+ },
+ "transientCapacityUsed": {
+  "title": "transientCapacityUsed",
+  "unit": "short"
+ },
+ "trunkCongestion": {
+  "title": "Congestion Stats",
+  "unit": "short"
+ },
+ "twoPCBatchCommitBlockedByGuestIOPS": {
+  "title": "2PC Queue Stats",
+  "unit": "iops"
+ },
+ "twoPCBatchCommitBlockedByOtherIOPS": {
+  "title": "2PC Queue Stats",
+  "unit": "iops"
+ },
+ "twoPCBatchCommitBlockedByResyncIOPS": {
+  "title": "2PC Queue Stats",
+  "unit": "iops"
+ },
+ "twoPCBatchCommitBlockedBySyncIOPS": {
+  "title": "2PC Queue Stats",
+  "unit": "iops"
+ },
+ "twoPCBatchCommitGuestIOPS": {
+  "title": "2PC Queue Stats",
+  "unit": "iops"
+ },
+ "twoPCBatchCommitOtherIOPS": {
+  "title": "2PC Queue Stats",
+  "unit": "iops"
+ },
+ "twoPCBatchCommitResyncIOPS": {
+  "title": "2PC Queue Stats",
+  "unit": "iops"
+ },
+ "twoPCBatchCommitSyncIOPS": {
+  "title": "2PC Queue Stats",
+  "unit": "iops"
+ },
+ "twoPCCommitCount": {
+  "title": "2PC Stats",
+  "unit": "short"
+ },
+ "twoPCCommitSize": {
+  "title": "2PC Stats",
+  "unit": "short"
+ },
+ "twoPCPrepareLimitRetryGuestAvgTimeMs": {
+  "title": "2PC Retry Latency",
+  "unit": "ms"
+ },
+ "twoPCPrepareLimitRetryGuestIOPS": {
+  "title": "2PC Queue Stats",
+  "unit": "iops"
+ },
+ "twoPCPrepareLimitRetryOtherAvgTimeMs": {
+  "title": "2PC Retry Latency",
+  "unit": "ms"
+ },
+ "twoPCPrepareLimitRetryOtherIOPS": {
+  "title": "2PC Queue Stats",
+  "unit": "iops"
+ },
+ "twoPCPrepareLimitRetryResyncAvgTimeMs": {
+  "title": "2PC Retry Latency",
+  "unit": "ms"
+ },
+ "twoPCPrepareLimitRetryResyncIOPS": {
+  "title": "2PC Queue Stats",
+  "unit": "iops"
+ },
+ "twoPCPrepareRetryCount": {
+  "title": "2PC Stats",
+  "unit": "short"
+ },
+ "twoPCReservedLSNExhaustedCount": {
+  "title": "Reserved LSN Utilization",
+  "unit": "short"
+ },
+ "twoPCReservedLSNUnusedCount": {
+  "title": "Reserved LSN Utilization",
+  "unit": "short"
+ },
+ "twoPCReservedLSNUsedCount": {
+  "title": "Reserved LSN Utilization",
+  "unit": "short"
+ },
+ "txAgentUpdateRequest": {
+  "title": "Tx Stats",
+  "unit": "short"
+ },
+ "txCarErr": {
+  "title": "Error Rate (per-mille)",
+  "unit": "short"
+ },
+ "txCtxQAvg": {
+  "title": "Space Available In RX Socket/TX Socket And TX Context Queue",
+  "unit": "bytes"
+ },
+ "txCtxQMax": {
+  "title": "Space Available In RX Socket/TX Socket And TX Context Queue (MAX)",
+  "unit": "bytes"
+ },
+ "txCtxQMin": {
+  "title": "Space Available In RX Socket/TX Socket And TX Context Queue (MIN)",
+  "unit": "bytes"
+ },
+ "txErr": {
+  "title": "Error Rate (per-mille)",
+  "unit": "short"
+ },
+ "txHeartbeatRequest": {
+  "title": "Tx Stats",
+  "unit": "short"
+ },
+ "txMasterCheckpoint": {
+  "title": "Tx Stats",
+  "unit": "short"
+ },
+ "txMasterCkptTried": {
+  "title": "Tx Stats",
+  "unit": "short"
+ },
+ "txMasterUpdate": {
+  "title": "Tx Stats",
+  "unit": "short"
+ },
+ "txMasterUpdateTried": {
+  "title": "Tx Stats",
+  "unit": "short"
+ },
+ "txPackets": {
+  "title": "Packets/sec (average)",
+  "unit": "short"
+ },
+ "txPacketsErrorRate": {
+  "title": "Error Rate (per-mille)",
+  "unit": "short"
+ },
+ "txPacketsLossRate": {
+  "title": "Discards Rate (per-mille)",
+  "unit": "short"
+ },
+ "txQLatAvg": {
+  "title": "Network Latency & Outbound Queueing Latency",
+  "unit": "\u00b5s"
+ },
+ "txQLatMax": {
+  "title": "Network Latency & Outbound Queueing Latency (MAX)",
+  "unit": "\u00b5s"
+ },
+ "txQLatMin": {
+  "title": "Network Latency & Outbound Queueing Latency (MIN)",
+  "unit": "\u00b5s"
+ },
+ "txRetransmitRequest": {
+  "title": "Tx Stats",
+  "unit": "short"
+ },
+ "txSbSpaceAvg": {
+  "title": "Space Available In RX Socket/TX Socket And TX Context Queue",
+  "unit": "bytes"
+ },
+ "txSbSpaceMax": {
+  "title": "Space Available In RX Socket/TX Socket And TX Context Queue (MAX)",
+  "unit": "bytes"
+ },
+ "txSbSpaceMin": {
+  "title": "Space Available In RX Socket/TX Socket And TX Context Queue (MIN)",
+  "unit": "bytes"
+ },
+ "txSnapshot": {
+  "title": "Tx Stats",
+  "unit": "short"
+ },
+ "txSnapshotBytes": {
+  "title": "Tx Stats",
+  "unit": "short"
+ },
+ "txSnapshotTried": {
+  "title": "Tx Stats",
+  "unit": "short"
+ },
+ "txThroughput": {
+  "title": "Throughput (average)",
+  "unit": "binBps"
+ },
+ "txnBankMaxLatUs": {
+  "title": "Max Latency Per Transaction",
+  "unit": "\u00b5s"
+ },
+ "txnBuildTime": {
+  "title": "Dedup Run Time",
+  "unit": "ns"
+ },
+ "txnCacheFlushMaxLatUs": {
+  "title": "Max Latency Per Transaction",
+  "unit": "\u00b5s"
+ },
+ "txnDLogMaxLatUs": {
+  "title": "Max Latency Per Transaction",
+  "unit": "\u00b5s"
+ },
+ "txnDelExtMiddleTreeMaxLatUs": {
+  "title": "Max Latency Per Transaction",
+  "unit": "\u00b5s"
+ },
+ "txnPrefetchMaxLatUs": {
+  "title": "Max Latency Per Transaction",
+  "unit": "\u00b5s"
+ },
+ "txnReplayBitmapTime": {
+  "title": "Dedup Run Time",
+  "unit": "ns"
+ },
+ "txnReplayHashmapTime": {
+  "title": "Dedup Run Time",
+  "unit": "ns"
+ },
+ "txnReplayReadIOHits": {
+  "title": "Dedup Txn Replay Optimization",
+  "unit": "short"
+ },
+ "txnReplayTime": {
+  "title": "Dedup Run Time",
+  "unit": "ns"
+ },
+ "txnReplayWriteIOs": {
+  "title": "Dedup Txn Replay Optimization",
+  "unit": "short"
+ },
+ "txnReplayXmapTime": {
+  "title": "Dedup Run Time",
+  "unit": "ns"
+ },
+ "txnSegCtxDataMaxLatUs": {
+  "title": "Max Latency Per Transaction",
+  "unit": "\u00b5s"
+ },
+ "txnSegCtxLLPMaxLatUs": {
+  "title": "Max Latency Per Transaction",
+  "unit": "\u00b5s"
+ },
+ "txnSizePerCommit": {
+  "title": "DDP Bytes per commit",
+  "unit": "bytes"
+ },
+ "txnUnmapMaxLatUs": {
+  "title": "Max Latency Per Transaction",
+  "unit": "\u00b5s"
+ },
+ "txnVatWriteSegMaxLatUs": {
+  "title": "Max Latency Per Transaction",
+  "unit": "\u00b5s"
+ },
+ "txnWriteTime": {
+  "title": "Dedup Run Time",
+  "unit": "ns"
+ },
+ "unaligned4kRatio": {
+  "title": "4K Aligned & Unaligned IO Ratio",
+  "unit": "short"
+ },
+ "unaligned4kReadRatio": {
+  "title": "4K Aligned & Unaligned IO Ratio",
+  "unit": "short"
+ },
+ "unaligned4kWriteRatio": {
+  "title": "4K Aligned & Unaligned IO Ratio",
+  "unit": "short"
+ },
+ "unicastBytesReceived": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "unicastBytesSent": {
+  "title": "Tput",
+  "unit": "binBps"
+ },
+ "unicastMessagesReceived": {
+  "title": "Messages/sec",
+  "unit": "iops"
+ },
+ "unicastMessagesSent": {
+  "title": "Messages/sec",
+  "unit": "iops"
+ },
+ "unmapCongestion": {
+  "title": "congestion",
+  "unit": "short"
+ },
+ "unmapCount": {
+  "title": "IO Counts",
+  "unit": "short"
+ },
+ "unmapDelayed": {
+  "title": "Unmap Fairness Stats",
+  "unit": "short"
+ },
+ "unmapInline": {
+  "title": "Unmap Fairness Stats",
+  "unit": "short"
+ },
+ "unmapLeafOwnerLatency": {
+  "title": "Leaf Owner Latency",
+  "unit": "\u00b5s"
+ },
+ "unmapLeafOwnerMaxLatencyAvgUs": {
+  "title": "Multi-leaf Owner Avg Max Latency",
+  "unit": "\u00b5s"
+ },
+ "unmapPendingBytes": {
+  "title": "Pending Unmap Stats",
+  "unit": "bytes"
+ },
+ "unmapPendingComponents": {
+  "title": "Pending Unmap Component Stats",
+  "unit": "short"
+ },
+ "unmapPendingComponentsActive": {
+  "title": "Pending Unmap Component Stats",
+  "unit": "short"
+ },
+ "unmapPendingComponentsQueued": {
+  "title": "Pending Unmap Component Stats",
+  "unit": "short"
+ },
+ "unmapPendingInflightBytes": {
+  "title": "Pending Unmap Stats",
+  "unit": "bytes"
+ },
+ "unmapPendingPlacedBytes": {
+  "title": "Pending Unmap Stats",
+  "unit": "bytes"
+ },
+ "unmapPendingProcessedBytes": {
+  "title": "Pending Unmap Stats",
+  "unit": "bytes"
+ },
+ "unmapPendingProcessedPages": {
+  "title": "Unmap Fairness Stats",
+  "unit": "short"
+ },
+ "unmapQuota": {
+  "title": "Unmap Quota Stats",
+  "unit": "bytes"
+ },
+ "unmapQuotaAvailableBytes": {
+  "title": "Unmap Quota Stats",
+  "unit": "bytes"
+ },
+ "unmapQuotaConsumedBytes": {
+  "title": "Unmap Quota Stats",
+  "unit": "bytes"
+ },
+ "unmapQuotaConsumedPages": {
+  "title": "Unmap Fairness Stats",
+  "unit": "short"
+ },
+ "unmapQuotaFailed": {
+  "title": "Unmap Fairness Stats",
+  "unit": "short"
+ },
+ "unmapQuotaRelinquished": {
+  "title": "Unmap Fairness Stats",
+  "unit": "short"
+ },
+ "unmapRate": {
+  "title": "Unmap/SegWrite/Bankwrite Rate",
+  "unit": "iops"
+ },
+ "unplannedDeltaComponents": {
+  "title": "unplannedDeltaComponents",
+  "unit": "short"
+ },
+ "unplannedDeltaSuccessCount": {
+  "title": "unplannedDeltaSuccessCount",
+  "unit": "short"
+ },
+ "unresvAddrSpaceUtil": {
+  "title": "unresvAddrSpaceUtil",
+  "unit": "short"
+ },
+ "unthrottledBankIOPS": {
+  "title": "Bank IOPS Unthrottled",
+  "unit": "iops"
+ },
+ "updateLatencyAvg": {
+  "title": "Insert/Update/Delete Latency",
+  "unit": "ns"
+ },
+ "updateLatencyMax": {
+  "title": "Insert/Update/Delete (MAX)",
+  "unit": "ns"
+ },
+ "updates": {
+  "title": "Insert IOps",
+  "unit": "iops"
+ },
+ "updatesApplied": {
+  "title": "Updates/sec",
+  "unit": "short"
+ },
+ "updatesCommitedAtLeader": {
+  "title": "Updates Per Second",
+  "unit": "iops"
+ },
+ "updatesReceivedAtLeader": {
+  "title": "Updates Per Second",
+  "unit": "iops"
+ },
+ "updatesRequested": {
+  "title": "Updates/sec",
+  "unit": "short"
+ },
+ "usageVariance": {
+  "title": "usageVariance",
+  "unit": "short"
+ },
+ "usedPct": {
+  "title": "CPU Utilization Percentage",
+  "unit": "percent"
+ },
+ "uwConsumedSize": {
+  "title": "User World Consumed",
+  "unit": "bytes"
+ },
+ "uwReservedSize": {
+  "title": "User World Reserved",
+  "unit": "bytes"
+ },
+ "versionWeight": {
+  "title": "versionWeight",
+  "unit": "short"
+ },
+ "virstoDirtyMapBlocks": {
+  "title": "Virsto Map Blocks",
+  "unit": "short"
+ },
+ "virstoFreeMapBlocks": {
+  "title": "Virsto Map Blocks",
+  "unit": "short"
+ },
+ "virstoInstanceHeapUtilization": {
+  "title": "Virsto Instance",
+  "unit": "bytes"
+ },
+ "virstoInvalidMapBlocks": {
+  "title": "Virsto Map Blocks",
+  "unit": "short"
+ },
+ "virstoMapBlockCacheEvictionsPerSec": {
+  "title": "Virsto Map Block Cache",
+  "unit": "short"
+ },
+ "virstoMapBlockCacheHitsPerSec": {
+  "title": "Virsto Map Block Cache",
+  "unit": "short"
+ },
+ "virstoMapBlockCacheMissesPerSec": {
+  "title": "Virsto Map Block Cache",
+  "unit": "short"
+ },
+ "virstoMetadataFlushedPerRun": {
+  "title": "Virsto Metadata Flush Tput",
+  "unit": "short"
+ },
+ "virstoMetadataFlusherPendingBuffers": {
+  "title": "Virsto Metadata Pending data",
+  "unit": "short"
+ },
+ "virstoMetadataFlusherRunsPerSec": {
+  "title": "Virsto Metadata Flusher Runs",
+  "unit": "short"
+ },
+ "virstoValidMapBlocks": {
+  "title": "Virsto Map Blocks",
+  "unit": "short"
+ },
+ "vitdConsumedSize": {
+  "title": "User World Consumed Breakdown",
+  "unit": "bytes"
+ },
+ "vitdReservedSize": {
+  "title": "User World Reserved Breakdown",
+  "unit": "bytes"
+ },
+ "vmdiskBackpressureCongestionReadSched": {
+  "title": "Backpressure Congestion",
+  "unit": "short"
+ },
+ "vmdiskBackpressureCongestionWriteSched": {
+  "title": "Backpressure Congestion",
+  "unit": "short"
+ },
+ "vmdiskDispatchedCostRead": {
+  "title": "Normalized IO Cost",
+  "unit": "binBps"
+ },
+ "vmdiskDispatchedCostReadSched": {
+  "title": "Scheduler Cost Bandwidth",
+  "unit": "binBps"
+ },
+ "vmdiskDispatchedCostWrite": {
+  "title": "Normalized IO Cost",
+  "unit": "binBps"
+ },
+ "vmdiskDispatchedCostWriteSched": {
+  "title": "Scheduler Cost Bandwidth",
+  "unit": "binBps"
+ },
+ "vmdiskQueueDepthRead": {
+  "title": "Queue Depth (queued but not dispatched)",
+  "unit": "short"
+ },
+ "vmdiskQueueDepthReadSched": {
+  "title": "Scheduler Queue Depth",
+  "unit": "iops"
+ },
+ "vmdiskQueueDepthWrite": {
+  "title": "Queue Depth (queued but not dispatched)",
+  "unit": "short"
+ },
+ "vmdiskQueueDepthWriteSched": {
+  "title": "Scheduler Queue Depth",
+  "unit": "iops"
+ },
+ "vmdiskThroughputReadSched": {
+  "title": "Scheduler Bandwidth",
+  "unit": "binBps"
+ },
+ "vmdiskThroughputWriteSched": {
+  "title": "Scheduler Bandwidth",
+  "unit": "binBps"
+ },
+ "vrstBarrTime": {
+  "title": "Time in commit flusher",
+  "unit": "ms"
+ },
+ "vsandevicemonitordConsumedSize": {
+  "title": "User World Consumed Breakdown",
+  "unit": "bytes"
+ },
+ "vsandevicemonitordReservedSize": {
+  "title": "User World Reserved Breakdown",
+  "unit": "bytes"
+ },
+ "vsanmgmtdConsumedSize": {
+  "title": "User World Consumed Breakdown",
+  "unit": "bytes"
+ },
+ "vsanmgmtdReservedSize": {
+  "title": "User World Reserved Breakdown",
+  "unit": "bytes"
+ },
+ "vsanmgmtdWatchdogConsumedSize": {
+  "title": "User World Consumed Breakdown",
+  "unit": "bytes"
+ },
+ "vsanmgmtdWatchdogReservedSize": {
+  "title": "User World Reserved Breakdown",
+  "unit": "bytes"
+ },
+ "vsanobserverConsumedSize": {
+  "title": "User World Consumed Breakdown",
+  "unit": "bytes"
+ },
+ "vsanobserverReservedSize": {
+  "title": "User World Reserved Breakdown",
+  "unit": "bytes"
+ },
+ "vsantracedConsumedSize": {
+  "title": "User World Consumed Breakdown",
+  "unit": "bytes"
+ },
+ "vsantracedReservedSize": {
+  "title": "User World Reserved Breakdown",
+  "unit": "bytes"
+ },
+ "wal": {
+  "title": "LSOM2 Congestion",
+  "unit": "short"
+ },
+ "walAllocator": {
+  "title": "LSOM2 Congestion",
+  "unit": "short"
+ },
+ "warEvictions": {
+  "title": "RC Evictions",
+  "unit": "short"
+ },
+ "wbFreePct": {
+  "title": "Write Buffer usage (percentage)",
+  "unit": "percent"
+ },
+ "wbSize": {
+  "title": "Write Buffer Usage (bytes)",
+  "unit": "bytes"
+ },
+ "writeBytes": {
+  "title": "Bytes",
+  "unit": "binBps"
+ },
+ "writeCongestion": {
+  "title": "congestion",
+  "unit": "short"
+ },
+ "writeCount": {
+  "title": "RW Count",
+  "unit": "short"
+ },
+ "writeIOPS": {
+  "title": "LSOM2 IOLayer IOPS",
+  "unit": "iops"
+ },
+ "writeIoSize": {
+  "title": "LSOM2 IOLayer Read/Write IO Size",
+  "unit": "bytes"
+ },
+ "writeLatency": {
+  "title": "Latency",
+  "unit": "\u00b5s"
+ },
+ "writeLatencyExCount": {
+  "title": "Exceed counts",
+  "unit": "short"
+ },
+ "writeLeafOwnerLatency": {
+  "title": "Leaf Owner Latency",
+  "unit": "\u00b5s"
+ },
+ "writeLeafOwnerLatencyLocal": {
+  "title": "Leaf Owner Latency",
+  "unit": "\u00b5s"
+ },
+ "writeLeafOwnerLatencyRemote": {
+  "title": "Leaf Owner Latency",
+  "unit": "\u00b5s"
+ },
+ "writeLeafOwnerMaxLatencyAvgUs": {
+  "title": "Multi-leaf Owner Avg Max Latency",
+  "unit": "\u00b5s"
+ },
+ "writeOIO": {
+  "title": "LSOM2 MDR Handle Read/Write OIO",
+  "unit": "short"
+ },
+ "writeOpTotal": {
+  "title": "IOPS",
+  "unit": "iops"
+ },
+ "writeRatio": {
+  "title": "Read & Write IO Ratio",
+  "unit": "short"
+ },
+ "writeRequested": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "writeThroughput": {
+  "title": "LSOM2 IOLayer Read/Write Throughput",
+  "unit": "binBps"
+ },
+ "writeTime": {
+  "title": "Time",
+  "unit": "short"
+ },
+ "writeTransferred": {
+  "title": "Throughput",
+  "unit": "binBps"
+ },
+ "writes": {
+  "title": "IO",
+  "unit": "short"
+ },
+ "zeroElevCurBucket": {
+  "title": "PLOG Elevator Extra stats",
+  "unit": "short"
+ },
+ "zeroElevCurTxnScopes": {
+  "title": "PLOG Elevator Extra stats",
+  "unit": "short"
+ },
+ "zeroElevLbaOffset": {
+  "title": "PLOG Elevator Extra stats",
+  "unit": "short"
+ },
+ "zeroElevMaxP": {
+  "title": "Elev throttling params",
+  "unit": "percent"
+ },
+ "zeroElevSMActivations": {
+  "title": "PLOG Zero Elev OPs & Activations",
+  "unit": "short"
+ },
+ "zeroElevStartThreshold": {
+  "title": "Write Buffer usage (percentage)",
+  "unit": "percent"
+ },
+ "zeroElevTimeToSleepMs": {
+  "title": "Elevator throttling sleep time",
+  "unit": "ms"
+ },
+ "zeroElevUnthrottleThreshold": {
+  "title": "Write Buffer usage (percentage)",
+  "unit": "percent"
+ },
+ "zeroElevatorWaitOnCFTime": {
+  "title": "PLOG Zero Elevator Commit Related Timing",
+  "unit": "ns"
+ },
+ "zeroP": {
+  "title": "Elev throttling params",
+  "unit": "percent"
+ },
+ "zeroesBucket0": {
+  "title": "PLOG bucket zero usage",
+  "unit": "bytes"
+ },
+ "zeroesBucket1": {
+  "title": "PLOG bucket zero usage",
+  "unit": "bytes"
+ },
+ "zeroesBucket2": {
+  "title": "PLOG bucket zero usage",
+  "unit": "bytes"
+ },
+ "zeroesBucket3": {
+  "title": "PLOG bucket zero usage",
+  "unit": "bytes"
+ },
+ "zeroesBucket4": {
+  "title": "PLOG bucket zero usage",
+  "unit": "bytes"
+ },
+ "zeroesBucket5": {
+  "title": "PLOG bucket zero usage",
+  "unit": "bytes"
+ },
+ "zeroesBucket6": {
+  "title": "PLOG bucket zero usage",
+  "unit": "bytes"
+ },
+ "zeroesBucket7": {
+  "title": "PLOG bucket zero usage",
+  "unit": "bytes"
+ },
+ "zerosInFlight": {
+  "title": "Zero Stats",
+  "unit": "short"
+ },
+ "zerosInFlightSystem": {
+  "title": "Zero Stats",
+  "unit": "short"
+ },
+ "zerosProcessedSystem": {
+  "title": "Zero Stats",
+  "unit": "short"
+ }
+}

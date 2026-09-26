@@ -97,10 +97,45 @@ def text(dash_id, title, body_html, x, y, w=12, h=4, url=""):
     }
 
 
+# Placeholder registry. A dashboard file never carries real ids: every
+# resource kind and every pinned object is referenced by a placeholder
+# ("resourceKind:id:N_::_", "resource:id:N_::_") that the `entries` block maps
+# back to an adapterKind/resourceKind key -- or, for objects, to identifiers --
+# and the importing system resolves those locally. Confirmed against a UI
+# export of a working provider->receiver dashboard on 2026-09-25
+# (docs/assets/dashboard.interaction-working.json).
+_KINDS = {}
+_RESOURCES = []
+
+
+def kind_ref(resource_kind, adapter=ADAPTER):
+    key = (adapter, resource_kind)
+    if key not in _KINDS:
+        _KINDS[key] = f"resourceKind:id:{len(_KINDS)}_::_"
+    return _KINDS[key]
+
+
+def resource_ref(name, resource_kind, adapter, identifiers):
+    ref = f"resource:id:{len(_RESOURCES)}_::_"
+    _RESOURCES.append({"resourceKindKey": resource_kind, "internalId": ref,
+                       "adapterKindKey": adapter, "name": name,
+                       "identifiers": [{"key": k, "value": v}
+                                       for k, v in identifiers]})
+    return ref
+
+
 def dashboard(name, description, widgets_fn):
     did = str(uuid.uuid4())
+    _KINDS.clear()
+    del _RESOURCES[:]
+    widgets = widgets_fn(did)
+    entries = {"resourceKind": [
+        {"resourceKindKey": rk, "internalId": ref, "adapterKindKey": ak}
+        for (ak, rk), ref in _KINDS.items()]}
+    if _RESOURCES:
+        entries["resource"] = list(_RESOURCES)
     return {
-        "entries": {},
+        "entries": entries,
         "dashboards": [{
             "id": did, "name": name, "description": description,
             "shared": True, "hidden": False, "creationTime": 0,
@@ -116,7 +151,7 @@ def dashboard(name, description, widgets_fn):
             "docCenterKey": "", "namePath": "",
             "userId": "", "lastUpdateUserId": "",
             "lastUpdateTime": int(__import__("time").time() * 1000),
-            "widgets": widgets_fn(did),
+            "widgets": widgets,
         }],
         "uuid": str(uuid.uuid4()),
     }
@@ -204,7 +239,7 @@ def write(doc, name):
 
 
 def scoreboard(dash_id, title, resource_kind_name, metrics, x, y, w=4, h=5,
-               self_provider=True):
+               self_provider=True, columns=6):
     """metrics: list of (metricKey, label, yellow, orange, red)."""
     wid = str(uuid.uuid4())
     entries = []
@@ -216,7 +251,14 @@ def scoreboard(dash_id, title, resource_kind_name, metrics, x, y, w=4, h=5,
             "yellowBound": yb, "orangeBound": ob, "redBound": rb,
             "colorMethod": 0, "handleOldColoring": False,
             "isStringMetric": False, "link": "", "unit": "",
-            "metricUnitId": None, "id": f"extModel-{wid[:6]}-{i}",
+            # Pure digits after the prefix, matching every captured working
+            # example (extModel25291-1, extModel2578-1, ...). A hex fragment
+            # is the prime suspect for the "not done configuring" state seen
+            # on a scripted multi-metric dashboard 2026-09-25: if Operations
+            # parses this suffix as an integer, a hex letter silently fails
+            # to bind and the widget falls back to a default object badge.
+            "metricUnitId": None,
+            "id": f"extModel{abs(hash(wid)) % 90000 + 10000}-{i}",
         })
     return {
         "tabId": dash_id, "id": wid, "type": "Scoreboard", "title": title,
@@ -224,7 +266,7 @@ def scoreboard(dash_id, title, resource_kind_name, metrics, x, y, w=4, h=5,
         "gridsterCoords": {"x": x, "y": y, "w": w, "h": h},
         "config": {
             "title": title, "refreshInterval": 300,
-            "boxColumns": 4, "periodLength": "dashboardTime",
+            "boxColumns": columns, "periodLength": "dashboardTime",
             "showSparkline": {"showSparkline": True},
             "metric": {"mode": "resourceKind", "resourceMetrics": [],
                        "resourceKindMetrics": entries},
@@ -232,7 +274,10 @@ def scoreboard(dash_id, title, resource_kind_name, metrics, x, y, w=4, h=5,
             "mode": {"layoutMode": "fixedView"},
             "maxCellCount": 100, "oldMetricValues": False,
             "relationshipMode": {"relationshipMode": 0},
-            "valueSize": 24, "labelSize": 16, "roundDecimals": 0,
+            # 14/12 matches Broadcom's own densest panels (Configuration,
+            # Relevant Properties) -- their default 24/16 is sized for a
+            # single number filling the box, not several per row.
+            "valueSize": 10, "labelSize": 9, "roundDecimals": 0,
             "boxHeight": None, "visualTheme": 8, "depth": 1,
             "showResourceName": {"showResourceName": True},
             "showMetricName": {"showMetricName": True},
@@ -375,5 +420,151 @@ def scope_probe():
     return doc
 
 
+# ---------------------------------------------------------------------------
+# CONFIRMED provider -> receiver pattern (UI export, 2026-09-25).
+#
+# Provider: an Object List with selfProvider ON listing the cluster(s).
+# Receiver: a Scoreboard with selfProvider OFF, resource [], relationshipMode
+# -1 and depth 4, metric.mode "resourceKind" + subMode "resourceKindAll", and
+# every metric naming its kind by resourceKindName plus a placeholder id that
+# `entries.resourceKind` maps back to the adapter/kind keys. Wiring is a single
+# widgetInteractions entry of type "resourceId"; dashboardNavigations stays {}.
+#
+# With depth 4 the receiver walks descendants of the selected object and keeps
+# those of the named kind, so cluster -> host -> pNIC (depth 2) is in reach.
+
+
+def object_list_pinned(dash_id, title, x, y, name, moid, vcid, w=6, h=4):
+    """Provider pinned to ONE cluster by MoRef + vCenter instanceUuid.
+
+    Lab-test shape only: the entries block carries the identifiers, so this
+    resolves on the system it was exported from and nowhere else. The generic
+    (unpinned) cluster list is still to be captured from a UI export.
+    """
+    wid = str(uuid.uuid4())
+    ref = resource_ref(name, "ClusterComputeResource", "VMWARE",
+                       [("VMEntityObjectID", moid), ("VMEntityVCID", vcid)])
+    return {
+        "tabId": dash_id, "id": wid, "type": "ResourceList", "title": title,
+        "collapsed": False, "state": "", "height": 0, "states": None,
+        "gridsterCoords": {"x": x, "y": y, "w": w, "h": h},
+        "config": {
+            "refreshInterval": 300, "resource": [{"name": name, "id": ref}],
+            "widgetId": wid, "refreshContent": {"refreshContent": False},
+            "relationshipMode": {"relationshipMode": 0}, "description": "",
+            "title": title, "additionalColumns": [], "mode": "resource",
+            "filterMode": "tagPicker", "tagFilter": None, "depth": 1,
+            "customFilter": {"filter": [], "excludedResources": None,
+                             "includedResources": None},
+            "selectFirstRow": {"selectFirstRow": True}, "viewDetails": "",
+            "selfProvider": {"selfProvider": True},
+        },
+    }
+
+
+def scoreboard_receiver(dash_id, title, resource_kind, metrics, x, y,
+                        w=4, h=6, columns=6, depth=4):
+    """Receiver Scoreboard. metrics: [(metricKey, label, yellow, orange, red)].
+
+    Bounds of None -> plain value (colorMethod 2); any bound -> banded (0).
+    """
+    wid = str(uuid.uuid4())
+    kind_name = kind_label(resource_kind)
+    ref = kind_ref(resource_kind)
+    entries = []
+    for i, (key, label, yb, ob, rb) in enumerate(metrics):
+        validate(resource_kind, key)
+        banded = any(b is not None for b in (yb, ob, rb))
+        entries.append({
+            "yellowBound": yb, "orangeBound": ob, "redBound": rb,
+            "metricUnitId": -1, "metricName": label, "metricKey": key,
+            "label": label, "handleOldColoring": False, "link": "",
+            "resourceKindName": kind_name, "isStringMetric": False,
+            "resourceKindId": ref, "unit": "Auto",
+            "id": f"extModel{abs(hash(wid)) % 90000 + 10000}-{i}",
+            # 1 matches the one proven-working capture; Broadcom's own
+            # shipped dashboard uses 0 (banded) / 2 (unbounded) instead, so
+            # this is unconfirmed either way -- flag if it turns out to matter.
+            "colorMethod": 0 if banded else 1,
+        })
+    return {
+        "tabId": dash_id, "id": wid, "type": "Scoreboard", "title": title,
+        "collapsed": False, "state": "", "height": 0, "states": None,
+        "gridsterCoords": {"x": x, "y": y, "w": w, "h": h},
+        "config": {
+            "maxCellCount": 100, "oldMetricValues": False,
+            "relationshipMode": {"relationshipMode": -1}, "description": "",
+            # Smaller than even Broadcom's densest preset (14/12) --
+            # requested explicitly to pack more panels into less space.
+            "valueSize": 10, "title": title, "boxHeight": None,
+            "showResourceName": {"showResourceName": True},
+            "roundDecimals": None, "mode": {"layoutMode": "fixedView"},
+            "labelSize": 9,
+            "customFilter": {"filter": [], "excludedResources": None,
+                             "includedResources": None},
+            "viewDetails": "", "selfProvider": {"selfProvider": False},
+            "resInteractionMode": None, "visualTheme": 3,
+            "showMetricName": {"showMetricName": True},
+            "refreshInterval": 300, "resource": [], "widgetId": wid,
+            "showDT": {"showDT": False}, "showRemaining": False,
+            "refreshContent": {"refreshContent": True},
+            "focusOnPercent": False,
+            "showMetricUnit": {"showMetricUnit": True}, "depth": depth,
+            "metric": {"mode": "resourceKind", "resourceMetrics": [],
+                       "resourceKindMetrics": entries,
+                       "subMode": "resourceKindAll"},
+            "showSparkline": {"showSparkline": False},
+            "showPercentText": False, "boxColumns": columns,
+            "periodLength": None,
+        },
+    }
+
+
+def wire(doc, provider, receivers):
+    db = doc["dashboards"][0]
+    db["widgetInteractions"] = [
+        {"widgetIdProvider": provider["id"], "type": "resourceId",
+         "widgetIdReceiver": r["id"]} for r in receivers]
+    return doc
+
+
+def receiver_probe(name, moid, vcid):
+    """Pinned cluster -> one depth-1 kind (known to work) and two depth-2 kinds."""
+    def widgets(did):
+        prov = object_list_pinned(did, "Cluster", 1, 1, name, moid, vcid, w=12, h=3)
+        recv = [
+            scoreboard_receiver(did, "Depth 1: RDT latency (cluster kind)",
+                                "VsanClusterRdtLatency",
+                                [("avgLatency", "RDT avg latency", None, None, None)],
+                                1, 4),
+            scoreboard_receiver(did, "Depth 2: pNIC errors (host kind)", "VsanPnic",
+                                [("rxMissErr", "RX missed (ring full)", 0, 1, 10),
+                                 ("rxCrcErr", "RX CRC", 0, 1, 10)], 5, 4, w=8),
+            scoreboard_receiver(did, "Depth 2: TCP retransmits (host kind)",
+                                "VsanHostNet",
+                                [("tcpTxRexmitRate", "TCP retransmit rate", 0, 5, 10)],
+                                1, 10, w=12, columns=4),
+        ]
+        return [text(did, "Receiver probe",
+                     "<p>Pick the cluster. Panel 1 is a cluster-level kind and "
+                     "should fill (proven in the UI). Panels 2 and 3 are host-level "
+                     "kinds two hops down; if they fill, depth 4 reaches pNICs and "
+                     "every rapid screen can hang off one cluster selector.</p>",
+                     1, 16, w=12, h=3), prov] + recv
+    doc = dashboard("Rapid vSAN Receiver Probe v3", "Safe to delete.", widgets)
+    db = doc["dashboards"][0]
+    prov = next(w for w in db["widgets"] if w["type"] == "ResourceList")
+    recv = [w for w in db["widgets"] if w["type"] == "Scoreboard"]
+    return wire(doc, prov, recv)
+
+
 if __name__ == "__main__":
-    write(scope_probe(), "rapid-scope-probe")
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--pin", metavar="NAME,MOID,VCID",
+                    help="cluster to pin the receiver probe to (lab test only)")
+    args = ap.parse_args()
+    if args.pin:
+        write(receiver_probe(*args.pin.split(",")), "rapid-receiver-probe")
+    else:
+        write(scope_probe(), "rapid-scope-probe")

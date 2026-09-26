@@ -1,0 +1,173 @@
+{
+   "entries": {
+      "resourceKind": [{
+         "resourceKindKey": "VsanClusterRdtLatency",
+         "internalId": "resourceKind:id:0_::_",
+         "adapterKindKey": "VsanHostMetrics"
+      }],
+      "resource": [{
+         "resourceKindKey": "ClusterComputeResource",
+         "internalId": "resource:id:0_::_",
+         "adapterKindKey": "VMWARE",
+         "identifiers": [
+            {
+               "value": "domain-c9",
+               "key": "VMEntityObjectID"
+            },
+            {
+               "value": "a6283d65-9225-4782-a612-35deb597a5a3",
+               "key": "VMEntityVCID"
+            }
+         ],
+         "name": "mgmt01-cl01"
+      }]
+   },
+   "dashboards": [{
+      "shared": false,
+      "hidden": false,
+      "creationTime": 0,
+      "autoswitchEnabled": false,
+      "importAttempts": 0,
+      "lastUpdateUserId": "833b693b-0960-4d05-b868-f14446488fc3",
+      "columnProportion": "1",
+      "importComplete": true,
+      "description": "",
+      "columnCount": 0,
+      "widgets": [
+         {
+            "tabId": "b6e080f6-f37e-4a78-9340-19cf93a70697",
+            "collapsed": false,
+            "id": "aa8e6c0e-8408-4bd3-aeaf-9302db0fbb4c",
+            "gridsterCoords": {
+               "w": 6,
+               "x": 1,
+               "h": 4,
+               "y": 1
+            },
+            "state": "",
+            "type": "ResourceList",
+            "title": "Object List",
+            "config": {
+               "refreshInterval": 300,
+               "resource": [{
+                  "name": "mgmt01-cl01",
+                  "id": "resource:id:0_::_"
+               }],
+               "widgetId": "aa8e6c0e-8408-4bd3-aeaf-9302db0fbb4c",
+               "refreshContent": {"refreshContent": false},
+               "relationshipMode": {"relationshipMode": 0},
+               "description": "",
+               "title": "Object List",
+               "additionalColumns": [],
+               "mode": "resource",
+               "filterMode": "tagPicker",
+               "tagFilter": null,
+               "depth": 1,
+               "customFilter": {
+                  "filter": [],
+                  "excludedResources": null,
+                  "includedResources": null
+               },
+               "selectFirstRow": {"selectFirstRow": false},
+               "viewDetails": "",
+               "selfProvider": {"selfProvider": true}
+            },
+            "height": 0,
+            "states": [{
+               "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253Ah1%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah2%255Eo%25253Aid%25253Ds%2525253Ah3%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah4%255Eo%25253Aid%25253Ds%2525253Ah5%255Eo%25253Aid%25253Ds%2525253Ah6%255Eo%25253Aid%25253Ds%2525253Ah7%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah8%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah9%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah10%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah11%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah12%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah13%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah14%255Eo%25253Aid%25253Ds%2525253Ah15%255Eo%25253Aid%25253Ds%2525253Ah16%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253AresourceRating%25255Ehidden%25253Db%2525253A1%255Eo%25253Aid%25253Ds%2525253Ah18%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah19%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah20%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah21%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah22%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah23%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah24%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah25%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah26%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah27%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah28%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah29%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah30%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah31%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah32%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah33%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah34%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah35%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah36%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah37%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah38%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah39%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah40%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah41%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah42%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah43%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah44%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah45%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah46%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100%255Eo%25253Aid%25253Ds%2525253Ah47%25255Ehidden%25253Db%2525253A1%25255Ewidth%25253Dn%2525253A100",
+               "key": "permResGrid_widget_b6e080f6-f37e-4a78-9340-19cf93a70697_aa8e6c0e-8408-4bd3-aeaf-9302db0fbb4c"
+            }]
+         },
+         {
+            "tabId": "b6e080f6-f37e-4a78-9340-19cf93a70697",
+            "collapsed": false,
+            "id": "929eaa24-2641-4359-bc65-f3cc8bea6661",
+            "gridsterCoords": {
+               "w": 4,
+               "x": 1,
+               "h": 6,
+               "y": 5
+            },
+            "state": "",
+            "type": "Scoreboard",
+            "title": "Scoreboard",
+            "config": {
+               "maxCellCount": 100,
+               "oldMetricValues": false,
+               "relationshipMode": {"relationshipMode": -1},
+               "description": "",
+               "valueSize": 24,
+               "title": "Scoreboard",
+               "boxHeight": null,
+               "showResourceName": {"showResourceName": true},
+               "roundDecimals": null,
+               "mode": {"layoutMode": "fixedView"},
+               "labelSize": 16,
+               "customFilter": {
+                  "filter": [],
+                  "excludedResources": null,
+                  "includedResources": null
+               },
+               "viewDetails": "",
+               "selfProvider": {"selfProvider": false},
+               "resInteractionMode": null,
+               "visualTheme": 3,
+               "showMetricName": {"showMetricName": true},
+               "refreshInterval": 300,
+               "resource": [],
+               "widgetId": "929eaa24-2641-4359-bc65-f3cc8bea6661",
+               "showDT": {"showDT": false},
+               "showRemaining": false,
+               "refreshContent": {"refreshContent": true},
+               "focusOnPercent": false,
+               "showMetricUnit": {"showMetricUnit": true},
+               "depth": 4,
+               "metric": {
+                  "mode": "resourceKind",
+                  "resourceMetrics": [],
+                  "resourceKindMetrics": [{
+                     "yellowBound": null,
+                     "metricUnitId": -1,
+                     "metricName": "RDT Network VNIC Average Latency",
+                     "metricKey": "avgLatency",
+                     "handleOldColoring": false,
+                     "link": "",
+                     "resourceKindName": "vSAN Cluster RDT Latency",
+                     "isStringMetric": false,
+                     "resourceKindId": "resourceKind:id:0_::_",
+                     "orangeBound": null,
+                     "unit": "Auto",
+                     "redBound": null,
+                     "id": "extModel25291-1",
+                     "colorMethod": 1
+                  }],
+                  "subMode": "resourceKindAll"
+               },
+               "showSparkline": {"showSparkline": false},
+               "showPercentText": false,
+               "boxColumns": 2,
+               "periodLength": null
+            },
+            "height": 0
+         }
+      ],
+      "userId": "833b693b-0960-4d05-b868-f14446488fc3",
+      "states": [],
+      "editAllowed": true,
+      "homeTab": false,
+      "name": "interactiontest",
+      "gridsterMaxColumns": 12,
+      "rank": 0,
+      "disabled": false,
+      "id": "b6e080f6-f37e-4a78-9340-19cf93a70697",
+      "locked": false,
+      "dashboardNavigations": {},
+      "widgetInteractions": [{
+         "widgetIdProvider": "aa8e6c0e-8408-4bd3-aeaf-9302db0fbb4c",
+         "type": "resourceId",
+         "widgetIdReceiver": "929eaa24-2641-4359-bc65-f3cc8bea6661"
+      }],
+      "lastUpdateTime": 1790356539772
+   }],
+   "uuid": "d39d7cd1-5e8d-405a-a1ef-f3f54ac9169b"
+}

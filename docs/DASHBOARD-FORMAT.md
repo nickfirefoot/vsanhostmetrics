@@ -291,3 +291,73 @@ The **provider widget**. Broadcom's is a `View` with a `viewDefinitionId`,
 which is separate shippable content. Whether a simpler provider exists that
 needs no view definition -- and its config shape -- has not been observed. This
 is the last gap before dashboards can ship in the pak.
+
+
+## Provider -> receiver: CONFIRMED (2026-09-25)
+
+Built in the UI, verified rendering a value off the selected cluster, then
+exported: `assets/dashboard.interaction-working.json`. This supersedes the
+guesses in the scope probes.
+
+**Provider** — `ResourceList` (Object List), `selfProvider: true`,
+`mode: "resource"`, `relationshipMode: 0`, `depth: 1`, `resource:
+[{"name": ..., "id": "resource:id:0_::_"}]`. The placeholder is mapped in
+`entries.resource` to the object's `adapterKindKey`, `resourceKindKey` and
+identifiers (`VMEntityObjectID` = MoRef, `VMEntityVCID` = vCenter
+instanceUuid). That pins the widget to one object on one system — fine for
+a lab test, not shippable. The generic form (all clusters) is still unobserved.
+
+**Receiver** — `Scoreboard`, `selfProvider: false`, `resource: []`,
+`relationshipMode: {"relationshipMode": -1}`, `depth: 4`,
+`refreshContent: true`, `metric.mode: "resourceKind"`,
+`metric.subMode: "resourceKindAll"`. Each `resourceKindMetrics` entry names
+its kind twice: `resourceKindName` (display label) and `resourceKindId`
+(placeholder `resourceKind:id:N_::_`), and `entries.resourceKind` maps the
+placeholder to `{adapterKindKey, resourceKindKey}`. `unit: "Auto"`,
+`metricUnitId: -1`. Broadcom's own receivers use `depth: 1` and
+`relationshipMode: 0`; the UI-built one uses `-1`/`4` — both are receivers,
+the difference is how far down the selected object's descendants are searched.
+
+**Wiring** — one entry per receiver in the dashboard's `widgetInteractions`:
+`{"widgetIdProvider": <provider widget id>, "type": "resourceId",
+"widgetIdReceiver": <receiver widget id>}`. `dashboardNavigations` is `{}` —
+it is not needed for in-dashboard interaction.
+
+**Envelope** — `columnCount: 0`, `columnProportion: "1"` in this export (the
+earlier note of `1`/`"1-1"` also imports; neither is load-bearing).
+
+## Do not reconstruct these files. Clone one. (2026-09-26)
+
+Every dashboard generated from the notes above failed on import, in three
+different ways: a generic object badge instead of the configured metrics,
+"this dashboard is not done configuring", or blank panels. Diffing a generated
+file against a dashboard built by hand in the UI and exported
+(`assets/dashboard.interaction-working.json`) found the reconstruction wrong at
+the **dashboard** level, not the widget level:
+
+| Field | Generated | Real export |
+|---|---|---|
+| `userId` / `lastUpdateUserId` | `""` | the owner's UUID |
+| `columnCount` | `1` | `0` |
+| `columnProportion` | `"1-1"` | `"1"` |
+| `shared` | `true` | `false` |
+| `adapterName`, `docCenterKey`, `namePath` | present | **do not exist** |
+
+`userId: ""` is a dashboard with no owner, which is the most likely cause of
+"not done configuring". The three invented keys came from an earlier note
+claiming they were "present in every working export"; they are not present in
+the one export confirmed to work, and that note was wrong.
+
+The lesson generalises: this format has fields nobody here has decoded, and a
+file assembled from a partial understanding of it is a file with unknown
+defects. `tools/clone_dashboard.py` therefore takes the working export
+verbatim and mutates only ids, names, coordinates, font sizes and which
+metrics a Scoreboard points at. New Scoreboards are deep copies of the proven
+one, so a panel cannot gain or lose a key -- `scoreboard_from` asserts on key
+drift rather than letting it through.
+
+**Known limitation:** the cloned provider is an Object List pinned to one
+cluster by MoRef, so it resolves only on the system the original was exported
+from. A View widget backed by a saved View definition is the shippable
+provider -- Broadcom's own dashboards use exactly that -- but no export of one
+has been captured yet, so it is not yet clonable.
