@@ -1,4 +1,15 @@
 #!/usr/bin/env python3
+"""SUPERSEDED -- see content/DASHBOARD-STORYBOARD.md.
+
+Dashboards are built in the Operations UI from that spec, not generated
+here. Files this produced imported without error but rendered wrongly,
+and verifying each attempt needed a human to import it and describe the
+screen -- too slow a loop to converge. Kept for the format notes it
+encodes (resourceKindId, the widget shapes) and for reuse once a real
+multi-panel export exists to clone.
+"""
+
+# Original module docstring follows.
 """Generate the rapid dashboards as UI-importable zips.
 
     python3 tools/build_dashboard.py

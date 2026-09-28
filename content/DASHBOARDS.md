@@ -1,5 +1,12 @@
 # Dashboard and alerting design
 
+> **The rapid dashboard screens are now specified in
+> [`DASHBOARD-STORYBOARD.md`](DASHBOARD-STORYBOARD.md)** — layouts, exact
+> metric keys, units and thresholds, written to be built in the Operations UI
+> by hand. This file remains the design rationale, the alerting and supermetric
+> work, and the collection-scale notes behind those screens.
+
+
 > **Sections below "What we have to work with" describe the retired host-scrape
 > model** (`vmware_esx_*` resource kinds) and are kept for the threshold and
 > HCIBench research in them. The current model is the Performance Service one;

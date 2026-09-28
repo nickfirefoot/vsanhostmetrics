@@ -1,4 +1,14 @@
 #!/usr/bin/env python3
+"""SUPERSEDED -- see content/DASHBOARD-STORYBOARD.md.
+
+Cloning a working export was judged more complex than the problem
+warranted: what is wanted is importable files, and those come from
+building in the UI. Kept because the clone approach is the right one IF
+generation is ever revisited -- it mutates a proven artifact rather than
+reconstructing the format from notes.
+"""
+
+# Original module docstring follows.
 """Build dashboards by CLONING a known-good export, not by reconstructing one.
 
     python3 tools/clone_dashboard.py
