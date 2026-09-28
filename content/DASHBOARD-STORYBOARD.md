@@ -99,6 +99,33 @@ fed by a cluster selection, rendering `avgLatency` from **vSAN Cluster RDT
 Latency** — a depth-1 kind. Exported at
 `docs/assets/dashboard.interaction-working.json`.
 
+### 3.1a If a panel is blank on load but fills when you change a setting
+
+**Symptom:** the pNIC panels populate sometimes and not others, with nothing
+done differently. Changing the Input Transformation depth from 2 to 3 and back
+makes them appear.
+
+**Not a data problem.** Checked against the stored series: all seven pNIC
+objects hold 72 samples over six hours on an exact five-minute cadence, no
+gaps, newest sample 3.5 minutes old, 100% availability, all `DATA_RECEIVING`.
+
+**Cause:** a receiver renders nothing until the provider *fires a selection*.
+The confirmed-working export has `selectFirstRow: false` on its provider, so on
+dashboard load no row is selected, no interaction fires, and every receiver
+below is blank. Editing any receiver setting forces it to re-resolve against
+whatever selection exists by then, which is why toggling the depth "fixes" it.
+
+**Fix: set Select First Row ON on the provider widget.** A selection then
+always exists at load and the interaction fires without anyone clicking. Do
+this on every screen — it is the difference between a dashboard that works and
+one that works only after you poke it.
+
+Worth checking alongside it: the Scoreboard's **Show old metric values**. The
+working export has it off, and with collection and widget refresh both on 300
+seconds the two drift in and out of phase, which can blank a panel for part of
+each cycle. Turning it on makes a panel show the last known value rather than
+nothing.
+
 ### 3.2a The working recipe — confirmed in the UI, 2026-09-28
 
 Established by building it, so this supersedes any depth guidance elsewhere in

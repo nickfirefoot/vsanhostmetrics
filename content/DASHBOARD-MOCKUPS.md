@@ -7,6 +7,12 @@ every row, so a panel can be built straight from the picture.
 Every "healthy" value is real, sampled from a live 4-host ESA cluster on
 2026-09-28 — so this doubles as a baseline of what normal reads.
 
+> **If a panel is blank, before suspecting the metric:** set **Select First
+> Row ON** on the provider widget. With it off, nothing is selected at load,
+> no interaction fires, and every receiver renders empty until something forces
+> a re-resolve — which is why changing the depth and changing it back appears
+> to fix it. See `DASHBOARD-STORYBOARD.md` §3.1a.
+
 ```
 LEGEND   ● within bounds   ▲ yellow   ⬛ orange   ✖ red   · no data
          ↑ cumulative counter since boot — watch the delta, not the value
