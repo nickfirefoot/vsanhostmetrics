@@ -154,6 +154,23 @@ the dashboard's window instead of demanding a value from the last instant.
 The confirmed-working export has `periodLength: null`, but that dashboard was
 a single-value binding test, not a working screen — do not copy it here.
 
+**If the Period control is not visible in the widget config**, it is probably
+because the widget has no reason to have a period yet. Comparing a Broadcom
+Scoreboard that sets `dashboardTime` against the test export that does not,
+the one other difference that would require a time range is
+**`showSparkline`** — on in theirs, off in the test export.
+
+1. **Turn Show Sparkline on**, then look for the Period control again. A
+   sparkline plots over time, so the widget needs a range to draw it. Sparklines
+   are worth having on a rapid screen regardless: a flat line beside a zero says
+   *still zero*, where a bare zero only says *zero right now*.
+2. **Or add any time-series widget** — a Metric Chart or Trend — to the
+   dashboard. The message asks for *one or more* widget on dashboard time, and
+   a chart uses it inherently, so that alone should un-grey the selector.
+
+Broadcom also run `visualTheme: 8` where the test export has `3`; if neither
+of the above works, the theme may change which options the panel exposes.
+
 #### Secondary, once dashboard time is set
 
 
