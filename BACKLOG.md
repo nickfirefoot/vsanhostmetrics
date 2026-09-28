@@ -377,6 +377,63 @@ goes to many sites.
 - Consider turning SSH back off on the Cloud Proxy once validation is done; it
   is disabled by default as deliberate hardening.
 
+## Relationships: the VM tier is a third orphaned
+
+**64 of 848 objects have no parent, and every one of them belongs to a
+vSphere Pod VM.** Measured against the live instance 2026-09-28.
+
+| Our kind | Objects | Parented | Orphaned | Parent when it works |
+|---|---|---|---|---|
+| `VsanVirtualMachine` | 30 | 20 | **10** | `VMWARE/VirtualMachine` |
+| `VsanVirtualDisk` | 60 | 33 | **27** | `VMWARE/VirtualMachine` |
+| `VsanVscsi` | 106 | 79 | **27** | `VMWARE/VirtualMachine` |
+
+Everything else is correctly attached: the six cluster-scoped kinds to
+`ClusterComputeResource` at depth 1, and all 21 host-scoped kinds -- including
+`VsanPnic` -- to `HostSystem` at depth 2. Confirmed by walking CHILD from the
+cluster: depth 1 yields 7 of our kinds, depth 2 yields 21, depth 3 the VM tier.
+
+### Cause: the join target does not exist in Operations
+
+Not our bug, but ours to work around. The chain:
+
+| Where | What it holds |
+|---|---|
+| vCenter | **35** `vim.VirtualMachine` objects, including all 10 pod VMs, each with a valid `uuid`, `instanceUuid` and MoRef (`vm-8043`, ...) |
+| vSAN Performance Service | reports all 30 VMs it has storage for, pod VMs included |
+| **Operations' VMWARE adapter** | **28** `VirtualMachine` objects -- **the 10 pod VMs are absent** |
+
+`build_parent_map` resolves those MoRefs correctly; the relationship then
+points at a `VMWARE/VirtualMachine` object that Operations never created, and
+fails silently. The pod VMs (`harbor-*`, `cci-ns-controller-manager-*`,
+`metrics-aggregator-*`) are Supervisor-managed and the vCenter adapter does
+not model them as virtual machines.
+
+### Consequences
+
+- A cluster-scoped selector reaches **20 of 30** vSAN VM objects and **79 of
+  106** vSCSI objects. `content/DASHBOARD-MOCKUPS.md` screen 7 silently shows
+  two thirds of the estate, with no indication the rest exist.
+- Orphans roll up nowhere -- no contribution to cluster or host health, and
+  invisible to anything scoped by relationship.
+- This will be **worse on customer sites running Supervisor/TKG at scale**,
+  where pod VMs can outnumber conventional ones.
+
+### Fix: attach VM-scoped objects to the host as well
+
+`vm.runtime.host` is already readable in the same container view -- the pod
+VMs above all return `host-12` -- and Operations *does* hold every
+`HostSystem`. Operations supports multiple parents (a lab HostSystem has 3),
+so record `vm_moid -> host_moid` in `build_parent_map` and attach VM-scoped
+objects to both the VirtualMachine and the HostSystem.
+
+Where the VM object exists, the VM relationship stays and the host becomes a
+second path. Where it does not, the host relationship still lands, so the
+object is reachable at depth 2 and rolls up. No object is orphaned either way.
+
+Worth a guard test asserting no collected object ships without at least one
+parent, since this failed silently for as long as it has.
+
 ## Object naming
 
 **Fourteen resource kinds are not named `vSAN ...`, and all fourteen carry

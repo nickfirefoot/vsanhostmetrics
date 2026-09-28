@@ -290,6 +290,15 @@ together means the rebuild is eating production IO.
 ## Screen 7 — Rapid vSAN VM
 
 ```
+> **⚠ Screen 7 is incomplete by a third, and not because of anything on this
+> screen.** 10 of 30 `vSAN Virtual Machine`, 27 of 60 `vSAN Virtual Disk` and
+> 27 of 106 `vSAN vSCSI` objects have **no parent**, so a cluster-scoped
+> selector cannot reach them. They are all vSphere Pod VMs, which the vCenter
+> adapter does not model as virtual machines — so the relationship points at
+> an object Operations never created. Build the screen; know that it shows
+> conventional VMs only until the fix in `BACKLOG.md` lands. On a site running
+> Supervisor at scale the hidden fraction will be larger.
+
 ┌─ WORST VMs BY LATENCY ─────────────────────────────────────────────────────────────┐
 │ object: vSAN Virtual Machine       sort by latencyWrite desc    30 objects, d 1-2  │
 │ VM         latencyRead  latencyWrite  iopsRead  iopsWrite                          │
