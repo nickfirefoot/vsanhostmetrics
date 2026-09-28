@@ -120,9 +120,46 @@ always exists at load and the interaction fires without anyone clicking. Do
 this on every screen — it is the difference between a dashboard that works and
 one that works only after you poke it.
 
-### 3.1b Panels that blank on auto-refresh and come back when you click refresh
+### 3.1b Set every performance panel to Dashboard Time — it fixes two things
 
-A second, separate cause with the same appearance. Measured 2026-09-28:
+**Symptoms, which look unrelated but are not:**
+
+- The `1H / 6H / 24H / 7D / CUSTOM` selector is **greyed out**, with *"one or
+  more widget on this dashboard should be set to dashboardTime to enable
+  dashboard level time constraints"*.
+- Panels **blank at random** and come back when you click refresh.
+
+**One cause: the widgets are not bound to dashboard time** (`periodLength`
+unset). Operations greys out the selector because no widget would honour it,
+and an unbound Scoreboard falls back to latest-value semantics — so if the
+newest sample is a moment too old, it shows nothing rather than looking back
+over a window.
+
+**Broadcom's own vSAN dashboard makes the rule explicit:**
+
+| Their panel | `periodLength` | Metrics |
+|---|---|---|
+| Storage Pool: Contention, Compute & Network, Physical Disk: Utilization, Storage Pool: Utilization, Utilization, Physical Disk: Contention, Contention | **`dashboardTime`** | all numeric |
+| Relevant Properties | `null` | 5 of 5 string properties |
+| Configuration | `null` | mostly string properties |
+
+**Every performance panel uses dashboard time. Only config/property panels do
+not** — a time range is meaningless for "is dedup enabled".
+
+**So: set the Period / Time setting on every Scoreboard in this document to
+Dashboard Time.** All of them are numeric performance metrics; none are
+property panels. That enables the time selector *and* makes each panel query
+the dashboard's window instead of demanding a value from the last instant.
+
+The confirmed-working export has `periodLength: null`, but that dashboard was
+a single-value binding test, not a working screen — do not copy it here.
+
+#### Secondary, once dashboard time is set
+
+
+
+If panels still blank occasionally, there is a second contributor. Measured
+2026-09-28:
 
 | | |
 |---|---|

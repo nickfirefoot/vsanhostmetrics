@@ -13,10 +13,13 @@ Every "healthy" value is real, sampled from a live 4-host ESA cluster on
 > a re-resolve — which is why changing the depth and changing it back appears
 > to fix it. See `DASHBOARD-STORYBOARD.md` §3.1a.
 >
-> **And if panels blank on auto-refresh but return when you click refresh:**
-> turn **Show old metric values ON** and move the refresh interval off 300 s.
-> Collection lands every 299–301 s and the default refresh is 300 s, so the
-> two beat against each other and lock into a phase for hours. See §3.1b.
+> **Set every Scoreboard's Period to Dashboard Time.** Without it the
+> `1H/6H/24H` selector greys out (*"one or more widget... should be set to
+> dashboardTime"*) and panels blank at random, because an unbound Scoreboard
+> demands a value from the last instant instead of querying a window. Every
+> panel in this document is a numeric performance panel, so every one of them
+> wants it — Broadcom set it on all 7 of their own metric Scoreboards and
+> omitted it only on the 2 that show config strings. See §3.1b.
 
 ```
 LEGEND   ● within bounds   ▲ yellow   ⬛ orange   ✖ red   · no data
