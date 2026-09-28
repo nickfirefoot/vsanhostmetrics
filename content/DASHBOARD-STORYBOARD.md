@@ -5,6 +5,10 @@ specified down to the metric key, so nothing here requires guessing what was
 meant. Where something is unverified it says so; please treat those as
 questions rather than instructions.
 
+**Panel-by-panel mockups with real measured values are in
+[`DASHBOARD-MOCKUPS.md`](DASHBOARD-MOCKUPS.md)** — what each screen should
+look like built, healthy and degraded, plus a baseline of what normal reads.
+
 Build them in the UI. Do not hand-write the dashboard JSON — see
 [Appendix A](#appendix-a-why-this-is-a-spec-and-not-a-file) for why.
 
@@ -160,8 +164,8 @@ All panels are **depth 1** — the proven-working case. Build this one first.
 | | | `oio` | Outstanding IO | count | — |
 | Transport | vSAN Cluster RDT Latency | `avgLatency` | RDT Average Latency | µs | 500 / 2000 / 5000 |
 | | | `maxLatency` | RDT Max Latency | µs | 5000 / 20000 / 50000 |
-| | | `kaReset` | Keepalive reset | count | **1 / 2 / 5** |
-| | | `numReadyDelay` | Num ready delay | count | 1 / 10 / 100 |
+| | | `kaReset` | Keepalive reset | count | **none — cumulative, see below** |
+| | | `numReadyDelay` | Num ready delay | count | **none — cumulative** |
 | Back end | Cluster Domcompmgr | `latencyAvgRead` | Read Latency | µs | 2000 / 5000 / 10000 |
 | | | `latencyAvgWrite` | Write Latency | µs | 2000 / 5000 / 10000 |
 | | | `congestion` | Congestions | count | 1 / 10 / 50 |
@@ -170,9 +174,11 @@ All panels are **depth 1** — the proven-working case. Build this one first.
 | | | `latAvgResyncRead` | Resync Read Latency | µs | 5000 / 20000 / 50000 |
 | | | `iopsRecWrite` | Recovery Write IOPS | IOPS | — |
 
-**`kaReset` deserves its own tile.** A keepalive reset means RDT gave up on a
-peer connection. It should be zero forever; any non-zero value is the clearest
-single indicator of a transport problem underneath a network that looks fine.
+**`kaReset` deserves its own tile, but not a threshold.** A keepalive reset
+means RDT gave up on a peer connection. Live sampling shows it **cumulative
+since boot** -- 13 on the healthy lab cluster, flat across an hour -- so an
+absolute bound would sit permanently red. Show it unbounded and alert on
+**rate of change**. The same applies to `numReadyDelay` (25, flat).
 
 **Capacity is on Overview deliberately** — exhaustion takes a cluster
 read-only, which is an outage, not a performance issue.
@@ -219,8 +225,13 @@ read-only, which is an outage, not a performance issue.
 | | | `rxPacketsLossRate` | Inbound Packet Discard Rate | % | 0.1 / 0.5 / 1.0 |
 | | | `txPacketsLossRate` | Outbound Packet Discard Rate | % | 0.1 / 0.5 / 1.0 |
 | Congestion | vSAN Physical NIC | `pauseCount` | pNic 802.3x Pause Rate | % | 0.1 / 0.5 / 1.0 |
-| TCP health | vSAN Host Network | `tcpTxRexmitRate` | TCP TX retransmit (rate) | — | 0.1 / 0.5 / 1.0 |
-| | | `tcpRxErrRate` | TCP RX errors (rate) | — | 0.1 / 0.5 / 1.0 |
+| TCP health | vSAN Host Network | `tcpTxRexmitRate` | TCP TX retransmit (rate) | — | **returns no data** |
+| | | `tcpRxErrRate` | TCP RX errors (rate) | — | **returns no data** |
+
+**The two TCP metrics return no data at all** from the Performance Service --
+absent, not zero (verified 2026-09-28). Build the panel since it costs
+nothing and may populate elsewhere, but do not design the screen around it or
+alert on it. Retransmit visibility is a genuine gap; see `BACKLOG.md`.
 
 **Threshold source:** Broadcom's *Understanding vSAN Network TCP/IP
 Expectations and Thresholds* — warning 0.1%, immediate 0.5%, critical 1.0%.
@@ -266,8 +277,8 @@ Cluster panel is **depth 1**; per-host panels are **depth 2**.
 
 | Panel | Object type | Metric key | Label | Unit | Yellow / Orange / Red |
 |---|---|---|---|---|---|
-| Connection | vSAN Cluster RDT Latency | `kaReset` | Keepalive reset | count | 1 / 2 / 5 |
-| | | `numReadyDelay` | Num ready delay | count | 1 / 10 / 100 |
+| Connection | vSAN Cluster RDT Latency | `kaReset` | Keepalive reset | count | **none — cumulative** |
+| | | `numReadyDelay` | Num ready delay | count | **none — cumulative** |
 | Latency | | `avgLatency` | RDT Average Latency | µs | 500 / 2000 / 5000 |
 | | | `maxLatency` | RDT Max Latency | µs | 5000 / 20000 / 50000 |
 | | | `minLatency` | RDT Min Latency | µs | — |
@@ -316,7 +327,7 @@ single most misreadable pair in the pack.
 |---|---|---|---|---|
 | vSAN layer latency | Vsan Esa Disk Layer | `avgLatReadCapacity` | vSAN Layer Average Read Latency | µs |
 | | | `avgLatWriteCapacity` | vSAN Layer Average Write Latency | µs |
-| Divergence | | `avgLatReadPerf` | Latency read perf (average) | µs |
+| Divergence | | `avgLatReadPerf` | Latency read perf (average) | µs — **reads 0 on every disk** |
 | | | `avgLatWritePerf` | Latency write perf (average) | µs |
 | | | `avgLatUnmapCapacity` | Latency unmap capacity (average) | µs |
 | Load | | `iopsReadCapacity` | vSAN Layer Read IOPS | IOPS |
