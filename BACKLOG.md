@@ -434,6 +434,38 @@ object is reachable at depth 2 and rolls up. No object is orphaned either way.
 Worth a guard test asserting no collected object ships without at least one
 parent, since this failed silently for as long as it has.
 
+## Container CVEs: what is fixable here and what is not
+
+The build now applies Debian security updates on top of the SDK's base image
+(`Dockerfile`, `USER 0` / `apt-get upgrade` / `USER aria-ops-adapter-user`).
+Measured on the base `base-adapter:python-1.2.0` (Debian 12 bookworm,
+105 packages) 2026-09-28:
+
+| Package | Base image | After the upgrade layer |
+|---|---|---|
+| `openssl` | 3.0.20-1~deb12u2 | **3.0.22-1~deb12u1** (security) |
+| `libssl3` | 3.0.20-1~deb12u2 | **3.0.22-1~deb12u1** (security) |
+| `tzdata` | 2026b-0+deb12u1 | **2026c-0+deb12u1** |
+
+Nothing else was behind, and the rebuilt image reports zero upgradable
+packages. Runtime user (uid 1000) and working directory are unchanged; the
+adapter imports and `ssl.OPENSSL_VERSION` reports 3.0.22. Cost: ~81 MB of
+image size, from apt's replacement copies.
+
+**What this does not fix, and cannot from here:**
+
+- **`perl-base` 5.36.0-7+deb12u3** -- the source of most scanner noise. It is
+  Debian **Essential**, so it cannot be removed without breaking dpkg, and it
+  is already at the newest version bookworm ships. Findings against it are
+  unfixed upstream, not a missing patch. Not actionable in this repository.
+- **Python 3.11.12**, pinned by the SDK's base image (3.11.16 exists). Changing
+  it means changing `FROM base-adapter:python-1.2.0`, which the SDK generates
+  and which Operations expects. Raise with the SDK team rather than forking.
+- Python dependencies are current -- `pip list --outdated` is empty.
+
+Re-run the upgrade check whenever a release is cut; the base image drifts
+further behind with time, and this layer is the only thing closing the gap.
+
 ## Object naming
 
 **Fourteen resource kinds are not named `vSAN ...`, and all fourteen carry
