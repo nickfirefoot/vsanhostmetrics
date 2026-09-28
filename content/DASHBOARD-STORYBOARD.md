@@ -99,6 +99,29 @@ fed by a cluster selection, rendering `avgLatency` from **vSAN Cluster RDT
 Latency** — a depth-1 kind. Exported at
 `docs/assets/dashboard.interaction-working.json`.
 
+### 3.2a The working recipe — confirmed in the UI, 2026-09-28
+
+Established by building it, so this supersedes any depth guidance elsewhere in
+this document:
+
+| Setting | Value |
+|---|---|
+| Input Transformation | **All objects** |
+| Output Transformation | **VCF world performance list** |
+| Depth — NIC-level stats naming the vmnic | **2** |
+| Depth — buffer and CRC counters | **3** |
+
+**Metrics on what looks like the same object do not all sit at the same
+depth.** Stats whose object name carries the vmnic (`esxi01 [vmnic0]`) resolve
+at depth 2; buffer and CRC counters resolve at depth 3. If a panel is empty at
+one depth, try the other before assuming the metric or the relationship is
+wrong.
+
+That distinction is invisible from the API — walking `CHILD` from the cluster
+puts every host-scoped kind, `VsanPnic` included, exactly 2 hops down. The
+widget's depth field evidently counts along a different path, so **the UI is
+the authority here, not the object graph.**
+
 **The relationships behind depth 2 are confirmed** (2026-09-28, by walking
 CHILD from the cluster through Operations' own API): depth 1 returns the 7
 cluster-scoped kinds, depth 2 returns all 21 host-scoped kinds including
