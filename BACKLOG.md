@@ -379,6 +379,39 @@ goes to many sites.
 
 ## Object naming
 
+**Fourteen resource kinds are not named `vSAN ...`, and all fourteen carry
+data.** Verified against the live Operations instance 2026-09-28
+(`/suite-api/api/adapterkinds/VsanHostMetrics/resourcekinds`, 70 kinds
+registered). They fall into three groups in the object-type picker:
+
+| Group | Count | Examples |
+|---|---|---|
+| No `vSAN` prefix at all | 10 | `Cluster Domclient`, `Cluster Domcompmgr`, `Cluster Domowner`, `Host Domclient`, `Host Domcompmgr`, `Host Domowner`, `Cmmds Net`, `Zdom Vtx`, `Host Vsansparse`, `Host Zdom Top Stats` |
+| `Vsan` instead of `vSAN` | 4 | `Vsan Cluster Capacity`, `Vsan Esa Disk Layer`, `Vsan Esa Disk Scsifw`, `Vsan Dp Historical Stats` |
+| Correct (`vSAN ...`) | 55 | `vSAN Physical NIC`, `vSAN Cluster RDT Latency` |
+
+**Why this matters more than cosmetics.** Someone building a dashboard types
+"vSAN" into the object-type picker to find our kinds. These fourteen do not
+appear -- they sort into two separate alphabetical blocks, one above every
+`vSAN` entry and one below. The affected set is not obscure: it is every DOM
+family (client, owner, component manager, at both cluster and host scope),
+cluster capacity, and both ESA disk kinds. **Eight of the seventeen object
+types used by `content/DASHBOARD-MOCKUPS.md` are in this group.**
+
+The cause is that `label` is derived per entity and the prefix rule was not
+applied uniformly -- `build_model_extra.py:label_for()` appends `vSAN ` only
+when the text does not already start with "vsan", which lets `Vsan Cluster
+Capacity` through unchanged, and the live model's labels were never passed
+through that rule at all.
+
+Fix: normalise every label to `vSAN <Title Case>` at generation time, and add
+a guard test asserting no label escapes without the prefix. Renaming a
+**display name** should be safe -- the resource kind key is what identifies
+the object and its history -- but confirm against a populated instance before
+shipping it, since dashboards and views referencing a kind by name would need
+re-pointing.
+
+
 **~~`virtual-disk` objects still read as UUIDs.~~** Resolved 2026-09-23. All
 60 now name themselves, e.g. `harbor-core-56d4957445-hp8cc [Hard disk 2]`.
 

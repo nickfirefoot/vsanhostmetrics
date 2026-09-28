@@ -12,6 +12,29 @@ LEGEND   ● within bounds   ▲ yellow   ⬛ orange   ✖ red   · no data
          ↑ cumulative counter since boot — watch the delta, not the value
 ```
 
+> ### ⚠ Finding the object types in the picker
+>
+> Verified against the live instance: **70 resource kinds are registered, but
+> fourteen are not named `vSAN ...`** — so typing "vSAN" into the object-type
+> picker will not find them. Eight of the seventeen object types used below
+> are affected. Search for these by their literal names:
+>
+> | Type this, not "vSAN..." | Used on screen |
+> |---|---|
+> | `Cluster Domclient` | Overview, DOM, Resync |
+> | `Cluster Domcompmgr` | Overview, DOM, Resync |
+> | `Cluster Domowner` | DOM |
+> | `Host Domclient` / `Host Domcompmgr` / `Host Domowner` | DOM per-host |
+> | `Vsan Cluster Capacity` (note: `Vsan`, not `vSAN`) | Overview |
+> | `Vsan Esa Disk Layer` / `Vsan Esa Disk Scsifw` | Disk |
+>
+> The rest are correctly prefixed: `vSAN Physical NIC`, `vSAN Cluster RDT
+> Latency`, `vSAN Host Network`, `vSAN Virtual Machine`, `vSAN vSCSI`, `vSAN
+> RDT Latency`, `vSAN VMkernel RDT Latency`, `vSAN Virtual Disk`.
+>
+> This is a naming defect in the pack, logged in `BACKLOG.md`, not something
+> to work around permanently — but it is how the picker behaves today.
+
 All panels are fed by the cluster selector. **Depth 1** = cluster-wide object
 (proven wiring). **Depth 2** = hangs off HostSystem — verify per
 `DASHBOARD-STORYBOARD.md` §3.2 before building.
