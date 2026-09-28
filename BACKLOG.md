@@ -466,6 +466,55 @@ image size, from apt's replacement copies.
 Re-run the upgrade check whenever a release is cut; the base image drifts
 further behind with time, and this layer is the only thing closing the gap.
 
+### Scanned with Harbor's own scanner, 2026-09-28
+
+The Harbor robot account (`robot$vsan-mp+mpbuild`) can push and pull but has
+**no Harbor API permissions** -- `/users/current/permissions` returns `[]` and
+every project endpoint is `FORBIDDEN` -- so scan results cannot be read
+programmatically with it. Reading them needs either a user account with
+project read, or the UI. Reproduced locally instead with the same scanner
+Harbor runs, **Trivy 0.74.0**:
+
+| Severity | 1.2.3 as deployed | With the upgrade layer |
+|---|---|---|
+| CRITICAL | 5 | 5 |
+| HIGH | 61 | 61 |
+| MEDIUM | 105 | 101 |
+| LOW | 104 | 96 |
+| **Total** | **277** | **264** |
+
+13 findings and 7 distinct CVEs cleared, none introduced.
+
+**Of the 264 remaining, 255 have no published fix** (198 `affected`, 43
+`fix_deferred`, 14 `will_not_fix`). All five CRITICALs are in that group:
+
+| Package | CVE | Status |
+|---|---|---|
+| `perl-base` | CVE-2026-13221, CVE-2026-8376 | affected |
+| `perl-base` | CVE-2026-42496 | **fix_deferred** by Debian |
+| `libsqlite3-0` | CVE-2025-7458 | affected |
+| `zlib1g` | CVE-2023-45853 | **will_not_fix** |
+
+**The 9 that are fixable are all Python, and none are fixable here:**
+
+| Package | Findings | Why not |
+|---|---|---|
+| `cryptography` 44.0.0 | 4 HIGH, 1 LOW | The SDK lib pins it exactly -- `Requires-Dist: cryptography==44.0.0`. Requesting `>=50.0.0` fails with `ResolutionImpossible`. Clearing all four needs 50.0.0, six major versions on, so forcing it past the pin risks breaking the SDK's own TLS at runtime. **SDK-team item.** |
+| `setuptools` 70.3.0 | 1 HIGH, 1 MEDIUM | Not installed -- **vendored inside pip** (`pip/_vendor/vendor.txt`). Trivy reads that manifest. |
+| `msgpack` 1.1.2 | 1 HIGH | Same: vendored inside pip. |
+
+The adapter imports and runs without pip, so deleting pip from the final image
+would clear those three. Not done: it is a change to the SDK's image for three
+findings in code that only executes when pip itself runs, and it would have to
+be re-justified on every SDK bump. Worth revisiting if a scan gate blocks a
+release on them.
+
+**For a Harbor policy exception**, the defensible line is that 255 of 264
+findings have no upstream fix and the remaining 9 are pinned by the vendor's
+own SDK or vendored inside pip. Re-scan each release rather than assuming this
+holds -- Debian publishes fixes for `fix_deferred` items eventually, and the
+apt layer picks them up automatically when it does.
+
 ## Object naming
 
 **Fourteen resource kinds are not named `vSAN ...`, and all fourteen carry
