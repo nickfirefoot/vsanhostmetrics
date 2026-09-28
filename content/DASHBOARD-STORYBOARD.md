@@ -120,11 +120,38 @@ always exists at load and the interaction fires without anyone clicking. Do
 this on every screen — it is the difference between a dashboard that works and
 one that works only after you poke it.
 
-Worth checking alongside it: the Scoreboard's **Show old metric values**. The
-working export has it off, and with collection and widget refresh both on 300
-seconds the two drift in and out of phase, which can blank a panel for part of
-each cycle. Turning it on makes a panel show the last known value rather than
-nothing.
+### 3.1b Panels that blank on auto-refresh and come back when you click refresh
+
+A second, separate cause with the same appearance. Measured 2026-09-28:
+
+| | |
+|---|---|
+| Collection lands every | **299–301 s** |
+| Dashboard auto-update | **300 s** |
+| Relative drift | **±1 s per cycle** |
+| Age of the newest sample at any moment | **0 to ~301 s** |
+
+Two timers on the same period with a second of drift **lock into a phase and
+stay there for hours**. When the widget refreshes just before a collection
+lands it is reading a value ~299 s old, and the Scoreboard ships with **Show
+old metric values off**, so that counts as stale and the panel blanks. It stays
+in the unlucky phase for a long stretch, then slowly walks out — which is why
+it looks intermittent rather than periodic. A manual refresh queries at a
+different phase, finds a fresh value, and the panel returns.
+
+**Fix both:**
+
+1. **Show old metric values → ON** on every Scoreboard. This removes the
+   problem rather than shortening it: the panel shows the last known value
+   instead of nothing, and on a metric collected every five minutes a
+   five-minute-old reading *is* the freshest thing that exists.
+2. **Set the refresh interval to something other than 300 s** — 60 s works.
+   The timers stop beating against each other and any blank window is at most
+   a minute.
+
+This is worth getting right before the screens go to an operator. A rapid
+dashboard whose panels empty at random teaches people to distrust it, and the
+failure looks identical to a metric that has stopped collecting.
 
 ### 3.2a The working recipe — confirmed in the UI, 2026-09-28
 
