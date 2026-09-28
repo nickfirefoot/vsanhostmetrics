@@ -99,11 +99,21 @@ fed by a cluster selection, rendering `avgLatency` from **vSAN Cluster RDT
 Latency** — a depth-1 kind. Exported at
 `docs/assets/dashboard.interaction-working.json`.
 
-**Not yet confirmed:** whether the same wiring reaches depth-2 kinds (pNIC,
-disk). Screens 2, 4 and 7 depend on it. **Please test this first** — one
-Scoreboard on `vSAN Physical NIC` / `rxMissErr` answers it. If depth 2 turns
-out to be unreachable from a cluster selector, those screens need a second
-selector (cluster → host) and I should re-cut their layouts.
+**The relationships behind depth 2 are confirmed** (2026-09-28, by walking
+CHILD from the cluster through Operations' own API): depth 1 returns the 7
+cluster-scoped kinds, depth 2 returns all 21 host-scoped kinds including
+`vSAN Physical NIC` (7 objects) and `Vsan Esa Disk Layer` (7). So the object
+graph supports every depth-2 panel in this document.
+
+What remains unconfirmed is only the **widget setting** that makes a receiver
+walk two hops rather than one. That is a configuration question, not a data
+one — if a depth-2 panel comes up empty, the relationship is not the cause.
+
+**One exception, and it is real:** 64 objects in the VM tier have no parent at
+all — 10 of 30 `vSAN Virtual Machine`, 27 of 60 `vSAN Virtual Disk`, 27 of 106
+`vSAN vSCSI`. They belong to vSphere Pod VMs, which Operations' vCenter
+adapter does not model, so nothing can reach them by relationship. Screen 7 is
+incomplete until that is fixed; see `BACKLOG.md`.
 
 ### 3.3 Widget choice
 
