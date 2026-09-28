@@ -44,11 +44,11 @@ LEGEND   ● within bounds   ▲ yellow   ⬛ orange   ✖ red   · no data
 All panels are fed by the cluster selector, with **Input Transformation = all
 objects** and **Output Transformation = VCF world performance list**.
 
-**Depth is per metric, not per object type.** NIC stats whose object name
-carries the vmnic resolve at **depth 2**; buffer and CRC counters resolve at
-**depth 3**. The `depth N` marks in the panel headers below are the hop count
-from the cluster in the object graph — treat them as a starting point, and if
-a panel is empty try one deeper. Confirmed in the UI 2026-09-28.
+**Depth is cumulative** — a depth of N includes everything at N hops and
+closer. The `depth N` marks in the panel headers are the hop count from the
+cluster, so setting the transformation to that number or higher works. Every
+pNIC error metric lives on `vSAN Physical NIC` alone, at depth 2, so one
+setting covers the whole Physical Network screen.
 
 ---
 

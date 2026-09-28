@@ -128,26 +128,30 @@ nothing.
 
 ### 3.2a The working recipe — confirmed in the UI, 2026-09-28
 
-Established by building it, so this supersedes any depth guidance elsewhere in
-this document:
-
 | Setting | Value |
 |---|---|
 | Input Transformation | **All objects** |
 | Output Transformation | **VCF world performance list** |
-| Depth — NIC-level stats naming the vmnic | **2** |
-| Depth — buffer and CRC counters | **3** |
+| Depth | **2 or more** (see below) |
+| Select First Row on the provider | **ON** — see §3.1a |
 
-**Metrics on what looks like the same object do not all sit at the same
-depth.** Stats whose object name carries the vmnic (`esxi01 [vmnic0]`) resolve
-at depth 2; buffer and CRC counters resolve at depth 3. If a panel is empty at
-one depth, try the other before assuming the metric or the relationship is
-wrong.
+**Depth is cumulative, not exact.** A depth of N includes everything at N hops
+*and closer*, so anything visible at 2 is also visible at 3.
 
-That distinction is invisible from the API — walking `CHILD` from the cluster
-puts every host-scoped kind, `VsanPnic` included, exactly 2 hops down. The
-widget's depth field evidently counts along a different path, so **the UI is
-the authority here, not the object graph.**
+**Every pNIC metric lives on one object type at one depth.** `rxCrcErr`,
+`rxMissErr`, `rxErr`, `rxFifoErr`, `rxOvErr` and `pauseCount` all belong to
+`vSAN Physical NIC` and nothing else; `portRxDrops` additionally exists on
+`vSAN Host Network` and `vSAN VMkernel NIC`, and those are host-scoped too. So
+there is no NIC metric that sits deeper than another, and **depth 2 is enough
+for all of them**.
+
+> **An earlier version of this file claimed NIC stats resolved at depth 2 and
+> buffer/CRC counters at depth 3. That was wrong** and is corrected here. It
+> came from observing panels fill at one depth and not another, which was
+> really the stale-resolution problem in §3.1a — changing *any* receiver
+> setting forces a re-resolve, so changing the depth appeared to be what
+> mattered. With Select First Row on, CRC now shows at both 2 and 3, as it
+> should.
 
 **The relationships behind depth 2 are confirmed** (2026-09-28, by walking
 CHILD from the cluster through Operations' own API): depth 1 returns the 7
