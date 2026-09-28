@@ -12,6 +12,11 @@ Every "healthy" value is real, sampled from a live 4-host ESA cluster on
 > no interaction fires, and every receiver renders empty until something forces
 > a re-resolve — which is why changing the depth and changing it back appears
 > to fix it. See `DASHBOARD-STORYBOARD.md` §3.1a.
+>
+> **And if panels blank on auto-refresh but return when you click refresh:**
+> turn **Show old metric values ON** and move the refresh interval off 300 s.
+> Collection lands every 299–301 s and the default refresh is 300 s, so the
+> two beat against each other and lock into a phase for hours. See §3.1b.
 
 ```
 LEGEND   ● within bounds   ▲ yellow   ⬛ orange   ✖ red   · no data
