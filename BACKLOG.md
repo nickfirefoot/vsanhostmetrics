@@ -377,6 +377,49 @@ goes to many sites.
 - Consider turning SSH back off on the Cloud Proxy once validation is done; it
   is disabled by default as deliberate hardening.
 
+## Open question: halfopen drop rate reads 7-9% on a healthy cluster
+
+`tcpHalfopenDropRate` (`VsanTcpIp`) is the only non-zero error signal in the
+entire TCP family on the lab cluster, and it is not small. Sampled 2026-09-29
+across 45 minutes:
+
+| Host | Rate after per-mille conversion |
+|---|---|
+| ...db86 | 8.8% |
+| ...db5d | 8.8% |
+| ...db54 | 9.4% |
+| ...db57 | 7.1% |
+
+Every other TCP metric on those hosts reads 0 -- `tcpErrs`, `tcpRxErrRate`,
+`tcpTxRexmitRate`, all three SACK rates, `tcpSndZeroWin`,
+`tcpTimeoutDropRate` -- against 983 RX / 1,160 TX packets and 1,427 IP total
+per sample.
+
+**What it measures:** connections dropped in `SYN_RCVD` -- a SYN arrived, the
+reply went out, the handshake never completed, the entry was evicted.
+
+**Why it is not yet actionable.** The denominator is undocumented; the
+official description is circular ("half open drop rate") and the schema says
+only `permille`. If the base is connection *attempts*, and RDT holds
+persistent connections so attempts are rare, a handful of drops yields a large
+percentage from a tiny base. This is the perspective problem already noted for
+error counters, except here the denominator is not merely absent from the
+dashboard but unknown entirely.
+
+**Reasons to suspect benign:** the rate is stable over time and near-identical
+across all four hosts. Genuine handshake trouble is usually lumpy and
+host-specific; a flat uniform rate on a healthy cluster reads more like
+routine background churn.
+
+**To settle it:** `esxcli network ip connection list`, or the absolute
+counters from `vsish`, would give drops *and* attempts on one host and convert
+the percentage into a real number. Worth doing once. If it is normal it should
+be excluded from the network screen, since a permanently amber tile trains
+operators to ignore the panel; if it is not, it is the most interesting signal
+in the TCP family and belongs on the Physical Network screen.
+
+Needs an ESXi credential, which is also blocking the `vsish` ring-buffer test.
+
 ## Two low-value families are making the dashboards unreliable
 
 Previously logged as a scale concern. It is now a **functional** one.
