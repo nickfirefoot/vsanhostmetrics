@@ -463,48 +463,56 @@ in the TCP family and belongs on the Physical Network screen.
 
 Needs an ESXi credential, which is also blocking the `vsish` ring-buffer test.
 
-## Two low-value families are making the dashboards unreliable
+## Two low-value families dominate the object count
 
-Previously logged as a scale concern. It is now a **functional** one.
+`VsanDomWorld` (78.8 objects per host) and `VsanHostCpu` (61.0 per host, **one
+per CPU thread**) are **87% of everything the pack creates per host** -- 140 of
+161. Neither appears in any screen in `content/DASHBOARD-STORYBOARD.md`, and
+`VsanHostCpu` carries three metrics of generic per-thread CPU that the
+built-in vCenter adapter already collects.
 
-A cluster-scoped panel on a host-level kind resolves by walking two hops and
-filtering. Measured 2026-09-29:
+Projected from measured per-host rates:
 
-| Traversal | Objects scanned | To find | Hit rate |
-|---|---|---|---|
-| Cluster, depth 2 | **658** | 7 pNICs | 1.1% |
-| One host, depth 1 | 168 | 2 pNICs | 1.2% |
-
-**85% of that 658 is two families:**
-
-| Family | Objects | What it is |
+| Hosts | Host-scoped objects | With both families off |
 |---|---|---|
-| `VsanDomWorld` | 315 | per-world DOM CPU |
-| `VsanHostCpu` | 244 | per-core host CPU, which the built-in vCenter adapter already collects |
-| everything else | **99** | |
+| 4 (lab) | 644 | 85 |
+| 16 | 2,576 | 340 |
+| **32** | **5,152** | **680** |
+| 64 | 10,304 | 1,360 |
 
-Dropping both takes a depth-2 resolve from 658 objects to 99, **6.6x less
-work**, without losing a single metric any rapid screen uses.
+Plus VM-scoped objects scaling with VM count, and cluster-scoped (7 flat). A
+32-host cluster is roughly **6,700 objects from this pack on one cluster**.
 
-**The symptom this causes.** Depth-2 panels populate roughly half the time.
-Depth-1 panels always work. Anything that forces a re-resolve fixes it --
-toggling the transformation depth, clicking refresh, reloading the UI -- and
-the stored data is provably fine: 72 samples per pNIC over six hours on an
-exact five-minute cadence, no gaps, 100% availability, every object
-`DATA_RECEIVING`. A heavy traversal losing a race against render is the
-explanation that fits all of it, and the object counts show the traversal is
-heavy for no benefit.
+**The lab understates it.** `VsanHostCpu` is per CPU thread and the lab hosts
+have 61. On production silicon, 32 hosts gives 4,096 objects at 128
+threads/host, or 6,144 at 192 -- from that one family.
 
-**Two fixes, independent of each other:**
+This is a sizing, storage and collection-load argument: object count drives
+Operations' own capacity planning, the analytics tier and the per-cycle
+collection cost. **It is not evidence about dashboard behaviour** -- see the
+retraction below.
 
-1. **Per-family collection toggles, `dom-world-cpu` and `host-cpu` off by
-   default.** Already proposed for scale; now also the cheapest way to make
-   the dashboards behave. Neither family appears in
-   `content/DASHBOARD-STORYBOARD.md`.
-2. **Chain the selectors on host-scoped screens** -- cluster picks a host,
-   the host feeds the NIC and disk panels -- so every traversal is depth 1.
-   This is a dashboard change, not a pack change, and it gives the operator a
-   useful drill-down besides.
+### Retracted: the claim that this caused the widget load failures
+
+An earlier version of this entry argued that depth-2 widgets fail because a
+resolve "walks 658 objects", and that cutting these families would fix it.
+**That was inference presented as mechanism and should not be relied on.**
+
+The 658 figure came from walking `CHILD` through the API one node at a time --
+that is how *this repository* measured the graph, not how Operations resolves a
+widget. Operations holds an indexed inventory; "descendants of X of kind Y" is
+a bounded query against a relationship table, not an enumeration of everything
+beneath the cluster. A widget asking for four metrics on `VsanPnic` has no
+reason to touch a `VsanDomWorld` object.
+
+What survives is the observation, not the explanation: **depth-1 widgets have
+never failed and depth-2 widgets fail intermittently.** Hop count is a more
+plausible variable than object count, since a two-hop join costs more than a
+one-hop one irrespective of how many rows sit at either end. The cause remains
+unknown and is with Broadcom -- see `docs/WIDGET-LOAD-DEFECT.md`.
+
+Turning these families off is still worth doing. It is worth doing for the
+object counts above, which stand on their own.
 
 ## Relationships: the VM tier is a third orphaned
 

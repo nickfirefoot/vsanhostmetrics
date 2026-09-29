@@ -51,17 +51,25 @@ Walking `CHILD` from the `ClusterComputeResource` the widget is scoped to:
 So the object graph supports the traversal at every load, including loads that
 render nothing.
 
-## Correlation with traversal size
+## Correlation with traversal depth
 
-| Widget | Deepest kind | Objects walked | Behaviour |
+| Widget | Deepest kind | Hops from the selected cluster | Behaviour |
 |---|---|---|---|
-| Cluster RDT latency | depth 1 | 13 | **always loads** |
-| pNIC errors | depth 2 | 658 | intermittent |
-| TCP + pNIC combined | depth 2 | 658 | intermittent, worst |
+| Cluster RDT latency | `VsanClusterRdtLatency` | **1** | **always loads** |
+| pNIC errors | `VsanPnic` | **2** | intermittent |
+| TCP + pNIC combined | `VsanHostNet`, `VsanPnic` | **2** | intermittent, worst |
 
-Every widget that fails is depth 2. The depth-1 widget has never failed. The
-`Edit` dialog for the failing widgets is also noticeably slow to open, which
-suggests the same object enumeration is behind both.
+**Every widget that fails resolves two hops from the selected object. The
+one-hop widget has never failed.** The `Edit` dialog for the failing widgets
+is also noticeably slower to open.
+
+For scale context only: 13 objects sit one hop from the cluster and 658 sit
+two hops, of which 7 are the `VsanPnic` objects the widget wants. Whether
+resolution cost tracks hop count or the number of candidate objects is not
+something we can determine from outside -- an indexed "descendants of X of
+kind Y" lookup would be bounded regardless of how many objects sit at that
+depth. The observation is the depth correlation; the mechanism is the
+question for support.
 
 ## Configuration of a failing widget
 
@@ -113,6 +121,8 @@ configurable? No such setting appears in the dashboard JSON (only
 `/suite-api/api/deployment/config/globalsettings` (only `PER_ACTION_TIME_OUT`
 and `PER_RESOURCE_ACTION_TIME_OUT`, both for the Actions framework).
 
-If resolution is bounded by a timeout, the 658-object walk would explain both
-the intermittency and why editing the widget -- which appears to force a fresh
-resolution -- reliably fixes it.
+If resolution is bounded by a timeout, that would explain both the
+intermittency and why editing the widget -- which appears to force a fresh
+resolution -- reliably fixes it. What we cannot determine from outside is what
+makes a two-hop resolution more expensive than a one-hop one, or whether the
+cost depends on the number of candidate objects at that depth.
