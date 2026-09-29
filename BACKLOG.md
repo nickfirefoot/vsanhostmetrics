@@ -377,6 +377,49 @@ goes to many sites.
 - Consider turning SSH back off on the Cloud Proxy once validation is done; it
   is disabled by default as deliberate hardening.
 
+## Standby uplinks are invisible, and they are the ones that matter
+
+The pack creates a `VsanPnic` object only for NICs the Performance Service
+reports, and it reports only NICs carrying vSAN traffic. A standby or unused
+uplink produces no data, so no object exists, so nothing monitors it.
+
+Measured on the lab cluster 2026-09-29:
+
+| Host | Physical vmnics | On the vSAN DVS | Collected |
+|---|---|---|---|
+| esxi01 | vmnic0-3 | vmnic0, **vmnic1**, vmnic2 | vmnic0, vmnic2 |
+| esxi03 | vmnic0-3 | vmnic0, **vmnic1**, vmnic2 | vmnic0, vmnic2 |
+| esxi04 | vmnic0-3 | vmnic0, **vmnic1**, vmnic2 | vmnic0, vmnic2 |
+| esxi02 | vmnic2-3 | vmnic2 | vmnic2 |
+
+`vmnic1` is attached to the vSAN DVS on three of four hosts and is not
+monitored. (`vmnic3` is correctly excluded -- it is not on that DVS.)
+
+**Why this matters more here than it would elsewhere.** The Physical Network
+screen exists to catch a failing NIC before it causes an outage. The standby
+uplink is precisely the NIC that will be relied on during a failover and
+precisely the one nobody has looked at. A green screen today means *every
+active NIC is fine*, which is not the same claim and will be read as the
+stronger one.
+
+**Options, none free:**
+
+1. **Say so on the screen.** Cheapest, and needed regardless: the text panel
+   should state that only vSAN-carrying uplinks appear, so an absent NIC is
+   not a healthy one. Belongs in `content/DASHBOARD-MOCKUPS.md`.
+2. **Create objects for DVS-attached uplinks with no perfsvc data**, from the
+   vCenter side, so the operator can at least see the NIC exists and is
+   unmonitored rather than being silently absent. Objects with no metrics are
+   their own kind of clutter, so this wants thought.
+3. **Surface the count instead** -- a supermetric comparing uplinks attached
+   to the vSAN DVS against `VsanPnic` objects present, alerting when they
+   diverge. Answers "is something unmonitored" without inventing empty objects.
+
+Needs confirming on a cluster where the standby uplink is known-good, to be
+sure the absence is teaming policy rather than a collection fault. The
+distinction matters: if perfsvc omits a NIC that *is* carrying traffic, that
+is a defect rather than a design limit.
+
 ## Open question: halfopen drop rate reads 7-9% on a healthy cluster
 
 `tcpHalfopenDropRate` (`VsanTcpIp`) is the only non-zero error signal in the
