@@ -171,6 +171,29 @@ the one other difference that would require a time range is
 Broadcom also run `visualTheme: 8` where the test export has `3`; if neither
 of the above works, the theme may change which options the panel exposes.
 
+#### If depth-2 panels still load about half the time
+
+This is the likeliest remaining cause, and it is not a dashboard bug.
+
+A cluster-scoped panel on a host-level kind walks two hops and filters
+**658 objects to find 7 pNICs** -- a 1.1% hit rate. **85% of that load is two
+families no screen here uses**: `VsanDomWorld` (315 objects) and `VsanHostCpu`
+(244). Everything else totals 99.
+
+A traversal that heavy can lose the race against render, which matches every
+observation: depth-1 panels always work, depth-2 panels load about half the
+time, and anything forcing a re-resolve fixes it. The stored data is provably
+fine.
+
+**Workaround available to you here:** chain the selectors on the host-scoped
+screens (2, 4 and the per-host sections of 3 and 5). Cluster picks a host, the
+host feeds the NIC and disk panels, so every traversal is depth 1 over 168
+objects instead of depth 2 over 658. It also gives the operator a drill-down
+worth having.
+
+**The real fix is in the pack** -- turning off those two families -- and is
+logged in `BACKLOG.md`.
+
 #### Secondary, once dashboard time is set
 
 

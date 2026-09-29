@@ -377,6 +377,49 @@ goes to many sites.
 - Consider turning SSH back off on the Cloud Proxy once validation is done; it
   is disabled by default as deliberate hardening.
 
+## Two low-value families are making the dashboards unreliable
+
+Previously logged as a scale concern. It is now a **functional** one.
+
+A cluster-scoped panel on a host-level kind resolves by walking two hops and
+filtering. Measured 2026-09-29:
+
+| Traversal | Objects scanned | To find | Hit rate |
+|---|---|---|---|
+| Cluster, depth 2 | **658** | 7 pNICs | 1.1% |
+| One host, depth 1 | 168 | 2 pNICs | 1.2% |
+
+**85% of that 658 is two families:**
+
+| Family | Objects | What it is |
+|---|---|---|
+| `VsanDomWorld` | 315 | per-world DOM CPU |
+| `VsanHostCpu` | 244 | per-core host CPU, which the built-in vCenter adapter already collects |
+| everything else | **99** | |
+
+Dropping both takes a depth-2 resolve from 658 objects to 99, **6.6x less
+work**, without losing a single metric any rapid screen uses.
+
+**The symptom this causes.** Depth-2 panels populate roughly half the time.
+Depth-1 panels always work. Anything that forces a re-resolve fixes it --
+toggling the transformation depth, clicking refresh, reloading the UI -- and
+the stored data is provably fine: 72 samples per pNIC over six hours on an
+exact five-minute cadence, no gaps, 100% availability, every object
+`DATA_RECEIVING`. A heavy traversal losing a race against render is the
+explanation that fits all of it, and the object counts show the traversal is
+heavy for no benefit.
+
+**Two fixes, independent of each other:**
+
+1. **Per-family collection toggles, `dom-world-cpu` and `host-cpu` off by
+   default.** Already proposed for scale; now also the cheapest way to make
+   the dashboards behave. Neither family appears in
+   `content/DASHBOARD-STORYBOARD.md`.
+2. **Chain the selectors on host-scoped screens** -- cluster picks a host,
+   the host feeds the NIC and disk panels -- so every traversal is depth 1.
+   This is a dashboard change, not a pack change, and it gives the operator a
+   useful drill-down besides.
+
 ## Relationships: the VM tier is a third orphaned
 
 **64 of 848 objects have no parent, and every one of them belongs to a
