@@ -51,25 +51,31 @@ Walking `CHILD` from the `ClusterComputeResource` the widget is scoped to:
 So the object graph supports the traversal at every load, including loads that
 render nothing.
 
-## Correlation with traversal depth
+## Depth is not the variable
 
-| Widget | Deepest kind | Hops from the selected cluster | Behaviour |
-|---|---|---|---|
-| Cluster RDT latency | `VsanClusterRdtLatency` | **1** | **always loads** |
-| pNIC errors | `VsanPnic` | **2** | intermittent |
-| TCP + pNIC combined | `VsanHostNet`, `VsanPnic` | **2** | intermittent, worst |
+**Input Transformation depth was tried at 2, 3, 4, 5 and 6. No value changes
+the behaviour.** The affected widgets fail intermittently at every setting and
+the unaffected one works at every setting. Configuration is therefore ruled
+out as a factor, including the depth control itself.
 
-**Every widget that fails resolves two hops from the selected object. The
-one-hop widget has never failed.** The `Edit` dialog for the failing widgets
-is also noticeably slower to open.
+What distinguishes the widget that always works from those that do not is what
+they target, not how they are configured:
 
-For scale context only: 13 objects sit one hop from the cluster and 658 sit
-two hops, of which 7 are the `VsanPnic` objects the widget wants. Whether
-resolution cost tracks hop count or the number of candidate objects is not
-something we can determine from outside -- an indexed "descendants of X of
-kind Y" lookup would be bounded regardless of how many objects sit at that
-depth. The observation is the depth correlation; the mechanism is the
-question for support.
+| Widget | Target kind | Relation to the selected cluster | Objects returned | Behaviour |
+|---|---|---|---|---|
+| RDT latency | `VsanClusterRdtLatency` | **direct child** | **1** | **always loads** |
+| pNIC errors | `VsanPnic` | child of child (via `HostSystem`) | 7 | intermittent |
+| TCP retransmits | `VsanHostNet`, `VsanPnic` | child of child | 4 + 7 | intermittent |
+| Network Observations | `VsanTcpIp` | child of child | 4 | intermittent |
+
+Two candidate variables remain and cannot be separated from outside the
+product: whether the target kind is a **direct child** of the selected object
+or one relationship further out, and whether the widget resolves **one** object
+or several. Every widget that fails is both indirect and multi-object; the one
+that works is neither.
+
+The `Edit` dialog for the failing widgets is also noticeably slower to open
+than for the working one.
 
 ## Configuration of a failing widget
 
@@ -123,6 +129,8 @@ and `PER_RESOURCE_ACTION_TIME_OUT`, both for the Actions framework).
 
 If resolution is bounded by a timeout, that would explain both the
 intermittency and why editing the widget -- which appears to force a fresh
-resolution -- reliably fixes it. What we cannot determine from outside is what
-makes a two-hop resolution more expensive than a one-hop one, or whether the
-cost depends on the number of candidate objects at that depth.
+resolution -- reliably fixes it.
+
+Note that the depth control is **not** the variable: values 2 through 6 were
+each tried and none changes the behaviour. Whatever governs this is not
+exposed in the widget configuration.
