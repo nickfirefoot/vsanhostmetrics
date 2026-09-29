@@ -15,19 +15,30 @@ not inferred.
 ## Symptom
 
 A Scoreboard widget configured as a receiver renders its frame but **no data**.
-It stays empty indefinitely. It populates after **any** of:
 
-- editing the widget and changing nothing of substance (e.g. Input
-  Transformation depth 2 -> 3 -> 2)
-- clicking the dashboard refresh control, sometimes after several attempts
-- reloading the browser
-- waiting several minutes after dashboard creation
+**The variable is elapsed time, not configuration.** The sequence, established
+2026-09-29 after several misattributions:
+
+1. The widget renders empty and stays empty.
+2. Several minutes pass.
+3. The browser is refreshed.
+4. The widget populates -- and continues working.
+
+**Widget configuration has no bearing on this.** Input Transformation depth was
+tried at 2, 3, 4, 5 and 6 with no effect at any value. Earlier notes in this
+repository claimed that editing the widget, or toggling the depth and toggling
+it back, reliably fixed it. **That was a misattribution**: those actions each
+take a minute or two and end in a reload, so they coincided with the recovery
+rather than causing it.
+
+Newly created dashboards show the same pattern -- empty for the first few
+minutes after creation, then working.
 
 Loading is **all-or-nothing**: when it works, all 28 cells (4 metrics x 7
-objects) populate. A partial render has never been observed.
+objects) populate at once. A partial render has never been observed.
 
-Two browsers loading the same dashboard at the same moment disagree — one
-populates, the other does not. That rules out server-side data availability.
+Two browsers loading the same dashboard at the same moment can disagree, which
+is consistent with one having waited past the recovery point and the other not.
 
 ## The data is present throughout
 
@@ -51,12 +62,7 @@ Walking `CHILD` from the `ClusterComputeResource` the widget is scoped to:
 So the object graph supports the traversal at every load, including loads that
 render nothing.
 
-## Depth is not the variable
-
-**Input Transformation depth was tried at 2, 3, 4, 5 and 6. No value changes
-the behaviour.** The affected widgets fail intermittently at every setting and
-the unaffected one works at every setting. Configuration is therefore ruled
-out as a factor, including the depth control itself.
+## What differs between the affected and unaffected widgets
 
 What distinguishes the widget that always works from those that do not is what
 they target, not how they are configured:
@@ -134,3 +140,9 @@ resolution -- reliably fixes it.
 Note that the depth control is **not** the variable: values 2 through 6 were
 each tried and none changes the behaviour. Whatever governs this is not
 exposed in the widget configuration.
+
+Given that recovery tracks elapsed time rather than any action taken, a cache
+or index populated asynchronously after first reference would fit every
+observation, including newly created dashboards being empty for their first
+few minutes. Is widget object resolution backed by such a cache, and is its
+population interval configurable or observable?
