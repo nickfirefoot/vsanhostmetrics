@@ -393,13 +393,34 @@ read-only, which is an outage, not a performance issue.
 | | | `rxPacketsLossRate` | Inbound Packet Discard Rate | % | 0.1 / 0.5 / 1.0 |
 | | | `txPacketsLossRate` | Outbound Packet Discard Rate | % | 0.1 / 0.5 / 1.0 |
 | Congestion | vSAN Physical NIC | `pauseCount` | pNic 802.3x Pause Rate | % | 0.1 / 0.5 / 1.0 |
-| TCP health | vSAN Host Network | `tcpTxRexmitRate` | TCP TX retransmit (rate) | — | **returns no data** |
-| | | `tcpRxErrRate` | TCP RX errors (rate) | — | **returns no data** |
+| TCP health | **vSAN TCP/IP** | `tcpTxRexmitRate` | TCP TX retransmit rate | % | 0.1 / 0.5 / 1.0 |
+| | | `tcpRxErrRate` | TCP RX error rate | % | 0.1 / 0.5 / 1.0 |
+| | | `tcpRcvdupackRate` | Duplicate ACK rate | % | 0.1 / 0.5 / 1.0 |
+| | | `tcpRcvoopackRate` | Out-of-order packet rate | % | 0.1 / 0.5 / 1.0 |
+| | | `tcpSackRcvBlocksRate` | SACK blocks received (peer missing our data) | % | 0.1 / 0.5 / 1.0 |
+| | | `tcpSndZeroWin` | TCP send zero window (cumulative) | count | none — watch the delta |
+| | | `tcpTimeoutDropRate` | Connections dropped on timeout | % | 0.1 / 0.5 / 1.0 |
 
-**The two TCP metrics return no data at all** from the Performance Service --
-absent, not zero (verified 2026-09-28). Build the panel since it costs
-nothing and may populate elsewhere, but do not design the screen around it or
-alert on it. Retransmit visibility is a genuine gap; see `BACKLOG.md`.
+> **Use `vSAN TCP/IP`, not `vSAN Host Network`.** An earlier version of this
+> table specified `vSAN Host Network` and that panel can never fill. The two
+> metrics are *advertised* on three object types and served by only one:
+>
+> | Object type | Series advertised | With data |
+> |---|---|---|
+> | `vSAN Host Network` | 8 | **0** |
+> | `vSAN VMkernel NIC` | 8 | **0** |
+> | **`vSAN TCP/IP`** | 8 | **8** |
+>
+> Verified 2026-09-29. This is the general trap in this pack: a metric key
+> existing on an object type does not mean that object type serves it. When a
+> panel is permanently empty rather than intermittently empty, check whether
+> another kind carries the same key with data.
+
+`vSAN TCP/IP` is the richer object anyway -- it carries duplicate-ACK,
+out-of-order, SACK, zero-window and both drop rates, which is most of what a
+transport-level view wants. `tcpHalfopenDropRate` lives here too but reads
+7-9% on a healthy cluster; leave it off until that is understood
+(`BACKLOG.md`).
 
 **Threshold source:** Broadcom's *Understanding vSAN Network TCP/IP
 Expectations and Thresholds* — warning 0.1%, immediate 0.5%, critical 1.0%.

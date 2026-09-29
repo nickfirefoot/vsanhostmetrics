@@ -137,9 +137,14 @@ back end innocent → Physical Network.
 └────────────────────────────────────────────────────────────────────────────────────┘
 
 ┌─ FABRIC CONGESTION ────────────────────┐ ┌─ TCP HEALTH ─────────────────────────────┐
-│ object: vSAN Physical NIC      depth 2 │ │ object: vSAN Host Network        depth 2 │
-│ ● pauseCount  802.3x Pause Rate   0.0% │ │ · tcpTxRexmitRate  TX retransmit no data │
-│               bounds 0.1/0.5/1.0       │ │ · tcpRxErrRate     RX err rate   no data │
+│ object: vSAN Physical NIC      depth 2 │ │ object: vSAN TCP/IP              depth 2 │
+│ ● pauseCount  802.3x Pause Rate   0.0% │ │ ● tcpTxRexmitRate     TX retransmit  0.0%│
+│               bounds 0.1/0.5/1.0       │ │ ● tcpRxErrRate        RX err rate    0.0%│
+│                                        │ │ ● tcpRcvdupackRate    Duplicate ACK  0.1%│
+│  NOT vSAN Host Network — that object   │ │ ● tcpRcvoopackRate    Out-of-order   0.0%│
+│  advertises the TCP keys and serves    │ │ ● tcpSackRcvBlocksRate SACK rcvd     0.0%│
+│  none of them. Same for vSAN VMkernel  │ │ ↑ tcpSndZeroWin       Zero window       0│
+│  NIC. Only vSAN TCP/IP has data.       │ │ ● tcpTimeoutDropRate  Timeout drop   0.0%│
 └────────────────────────────────────────┘ └──────────────────────────────────────────┘
 ```
 
