@@ -148,6 +148,13 @@ back end innocent → Physical Network.
 └────────────────────────────────────────┘ └──────────────────────────────────────────┘
 ```
 
+> **Blind spot — an absent NIC is not a healthy NIC.** Only uplinks carrying
+> vSAN traffic get an object, so **standby uplinks appear nowhere on this
+> screen**. On the lab cluster `vmnic1` is attached to the vSAN DVS on three of
+> four hosts and is monitored on none. The standby NIC is the one a failover
+> will depend on and the one nobody has checked, so say on the screen that
+> this panel covers active vSAN uplinks only. See `BACKLOG.md`.
+
 **Degraded — esxi03 vmnic2, failing transceiver:** `rxMissErr` 0.8%,
 `rxCrcErr` 0.4%, `rxErr` 0.4%, `rxFifoErr` 0.1% on that one port; `pauseCount`
 stays 0.0% everywhere.
