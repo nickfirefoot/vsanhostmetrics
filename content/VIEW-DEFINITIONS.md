@@ -1,5 +1,24 @@
 # View definitions to create
 
+**Views ship in the pak under `content/reports/`** (confirmed with Broadcom).
+The SDK scaffolds no `views/` directory and `mp_build` only calls
+`build_subdirectories()` for `content/dashboards` and `content/reports`, so
+reports is the folder that carries them -- one subdirectory per view, XML:
+
+```
+content/reports/<view-name>/<view-name>.xml      # the view definition
+content/dashboards/<name>/<name>.json            # references it by viewDefinitionId
+```
+
+That makes these a **one-time build, not per-customer setup**. A view's GUID
+travels with its XML rather than being regenerated on import -- which is how
+Broadcom's own dashboard hard-codes
+`viewDefinitionId=fc3518f5-893a-4935-9ac1-2f46b0e063d6` and resolves on every
+customer install. Build once, export, ship.
+
+**Import order matters:** views before dashboards, or the dashboard lands with
+dangling references.
+
 **Build these first.** A View List widget references a View by GUID
 (`viewDefinitionId`), there is no API to create or list Views
 (`/suite-api/api/views` and `/viewdefinitions` both return 404), so the Views

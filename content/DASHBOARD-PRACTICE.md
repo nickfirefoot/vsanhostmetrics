@@ -220,6 +220,32 @@ The pattern in all five: an observation generalised into a mechanism without
 a way to test it. Where a claim cannot be falsified from outside the product,
 it belongs in section 4 as a symptom, not here as a cause.
 
+## 6a. Shipping views and dashboards in the pak
+
+Views are referenced by GUID (`viewDefinitionId`) and there is **no API** to
+create or list them -- `/suite-api/api/views` and `/viewdefinitions` both 404.
+They are built in the UI, exported as XML, and **ship in the pak under
+`content/reports/`** (confirmed with Broadcom; the SDK scaffolds no `views/`
+directory and `mp_build` only builds subdirectories for `content/dashboards`
+and `content/reports`).
+
+```
+content/reports/<view-name>/<view-name>.xml    # the view
+content/dashboards/<name>/<name>.json          # references it by GUID
+```
+
+**The GUID travels with the XML.** It is not regenerated on import, which is
+why Broadcom's shipped dashboard can hard-code a `viewDefinitionId` and have
+it resolve on every customer install. So views are a one-time authoring cost,
+not per-customer setup.
+
+**Import views before dashboards**, or the dashboard arrives with dangling
+references.
+
+Practical consequence: a dashboard using View List widgets **cannot be
+generated before its views exist**, because the GUIDs have to come from
+somewhere. Author the views, export one, and the rest becomes mechanical.
+
 ## 7. Source
 
 Sections 1 and 2 draw on *Part 2 of 4: Consumption* (August 2026), chapter
