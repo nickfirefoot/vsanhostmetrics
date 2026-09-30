@@ -509,7 +509,7 @@ What survives is the observation, not the explanation: **depth-1 widgets have
 never failed and depth-2 widgets fail intermittently.** Hop count is a more
 plausible variable than object count, since a two-hop join costs more than a
 one-hop one irrespective of how many rows sit at either end. The cause remains
-unknown and is with Broadcom -- see `docs/WIDGET-LOAD-DEFECT.md`.
+unknown and is with Broadcom -- see `docs/WIDGET-LOAD-BEHAVIOUR.md`.
 
 Turning these families off is still worth doing. It is worth doing for the
 object counts above, which stand on their own.

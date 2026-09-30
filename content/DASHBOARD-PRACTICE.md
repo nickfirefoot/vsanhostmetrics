@@ -8,7 +8,7 @@ distinction is the point of the document.
 Companions: [`DASHBOARD-STORYBOARD.md`](DASHBOARD-STORYBOARD.md) (what to
 build), [`DASHBOARD-MOCKUPS.md`](DASHBOARD-MOCKUPS.md) (what it should look
 like), [`../docs/DASHBOARD-FORMAT.md`](../docs/DASHBOARD-FORMAT.md) (the file
-format), [`../docs/WIDGET-LOAD-DEFECT.md`](../docs/WIDGET-LOAD-DEFECT.md) (the
+format), [`../docs/WIDGET-LOAD-BEHAVIOUR.md`](../docs/WIDGET-LOAD-BEHAVIOUR.md) (the
 open product defect).
 
 ---
@@ -178,7 +178,7 @@ causes are not.
 |---|---|
 | **Permanently** empty, never populates | **Wrong object type.** A metric key existing on a kind does not mean that kind serves it -- `tcpTxRexmitRate` is advertised on three kinds and served only by `vSAN TCP/IP`. Check for the same key on another kind. |
 | Empty until any widget setting is changed | **Select First Row off** on the provider -- no selection fires at load |
-| Empty, then loads after several minutes + reload | **The open defect.** Not configuration; see `WIDGET-LOAD-DEFECT.md` |
+| Empty, then loads after several minutes + reload | **Read latency**, not configuration. The widget is reading more than the storage serves quickly; the first read warms the cache. Use a View List rather than a Scoreboard for many objects -- see `../docs/WIDGET-LOAD-BEHAVIOUR.md` |
 | Renders unrelated content (HA status, Health/Risk badges) | The widget fell back to a default object badge because its metric config did not resolve |
 | `1H/6H/24H` greyed out | No widget set to dashboard time |
 

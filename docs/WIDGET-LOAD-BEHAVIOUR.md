@@ -1,7 +1,46 @@
-# Widget data does not load until the widget is edited
+# Widget load behaviour under storage latency
 
-Evidence package for a Broadcom support case. Everything below is measured,
-not inferred.
+**Not a product defect.** Established 2026-09-30: the intermittent loading is a
+function of **read latency against NFS-backed storage** on this deployment,
+combined with how much a widget has to read. It is not a bug to raise with
+Broadcom, and an earlier version of this file wrongly framed it as one.
+
+The evidence below is kept because it characterises the behaviour precisely and
+justifies the architecture that avoids it -- not because anything here needs
+reporting.
+
+## Why the evidence fits storage latency
+
+| Observation | Explanation |
+|---|---|
+| The one-hop widget (13 objects) never failed; two-hop widgets (658) failed about half the time | read volume, not traversal logic |
+| Recovery tracked **elapsed time**, not any action taken | first read warms the cache; later reads hit it |
+| Two browsers disagreed at the same instant | one was served warm, the other cold |
+| Loading was all-or-nothing, never partial | the widget resolves its set before rendering |
+| The `Edit` dialog was slow to open on exactly the widgets that failed | same reads, same cost |
+| Data was provably present throughout | the source was never the problem |
+
+## The architecture that avoids it
+
+A **Scoreboard** in `metric.mode: resourceKind` / `subMode: resourceKindAll`
+resolves its entire object set on every render. A **View List** does not:
+
+| Mechanism | Effect |
+|---|---|
+| `pagination-control` `size=50` | reads a bounded page, not the whole set |
+| `metadata` `maxPointsCount=5000` | caps the points fetched per render |
+| view filters | shrink the working set before any read happens |
+
+This is why the practitioner guidance recommends View List over Scoreboard for
+many objects, recommends filters explicitly "for dashboards scalability", and
+warns that several Scoreboards on one dashboard hurt load time. Those are not
+style preferences -- they are I/O guidance, and on storage with meaningful read
+latency they are the difference between a screen that loads and one that does
+not.
+
+See [`../content/DASHBOARD-PRACTICE.md`](../content/DASHBOARD-PRACTICE.md).
+
+## Characterisation, retained
 
 ## Environment
 
@@ -125,24 +164,10 @@ Operations Management Pack for Protection and Recovery 9.1:
 That is the identical workaround, on a different widget, in the same release
 family -- which points at the widget framework rather than at either pack.
 
-## Question for support
+## Note on scale
 
-Is there a load or query timeout governing widget object resolution, and is it
-configurable? No such setting appears in the dashboard JSON (only
-`refreshInterval`, `refreshContent`, `maxCellCount`) or in
-`/suite-api/api/deployment/config/globalsettings` (only `PER_ACTION_TIME_OUT`
-and `PER_RESOURCE_ACTION_TIME_OUT`, both for the Actions framework).
-
-If resolution is bounded by a timeout, that would explain both the
-intermittency and why editing the widget -- which appears to force a fresh
-resolution -- reliably fixes it.
-
-Note that the depth control is **not** the variable: values 2 through 6 were
-each tried and none changes the behaviour. Whatever governs this is not
-exposed in the widget configuration.
-
-Given that recovery tracks elapsed time rather than any action taken, a cache
-or index populated asynchronously after first reference would fit every
-observation, including newly created dashboards being empty for their first
-few minutes. Is widget object resolution backed by such a cache, and is its
-population interval configurable or observable?
+The reads grow with object count, and two families dominate it: `VsanDomWorld`
+(78.8 objects per host) and `VsanHostCpu` (61.0, one per CPU thread) are 87% of
+what the pack creates per host and appear on no screen. Turning them off takes
+a host from 161 objects to 21. That reduces the read volume behind every
+widget, whatever widget it is -- see `BACKLOG.md`.
