@@ -74,6 +74,33 @@ Columns:
 | `portTxDrops` | vSwitch TX drop % | 0.1 / 0.2 / 0.4 / 0.8 |
 | `pauseCount` | 802.3x pause % | 0.1 / 0.2 / 0.4 / 0.8 |
 
+**Add lifetime columns**, transformation **Current** (a monotonic counter's
+maximum is just its latest value), no colour bands:
+
+| Metric key | Label |
+|---|---|
+| `rxMissErrRaw` | RX missed, lifetime |
+| `rxCrcErrRaw` | RX CRC, lifetime |
+| `rxErrRaw` | RX generic, lifetime |
+| `rxOvErrRaw` | RX overflow, lifetime |
+
+`portRxDrops` and `portTxDrops` have no Raw variant -- rate only.
+
+> **Why both, demonstrated on the lab cluster 2026-09-30.** `esxi03 [vmnic2]`
+> read `rxMissErrRaw` 10,524 -> 11,664 across one five-minute interval: **1,140
+> receive packets dropped to a full ring buffer**. The rate metric registered
+> `0.1%` for exactly one sample out of eleven and zero for the rest.
+>
+> - **Current** transformation on the rate would have missed it ten times out
+>   of eleven.
+> - **Maximum** catches it, at exactly the 0.1% warning threshold.
+> - A window that excludes the burst still reads clean on the rate, while the
+>   lifetime counter reads 11,664 regardless of when you look.
+>
+> Percentages answer *is it happening now*; lifetime counters answer *has this
+> NIC ever been bad*. A screen carrying only the first shows an all-green
+> esxi03.
+
 Bands follow the convention that each is twice the last, anchored on
 Broadcom's published 0.1% network warning threshold.
 
