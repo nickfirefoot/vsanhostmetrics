@@ -69,13 +69,18 @@ DASHBOARDS = [
         ("Transport - RDT",               "vSAN_Cluster_RDT",                   {"w":12,"x":1,"h":6,"y":24}),
         ("Host services - are they up?",  "vSphere_Host_vSAN_Services",         {"w":12,"x":1,"h":6,"y":30}),
     ]),
+    # TCP sits BELOW the NIC panels, moved on review. The screen now reads
+    # strictly top down through the layers that carry vSAN traffic: vSAN's own
+    # transport first, then the kernel port, then the wire, and only then the
+    # TCP stack underneath all of it. TCP was previously third, which put the
+    # most abstract layer above the two physical ones feeding it.
     ("Rapid vSAN Network", "rapid-vsan-network-help", [
         ("RDT latencies - per host",      "vSAN_RDT_Transport_Per_Host", {"w":10,"x":3,"h":9,"y":1}),
         ("RDT latencies - per vmknic",    "vSAN_vmknic_RDT_Latency",     {"w":12,"x":1,"h":7,"y":10}),
-        ("TCP error types",               "vSAN_Host_TCP_Health",        {"w":12,"x":1,"h":8,"y":17}),
-        ("pNIC stats - vSAN uplinks",     "vSAN_pNIC_Errors",            {"w":12,"x":1,"h":9,"y":25}),
-        ("vmknic - the kernel port",      "vSAN_vmknic",                 {"w":12,"x":1,"h":7,"y":34}),
-        ("Host network - all vSAN",       "vSAN_Host_Network",           {"w":12,"x":1,"h":7,"y":41}),
+        ("pNIC stats - vSAN uplinks",     "vSAN_pNIC_Errors",            {"w":12,"x":1,"h":9,"y":17}),
+        ("vmknic - the kernel port",      "vSAN_vmknic",                 {"w":12,"x":1,"h":7,"y":26}),
+        ("Host network - all vSAN",       "vSAN_Host_Network",           {"w":12,"x":1,"h":7,"y":33}),
+        ("TCP error types",               "vSAN_Host_TCP_Health",        {"w":12,"x":1,"h":8,"y":40}),
         ("Every uplink - from vCenter",   "vSphere_Host_Uplinks_and_Load", {"w":12,"x":1,"h":7,"y":48}),
         ("CMMDS - cluster membership",    "vSAN_CMMDS_Network",          {"w":12,"x":1,"h":7,"y":55}),
     ]),
@@ -170,6 +175,17 @@ def build(template, name, help_file, panels):
     db["name"] = name
     db["description"] = ""
     doc["uuid"] = str(uuid.uuid4())
+    # Taken from a dashboard corrected in the UI and re-exported, diffed
+    # against the generated one. Both of these were wrong in the template.
+    #
+    # `shared` false means the dashboard is visible to its owner alone. Since
+    # the file also carries a hard-coded userId, on anybody else's instance
+    # that is an owner who does not exist and nobody can see it.
+    #
+    # `adapterName` must be the pak's internal name from manifest.txt, not the
+    # display name. Operations rewrote 'vSAN Host Metrics' to this on save.
+    db["shared"] = True
+    db["adapterName"] = "iSDK_VsanHostMetrics"
 
     widgets = {w["type"] + ":" + (w["config"].get("title") or ""): w
                for w in db["widgets"]}
@@ -188,7 +204,15 @@ def build(template, name, help_file, panels):
     prov["tabId"] = tab
     prov["config"]["widgetId"] = pid
     prov["title"] = prov["config"].get("title") or "Select cluster"
-    prov["gridsterCoords"] = {"w": 2, "x": 1, "h": 9, "y": 1}
+    # The selector's height must MATCH THE FIRST PANEL'S, not be a fixed 9.
+    # The first panel sits beside it at x=3; every panel after that spans the
+    # full width from x=1. So if the selector is taller than the first panel,
+    # the second panel starts inside the selector's columns and gridster
+    # resolves the collision by shoving the selector to the bottom of the
+    # screen. That is what happened on five of the seven dashboards, and the
+    # two that were fine -- Network and Storage -- were fine only because
+    # their first panel happened to be 9 rows high already.
+    prov["gridsterCoords"] = {"w": 2, "x": 1, "h": panels[0][2]["h"], "y": 1}
     prov["config"]["viewDefinitionId"] = V["vSAN_Clusters"]
     # The template's provider carries a pinned root that came out of the
     # browser session the dashboard was exported from:
@@ -235,6 +259,20 @@ def build(template, name, help_file, panels):
             t["config"]["editorData"] = ""
             t["config"]["title"] = "How to read this"
         out.append(t)
+
+    # Geometry guard. The collision above was invisible in the generated JSON
+    # and only showed up as a misplaced widget on screen, which is exactly the
+    # kind of defect that comes back. Fail the build instead.
+    boxes = [(w["config"].get("title") or w["type"], w["gridsterCoords"])
+             for w in out if w.get("gridsterCoords")]
+    for i in range(len(boxes)):
+        for j in range(i + 1, len(boxes)):
+            (ta, a), (tb, b) = boxes[i], boxes[j]
+            if (a["x"] <= b["x"] + b["w"] - 1 and b["x"] <= a["x"] + a["w"] - 1
+                    and a["y"] <= b["y"] + b["h"] - 1
+                    and b["y"] <= a["y"] + a["h"] - 1):
+                raise SystemExit(
+                    f"{name}: {ta!r} overlaps {tb!r} -- {a} vs {b}")
 
     db["widgets"] = out
     db["widgetInteractions"] = [
