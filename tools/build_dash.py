@@ -41,6 +41,9 @@ V = {
     "esa":       "74e1354d-757f-5ca7-a9e4-25e01718c627",
     "esaphys":   "4edb922b-10e6-5f18-b0d8-77cdba6df121",
     "vm":        "24773067-9b6e-536a-a39c-46353dfd5068",
+    # the cluster selector, shipped with the pak so a dashboard does not
+    # depend on a view the customer happens to have built themselves
+    "clusters":  "057a006b-7ad1-5df7-af19-832b788b7b16",
 }
 
 # (title, view-key, gridster)  -- the cluster selector is added automatically
@@ -102,6 +105,7 @@ def build(template, name, help_file, panels):
     prov["config"]["widgetId"] = pid
     prov["title"] = prov["config"].get("title") or "Select cluster"
     prov["gridsterCoords"] = {"w": 2, "x": 1, "h": 9, "y": 1}
+    prov["config"]["viewDefinitionId"] = V["clusters"]
 
     out = [prov]
     for title, key, coords in panels:

@@ -94,7 +94,7 @@ question a rapid screen actually asks ("is anything wrong"), not "show me 112
 values". Rollups are **additive**: every per-object metric stays where it is.
 
 **Publish the offender's name as a string metric.** Broadcom ship string
-metrics in Scoreboards, so a tile can read `"esxi03.denick.lab [vmnic2]"`
+metrics in Scoreboards, so a tile can read `"esxi03.example.com [vmnic2]"`
 beside the worst value. This matters because drill-down is based on *the object
 owning the metric* -- a rollup's object is the cluster, so navigation from it
 can only scope a spoke to the cluster. The name closes that gap without

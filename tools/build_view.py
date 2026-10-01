@@ -59,6 +59,13 @@ CUMULATIVE = {"rxMissErrRaw", "rxCrcErrRaw", "pfcCountRaw", "portTxpkts",
 INVERTED = {"txSbSpaceMin", "rxSbSpaceMin"}
 
 VIEWS = [
+    # The cluster selector every dashboard is driven from. Its subject is a
+    # vCenter object, not one of ours, so it carries its own adapter kind --
+    # shipping it means the dashboards do not depend on a view the customer
+    # happens to have built.
+    ("vSAN Clusters", "ClusterComputeResource", [
+        ("Configuration|Name", "", "CURRENT"),
+    ], "VMWARE"),
     ("vSAN pNIC Errors", "VsanPnic", [
         ("rxMissErr",      "percent", "MAX"),
         ("rxCrcErr",       "percent", "MAX"),
@@ -159,7 +166,9 @@ OVERRIDE = {
 
 def label_for(kind, key):
     """Broadcom's official name verbatim, else the pack's derived label."""
-    ent = ENT_FOR[kind]
+    ent = ENT_FOR.get(kind)
+    if ent is None:
+        return key.split("|")[-1]
     official = ((SCHEMA.get(ent) or {}).get(key) or {}).get("name")
     label = (OVERRIDE.get((kind, key)) or official
              or metric_labels.LABELS.get(key) or key)
@@ -176,7 +185,7 @@ ADAPTER = "VsanHostMetrics"
 NAMESPACE = uuid.UUID("6f3c9b1e-4a2d-5e8f-9c1b-2d7a4e6f8b03")
 
 
-def make_item(key, label, unit, transform, kind):
+def make_item(key, label, unit, transform, kind, adapter=None):
     """One column, built as elements so the result cannot be malformed."""
     item = ET.Element("Item")
     val = ET.SubElement(item, "Value")
@@ -186,7 +195,7 @@ def make_item(key, label, unit, transform, kind):
     prop("attributeKey", key)
     prop("preferredUnitId", unit)
     prop("isStringAttribute", "false")
-    prop("adapterKind", ADAPTER)
+    prop("adapterKind", adapter or ADAPTER)
     prop("resourceKind", kind)
     prop("rollUpType", "NONE")
     prop("rollUpCount", "0")
@@ -201,13 +210,14 @@ def make_item(key, label, unit, transform, kind):
     return item
 
 
-def build(template, title, kind, columns, seed):
+def build(template, title, kind, columns, seed, adapter=None):
     """Clone the working export, swapping only identity, subject and columns.
 
     Parsed and rewritten rather than string-substituted: an earlier regex
     version matched the `</List>` belonging to a column's `transformations`
     instead of the outer `attributeInfos` list, and produced malformed XML.
     """
+    adapter = adapter or ADAPTER
     root = ET.fromstring(template)
     vd = root.find(".//ViewDef")
     # Deterministic: the same title always yields the same GUID, so
@@ -217,7 +227,7 @@ def build(template, title, kind, columns, seed):
     vd.set("id", PINNED.get(title) or str(uuid.uuid5(NAMESPACE, title)))
     vd.find("Title").text = title
     for st in vd.findall("SubjectType"):
-        st.set("adapterKind", ADAPTER)
+        st.set("adapterKind", adapter)
         st.set("resourceKind", kind)
     # control ids must not collide between views
     for el in root.iter():
@@ -237,7 +247,8 @@ def build(template, title, kind, columns, seed):
             for child in list(lst):
                 lst.remove(child)
             for key, unit, transform in columns:
-                lst.append(make_item(key, label_for(kind, key), unit, transform, kind))
+                lst.append(make_item(key, label_for(kind, key), unit, transform,
+                                     kind, adapter))
             replaced = True
     if not replaced:
         raise SystemExit(f"{title}: could not find attributeInfos to replace")
@@ -252,8 +263,10 @@ def main():
     assert "example.com" not in template and "denick" not in template, \
         "template carries a hostname -- check before shipping"
     os.makedirs(OUTDIR, exist_ok=True)
-    for i, (title, kind, columns) in enumerate(VIEWS):
-        xml = build(template, title, kind, columns, seed=700 + i * 20)
+    for i, entry in enumerate(VIEWS):
+        title, kind, columns = entry[0], entry[1], entry[2]
+        adapter = entry[3] if len(entry) > 3 else ADAPTER
+        xml = build(template, title, kind, columns, seed=700 + i * 20, adapter=adapter)
         name = title.replace(" ", "_")
         path = os.path.join(OUTDIR, f"{name}.xml")
         open(path, "w").write(xml)
