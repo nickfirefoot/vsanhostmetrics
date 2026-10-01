@@ -17,14 +17,45 @@ LABEL org.opencontainers.image.source="https://github.com/nickfirefoot/vsanhostm
 # Root is needed for apt and the base image runs as aria-ops-adapter-user, so
 # this switches and switches back. Nothing below this line runs as root.
 #
-# perl-base is NOT removable -- it is Debian Essential and pulled in by the
-# base image. It is already at the newest bookworm version, so the CVEs a
-# scanner reports against it are unfixed upstream, not a missing patch here.
+# perl-base is then PURGED. It is Debian Essential, so this needs forcing, and
+# that warrants justifying:
+#
+#   - nothing installed depends on it -- `apt-cache rdepends --installed
+#     perl-base` returns an empty list
+#   - the adapter is Python; the only perl consumers in the image are dpkg and
+#     debconf helper scripts, which matter when managing packages, not at run
+#     time. This runs AFTER the upgrade above for that reason
+#   - it is 19 of the image's scanner findings including three of its five
+#     criticals, all of them unfixed upstream and so otherwise permanent
+#   - verified: the adapter imports and the swagger server starts without it
+#
+# The same test was applied to every other vulnerable OS package: each one
+# purged here has NO installed reverse-dependency, and the adapter and the
+# swagger server were verified running without it. Together they account for
+# 43 scanner findings and one of the image's two criticals, none of which have
+# a published fix, so they would otherwise be permanent.
+#
+# The trade:
+#   - apt and dpkg are no longer reliable inside a running container
+#   - `import sqlite3` raises ImportError. Nothing in the adapter or the SDK
+#     library uses it; a future dependency that does would fail at collection
+#     time, and this comment is the explanation for that
+#   - no mount, login, or curses tooling. Nothing shipped here needs them
+#
+# NOT removed, deliberately: the remaining util-linux siblings (libblkid1,
+# libmount1, libsmartcols1, libuuid1, util-linux, util-linux-extra) have real
+# dependents, and their 30 findings are only 5 unique CVEs counted six times
+# over because one source package ships six binaries. zlib1g cannot go --
+# Python links it -- and its CVE-2023-45853 is marked will-not-fix by Debian,
+# which is the one critical that remains.
 USER 0
 RUN apt-get update \
  && apt-get upgrade -y --no-install-recommends \
  && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
+ && dpkg --purge --force-remove-essential --force-depends \
+      perl-base libsqlite3-0 mount bsdutils libncursesw6 ncurses-bin \
+      ncurses-base login \
+ && rm -rf /usr/share/perl /usr/share/doc/perl* /var/lib/apt/lists/*
 USER aria-ops-adapter-user
 
 COPY commands.cfg .

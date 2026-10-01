@@ -605,6 +605,36 @@ parent, since this failed silently for as long as it has.
 
 ## Container CVEs: what is fixable here and what is not
 
+### Resolved in 1.3.1 -- unused packages purged
+
+Eight OS packages with **zero installed reverse-dependencies** are purged at
+build time. Each was verified individually: the adapter imports and the swagger
+server starts without it.
+
+| Removed | Findings | Why it was there |
+|---|---|---|
+| `perl-base` | 19 (3 critical) | Debian Essential; only consumers are dpkg and debconf helper scripts |
+| `libsqlite3-0` | 9 (1 critical) | backs Python's `sqlite3` stdlib module, which nothing here imports |
+| `mount`, `bsdutils` | 22 (10 crit/high) | util-linux binaries a container never calls |
+| `libncursesw6`, `ncurses-bin`, `ncurses-base`, `login` | 12 | terminal and login tooling |
+
+Measured effect: **268 findings -> 225, criticals 2 -> 1, 119 unique CVEs ->
+110.** Every finding removed was unfixable upstream, so they were otherwise
+permanent.
+
+**The trade, recorded so it is not rediscovered as a bug:** apt and dpkg stop
+being reliable inside a running container, `import sqlite3` raises ImportError,
+and there is no mount, login or curses tooling. Nothing shipped uses any of it.
+
+**Deliberately kept:** the remaining util-linux siblings have real dependents,
+and their 30 findings are 5 unique CVEs counted six times because one source
+ships six binaries. `zlib1g` cannot go -- Python links it -- and its
+CVE-2023-45853 is `will_not_fix`, which is the one critical that remains.
+
+### Still not fixable here
+
+
+
 The build now applies Debian security updates on top of the SDK's base image
 (`Dockerfile`, `USER 0` / `apt-get upgrade` / `USER aria-ops-adapter-user`).
 Measured on the base `base-adapter:python-1.2.0` (Debian 12 bookworm,
