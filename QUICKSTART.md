@@ -48,10 +48,39 @@ Tick **both** boxes:
 - *Install the PAK file even if it is already installed* — needed for every reinstall
 - *Ignore the PAK file signature checking* — **required**, this pak is unsigned
 
-**Upgrading?** Uninstall the old version and delete its adapter instances
-first. A schema change otherwise leaves the previous `describe.xml` in the
-Operations database, and you end up with orphaned resource kinds and objects
-that never collect again.
+**Upgrading?** It depends on whether the release changes the schema, and the
+answer is in the pak rather than in the version number.
+
+*Schema unchanged* -- install over the top. Tick both boxes above and leave the
+adapter instance alone. Its credentials, its collector assignment and its
+collected history all survive, and the new views and dashboards appear on the
+next content import. **1.3.1 to 1.4.0 is this case**: content only.
+
+*Schema changed* -- uninstall the old version and delete its adapter instances
+first. Otherwise the previous `describe.xml` stays in the Operations database
+and you are left with orphaned resource kinds and objects that never collect
+again. **1.2.x to 1.3.x was this case.**
+
+To tell which, compare the two paks rather than trusting the version bump:
+
+```sh
+python3 - <<'PY'
+import zipfile, io, re, sys
+def schema(p):
+    z = zipfile.ZipFile(p)
+    a = zipfile.ZipFile(io.BytesIO(z.read('adapter.zip')))
+    d = a.read('VsanHostMetrics/conf/describe.xml').decode('utf-8', 'replace')
+    return (set(re.findall(r'<ResourceKind key="([^"]+)"', d)),
+            set(re.findall(r'<ResourceAttribute key="([^"]+)"', d)))
+old, new = schema(sys.argv[1]), schema(sys.argv[2])
+print("schema unchanged" if old == new else "SCHEMA CHANGED -- uninstall first")
+PY
+```
+
+Pass the old pak then the new one. Do not diff `describe.xml` byte for byte:
+the SDK writes the `UnitType` block in a different order on every build, so two
+builds of the same schema differ in hundreds of lines while describing exactly
+the same 70 resource kinds and 971 attributes. Compare the key sets, as above.
 
 ## 2. Create the adapter instance
 
