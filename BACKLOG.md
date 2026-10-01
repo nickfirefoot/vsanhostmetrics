@@ -420,6 +420,38 @@ sure the absence is teaming policy rather than a collection fault. The
 distinction matters: if perfsvc omits a NIC that *is* carrying traffic, that
 is a defect rather than a design limit.
 
+## Pause frames are undirected, and the direction is the diagnosis
+
+The Performance Service offers `pauseCount` ("pNic 802.3x Pause Rate"), its
+`Raw` and `Actual` twins, and the same three for `pfcCount`. **None carries a
+direction.** Confirmed against the full advertised schema, not merely what is
+modelled: there is no `pauseRx`/`pauseTx` anywhere in it, and the dormant
+host-scrape model has nothing either.
+
+The two directions mean opposite things:
+
+| Direction | Meaning | Who fixes it |
+|---|---|---|
+| Pause **sent** by the host | our receive path cannot keep up | us -- ring buffers, interrupt coalescing |
+| Pause **received** from the switch | the fabric is congested | the network team |
+
+A combined counter cannot separate "this host is drowning" from "the switch is
+overloaded", which is precisely the call the Physical Network screen exists to
+make. It also leaves `pauseCount` unable to corroborate a finding like the
+`rxMissErr` burst on esxi03 vmnic2: pause frames *sent* would confirm the host
+was overwhelmed, pause frames *received* would point elsewhere entirely.
+
+Available below both collection paths, at the driver:
+
+    vsish -e get /net/pNics/vmnic2/stats     # rx_pause / tx_pause on some drivers
+    esxcli network nic stats get -n vmnic2
+    esxcli network nic get -n vmnic2         # whether flow control is enabled at all
+
+Needs an ESXi credential, the same blocker as the ring-buffer size check, and
+worth doing on the same host. Note the third command first: if flow control is
+disabled on the uplink, `pauseCount` reading zero says nothing at all, and the
+screen should not imply otherwise.
+
 ## Open question: halfopen drop rate reads 7-9% on a healthy cluster
 
 `tcpHalfopenDropRate` (`VsanTcpIp`) is the only non-zero error signal in the
