@@ -1068,3 +1068,75 @@ would need re-justifying on every SDK bump.
   Broadcom's image layer, not our dependency.
 - **`setuptools` installed is 84.0.0**, not 70.3.0. The 70.3.0 finding is also
   pip's vendored copy.
+
+## Further removal candidates, tested 2026-10-01
+
+Asked during review: besides pip, what else is worth removing? Tested rather
+than reasoned about. Two variants were built on top of the real 1.4.0 image and
+each was put through `tools/probe_adapter.py` against the live cluster.
+
+**Both variants collected identically to the unmodified image: 739 objects,
+5,203 metric values, 1,510 properties, 34 resource kinds, `/test` and
+`/collect` both 200.**
+
+### Variant A -- recommended
+
+| Removed | Why it is safe |
+|---|---|
+| `pip`, `setuptools`, `wheel` | Nothing shipped imports them. Verified by grep for `pkg_resources`, `import setuptools` and `import pip` across `app/`, `swagger_server/` and `aria/`: the only hits are inside pip itself. `commands.cfg` invokes `/usr/local/bin/python app/adapter.py` directly. |
+| `apt`, `gpgv` | Package management. `apt` is already unreliable here after the 1.3.1 purge, and `gpgv` exists only to verify apt's signatures. |
+| `e2fsprogs` | Filesystem repair tools in a container that mounts nothing. |
+| `libgdbm6` | Backs Python's `dbm.gnu`, which nothing imports. |
+| `libnsl2` | NIS client library. |
+| `libreadline8` | Line editing for an interactive interpreter that never runs. |
+
+**The pip removal is the valuable one, and not for its own findings.** pip
+*vendors* copies of its dependencies and the scanner reads that manifest rather
+than what is installed. Removing pip deletes `pip/_vendor/vendor.txt` and with
+it **18 packages** from the scan surface, including every one of the three
+"fixable but not by us" findings recorded above: `setuptools==70.3.0`,
+`msgpack==1.1.2` and `urllib3==2.7.0`.
+
+### Variant B -- tested, collects, not recommended yet
+
+Adds `mawk` and `util-linux`. Both are orphaned and the collection is clean
+without them, but `util-linux` is Debian **Essential** and supplies `setpriv`,
+`flock`, `logger` and `su`. Nothing in this pack calls them; whether the
+Operations container runtime does on some code path has not been established,
+and the payoff is one of the six binaries sharing util-linux's five CVEs. Not
+worth that unknown.
+
+### Scan surface, measured
+
+| | 1.4.0 | Variant A | Variant B |
+|---|---|---|---|
+| OS packages in the dpkg database | 97 | 91 | 89 |
+| Python dist-info directories | 4 | 1 | 1 |
+| Packages in pip's vendor manifest | 18 | 0 | 0 |
+| **Total entries a scanner enumerates** | **119** | **92** | **90** |
+
+### Deliberately kept, though all three are orphaned
+
+- **`ca-certificates`** -- `verify_certs` defaults to true, and QUICKSTART
+  documents importing the VMCA root into the container trust store as a
+  supported alternative to turning it off. That path needs the bundle and
+  `update-ca-certificates`. A passing test here would prove nothing either way,
+  because the probe runs with verification off.
+- **`tzdata`** -- collection timestamps.
+- **`netbase`** -- `/etc/services` and `/etc/protocols`.
+- The essential floor (`bash`, `coreutils`, `dash`, `sed`, `grep`, `libc-bin`
+  and siblings) shows as orphaned only because nothing declares a dependency on
+  what it assumes is always present.
+
+### One implementation note
+
+The test variants are 450 MB against the original's 449 MB: **purging in a
+later layer does not shrink the image**, because the files remain in the layers
+beneath. Scanner findings still drop, since Trivy reads the flattened
+filesystem. To recover the space as well, the purge has to go in the **same
+`RUN` as the `pip3 install`** in the main Dockerfile rather than a layer after
+it.
+
+Variant A is a one-line addition to that `RUN`. Not applied yet -- it is a
+change to how the shipped image is built and should be a deliberate decision
+rather than a side effect of answering a question.
