@@ -65,6 +65,9 @@ def receiver(template_receiver, title, view_guid, coords, tab):
     w["id"] = wid
     w["tabId"] = tab
     w["gridsterCoords"] = dict(coords)
+    # the widget carries its title in TWO places; setting only config.title
+    # leaves the template's name on the frame
+    w["title"] = title
     c = w["config"]
     c["widgetId"] = wid
     c["title"] = title
@@ -97,6 +100,7 @@ def build(template, name, help_file, panels):
     prov["id"] = pid
     prov["tabId"] = tab
     prov["config"]["widgetId"] = pid
+    prov["title"] = prov["config"].get("title") or "Select cluster"
     prov["gridsterCoords"] = {"w": 2, "x": 1, "h": 9, "y": 1}
 
     out = [prov]
@@ -109,6 +113,7 @@ def build(template, name, help_file, panels):
         t["id"] = tid
         t["tabId"] = tab
         t["config"]["widgetId"] = tid
+        t["title"] = "How to read this"
         bottom = max(p[2]["y"] + p[2]["h"] for p in panels)
         t["gridsterCoords"] = {"w": 12, "x": 1, "h": 7, "y": bottom}
         path = os.path.join(HELP, f"{help_file}.EDITOR.html") if help_file else None
