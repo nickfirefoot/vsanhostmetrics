@@ -30,38 +30,60 @@ OUTDIR = os.path.expanduser("~/ops-content/out")
 # (metricKey, displayName, preferredUnitId, transformation)
 # An empty unit lets Operations use the unit the adapter declares.
 VIEWS = [
+    # Labels follow three rules learned from reviewing the first draft:
+    #   1. a CUMULATIVE counter says "(Total)", so nobody thresholds a number
+    #      that only ever rises
+    #   2. an INVERTED metric says "Low Is Bad", because free-space metrics
+    #      read backwards against every other column on the screen
+    #   3. where two LAYERS measure the same thing, each says which layer --
+    #      "Read Latency" is ambiguous once a physical-layer table sits below
+    #      a vSAN-layer one
     ("vSAN Host TCP Health", "VsanTcpIp", [
-        ("tcpTxRexmitRate",      "TCP Retransmit",   "percent", "MAX"),
-        ("tcpRxErrRate",         "TCP RX Error",     "percent", "MAX"),
-        ("tcpRcvdupackRate",     "Duplicate ACK",    "percent", "MAX"),
-        ("tcpRcvoopackRate",     "Out Of Order",     "percent", "MAX"),
-        ("tcpSackRcvBlocksRate", "SACK Received",    "percent", "MAX"),
-        ("tcpTimeoutDropRate",   "Timeout Drop",     "percent", "MAX"),
-        ("tcpSndZeroWin",        "Zero Window",      "",        "CURRENT"),
-        ("tcpErrs",              "TCP Errors",       "",        "CURRENT"),
+        ("tcpTxRexmitRate",      "TCP Retransmit",        "percent", "MAX"),
+        ("tcpRxErrRate",         "TCP RX Error",          "percent", "MAX"),
+        ("tcpRcvdupackRate",     "Duplicate ACK",         "percent", "MAX"),
+        ("tcpRcvoopackRate",     "Out Of Order",          "percent", "MAX"),
+        # direction is the whole point: receiving SACK blocks means the PEER
+        # is missing data we sent, i.e. loss on our outbound path
+        ("tcpSackRcvBlocksRate", "SACK Rcvd (Peer Lost)", "percent", "MAX"),
+        ("tcpTimeoutDropRate",   "Timeout Drop",          "percent", "MAX"),
+        ("tcpSndZeroWin",        "Zero Window (Total)",   "",        "CURRENT"),
+        ("tcpErrs",              "TCP Error Count (Total)", "",      "CURRENT"),
     ]),
     ("vSAN RDT Transport", "VsanRdtLatency", [
-        ("avgLatency",    "RDT Average Latency",   "", "MAX"),
-        ("maxLatency",    "RDT Max Latency",       "", "MAX"),
-        ("txQLatAvg",     "Queue Latency Average", "", "MAX"),
-        ("txQLatMax",     "Queue Latency Max",     "", "MAX"),
-        ("txSbSpaceMin",  "TX Buffer Free",        "", "MIN"),
-        ("rxSbSpaceMin",  "RX Buffer Free",        "", "MIN"),
-        ("kaReset",       "Keepalive Reset",       "", "CURRENT"),
-        ("numReadyDelay", "Ready Delay",           "", "CURRENT"),
+        ("avgLatency",    "RDT Latency Avg",              "", "MAX"),
+        ("maxLatency",    "RDT Latency Max",              "", "MAX"),
+        ("txQLatAvg",     "TX Queue Latency Avg",         "", "MAX"),
+        ("txQLatMax",     "TX Queue Latency Max",         "", "MAX"),
+        # free space remaining: the only inverted columns in the pack
+        ("txSbSpaceMin",  "TX Buffer Free (Low Is Bad)",  "", "MIN"),
+        ("rxSbSpaceMin",  "RX Buffer Free (Low Is Bad)",  "", "MIN"),
+        ("kaReset",       "Keepalive Reset (Total)",      "", "CURRENT"),
+        ("numReadyDelay", "Ready Delay (Total)",          "", "CURRENT"),
     ]),
     ("vSAN ESA Disks", "VsanEsaDiskLayer", [
-        ("avgLatReadCapacity",  "Read Latency",           "", "MAX"),
-        ("avgLatWriteCapacity", "Write Latency",          "", "MAX"),
+        ("avgLatReadCapacity",  "vSAN Read Latency",       "", "MAX"),
+        ("avgLatWriteCapacity", "vSAN Write Latency",      "", "MAX"),
         ("avgLatWritePerf",     "Perf Tier Write Latency", "", "MAX"),
-        ("iopsReadCapacity",    "Read IOPS",              "", "MAX"),
-        ("iopsWriteCapacity",   "Write IOPS",             "", "MAX"),
+        ("iopsReadCapacity",    "Read IOPS",               "", "MAX"),
+        ("iopsWriteCapacity",   "Write IOPS",              "", "MAX"),
+    ]),
+    # The layer that says WHY a disk is slow. DAVG is the device, KAVG the
+    # VMkernel queue, GAVG what the guest sees (DAVG + KAVG). High DAVG with
+    # flat KAVG is a slow device; high KAVG is contention. Lives on a separate
+    # resource kind, so it cannot be a column on the view above.
+    ("vSAN ESA Disk Physical Layer", "VsanEsaDiskScsifw", [
+        ("latencyDevRead",  "Physical Read Latency",   "", "MAX"),
+        ("latencyDevWrite", "Physical Write Latency",  "", "MAX"),
+        ("latencyDevDAvg",  "Device (DAVG)",           "", "MAX"),
+        ("latencyDevKAvg",  "Kernel Queue (KAVG)",     "", "MAX"),
+        ("latencyDevGAvg",  "Guest Total (GAVG)",      "", "MAX"),
     ]),
     ("vSAN VM Storage", "VsanVscsi", [
-        ("latencyRead",  "Read Latency",  "", "MAX"),
-        ("latencyWrite", "Write Latency", "", "MAX"),
-        ("iopsRead",     "Read IOPS",     "", "MAX"),
-        ("iopsWrite",    "Write IOPS",    "", "MAX"),
+        ("latencyRead",  "vSAN Read Latency",  "", "MAX"),
+        ("latencyWrite", "vSAN Write Latency", "", "MAX"),
+        ("iopsRead",     "Read IOPS",          "", "MAX"),
+        ("iopsWrite",    "Write IOPS",         "", "MAX"),
     ]),
 ]
 
