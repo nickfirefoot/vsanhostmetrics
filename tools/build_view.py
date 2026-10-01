@@ -89,6 +89,9 @@ VIEWS = [
 
 ADAPTER = "VsanHostMetrics"
 
+# Fixed namespace so view GUIDs are reproducible across machines and runs.
+NAMESPACE = uuid.UUID("6f3c9b1e-4a2d-5e8f-9c1b-2d7a4e6f8b03")
+
 
 def make_item(key, label, unit, transform, kind):
     """One column, built as elements so the result cannot be malformed."""
@@ -124,7 +127,11 @@ def build(template, title, kind, columns, seed):
     """
     root = ET.fromstring(template)
     vd = root.find(".//ViewDef")
-    vd.set("id", str(uuid.uuid4()))
+    # Deterministic: the same title always yields the same GUID, so
+    # regenerating after a label fix UPDATES the view in place rather than
+    # creating a duplicate, and any dashboard referencing it keeps resolving.
+    # uuid4 here would mean every edit orphaned the previous import.
+    vd.set("id", str(uuid.uuid5(NAMESPACE, title)))
     vd.find("Title").text = title
     for st in vd.findall("SubjectType"):
         st.set("adapterKind", ADAPTER)
