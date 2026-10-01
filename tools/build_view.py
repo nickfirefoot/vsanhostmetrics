@@ -25,65 +25,104 @@ import xml.etree.ElementTree as ET
 import zipfile
 
 TEMPLATE = "docs/assets/view.vsan-pnic-errors.xml"
+# The hand-built pNIC view keeps its original GUID so a regenerated
+# version UPDATES the one already imported rather than duplicating it.
+PINNED = {"vSAN pNIC Errors": "09f4cb2e-f52c-412a-826d-ee04a3d07d0f"}
 OUTDIR = os.path.expanduser("~/ops-content/out")
 
 # (metricKey, displayName, preferredUnitId, transformation)
 # An empty unit lets Operations use the unit the adapter declares.
 VIEWS = [
-    # Labels follow three rules learned from reviewing the first draft:
-    #   1. a CUMULATIVE counter says "(Total)", so nobody thresholds a number
-    #      that only ever rises
-    #   2. an INVERTED metric says "Low Is Bad", because free-space metrics
-    #      read backwards against every other column on the screen
-    #   3. where two LAYERS measure the same thing, each says which layer --
-    #      "Read Latency" is ambiguous once a physical-layer table sits below
-    #      a vSAN-layer one
-    ("vSAN Host TCP Health", "VsanTcpIp", [
-        ("tcpTxRexmitRate",      "TCP Retransmit",        "percent", "MAX"),
-        ("tcpRxErrRate",         "TCP RX Error",          "percent", "MAX"),
-        ("tcpRcvdupackRate",     "Duplicate ACK",         "percent", "MAX"),
-        ("tcpRcvoopackRate",     "Out Of Order",          "percent", "MAX"),
-        # direction is the whole point: receiving SACK blocks means the PEER
-        # is missing data we sent, i.e. loss on our outbound path
-        ("tcpSackRcvBlocksRate", "SACK Rcvd (Peer Lost)", "percent", "MAX"),
-        ("tcpTimeoutDropRate",   "Timeout Drop",          "percent", "MAX"),
-        ("tcpSndZeroWin",        "Zero Window (Total)",   "",        "CURRENT"),
-        ("tcpErrs",              "TCP Error Count (Total)", "",      "CURRENT"),
+    # Every metric from the hand-built dashboard is carried here. Earlier
+    # drafts dropped twenty of them on my judgement without saying so; the
+    # only grouping constraint a view actually imposes is that it has ONE
+    # subject kind, so a panel mixing kinds becomes two views, nothing is lost.
+    #
+    # Labels are Broadcom's official names, trimmed where they repeat the
+    # view's subject. Two markers are added where the official name omits
+    # something load-bearing:
+    #   (Total)       cumulative since boot -- do not threshold it
+    #   (Low Is Bad)  free space remaining -- reads backwards from every
+    #                 other column
+    ("vSAN pNIC Errors", "VsanPnic", [
+        # rates: is it happening now
+        ("rxMissErr",   "pNIC RX Missed Error",            "percent", "MAX"),
+        ("rxCrcErr",    "pNIC RX CRC Error",               "percent", "MAX"),
+        ("rxErr",       "pNIC RX Generic Error",           "percent", "MAX"),
+        ("rxFifoErr",   "pNIC RX FIFO Error",              "percent", "MAX"),
+        ("rxOvErr",     "pNIC RX Buffer Overflow Error",   "percent", "MAX"),
+        ("txCarErr",    "pNIC TX Carrier Error",           "percent", "MAX"),
+        ("txErr",       "pNIC TX Generic Error",           "percent", "MAX"),
+        ("portRxDrops", "vSwitch Port Inbound Drop Rate",  "percent", "MAX"),
+        ("portTxDrops", "vSwitch Port Outbound Drop Rate", "percent", "MAX"),
+        ("pauseCount",  "pNIC 802.3x Pause Rate",          "percent", "MAX"),
+        # IO chain drops: kept from the original dashboard
+        ("ioChainDrops",   "IO Chain Drops",               "", "MAX"),
+        ("ioChainRxdrops", "IO Chain RX Drops",            "", "MAX"),
+        ("ioChainTxdrops", "IO Chain TX Drops",            "", "MAX"),
+        # lifetime counters: has this NIC ever been bad
+        ("rxMissErrRaw", "RX Missed Count (Total)",        "", "CURRENT"),
+        ("rxCrcErrRaw",  "RX CRC Count (Total)",           "", "CURRENT"),
+        ("pfcCountRaw",  "PFC Count (Total)",              "", "CURRENT"),
+        ("portTxpkts",   "Port TX Packets",                "", "CURRENT"),
     ]),
-    ("vSAN RDT Transport", "VsanRdtLatency", [
-        ("avgLatency",    "RDT Latency Avg",              "", "MAX"),
-        ("maxLatency",    "RDT Latency Max",              "", "MAX"),
-        ("txQLatAvg",     "TX Queue Latency Avg",         "", "MAX"),
-        ("txQLatMax",     "TX Queue Latency Max",         "", "MAX"),
-        # free space remaining: the only inverted columns in the pack
-        ("txSbSpaceMin",  "TX Buffer Free (Low Is Bad)",  "", "MIN"),
-        ("rxSbSpaceMin",  "RX Buffer Free (Low Is Bad)",  "", "MIN"),
-        ("kaReset",       "Keepalive Reset (Total)",      "", "CURRENT"),
-        ("numReadyDelay", "Ready Delay (Total)",          "", "CURRENT"),
+    ("vSAN Host Network", "VsanHostNet", [
+        ("rxPacketsLossRate", "Network Inbound Packet Discard Rate",  "percent", "MAX"),
+        ("txPacketsLossRate", "Network Outbound Packet Discard Rate", "percent", "MAX"),
+        ("portRxDrops",       "Inbound Drop Rate of vSAN Host Port",  "percent", "MAX"),
+        ("portTxDrops",       "Outbound Drop Rate of vSAN Host Port", "percent", "MAX"),
+        ("rxThroughput",      "Network Inbound Throughput",           "", "MAX"),
+        ("txThroughput",      "Network Outbound Throughput",          "", "MAX"),
+        ("rxPackets",         "Network Inbound Packets Per Second",   "", "MAX"),
+        ("txPackets",         "Network Outbound Packets Per Second",  "", "MAX"),
+    ]),
+    ("vSAN Host TCP Health", "VsanTcpIp", [
+        ("tcpTxRexmitRate",       "TCP TX Retransmit Rate",             "percent", "MAX"),
+        ("tcpRxErrRate",          "TCP RX Error Rate",                  "percent", "MAX"),
+        ("tcpRcvdupackRate",      "Received Duplicate Acknowledge Rate", "percent", "MAX"),
+        ("tcpRcvduppackRate",     "Received Duplicate Packets Rate",    "percent", "MAX"),
+        ("tcpRcvoopackRate",      "Received Out-of-order Packets Rate", "percent", "MAX"),
+        ("tcpSackRcvBlocksRate",  "SACK Received Blocks Rate",          "percent", "MAX"),
+        ("tcpSackSendBlocksRate", "SACK Send Blocks Rate",              "percent", "MAX"),
+        ("tcpSackRexmitsRate",    "SACK Rexmits Rate",                  "percent", "MAX"),
+        ("tcpTimeoutDropRate",    "Timeout Drop Rate",                  "percent", "MAX"),
+        # reads 7-9% on a healthy cluster -- restored because it was on the
+        # original dashboard, but do not colour it until that is understood
+        ("tcpHalfopenDropRate",   "Half Open Drop Rate",                "percent", "MAX"),
+        ("tcpSndZeroWin",         "TCP Send Zero Window (Total)",       "",        "CURRENT"),
+        ("tcpErrs",               "TCP Errors (Total)",                 "",        "CURRENT"),
+    ]),
+    ("vSAN RDT Transport Per Host", "VsanRdtLatency", [
+        ("avgLatency",    "RDT Network Host Average Latency",           "", "MAX"),
+        ("maxLatency",    "RDT Network Max Latency",                    "", "MAX"),
+        ("minLatency",    "RDT Network Min Latency",                    "", "MIN"),
+        ("txQLatAvg",     "RDT Average Outbound Queueing Latency",      "", "MAX"),
+        ("txQLatMax",     "RDT Max Outbound Queueing Latency",          "", "MAX"),
+        ("txSbSpaceMin",  "RDT Socket Min Outbound Bytes (Low Is Bad)", "", "MIN"),
+        ("rxSbSpaceMin",  "RDT Socket Min Inbound Bytes (Low Is Bad)",  "", "MIN"),
+        ("rxSbSpaceMax",  "RDT Socket Max Inbound Bytes",               "", "MAX"),
+        ("kaReset",       "Keepalive Reset (Total)",                    "", "CURRENT"),
+        ("numReadyDelay", "Num Ready Delay (Total)",                    "", "CURRENT"),
     ]),
     ("vSAN ESA Disks", "VsanEsaDiskLayer", [
-        ("avgLatReadCapacity",  "vSAN Read Latency",       "", "MAX"),
-        ("avgLatWriteCapacity", "vSAN Write Latency",      "", "MAX"),
-        ("avgLatWritePerf",     "Perf Tier Write Latency", "", "MAX"),
-        ("iopsReadCapacity",    "Read IOPS",               "", "MAX"),
-        ("iopsWriteCapacity",   "Write IOPS",              "", "MAX"),
+        ("avgLatReadCapacity",  "vSAN Layer Average Read Latency",   "", "MAX"),
+        ("avgLatWriteCapacity", "vSAN Layer Average Write Latency",  "", "MAX"),
+        ("avgLatWritePerf",     "Perf Tier Average Write Latency",   "", "MAX"),
+        ("iopsReadCapacity",    "vSAN Layer Read IOPS",              "", "MAX"),
+        ("iopsWriteCapacity",   "vSAN Layer Write IOPS",             "", "MAX"),
     ]),
-    # The layer that says WHY a disk is slow. DAVG is the device, KAVG the
-    # VMkernel queue, GAVG what the guest sees (DAVG + KAVG). High DAVG with
-    # flat KAVG is a slow device; high KAVG is contention. Lives on a separate
-    # resource kind, so it cannot be a column on the view above.
     ("vSAN ESA Disk Physical Layer", "VsanEsaDiskScsifw", [
-        ("latencyDevRead",  "Physical Read Latency",   "", "MAX"),
-        ("latencyDevWrite", "Physical Write Latency",  "", "MAX"),
-        ("latencyDevDAvg",  "Device (DAVG)",           "", "MAX"),
-        ("latencyDevKAvg",  "Kernel Queue (KAVG)",     "", "MAX"),
-        ("latencyDevGAvg",  "Guest Total (GAVG)",      "", "MAX"),
+        ("latencyDevRead",  "Physical/Firmware Layer Read Latency",     "", "MAX"),
+        ("latencyDevWrite", "Physical/Firmware Layer Write Latency",    "", "MAX"),
+        ("latencyDevDAvg",  "Physical/Firmware Device Average (DAVG)",  "", "MAX"),
+        ("latencyDevKAvg",  "Physical/Firmware Kernel Average (KAVG)",  "", "MAX"),
+        ("latencyDevGAvg",  "Physical/Firmware Guest Average (GAVG)",   "", "MAX"),
     ]),
     ("vSAN VM Storage", "VsanVscsi", [
-        ("latencyRead",  "vSAN Read Latency",  "", "MAX"),
-        ("latencyWrite", "vSAN Write Latency", "", "MAX"),
-        ("iopsRead",     "Read IOPS",          "", "MAX"),
-        ("iopsWrite",    "Write IOPS",         "", "MAX"),
+        ("latencyRead",  "vSAN Layer Read Latency",  "", "MAX"),
+        ("latencyWrite", "vSAN Layer Write Latency", "", "MAX"),
+        ("iopsRead",     "Read IOPS",                "", "MAX"),
+        ("iopsWrite",    "Write IOPS",               "", "MAX"),
     ]),
 ]
 
@@ -131,7 +170,7 @@ def build(template, title, kind, columns, seed):
     # regenerating after a label fix UPDATES the view in place rather than
     # creating a duplicate, and any dashboard referencing it keeps resolving.
     # uuid4 here would mean every edit orphaned the previous import.
-    vd.set("id", str(uuid.uuid5(NAMESPACE, title)))
+    vd.set("id", PINNED.get(title) or str(uuid.uuid5(NAMESPACE, title)))
     vd.find("Title").text = title
     for st in vd.findall("SubjectType"):
         st.set("adapterKind", ADAPTER)
