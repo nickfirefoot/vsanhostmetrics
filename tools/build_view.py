@@ -18,11 +18,20 @@ columns, `CURRENT` on cumulative counters. `MIN` is used here for the two
 socket-buffer minimums, where low is bad and the worst case is the lowest
 value -- **that enum value is unverified**, see the note in the output.
 """
+import json
 import os
 import re
 import uuid
 import xml.etree.ElementTree as ET
 import zipfile
+import sys
+
+sys.path.insert(0, "app")
+import perfsvc_model            # noqa: E402
+import metric_labels            # noqa: E402
+
+SCHEMA = json.load(open("docs/assets/perfsvc_schema.json"))
+ENT_FOR = {sp["kind"]: e for e, sp in perfsvc_model.ENTITIES.items()}
 
 TEMPLATE = "docs/assets/view.vsan-pnic-errors.xml"
 # The hand-built pNIC view keeps its original GUID so a regenerated
@@ -32,99 +41,126 @@ OUTDIR = os.path.expanduser("~/ops-content/out")
 
 # (metricKey, displayName, preferredUnitId, transformation)
 # An empty unit lets Operations use the unit the adapter declares.
+# Columns are (metricKey, preferredUnitId, transformation). The LABEL is
+# derived, not hand-written: Broadcom's official name from the Performance
+# Service schema verbatim where one exists, the pack's own derived label
+# otherwise (17 of these metrics have no official name at all). Two suffixes
+# are appended because the official names omit them and their absence misleads.
+CUMULATIVE = {"rxMissErrRaw", "rxCrcErrRaw", "pfcCountRaw", "portTxpkts",
+              "tcpSndZeroWin", "tcpErrs", "kaReset", "numReadyDelay"}
+INVERTED = {"txSbSpaceMin", "rxSbSpaceMin"}
+
 VIEWS = [
-    # Every metric from the hand-built dashboard is carried here. Earlier
-    # drafts dropped twenty of them on my judgement without saying so; the
-    # only grouping constraint a view actually imposes is that it has ONE
-    # subject kind, so a panel mixing kinds becomes two views, nothing is lost.
-    #
-    # Labels are Broadcom's official names, trimmed where they repeat the
-    # view's subject. Two markers are added where the official name omits
-    # something load-bearing:
-    #   (Total)       cumulative since boot -- do not threshold it
-    #   (Low Is Bad)  free space remaining -- reads backwards from every
-    #                 other column
     ("vSAN pNIC Errors", "VsanPnic", [
-        # rates: is it happening now
-        ("rxMissErr",   "pNIC RX Missed Error",            "percent", "MAX"),
-        ("rxCrcErr",    "pNIC RX CRC Error",               "percent", "MAX"),
-        ("rxErr",       "pNIC RX Generic Error",           "percent", "MAX"),
-        ("rxFifoErr",   "pNIC RX FIFO Error",              "percent", "MAX"),
-        ("rxOvErr",     "pNIC RX Buffer Overflow Error",   "percent", "MAX"),
-        ("txCarErr",    "pNIC TX Carrier Error",           "percent", "MAX"),
-        ("txErr",       "pNIC TX Generic Error",           "percent", "MAX"),
-        ("portRxDrops", "vSwitch Port Inbound Drop Rate",  "percent", "MAX"),
-        ("portTxDrops", "vSwitch Port Outbound Drop Rate", "percent", "MAX"),
-        ("pauseCount",  "pNIC 802.3x Pause Rate",          "percent", "MAX"),
-        # IO chain drops: kept from the original dashboard
-        ("ioChainDrops",   "IO Chain Drops",               "", "MAX"),
-        ("ioChainRxdrops", "IO Chain RX Drops",            "", "MAX"),
-        ("ioChainTxdrops", "IO Chain TX Drops",            "", "MAX"),
-        # lifetime counters: has this NIC ever been bad
-        ("rxMissErrRaw", "RX Missed Count (Total)",        "", "CURRENT"),
-        ("rxCrcErrRaw",  "RX CRC Count (Total)",           "", "CURRENT"),
-        ("pfcCountRaw",  "PFC Count (Total)",              "", "CURRENT"),
-        ("portTxpkts",   "Port TX Packets",                "", "CURRENT"),
+        ("rxMissErr",      "percent", "MAX"),
+        ("rxCrcErr",       "percent", "MAX"),
+        ("rxErr",          "percent", "MAX"),
+        ("rxFifoErr",      "percent", "MAX"),
+        ("rxOvErr",        "percent", "MAX"),
+        ("txCarErr",       "percent", "MAX"),
+        ("txErr",          "percent", "MAX"),
+        ("portRxDrops",    "percent", "MAX"),
+        ("portTxDrops",    "percent", "MAX"),
+        ("pauseCount",     "percent", "MAX"),
+        ("ioChainDrops",   "",        "MAX"),
+        ("ioChainRxdrops", "",        "MAX"),
+        ("ioChainTxdrops", "",        "MAX"),
+        ("rxMissErrRaw",   "",        "CURRENT"),
+        ("rxCrcErrRaw",    "",        "CURRENT"),
+        ("pfcCountRaw",    "",        "CURRENT"),
+        ("portTxpkts",     "",        "CURRENT"),
     ]),
     ("vSAN Host Network", "VsanHostNet", [
-        ("rxPacketsLossRate", "Network Inbound Packet Discard Rate",  "percent", "MAX"),
-        ("txPacketsLossRate", "Network Outbound Packet Discard Rate", "percent", "MAX"),
-        ("portRxDrops",       "Inbound Drop Rate of vSAN Host Port",  "percent", "MAX"),
-        ("portTxDrops",       "Outbound Drop Rate of vSAN Host Port", "percent", "MAX"),
-        ("rxThroughput",      "Network Inbound Throughput",           "", "MAX"),
-        ("txThroughput",      "Network Outbound Throughput",          "", "MAX"),
-        ("rxPackets",         "Network Inbound Packets Per Second",   "", "MAX"),
-        ("txPackets",         "Network Outbound Packets Per Second",  "", "MAX"),
+        ("rxPacketsLossRate", "percent", "MAX"),
+        ("txPacketsLossRate", "percent", "MAX"),
+        ("portRxDrops",       "percent", "MAX"),
+        ("portTxDrops",       "percent", "MAX"),
+        ("rxThroughput",      "",        "MAX"),
+        ("txThroughput",      "",        "MAX"),
+        ("rxPackets",         "",        "MAX"),
+        ("txPackets",         "",        "MAX"),
     ]),
     ("vSAN Host TCP Health", "VsanTcpIp", [
-        ("tcpTxRexmitRate",       "TCP TX Retransmit Rate",             "percent", "MAX"),
-        ("tcpRxErrRate",          "TCP RX Error Rate",                  "percent", "MAX"),
-        ("tcpRcvdupackRate",      "Received Duplicate Acknowledge Rate", "percent", "MAX"),
-        ("tcpRcvduppackRate",     "Received Duplicate Packets Rate",    "percent", "MAX"),
-        ("tcpRcvoopackRate",      "Received Out-of-order Packets Rate", "percent", "MAX"),
-        ("tcpSackRcvBlocksRate",  "SACK Received Blocks Rate",          "percent", "MAX"),
-        ("tcpSackSendBlocksRate", "SACK Send Blocks Rate",              "percent", "MAX"),
-        ("tcpSackRexmitsRate",    "SACK Rexmits Rate",                  "percent", "MAX"),
-        ("tcpTimeoutDropRate",    "Timeout Drop Rate",                  "percent", "MAX"),
-        # reads 7-9% on a healthy cluster -- restored because it was on the
-        # original dashboard, but do not colour it until that is understood
-        ("tcpHalfopenDropRate",   "Half Open Drop Rate",                "percent", "MAX"),
-        ("tcpSndZeroWin",         "TCP Send Zero Window (Total)",       "",        "CURRENT"),
-        ("tcpErrs",               "TCP Errors (Total)",                 "",        "CURRENT"),
+        ("tcpTxRexmitRate",       "percent", "MAX"),
+        ("tcpRxErrRate",          "percent", "MAX"),
+        ("tcpRcvdupackRate",      "percent", "MAX"),
+        ("tcpRcvduppackRate",     "percent", "MAX"),
+        ("tcpRcvoopackRate",      "percent", "MAX"),
+        ("tcpSackRcvBlocksRate",  "percent", "MAX"),
+        ("tcpSackSendBlocksRate", "percent", "MAX"),
+        ("tcpSackRexmitsRate",    "percent", "MAX"),
+        ("tcpTimeoutDropRate",    "percent", "MAX"),
+        ("tcpHalfopenDropRate",   "percent", "MAX"),
+        ("tcpSndZeroWin",         "",        "CURRENT"),
+        ("tcpErrs",               "",        "CURRENT"),
     ]),
     ("vSAN RDT Transport Per Host", "VsanRdtLatency", [
-        ("avgLatency",    "RDT Network Host Average Latency",           "", "MAX"),
-        ("maxLatency",    "RDT Network Max Latency",                    "", "MAX"),
-        ("minLatency",    "RDT Network Min Latency",                    "", "MIN"),
-        ("txQLatAvg",     "RDT Average Outbound Queueing Latency",      "", "MAX"),
-        ("txQLatMax",     "RDT Max Outbound Queueing Latency",          "", "MAX"),
-        ("txSbSpaceMin",  "RDT Socket Min Outbound Bytes (Low Is Bad)", "", "MIN"),
-        ("rxSbSpaceMin",  "RDT Socket Min Inbound Bytes (Low Is Bad)",  "", "MIN"),
-        ("rxSbSpaceMax",  "RDT Socket Max Inbound Bytes",               "", "MAX"),
-        ("kaReset",       "Keepalive Reset (Total)",                    "", "CURRENT"),
-        ("numReadyDelay", "Num Ready Delay (Total)",                    "", "CURRENT"),
+        ("avgLatency",    "", "MAX"),
+        ("maxLatency",    "", "MAX"),
+        ("minLatency",    "", "MIN"),
+        ("txQLatAvg",     "", "MAX"),
+        ("txQLatMax",     "", "MAX"),
+        ("txSbSpaceMin",  "", "MIN"),
+        ("rxSbSpaceMin",  "", "MIN"),
+        ("rxSbSpaceMax",  "", "MAX"),
+        ("kaReset",       "", "CURRENT"),
+        ("numReadyDelay", "", "CURRENT"),
     ]),
     ("vSAN ESA Disks", "VsanEsaDiskLayer", [
-        ("avgLatReadCapacity",  "vSAN Layer Average Read Latency",   "", "MAX"),
-        ("avgLatWriteCapacity", "vSAN Layer Average Write Latency",  "", "MAX"),
-        ("avgLatWritePerf",     "Perf Tier Average Write Latency",   "", "MAX"),
-        ("iopsReadCapacity",    "vSAN Layer Read IOPS",              "", "MAX"),
-        ("iopsWriteCapacity",   "vSAN Layer Write IOPS",             "", "MAX"),
+        ("avgLatReadCapacity",  "", "MAX"),
+        ("avgLatWriteCapacity", "", "MAX"),
+        ("avgLatWritePerf",     "", "MAX"),
+        ("iopsReadCapacity",    "", "MAX"),
+        ("iopsWriteCapacity",   "", "MAX"),
     ]),
     ("vSAN ESA Disk Physical Layer", "VsanEsaDiskScsifw", [
-        ("latencyDevRead",  "Physical/Firmware Layer Read Latency",     "", "MAX"),
-        ("latencyDevWrite", "Physical/Firmware Layer Write Latency",    "", "MAX"),
-        ("latencyDevDAvg",  "Physical/Firmware Device Average (DAVG)",  "", "MAX"),
-        ("latencyDevKAvg",  "Physical/Firmware Kernel Average (KAVG)",  "", "MAX"),
-        ("latencyDevGAvg",  "Physical/Firmware Guest Average (GAVG)",   "", "MAX"),
+        ("latencyDevRead",  "", "MAX"),
+        ("latencyDevWrite", "", "MAX"),
+        ("latencyDevDAvg",  "", "MAX"),
+        ("latencyDevKAvg",  "", "MAX"),
+        ("latencyDevGAvg",  "", "MAX"),
     ]),
     ("vSAN VM Storage", "VsanVscsi", [
-        ("latencyRead",  "vSAN Layer Read Latency",  "", "MAX"),
-        ("latencyWrite", "vSAN Layer Write Latency", "", "MAX"),
-        ("iopsRead",     "Read IOPS",                "", "MAX"),
-        ("iopsWrite",    "Write IOPS",               "", "MAX"),
+        ("latencyRead",  "", "MAX"),
+        ("latencyWrite", "", "MAX"),
+        ("iopsRead",     "", "MAX"),
+        ("iopsWrite",    "", "MAX"),
     ]),
 ]
+
+
+# Where no official name exists the derived fallback is sometimes wrong or
+# useless. Each entry states why; keep the list short.
+OVERRIDE = {
+    # the derived name says "Cluster" -- but this view's subject is the
+    # PER-HOST kind, so the label would assert the wrong scope
+    ("VsanRdtLatency", "maxLatency"): "RDT Network Host Max Latency",
+    ("VsanRdtLatency", "minLatency"): "RDT Network Host Min Latency",
+    # derived names are placeholders ("Latency dev k (average)"); named to
+    # match the DAVG and GAVG siblings that do have official names
+    ("VsanEsaDiskScsifw", "latencyDevKAvg"):
+        "vSAN ESA Disk Physical/Firmware Layer Kernel Average Latency",
+    ("VsanEsaDiskLayer", "avgLatWritePerf"):
+        "Perf Tier Average Write Latency of vSAN ESA Disk",
+    # "(raw) (Total)" says the same thing twice
+    ("VsanPnic", "rxMissErrRaw"): "pNIC RX Missed Error",
+    ("VsanPnic", "rxCrcErrRaw"):  "pNIC RX CRC Error",
+    ("VsanPnic", "pfcCountRaw"):  "pNIC PFC Count",
+}
+
+
+def label_for(kind, key):
+    """Broadcom's official name verbatim, else the pack's derived label."""
+    ent = ENT_FOR[kind]
+    official = ((SCHEMA.get(ent) or {}).get(key) or {}).get("name")
+    label = (OVERRIDE.get((kind, key)) or official
+             or metric_labels.LABELS.get(key) or key)
+    if key in CUMULATIVE:
+        label += " (Total)"
+    if key in INVERTED:
+        label += " (Low Is Bad)"
+    return label
+
 
 ADAPTER = "VsanHostMetrics"
 
@@ -192,8 +228,8 @@ def build(template, title, kind, columns, seed):
             lst = prop.find("List")
             for child in list(lst):
                 lst.remove(child)
-            for col in columns:
-                lst.append(make_item(*col, kind))
+            for key, unit, transform in columns:
+                lst.append(make_item(key, label_for(kind, key), unit, transform, kind))
             replaced = True
     if not replaced:
         raise SystemExit(f"{title}: could not find attributeInfos to replace")
