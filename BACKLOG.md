@@ -1017,3 +1017,54 @@ returns the child's exit status.
   enough to generate it for all seven. Until then each dashboard has its own
   selector with `selectFirstRow` enabled, which auto-populates on a
   single-cluster instance.
+
+## CVE ownership: who can actually fix what
+
+Asked during review: of the remaining findings, which are Broadcom's to fix?
+Attributed from the image rather than from the scan report, because the scanner
+names a package without saying who chose its version.
+
+### Broadcom's, and only Broadcom's
+
+| What | Evidence | Cost of them not fixing it |
+|---|---|---|
+| **Python 3.11.12** | `FROM python:3.11.12-slim-bookworm`, hard-coded in the SDK's own `images/base-python-adapter/Dockerfile` | **3.11.16 is published** -- four patch releases on. Any CPython fix after May 2025 is unreachable from here. Changing the `FROM` means forking the image the SDK generates and Operations expects. |
+| **`cryptography==44.0.0`** | an **exact** pin in `vmware-aria-operations-integration-sdk-lib` 1.1.0 metadata, not a floor | 4 HIGH, 1 LOW. Clearing all four needs 50.0.0. Requesting it gives `ResolutionImpossible`, because this is `==` and not `>=`. |
+| **`aenum==3.1.11`** | the same exact pin | currently clean; the same trap whenever it is not. |
+| **Debian 12 bookworm as the base** | their choice of `python:3.11-slim-bookworm` | the ~225 remaining OS findings are bookworm's. Moving to trixie would clear a large share of them and is a base-image decision only they can take. |
+| **`pip` present in the runtime image** | shipped by their base layer | pip *vendors* its own dependency copies and the scanner reads that manifest: `setuptools==70.3.0`, `msgpack==1.1.2`, `urllib3==2.7.0`. The adapter never calls pip at run time. |
+
+### Debian's, which nobody downstream can fix
+
+255 of 264 findings have no published fix -- 198 `affected`, 43 `fix_deferred`,
+14 `will_not_fix`. `zlib1g` CVE-2023-45853 is the clearest case: Debian have
+marked it will-not-fix, and Python links zlib so it cannot be removed. These
+are not a missing patch anywhere; they are a package at the newest version its
+distribution ships.
+
+### Ours
+
+**Nothing we pin is vulnerable.** `adapter_requirements.txt` declares two
+things, `vmware-aria-operations-integration-sdk-lib~=1.1.0` and `pyvmomi~=8.0`,
+and neither carries a finding. Everything flagged arrives through Broadcom's
+pin or Debian's base.
+
+What is ours is the mitigation, and both are already in place: the apt upgrade
+layer, which carries openssl and libssl3 to 3.0.22, and the purge of eight
+zero-dependency packages.
+
+**One thing we could still take from the list above:** deleting `pip` from the
+final image would clear the three vendored findings, and the adapter imports
+and collects without it. Not done, because it is a change to the vendor's image
+layer for three findings in code that only runs when pip itself runs, and it
+would need re-justifying on every SDK bump.
+
+### Two corrections to what this file said before
+
+- **`urllib3` is not ours to fix.** It was listed here as "2.7.0 -> 2.8.0, the
+  only possibly-fixable finding in our control". Wrong on both counts. The
+  *installed* urllib3 is **already 2.8.0** -- the upgrade layer took it. The
+  2.7.0 the scanner reports is the copy **vendored inside pip**, which is
+  Broadcom's image layer, not our dependency.
+- **`setuptools` installed is 84.0.0**, not 70.3.0. The 70.3.0 finding is also
+  pip's vendored copy.
