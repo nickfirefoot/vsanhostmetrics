@@ -22,9 +22,9 @@
    "description": "",
    "widgets": [
     {
-     "tabId": "e90bc14d-7185-400a-8b0e-54c4cfdd279f",
+     "tabId": "8ee740d6-b50c-4430-9d23-8f6fdffc7208",
      "collapsed": false,
-     "id": "d94ac7fb-774a-433d-8174-2ec06ebf6fbf",
+     "id": "690620f4-7d0b-42c7-a5e1-52e22dc7e065",
      "gridsterCoords": {
       "w": 2,
       "x": 1,
@@ -43,7 +43,7 @@
        "resourceKindId": "002010VcfAdapterVCFWorld",
        "id": "Ext.vcops.chrome.model.Resource-592"
       },
-      "widgetId": "d94ac7fb-774a-433d-8174-2ec06ebf6fbf",
+      "widgetId": "690620f4-7d0b-42c7-a5e1-52e22dc7e065",
       "traversalSpecId": null,
       "refreshContent": {
        "refreshContent": true
@@ -71,9 +71,9 @@
      ]
     },
     {
-     "tabId": "e90bc14d-7185-400a-8b0e-54c4cfdd279f",
+     "tabId": "8ee740d6-b50c-4430-9d23-8f6fdffc7208",
      "collapsed": false,
-     "id": "9da9e426-726d-41dd-a853-f51b18fc39ae",
+     "id": "a2e2e326-133a-41da-9400-8e4e0453bd5a",
      "gridsterCoords": {
       "w": 10,
       "x": 3,
@@ -86,7 +86,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "9da9e426-726d-41dd-a853-f51b18fc39ae",
+      "widgetId": "a2e2e326-133a-41da-9400-8e4e0453bd5a",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -115,9 +115,9 @@
      ]
     },
     {
-     "tabId": "e90bc14d-7185-400a-8b0e-54c4cfdd279f",
+     "tabId": "8ee740d6-b50c-4430-9d23-8f6fdffc7208",
      "collapsed": false,
-     "id": "be2325f8-942e-47af-8024-534b1674361d",
+     "id": "3d7830ee-990a-4d99-b967-ac3afc017d6e",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -130,7 +130,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "be2325f8-942e-47af-8024-534b1674361d",
+      "widgetId": "3d7830ee-990a-4d99-b967-ac3afc017d6e",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -159,9 +159,9 @@
      ]
     },
     {
-     "tabId": "e90bc14d-7185-400a-8b0e-54c4cfdd279f",
+     "tabId": "8ee740d6-b50c-4430-9d23-8f6fdffc7208",
      "collapsed": false,
-     "id": "71853213-72c1-4510-bb22-facc2bf74cc9",
+     "id": "1ddefdbd-8ed8-4fc6-abad-b600ed87f9dd",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -174,7 +174,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "71853213-72c1-4510-bb22-facc2bf74cc9",
+      "widgetId": "1ddefdbd-8ed8-4fc6-abad-b600ed87f9dd",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -203,9 +203,9 @@
      ]
     },
     {
-     "tabId": "e90bc14d-7185-400a-8b0e-54c4cfdd279f",
+     "tabId": "8ee740d6-b50c-4430-9d23-8f6fdffc7208",
      "collapsed": false,
-     "id": "b3ba185f-8768-4a94-a1fc-f57f7bf916bb",
+     "id": "d8ded995-f30d-44d3-b8eb-90d9c5a9cf3b",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -218,7 +218,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "b3ba185f-8768-4a94-a1fc-f57f7bf916bb",
+      "widgetId": "d8ded995-f30d-44d3-b8eb-90d9c5a9cf3b",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -247,9 +247,9 @@
      ]
     },
     {
-     "tabId": "e90bc14d-7185-400a-8b0e-54c4cfdd279f",
+     "tabId": "8ee740d6-b50c-4430-9d23-8f6fdffc7208",
      "collapsed": false,
-     "id": "ce912c59-1d20-4aba-a9b8-0e6947f2ef31",
+     "id": "a3785b88-18d7-4af6-9010-c0d99f660c03",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -264,7 +264,7 @@
       "locationFile": "",
       "editorData": "<div style=\"font-family:'Metropolis','Segoe UI',sans-serif;font-size:13px;color:#ffffff;padding:6px 12px\">\n<h2 style=\"font-size:15px;color:#ffffff;margin:4px 0 10px 0\">Welcome to advanced vSAN network troubleshooting 201</h2>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Above you will find four windows grouped by metric type. Pick a cluster in\n<span style=\"font-weight:600;color:#8fd3ff\">Select cluster</span> and the other three fill in beneath it.\nEvery error column answers <i style=\"color:#cfd8de\">is it happening now</i>; the count columns answer\n<i style=\"color:#cfd8de\">has this ever happened</i>. <b style=\"color:#ffffff;font-weight:700\">Non-zero is the catch</b> &mdash; a NIC\ndropping a tenth of a percent still moves traffic at line rate, so throughput\nand latency stay green straight through the fault these screens exist to find.</p>\n\n<p style=\"margin:14px 0 5px 0;line-height:1.45;color:#b6c2ca;font-style:italic\">\nBands are the thresholds from the original scoreboards:\n<span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFDB24;color:#1b2a32\">yellow</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFA500;color:#1b2a32\">orange</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FF4D2E;color:#ffffff\">red</span>.\nFaded bands are <b style=\"color:#ffffff;font-weight:700\">inherited</b> from the nearest sibling metric rather than\nset deliberately. <span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#4a9eda;color:#ffffff\">low is bad</span> marks a column measuring\nfree space, which reads backwards. <span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#6c7a85;color:#ffffff\">cumulative</span> marks a\ncounter that only rises &mdash; watch the delta, not the value.</p>\n\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">RDT latencies</h3>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">RDT latency</span> tells you the latency of the vSAN transport\nprotocol itself. RDT sits above TCP, so it can be slow while every NIC counter\non the screen is clean &mdash; that combination means the wire is fine and the\ndelay is in the transport or the host.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">RDT Network Host Average Latency</span> and\n<span style=\"font-weight:600;color:#8fd3ff\">Max Latency</span> &mdash; round trip between hosts. The maximum\nmatters more than the average: one stalled transfer blocks whatever was waiting\nbehind it.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Average / Max Outbound Queueing Latency</span> &mdash; time\nspent waiting in the queue before anything went on the wire. Queueing, rather\nthan time in flight. Climbing here with clean NIC counters means back-pressure,\nnot loss.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Socket Min Outbound / Inbound Bytes</span> <span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#4a9eda;color:#ffffff\">low is bad</span> &mdash;\n<b style=\"color:#ffffff;font-weight:700\">low is bad</b>. These are free space remaining, so they read backwards from\nevery other column on the screen. Falling toward zero means the socket buffer is\nexhausting and the transport is about to stall.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Keepalive Reset</span> <span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#6c7a85;color:#ffffff\">cumulative</span> and <span style=\"font-weight:600;color:#8fd3ff\">Num Ready\nDelay</span> &mdash; <b style=\"color:#ffffff;font-weight:700\">cumulative since the host booted</b>. The number itself\nmeans nothing; watch whether it is <i style=\"color:#cfd8de\">increasing</i>. A keepalive reset means\nRDT gave up on a peer connection and rebuilt it.</p>\n\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">pnicstats &mdash; the physical NICs</h3>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">These are the per-uplink error counters, and the three that matter most:</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">RX Buffer Overflow</span> <span style=\"font-weight:400;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFDB24;color:#1b2a32;opacity:0.6\">&gt;0.05</span><span style=\"font-weight:400;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFA500;color:#1b2a32;opacity:0.6\">&gt;0.1</span><span style=\"font-weight:400;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FF4D2E;color:#ffffff;opacity:0.6\">&gt;0.5</span> &mdash; likely increase your pNIC\ndriver buffers.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">RX CRC Error</span> <span style=\"font-weight:400;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFDB24;color:#1b2a32;opacity:0.6\">&gt;0.05</span><span style=\"font-weight:400;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFA500;color:#1b2a32;opacity:0.6\">&gt;0.1</span><span style=\"font-weight:400;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FF4D2E;color:#ffffff;opacity:0.6\">&gt;0.5</span> &mdash; checksum mismatch. Indicative of\nan upstream overrun and a tailstomp chopping off the last of the packet.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">RX Missed Error</span> <span style=\"font-weight:400;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFDB24;color:#1b2a32;opacity:0.6\">&gt;0.05</span><span style=\"font-weight:400;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFA500;color:#1b2a32;opacity:0.6\">&gt;0.1</span><span style=\"font-weight:400;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FF4D2E;color:#ffffff;opacity:0.6\">&gt;0.5</span> &mdash; typically buffer overflow, but\nthis catches more. <b style=\"color:#ffffff;font-weight:700\">If buffer overflow and this are equal, it is a buffer\nincrease to get rid of it.</b> If missed is high and overflow is not, something\nelse is starving the receive ring.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">RX FIFO Error</span> <span style=\"font-weight:400;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFDB24;color:#1b2a32;opacity:0.6\">&gt;0.05</span><span style=\"font-weight:400;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFA500;color:#1b2a32;opacity:0.6\">&gt;0.1</span><span style=\"font-weight:400;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FF4D2E;color:#ffffff;opacity:0.6\">&gt;0.5</span> &mdash; the NIC's own on-chip buffer\nfilled before it could move packets across PCIe into host memory. The card could\nnot hand data over fast enough.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">TX Carrier Error</span> <span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFDB24;color:#1b2a32\">&gt;0.1</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFA500;color:#1b2a32\">&gt;0.5</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FF4D2E;color:#ffffff\">&gt;1</span> &mdash; carrier lost while\ntransmitting. Physical: port, cable, or link negotiation.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">RX / TX Generic Error</span> <span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFDB24;color:#1b2a32\">&gt;0.05</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFA500;color:#1b2a32\">&gt;0.1</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FF4D2E;color:#ffffff\">&gt;0.5</span> &mdash; errors not attributed to\na more specific counter. Look at the specific ones first.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Inbound / Outbound Packet Drop Rate of pNic vSwitch\nPort</span> &mdash; the vSwitch threw traffic away after the NIC delivered it\ncleanly. A small steady rate is usually normal: broadcast and multicast with\nnowhere to go. <b style=\"color:#ffffff;font-weight:700\">A rate that changes is the signal, not one that exists.</b></p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">802.3x Pause Rate</span> <span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFDB24;color:#1b2a32\">&gt;0.1</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFA500;color:#1b2a32\">&gt;0.5</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FF4D2E;color:#ffffff\">&gt;1</span> &mdash; flow control, the host and\nthe switch asking each other to slow down. <b style=\"color:#ffffff;font-weight:700\">No direction is available</b>, so\nthis cannot tell you whether you are congested or the fabric is. Check flow\ncontrol is even enabled on the uplink before reading a zero as healthy.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">IO Chain Drops</span> <span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFDB24;color:#1b2a32\">&gt;10</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFA500;color:#1b2a32\">&gt;50</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FF4D2E;color:#ffffff\">&gt;150</span> &mdash; dropped inside the ESXi IO\nchain, above the NIC and below the vSwitch port.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">(Total) columns</span> &mdash; lifetime counts since boot.\nThe rate columns go quiet between bursts; these do not. A NIC reading 0.0% now\nwith thousands of missed errors behind it has a history worth knowing.</p>\n\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">TCP error types &mdash; network observations</h3>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">These are all counters showing what is happening on the network. They are\nper host, not per NIC &mdash; TCP sits above the link layer and a flow can leave\nby any uplink in the team, so there is no correct way to blame one port.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Received Duplicate Acknowledge Rate</span> <span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFDB24;color:#1b2a32\">&gt;1</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFA500;color:#1b2a32\">&gt;2</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FF4D2E;color:#ffffff\">&gt;4</span> &mdash; duplicate\nACKs are caused by latency and retransmission causing duplicate handshakes. The\npeer telling us, repeatedly, that it is still missing something. This shows up\n<i style=\"color:#cfd8de\">before</i> a retransmit timer fires.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">TCP TX Retransmit</span> <span style=\"font-weight:400;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFDB24;color:#1b2a32;opacity:0.6\">&gt;1</span><span style=\"font-weight:400;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFA500;color:#1b2a32;opacity:0.6\">&gt;2</span><span style=\"font-weight:400;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FF4D2E;color:#ffffff;opacity:0.6\">&gt;4</span> &mdash; segments we had to send\nagain. The cost of loss somewhere on the path, paid in latency.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Received Out-of-order Packets Rate</span> <span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFDB24;color:#1b2a32\">&gt;1</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFA500;color:#1b2a32\">&gt;2</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FF4D2E;color:#ffffff\">&gt;4</span> &mdash; packets\narriving in the wrong order. Broadcom treat 0.1% as a warning and 1% as\ncritical. Reordering is not loss, but TCP reacts to it as though it were.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Received Duplicate Packets Rate</span> <span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFDB24;color:#1b2a32\">&gt;1</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFA500;color:#1b2a32\">&gt;2</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FF4D2E;color:#ffffff\">&gt;4</span> &mdash; the same data\narrived twice, usually because a peer retransmitted something that was never\nactually lost.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">SACK Received Blocks Rate</span> <span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFDB24;color:#1b2a32\">&gt;1</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFA500;color:#1b2a32\">&gt;2</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FF4D2E;color:#ffffff\">&gt;4</span> &mdash; the peer is\nreporting holes in what <b style=\"color:#ffffff;font-weight:700\">we sent it</b>. Points at loss on our\n<b style=\"color:#ffffff;font-weight:700\">outbound</b> path.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">SACK Send Blocks Rate</span> <span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFDB24;color:#1b2a32\">&gt;1</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFA500;color:#1b2a32\">&gt;2</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FF4D2E;color:#ffffff\">&gt;4</span> &mdash; we are reporting holes\nin what <b style=\"color:#ffffff;font-weight:700\">the peer sent us</b>. Loss on our <b style=\"color:#ffffff;font-weight:700\">inbound</b> path. Read the pair\ntogether and they tell you which direction is losing.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">SACK Rexmits Rate</span> <span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFDB24;color:#1b2a32\">&gt;1</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFA500;color:#1b2a32\">&gt;2</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FF4D2E;color:#ffffff\">&gt;4</span> &mdash; retransmissions we made\nbecause SACK told us exactly which segments were missing.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Timeout Drop Rate</span> <span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFDB24;color:#1b2a32\">&gt;0.1</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFA500;color:#1b2a32\">&gt;0.5</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FF4D2E;color:#ffffff\">&gt;1</span> &mdash; established connections torn\ndown because the retransmit timer ran out. The end state of sustained loss: the\nstack gave up rather than kept trying.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">TCP Send Zero Window</span> <span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFDB24;color:#1b2a32\">&gt;0.1</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FFA500;color:#1b2a32\">&gt;0.5</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#FF4D2E;color:#ffffff\">&gt;1</span><span style=\"font-weight:600;font-size:11px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#6c7a85;color:#ffffff\">cumulative</span> &mdash; we told a peer to stop\nsending because our receive buffer was full. <b style=\"color:#ffffff;font-weight:700\">This is not a network fault.</b>\nThe network delivered and the host could not consume it fast enough. Look at CPU\nand at the vSAN layers, not at the wire. Cumulative since boot.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Half Open Drop Rate</span> &mdash; connections dropped\nmid-handshake: a SYN arrived, we replied, the confirmation never came.\n<span style=\"color:#b6c2ca;font-style:italic\">Reads 7&ndash;9% on a healthy cluster here and the\ndenominator is undocumented, so do not treat a non-zero value as a fault until\nthat is understood.</span></p>\n\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Blind spots &mdash; what a green screen does not tell you</h3>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><b style=\"color:#ffffff;font-weight:700\">Only uplinks carrying vSAN traffic appear here.</b> A standby uplink has\nno object at all, so it is absent rather than green. The NIC you fail over to is\nthe one nobody has looked at.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><b style=\"color:#ffffff;font-weight:700\">There is no ring buffer utilisation anywhere in vSAN</b> &mdash; only\noverflow after the fact. There is no early warning, only damage.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><b style=\"color:#ffffff;font-weight:700\">Pause frames carry no direction</b>, so flow control cannot tell you\nwhether the problem is yours or the fabric's.</p>\n</div>\n",
       "refreshInterval": 300,
-      "widgetId": "ce912c59-1d20-4aba-a9b8-0e6947f2ef31",
+      "widgetId": "a3785b88-18d7-4af6-9010-c0d99f660c03",
       "refreshContent": {
        "refreshContent": false
       },
@@ -281,30 +281,30 @@
    "homeTab": false,
    "rank": 0,
    "disabled": false,
-   "id": "e90bc14d-7185-400a-8b0e-54c4cfdd279f",
+   "id": "8ee740d6-b50c-4430-9d23-8f6fdffc7208",
    "adapterName": "vSAN Host Metrics",
    "locked": false,
    "dashboardNavigations": {},
    "widgetInteractions": [
     {
-     "widgetIdProvider": "d94ac7fb-774a-433d-8174-2ec06ebf6fbf",
+     "widgetIdProvider": "690620f4-7d0b-42c7-a5e1-52e22dc7e065",
      "type": "resourceId",
-     "widgetIdReceiver": "9da9e426-726d-41dd-a853-f51b18fc39ae"
+     "widgetIdReceiver": "a2e2e326-133a-41da-9400-8e4e0453bd5a"
     },
     {
-     "widgetIdProvider": "d94ac7fb-774a-433d-8174-2ec06ebf6fbf",
+     "widgetIdProvider": "690620f4-7d0b-42c7-a5e1-52e22dc7e065",
      "type": "resourceId",
-     "widgetIdReceiver": "be2325f8-942e-47af-8024-534b1674361d"
+     "widgetIdReceiver": "3d7830ee-990a-4d99-b967-ac3afc017d6e"
     },
     {
-     "widgetIdProvider": "d94ac7fb-774a-433d-8174-2ec06ebf6fbf",
+     "widgetIdProvider": "690620f4-7d0b-42c7-a5e1-52e22dc7e065",
      "type": "resourceId",
-     "widgetIdReceiver": "71853213-72c1-4510-bb22-facc2bf74cc9"
+     "widgetIdReceiver": "1ddefdbd-8ed8-4fc6-abad-b600ed87f9dd"
     },
     {
-     "widgetIdProvider": "d94ac7fb-774a-433d-8174-2ec06ebf6fbf",
+     "widgetIdProvider": "690620f4-7d0b-42c7-a5e1-52e22dc7e065",
      "type": "resourceId",
-     "widgetIdReceiver": "b3ba185f-8768-4a94-a1fc-f57f7bf916bb"
+     "widgetIdReceiver": "d8ded995-f30d-44d3-b8eb-90d9c5a9cf3b"
     }
    ],
    "lastUpdateUserId": "833b693b-0960-4d05-b868-f14446488fc3",
@@ -315,5 +315,5 @@
    "lastUpdateTime": 1790823795066
   }
  ],
- "uuid": "d6d62537-8490-48a6-9cc2-8295d2dc8cab"
+ "uuid": "319d2e48-2db3-4692-9959-12fafc4950dd"
 }

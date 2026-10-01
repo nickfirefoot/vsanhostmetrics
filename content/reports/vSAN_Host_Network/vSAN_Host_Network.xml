@@ -10,12 +10,12 @@
             <Usage>report</Usage>
             <Usage>content</Usage>
             <Controls>
-                <Control id="time-interval-selector_id_740" type="time-interval-selector" visible="false">
+                <Control id="time-interval-selector_id_860" type="time-interval-selector" visible="false">
                     <Property name="advancedTimeMode" value="false" />
                     <Property name="unit" value="DAYS" />
                     <Property name="count" value="7" />
                 </Control>
-                <Control id="attributes-selector_id_741" type="attributes-selector" visible="false">
+                <Control id="attributes-selector_id_861" type="attributes-selector" visible="false">
                     <Property name="attributeInfos">
                         <List>
                             <Item>
@@ -197,18 +197,18 @@
                         </List>
                     </Property>
                 </Control>
-                <Control id="pagination-control_id_742" type="pagination-control" visible="true">
+                <Control id="pagination-control_id_862" type="pagination-control" visible="true">
                     <Property name="start" value="0" />
                     <Property name="size" value="50" />
                 </Control>
-                <Control id="metadata_id_743" type="metadata" visible="false">
+                <Control id="metadata_id_863" type="metadata" visible="false">
                     <Property name="maxPointsCount" value="5000" />
                     <Property name="hideObjectNameColumn" value="false" />
                     <Property name="listTopResultSize" value="-1" />
                 </Control>
             </Controls>
             <DataProviders>
-                <DataProvider dataType="list-view" id="list-view_id_744" />
+                <DataProvider dataType="list-view" id="list-view_id_864" />
             </DataProviders>
             <Presentation type="list" />
         </ViewDef>

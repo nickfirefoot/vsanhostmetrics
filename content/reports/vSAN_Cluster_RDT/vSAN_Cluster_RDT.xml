@@ -1,251 +1,163 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Content>
     <Views>
-        <ViewDef id="c10ec3f1-e693-5b3d-af81-d2d19de1c341">
-            <Title>vSAN Host TCP Health</Title>
+        <ViewDef id="c972e782-317e-55b8-b5db-400c703ccfa7">
+            <Title>vSAN Cluster RDT</Title>
             <Description />
-            <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanTcpIp" type="descendant" />
-            <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanTcpIp" type="self" />
+            <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanClusterRdtLatency" type="descendant" />
+            <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanClusterRdtLatency" type="self" />
             <Usage>dashboard</Usage>
             <Usage>report</Usage>
             <Usage>content</Usage>
             <Controls>
-                <Control id="time-interval-selector_id_880" type="time-interval-selector" visible="false">
+                <Control id="time-interval-selector_id_800" type="time-interval-selector" visible="false">
                     <Property name="advancedTimeMode" value="false" />
                     <Property name="unit" value="DAYS" />
                     <Property name="count" value="7" />
                 </Control>
-                <Control id="attributes-selector_id_881" type="attributes-selector" visible="false">
+                <Control id="attributes-selector_id_801" type="attributes-selector" visible="false">
                     <Property name="attributeInfos">
                         <List>
                             <Item>
                                 <Value>
                                     <Property name="objectType" value="RESOURCE" />
-                                    <Property name="attributeKey" value="tcpTxRexmitRate" />
-                                    <Property name="preferredUnitId" value="percent" />
-                                    <Property name="isStringAttribute" value="false" />
-                                    <Property name="adapterKind" value="VsanHostMetrics" />
-                                    <Property name="resourceKind" value="VsanTcpIp" />
-                                    <Property name="rollUpType" value="NONE" />
-                                    <Property name="rollUpCount" value="0" />
-                                    <Property name="transformations">
-                                        <List>
-                                            <Item value="MAX" />
-                                        </List>
-                                    </Property>
-                                    <Property name="sortCriteria" value="false" />
-                                    <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="TCP TX retransmit (rate)" />
-                                    <Property name="addTimestampAsColumn" value="false" />
-                                    <Property name="isShowRelativeTimestamp" value="false" />
-                                </Value>
-                            </Item>
-                            <Item>
-                                <Value>
-                                    <Property name="objectType" value="RESOURCE" />
-                                    <Property name="attributeKey" value="tcpRxErrRate" />
-                                    <Property name="preferredUnitId" value="percent" />
-                                    <Property name="isStringAttribute" value="false" />
-                                    <Property name="adapterKind" value="VsanHostMetrics" />
-                                    <Property name="resourceKind" value="VsanTcpIp" />
-                                    <Property name="rollUpType" value="NONE" />
-                                    <Property name="rollUpCount" value="0" />
-                                    <Property name="transformations">
-                                        <List>
-                                            <Item value="MAX" />
-                                        </List>
-                                    </Property>
-                                    <Property name="sortCriteria" value="false" />
-                                    <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="TCP RX errors (rate)" />
-                                    <Property name="addTimestampAsColumn" value="false" />
-                                    <Property name="isShowRelativeTimestamp" value="false" />
-                                </Value>
-                            </Item>
-                            <Item>
-                                <Value>
-                                    <Property name="objectType" value="RESOURCE" />
-                                    <Property name="attributeKey" value="tcpRcvdupackRate" />
-                                    <Property name="preferredUnitId" value="percent" />
-                                    <Property name="isStringAttribute" value="false" />
-                                    <Property name="adapterKind" value="VsanHostMetrics" />
-                                    <Property name="resourceKind" value="VsanTcpIp" />
-                                    <Property name="rollUpType" value="NONE" />
-                                    <Property name="rollUpCount" value="0" />
-                                    <Property name="transformations">
-                                        <List>
-                                            <Item value="MAX" />
-                                        </List>
-                                    </Property>
-                                    <Property name="sortCriteria" value="false" />
-                                    <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="Received Duplicate Acknowledge Rate" />
-                                    <Property name="addTimestampAsColumn" value="false" />
-                                    <Property name="isShowRelativeTimestamp" value="false" />
-                                </Value>
-                            </Item>
-                            <Item>
-                                <Value>
-                                    <Property name="objectType" value="RESOURCE" />
-                                    <Property name="attributeKey" value="tcpRcvduppackRate" />
-                                    <Property name="preferredUnitId" value="percent" />
-                                    <Property name="isStringAttribute" value="false" />
-                                    <Property name="adapterKind" value="VsanHostMetrics" />
-                                    <Property name="resourceKind" value="VsanTcpIp" />
-                                    <Property name="rollUpType" value="NONE" />
-                                    <Property name="rollUpCount" value="0" />
-                                    <Property name="transformations">
-                                        <List>
-                                            <Item value="MAX" />
-                                        </List>
-                                    </Property>
-                                    <Property name="sortCriteria" value="false" />
-                                    <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="Received Duplicate Packets Rate" />
-                                    <Property name="addTimestampAsColumn" value="false" />
-                                    <Property name="isShowRelativeTimestamp" value="false" />
-                                </Value>
-                            </Item>
-                            <Item>
-                                <Value>
-                                    <Property name="objectType" value="RESOURCE" />
-                                    <Property name="attributeKey" value="tcpRcvoopackRate" />
-                                    <Property name="preferredUnitId" value="percent" />
-                                    <Property name="isStringAttribute" value="false" />
-                                    <Property name="adapterKind" value="VsanHostMetrics" />
-                                    <Property name="resourceKind" value="VsanTcpIp" />
-                                    <Property name="rollUpType" value="NONE" />
-                                    <Property name="rollUpCount" value="0" />
-                                    <Property name="transformations">
-                                        <List>
-                                            <Item value="MAX" />
-                                        </List>
-                                    </Property>
-                                    <Property name="sortCriteria" value="false" />
-                                    <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="Received Out-of-order Packets Rate" />
-                                    <Property name="addTimestampAsColumn" value="false" />
-                                    <Property name="isShowRelativeTimestamp" value="false" />
-                                </Value>
-                            </Item>
-                            <Item>
-                                <Value>
-                                    <Property name="objectType" value="RESOURCE" />
-                                    <Property name="attributeKey" value="tcpSackRcvBlocksRate" />
-                                    <Property name="preferredUnitId" value="percent" />
-                                    <Property name="isStringAttribute" value="false" />
-                                    <Property name="adapterKind" value="VsanHostMetrics" />
-                                    <Property name="resourceKind" value="VsanTcpIp" />
-                                    <Property name="rollUpType" value="NONE" />
-                                    <Property name="rollUpCount" value="0" />
-                                    <Property name="transformations">
-                                        <List>
-                                            <Item value="MAX" />
-                                        </List>
-                                    </Property>
-                                    <Property name="sortCriteria" value="false" />
-                                    <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="Sack Received Blocks Rate" />
-                                    <Property name="addTimestampAsColumn" value="false" />
-                                    <Property name="isShowRelativeTimestamp" value="false" />
-                                </Value>
-                            </Item>
-                            <Item>
-                                <Value>
-                                    <Property name="objectType" value="RESOURCE" />
-                                    <Property name="attributeKey" value="tcpSackSendBlocksRate" />
-                                    <Property name="preferredUnitId" value="percent" />
-                                    <Property name="isStringAttribute" value="false" />
-                                    <Property name="adapterKind" value="VsanHostMetrics" />
-                                    <Property name="resourceKind" value="VsanTcpIp" />
-                                    <Property name="rollUpType" value="NONE" />
-                                    <Property name="rollUpCount" value="0" />
-                                    <Property name="transformations">
-                                        <List>
-                                            <Item value="MAX" />
-                                        </List>
-                                    </Property>
-                                    <Property name="sortCriteria" value="false" />
-                                    <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="Sack Send Blocks Rate" />
-                                    <Property name="addTimestampAsColumn" value="false" />
-                                    <Property name="isShowRelativeTimestamp" value="false" />
-                                </Value>
-                            </Item>
-                            <Item>
-                                <Value>
-                                    <Property name="objectType" value="RESOURCE" />
-                                    <Property name="attributeKey" value="tcpSackRexmitsRate" />
-                                    <Property name="preferredUnitId" value="percent" />
-                                    <Property name="isStringAttribute" value="false" />
-                                    <Property name="adapterKind" value="VsanHostMetrics" />
-                                    <Property name="resourceKind" value="VsanTcpIp" />
-                                    <Property name="rollUpType" value="NONE" />
-                                    <Property name="rollUpCount" value="0" />
-                                    <Property name="transformations">
-                                        <List>
-                                            <Item value="MAX" />
-                                        </List>
-                                    </Property>
-                                    <Property name="sortCriteria" value="false" />
-                                    <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="Sack Rexmits Rate" />
-                                    <Property name="addTimestampAsColumn" value="false" />
-                                    <Property name="isShowRelativeTimestamp" value="false" />
-                                </Value>
-                            </Item>
-                            <Item>
-                                <Value>
-                                    <Property name="objectType" value="RESOURCE" />
-                                    <Property name="attributeKey" value="tcpTimeoutDropRate" />
-                                    <Property name="preferredUnitId" value="percent" />
-                                    <Property name="isStringAttribute" value="false" />
-                                    <Property name="adapterKind" value="VsanHostMetrics" />
-                                    <Property name="resourceKind" value="VsanTcpIp" />
-                                    <Property name="rollUpType" value="NONE" />
-                                    <Property name="rollUpCount" value="0" />
-                                    <Property name="transformations">
-                                        <List>
-                                            <Item value="MAX" />
-                                        </List>
-                                    </Property>
-                                    <Property name="sortCriteria" value="false" />
-                                    <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="Timeout Drop Rate" />
-                                    <Property name="addTimestampAsColumn" value="false" />
-                                    <Property name="isShowRelativeTimestamp" value="false" />
-                                </Value>
-                            </Item>
-                            <Item>
-                                <Value>
-                                    <Property name="objectType" value="RESOURCE" />
-                                    <Property name="attributeKey" value="tcpHalfopenDropRate" />
-                                    <Property name="preferredUnitId" value="percent" />
-                                    <Property name="isStringAttribute" value="false" />
-                                    <Property name="adapterKind" value="VsanHostMetrics" />
-                                    <Property name="resourceKind" value="VsanTcpIp" />
-                                    <Property name="rollUpType" value="NONE" />
-                                    <Property name="rollUpCount" value="0" />
-                                    <Property name="transformations">
-                                        <List>
-                                            <Item value="MAX" />
-                                        </List>
-                                    </Property>
-                                    <Property name="sortCriteria" value="false" />
-                                    <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="Half Open Drop Rate" />
-                                    <Property name="addTimestampAsColumn" value="false" />
-                                    <Property name="isShowRelativeTimestamp" value="false" />
-                                </Value>
-                            </Item>
-                            <Item>
-                                <Value>
-                                    <Property name="objectType" value="RESOURCE" />
-                                    <Property name="attributeKey" value="tcpSndZeroWin" />
+                                    <Property name="attributeKey" value="avgLatency" />
                                     <Property name="preferredUnitId" value="" />
                                     <Property name="isStringAttribute" value="false" />
                                     <Property name="adapterKind" value="VsanHostMetrics" />
-                                    <Property name="resourceKind" value="VsanTcpIp" />
+                                    <Property name="resourceKind" value="VsanClusterRdtLatency" />
+                                    <Property name="rollUpType" value="NONE" />
+                                    <Property name="rollUpCount" value="0" />
+                                    <Property name="transformations">
+                                        <List>
+                                            <Item value="MAX" />
+                                        </List>
+                                    </Property>
+                                    <Property name="sortCriteria" value="false" />
+                                    <Property name="isProperty" value="false" />
+                                    <Property name="displayName" value="RDT Network Cluster Average Latency" />
+                                    <Property name="addTimestampAsColumn" value="false" />
+                                    <Property name="isShowRelativeTimestamp" value="false" />
+                                </Value>
+                            </Item>
+                            <Item>
+                                <Value>
+                                    <Property name="objectType" value="RESOURCE" />
+                                    <Property name="attributeKey" value="maxLatency" />
+                                    <Property name="preferredUnitId" value="" />
+                                    <Property name="isStringAttribute" value="false" />
+                                    <Property name="adapterKind" value="VsanHostMetrics" />
+                                    <Property name="resourceKind" value="VsanClusterRdtLatency" />
+                                    <Property name="rollUpType" value="NONE" />
+                                    <Property name="rollUpCount" value="0" />
+                                    <Property name="transformations">
+                                        <List>
+                                            <Item value="MAX" />
+                                        </List>
+                                    </Property>
+                                    <Property name="sortCriteria" value="false" />
+                                    <Property name="isProperty" value="false" />
+                                    <Property name="displayName" value="RDT Network Cluster Max Latency" />
+                                    <Property name="addTimestampAsColumn" value="false" />
+                                    <Property name="isShowRelativeTimestamp" value="false" />
+                                </Value>
+                            </Item>
+                            <Item>
+                                <Value>
+                                    <Property name="objectType" value="RESOURCE" />
+                                    <Property name="attributeKey" value="minLatency" />
+                                    <Property name="preferredUnitId" value="" />
+                                    <Property name="isStringAttribute" value="false" />
+                                    <Property name="adapterKind" value="VsanHostMetrics" />
+                                    <Property name="resourceKind" value="VsanClusterRdtLatency" />
+                                    <Property name="rollUpType" value="NONE" />
+                                    <Property name="rollUpCount" value="0" />
+                                    <Property name="transformations">
+                                        <List>
+                                            <Item value="MIN" />
+                                        </List>
+                                    </Property>
+                                    <Property name="sortCriteria" value="false" />
+                                    <Property name="isProperty" value="false" />
+                                    <Property name="displayName" value="RDT Network Cluster Min Latency" />
+                                    <Property name="addTimestampAsColumn" value="false" />
+                                    <Property name="isShowRelativeTimestamp" value="false" />
+                                </Value>
+                            </Item>
+                            <Item>
+                                <Value>
+                                    <Property name="objectType" value="RESOURCE" />
+                                    <Property name="attributeKey" value="txQLatAvg" />
+                                    <Property name="preferredUnitId" value="" />
+                                    <Property name="isStringAttribute" value="false" />
+                                    <Property name="adapterKind" value="VsanHostMetrics" />
+                                    <Property name="resourceKind" value="VsanClusterRdtLatency" />
+                                    <Property name="rollUpType" value="NONE" />
+                                    <Property name="rollUpCount" value="0" />
+                                    <Property name="transformations">
+                                        <List>
+                                            <Item value="MAX" />
+                                        </List>
+                                    </Property>
+                                    <Property name="sortCriteria" value="false" />
+                                    <Property name="isProperty" value="false" />
+                                    <Property name="displayName" value="RDT Network Average Outbound Queueing Latency" />
+                                    <Property name="addTimestampAsColumn" value="false" />
+                                    <Property name="isShowRelativeTimestamp" value="false" />
+                                </Value>
+                            </Item>
+                            <Item>
+                                <Value>
+                                    <Property name="objectType" value="RESOURCE" />
+                                    <Property name="attributeKey" value="txSbSpaceMin" />
+                                    <Property name="preferredUnitId" value="" />
+                                    <Property name="isStringAttribute" value="false" />
+                                    <Property name="adapterKind" value="VsanHostMetrics" />
+                                    <Property name="resourceKind" value="VsanClusterRdtLatency" />
+                                    <Property name="rollUpType" value="NONE" />
+                                    <Property name="rollUpCount" value="0" />
+                                    <Property name="transformations">
+                                        <List>
+                                            <Item value="MIN" />
+                                        </List>
+                                    </Property>
+                                    <Property name="sortCriteria" value="false" />
+                                    <Property name="isProperty" value="false" />
+                                    <Property name="displayName" value="RDT Network Socket Min Outbound Bytes (Low Is Bad)" />
+                                    <Property name="addTimestampAsColumn" value="false" />
+                                    <Property name="isShowRelativeTimestamp" value="false" />
+                                </Value>
+                            </Item>
+                            <Item>
+                                <Value>
+                                    <Property name="objectType" value="RESOURCE" />
+                                    <Property name="attributeKey" value="rxSbSpaceMin" />
+                                    <Property name="preferredUnitId" value="" />
+                                    <Property name="isStringAttribute" value="false" />
+                                    <Property name="adapterKind" value="VsanHostMetrics" />
+                                    <Property name="resourceKind" value="VsanClusterRdtLatency" />
+                                    <Property name="rollUpType" value="NONE" />
+                                    <Property name="rollUpCount" value="0" />
+                                    <Property name="transformations">
+                                        <List>
+                                            <Item value="MIN" />
+                                        </List>
+                                    </Property>
+                                    <Property name="sortCriteria" value="false" />
+                                    <Property name="isProperty" value="false" />
+                                    <Property name="displayName" value="RDT Network Socket Min Inbound Bytes (Low Is Bad)" />
+                                    <Property name="addTimestampAsColumn" value="false" />
+                                    <Property name="isShowRelativeTimestamp" value="false" />
+                                </Value>
+                            </Item>
+                            <Item>
+                                <Value>
+                                    <Property name="objectType" value="RESOURCE" />
+                                    <Property name="attributeKey" value="kaReset" />
+                                    <Property name="preferredUnitId" value="" />
+                                    <Property name="isStringAttribute" value="false" />
+                                    <Property name="adapterKind" value="VsanHostMetrics" />
+                                    <Property name="resourceKind" value="VsanClusterRdtLatency" />
                                     <Property name="rollUpType" value="NONE" />
                                     <Property name="rollUpCount" value="0" />
                                     <Property name="transformations">
@@ -255,7 +167,7 @@
                                     </Property>
                                     <Property name="sortCriteria" value="false" />
                                     <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="TCP Send Zero Window (Total)" />
+                                    <Property name="displayName" value="Keepalive reset (Total)" />
                                     <Property name="addTimestampAsColumn" value="false" />
                                     <Property name="isShowRelativeTimestamp" value="false" />
                                 </Value>
@@ -263,11 +175,11 @@
                             <Item>
                                 <Value>
                                     <Property name="objectType" value="RESOURCE" />
-                                    <Property name="attributeKey" value="tcpErrs" />
+                                    <Property name="attributeKey" value="numReadyDelay" />
                                     <Property name="preferredUnitId" value="" />
                                     <Property name="isStringAttribute" value="false" />
                                     <Property name="adapterKind" value="VsanHostMetrics" />
-                                    <Property name="resourceKind" value="VsanTcpIp" />
+                                    <Property name="resourceKind" value="VsanClusterRdtLatency" />
                                     <Property name="rollUpType" value="NONE" />
                                     <Property name="rollUpCount" value="0" />
                                     <Property name="transformations">
@@ -277,7 +189,7 @@
                                     </Property>
                                     <Property name="sortCriteria" value="false" />
                                     <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="TCP Errors (Total)" />
+                                    <Property name="displayName" value="Num ready delay (Total)" />
                                     <Property name="addTimestampAsColumn" value="false" />
                                     <Property name="isShowRelativeTimestamp" value="false" />
                                 </Value>
@@ -285,18 +197,18 @@
                         </List>
                     </Property>
                 </Control>
-                <Control id="pagination-control_id_882" type="pagination-control" visible="true">
+                <Control id="pagination-control_id_802" type="pagination-control" visible="true">
                     <Property name="start" value="0" />
                     <Property name="size" value="50" />
                 </Control>
-                <Control id="metadata_id_883" type="metadata" visible="false">
+                <Control id="metadata_id_803" type="metadata" visible="false">
                     <Property name="maxPointsCount" value="5000" />
                     <Property name="hideObjectNameColumn" value="false" />
                     <Property name="listTopResultSize" value="-1" />
                 </Control>
             </Controls>
             <DataProviders>
-                <DataProvider dataType="list-view" id="list-view_id_884" />
+                <DataProvider dataType="list-view" id="list-view_id_804" />
             </DataProviders>
             <Presentation type="list" />
         </ViewDef>

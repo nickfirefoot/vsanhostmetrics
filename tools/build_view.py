@@ -66,6 +66,37 @@ VIEWS = [
     ("vSAN Clusters", "ClusterComputeResource", [
         ("Configuration|Name", "", "CURRENT"),
     ], "VMWARE"),
+    ("vSAN Cluster Capacity", "VsanClusterCapacity", [
+        ("free", "", "CURRENT"), ("used", "", "CURRENT"), ("total", "", "CURRENT"),
+        ("dedupRatio", "", "CURRENT"), ("savedByDedup", "", "CURRENT"),
+    ]),
+    ("vSAN Cluster DOM Client", "VsanClusterDomclient", [
+        ("latencyAvgRead", "", "MAX"), ("latencyAvgWrite", "", "MAX"),
+        ("congestion", "", "MAX"), ("readCongestion", "", "MAX"),
+        ("writeCongestion", "", "MAX"), ("unmapCongestion", "", "MAX"),
+        ("iopsRead", "", "MAX"), ("iopsWrite", "", "MAX"), ("oio", "", "MAX"),
+        ("throughputRead", "", "MAX"), ("throughputWrite", "", "MAX"),
+    ]),
+    ("vSAN Cluster DOM Component Manager", "VsanClusterDomcompmgr", [
+        ("latencyAvgRead", "", "MAX"), ("latencyAvgWrite", "", "MAX"),
+        ("congestion", "", "MAX"), ("oio", "", "MAX"),
+        ("iopsRead", "", "MAX"), ("iopsWrite", "", "MAX"),
+    ]),
+    ("vSAN Cluster Resync", "VsanClusterDomcompmgr", [
+        ("iopsResyncRead", "", "MAX"), ("tputResyncRead", "", "MAX"),
+        ("latAvgResyncRead", "", "MAX"), ("iopsRecWrite", "", "MAX"),
+        ("throughputRecWrite", "", "MAX"), ("latencyAvgRecWrite", "", "MAX"),
+    ]),
+    ("vSAN Cluster RDT", "VsanClusterRdtLatency", [
+        ("avgLatency", "", "MAX"), ("maxLatency", "", "MAX"), ("minLatency", "", "MIN"),
+        ("txQLatAvg", "", "MAX"), ("txSbSpaceMin", "", "MIN"), ("rxSbSpaceMin", "", "MIN"),
+        ("kaReset", "", "CURRENT"), ("numReadyDelay", "", "CURRENT"),
+    ]),
+    ("vSAN Host DOM", "VsanHostDomclient", [
+        ("latencyAvgRead", "", "MAX"), ("latencyAvgWrite", "", "MAX"),
+        ("congestion", "", "MAX"), ("iopsRead", "", "MAX"), ("iopsWrite", "", "MAX"),
+        ("oio", "", "MAX"),
+    ]),
     ("vSAN pNIC Errors", "VsanPnic", [
         ("rxMissErr",      "percent", "MAX"),
         ("rxCrcErr",       "percent", "MAX"),

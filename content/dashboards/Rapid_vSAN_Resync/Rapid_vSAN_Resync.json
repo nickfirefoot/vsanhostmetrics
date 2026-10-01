@@ -22,9 +22,9 @@
    "description": "",
    "widgets": [
     {
-     "tabId": "1199c54f-410c-4b97-b946-5ea16e1b6244",
+     "tabId": "0f74798a-4dcd-418a-bebc-ec58059a493e",
      "collapsed": false,
-     "id": "5cc9f0bf-9b30-497a-9e6b-9287cc58c23b",
+     "id": "c06e6a60-30ac-411d-a9b8-46ff3220a5dd",
      "gridsterCoords": {
       "w": 2,
       "x": 1,
@@ -43,7 +43,7 @@
        "resourceKindId": "002010VcfAdapterVCFWorld",
        "id": "Ext.vcops.chrome.model.Resource-592"
       },
-      "widgetId": "5cc9f0bf-9b30-497a-9e6b-9287cc58c23b",
+      "widgetId": "c06e6a60-30ac-411d-a9b8-46ff3220a5dd",
       "traversalSpecId": null,
       "refreshContent": {
        "refreshContent": true
@@ -71,31 +71,31 @@
      ]
     },
     {
-     "tabId": "1199c54f-410c-4b97-b946-5ea16e1b6244",
+     "tabId": "0f74798a-4dcd-418a-bebc-ec58059a493e",
      "collapsed": false,
-     "id": "f3c0836e-38bb-4116-857f-ed45d114f6b7",
+     "id": "4c4e6c76-eb05-4de4-8ed1-b2eb0a699f11",
      "gridsterCoords": {
       "w": 10,
       "x": 3,
-      "h": 9,
+      "h": 7,
       "y": 1
      },
      "state": "",
      "type": "View",
-     "title": "ESA disks - vSAN layer",
+     "title": "Rebuild activity",
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "f3c0836e-38bb-4116-857f-ed45d114f6b7",
+      "widgetId": "4c4e6c76-eb05-4de4-8ed1-b2eb0a699f11",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
       },
       "description": "",
       "isUpdatedView": true,
-      "title": "ESA disks - vSAN layer",
-      "viewDefinitionId": "74e1354d-757f-5ca7-a9e4-25e01718c627",
-      "titleLocalized": "ESA disks - vSAN layer",
+      "title": "Rebuild activity",
+      "viewDefinitionId": "e12fcf23-eb55-5555-9bf9-b7c4c91d1135",
+      "titleLocalized": "Rebuild activity",
       "viewType": "LIST",
       "chartViewItems": [],
       "selectFirstRow": {
@@ -115,102 +115,102 @@
      ]
     },
     {
-     "tabId": "1199c54f-410c-4b97-b946-5ea16e1b6244",
+     "tabId": "0f74798a-4dcd-418a-bebc-ec58059a493e",
      "collapsed": false,
-     "id": "0b6a9eec-a83a-4c5b-843d-0e9cb65a152e",
-     "gridsterCoords": {
-      "w": 12,
-      "x": 1,
-      "h": 8,
-      "y": 10
-     },
-     "state": "",
-     "type": "View",
-     "title": "ESA disks - physical layer",
-     "config": {
-      "refreshInterval": 300,
-      "resource": null,
-      "widgetId": "0b6a9eec-a83a-4c5b-843d-0e9cb65a152e",
-      "traversalSpecId": "",
-      "refreshContent": {
-       "refreshContent": true
-      },
-      "description": "",
-      "isUpdatedView": true,
-      "title": "ESA disks - physical layer",
-      "viewDefinitionId": "4edb922b-10e6-5f18-b0d8-77cdba6df121",
-      "titleLocalized": "ESA disks - physical layer",
-      "viewType": "LIST",
-      "chartViewItems": [],
-      "selectFirstRow": {
-       "selectFirstRow": false
-      },
-      "viewDetails": "",
-      "selfProvider": {
-       "selfProvider": false
-      }
-     },
-     "height": 0,
-     "states": [
-      {
-       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-0%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-avgLatency1%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A115%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-maxLatency2%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A109%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txQLatAvg3%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A136%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txQLatMax4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txSbSpaceMin5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-rxSbSpaceMin6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-kaReset7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-numReadyDelay8%25255Ehidden%25253Db%2525253A0",
-       "key": "permTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264"
-      }
-     ]
-    },
-    {
-     "tabId": "1199c54f-410c-4b97-b946-5ea16e1b6244",
-     "collapsed": false,
-     "id": "438044aa-51d4-4437-8922-53b7926a61d3",
-     "gridsterCoords": {
-      "w": 12,
-      "x": 1,
-      "h": 9,
-      "y": 18
-     },
-     "state": "",
-     "type": "View",
-     "title": "VM storage",
-     "config": {
-      "refreshInterval": 300,
-      "resource": null,
-      "widgetId": "438044aa-51d4-4437-8922-53b7926a61d3",
-      "traversalSpecId": "",
-      "refreshContent": {
-       "refreshContent": true
-      },
-      "description": "",
-      "isUpdatedView": true,
-      "title": "VM storage",
-      "viewDefinitionId": "24773067-9b6e-536a-a39c-46353dfd5068",
-      "titleLocalized": "VM storage",
-      "viewType": "LIST",
-      "chartViewItems": [],
-      "selectFirstRow": {
-       "selectFirstRow": false
-      },
-      "viewDetails": "",
-      "selfProvider": {
-       "selfProvider": false
-      }
-     },
-     "height": 0,
-     "states": [
-      {
-       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-0%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-avgLatency1%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A115%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-maxLatency2%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A109%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txQLatAvg3%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A136%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txQLatMax4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txSbSpaceMin5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-rxSbSpaceMin6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-kaReset7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-numReadyDelay8%25255Ehidden%25253Db%2525253A0",
-       "key": "permTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264"
-      }
-     ]
-    },
-    {
-     "tabId": "1199c54f-410c-4b97-b946-5ea16e1b6244",
-     "collapsed": false,
-     "id": "6116c42e-cc9e-438a-99a5-4b4927953317",
+     "id": "69810061-0132-4ca2-9f24-453d6b7b0bfd",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
       "h": 7,
-      "y": 27
+      "y": 8
+     },
+     "state": "",
+     "type": "View",
+     "title": "Guest impact",
+     "config": {
+      "refreshInterval": 300,
+      "resource": null,
+      "widgetId": "69810061-0132-4ca2-9f24-453d6b7b0bfd",
+      "traversalSpecId": "",
+      "refreshContent": {
+       "refreshContent": true
+      },
+      "description": "",
+      "isUpdatedView": true,
+      "title": "Guest impact",
+      "viewDefinitionId": "961aa3db-a230-5c2d-8ce5-00b666bdcdbd",
+      "titleLocalized": "Guest impact",
+      "viewType": "LIST",
+      "chartViewItems": [],
+      "selectFirstRow": {
+       "selectFirstRow": false
+      },
+      "viewDetails": "",
+      "selfProvider": {
+       "selfProvider": false
+      }
+     },
+     "height": 0,
+     "states": [
+      {
+       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-0%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-avgLatency1%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A115%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-maxLatency2%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A109%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txQLatAvg3%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A136%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txQLatMax4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txSbSpaceMin5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-rxSbSpaceMin6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-kaReset7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-numReadyDelay8%25255Ehidden%25253Db%2525253A0",
+       "key": "permTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264"
+      }
+     ]
+    },
+    {
+     "tabId": "0f74798a-4dcd-418a-bebc-ec58059a493e",
+     "collapsed": false,
+     "id": "6e6b67c1-c840-467a-8eb0-002aa8a5ec8f",
+     "gridsterCoords": {
+      "w": 12,
+      "x": 1,
+      "h": 6,
+      "y": 15
+     },
+     "state": "",
+     "type": "View",
+     "title": "Back end",
+     "config": {
+      "refreshInterval": 300,
+      "resource": null,
+      "widgetId": "6e6b67c1-c840-467a-8eb0-002aa8a5ec8f",
+      "traversalSpecId": "",
+      "refreshContent": {
+       "refreshContent": true
+      },
+      "description": "",
+      "isUpdatedView": true,
+      "title": "Back end",
+      "viewDefinitionId": "b597d3fd-2fbb-546e-88f8-3f6d42537dcf",
+      "titleLocalized": "Back end",
+      "viewType": "LIST",
+      "chartViewItems": [],
+      "selectFirstRow": {
+       "selectFirstRow": false
+      },
+      "viewDetails": "",
+      "selfProvider": {
+       "selfProvider": false
+      }
+     },
+     "height": 0,
+     "states": [
+      {
+       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-0%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-avgLatency1%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A115%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-maxLatency2%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A109%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txQLatAvg3%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A136%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txQLatMax4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txSbSpaceMin5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-rxSbSpaceMin6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-kaReset7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-numReadyDelay8%25255Ehidden%25253Db%2525253A0",
+       "key": "permTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264"
+      }
+     ]
+    },
+    {
+     "tabId": "0f74798a-4dcd-418a-bebc-ec58059a493e",
+     "collapsed": false,
+     "id": "7a16c959-edad-421e-8382-f98766119d60",
+     "gridsterCoords": {
+      "w": 12,
+      "x": 1,
+      "h": 7,
+      "y": 21
      },
      "state": "",
      "type": "TextDisplay",
@@ -218,9 +218,9 @@
      "config": {
       "locationUrl": "",
       "locationFile": "",
-      "editorData": "<div style=\"font-family:'Metropolis','Segoe UI',sans-serif;font-size:13px;color:#ffffff;padding:6px 12px\">\n<h2 style=\"font-size:15px;color:#ffffff;margin:4px 0 10px 0\">vSAN storage troubleshooting 201</h2>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Three tables, read top to bottom. The first says <i style=\"color:#cfd8de\">which disk</i>, the second says <i style=\"color:#cfd8de\">why</i>, the third says <i style=\"color:#cfd8de\">who felt it</i>. Pick a cluster on the left and all three fill in.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><b style=\"color:#ffffff;font-weight:700\">Compare across disks, not against a number.</b> Disk latency depends on the workload, so there is no absolute figure that means \"bad\". One device sitting well above its peers is the signal, which is why these tables sort worst-first instead of colouring on a threshold.</p>\n\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">ESA disks &mdash; vSAN layer</h3>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN Layer Average Read / Write Latency</span> &mdash; latency as vSAN sees it, above the device. This is the number that turns into VM latency.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Perf Tier Average Write Latency</span> &mdash; write latency at the performance tier.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN Layer Read / Write IOPS</span> &mdash; context, not a fault. High latency at high IOPS is a busy disk; high latency at <b style=\"color:#ffffff;font-weight:700\">low</b> IOPS is a sick one. Never read the latency columns without these beside them.</p>\n\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">ESA disks &mdash; physical layer</h3>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">The same disks one layer down, at the firmware. This is the table that tells you <b style=\"color:#ffffff;font-weight:700\">whether to replace the drive or fix the contention</b>.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Device Average Latency (DAVG)</span> &mdash; time spent inside the device itself. <b style=\"color:#ffffff;font-weight:700\">High DAVG is a slow or failing drive</b> &mdash; or one throttling thermally, or busy with internal garbage collection.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Kernel Average Latency (KAVG)</span> &mdash; time queued in the VMkernel before the request reached the device. <b style=\"color:#ffffff;font-weight:700\">High KAVG is contention</b>, not a bad disk. Queue depth, or too much work aimed at one device.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Guest Average Latency (GAVG)</span> &mdash; what the guest actually experiences, being DAVG plus KAVG. GAVG tells you it hurts; the other two tell you which to fix.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Physical/Firmware Layer Read / Write Latency</span> &mdash; read and write split at the same layer. Compare with the vSAN layer table above: <b style=\"color:#ffffff;font-weight:700\">both high means the device is slow</b>; <b style=\"color:#ffffff;font-weight:700\">only the vSAN layer high means the delay is above the disk</b> &mdash; policy, resync, or the network.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><i style=\"color:#cfd8de\">Worked example from this cluster:</i> one disk read DAVG 495&micro;s against peers at 38&ndash;58, while KAVG stayed flat at 12 against 8&ndash;10. Ten times the device time with no extra queueing &mdash; the drive, not the load.</p>\n\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">VM storage</h3>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN Layer Read / Write Latency</span> &mdash; per virtual disk, sorted worst-first. This is what a user means when they say a VM is slow.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read / Write IOPS</span> &mdash; same rule as the disks: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one. Without the pair you escalate both.</p>\n\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Blind spots &mdash; what a green screen does not tell you</h3>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><b style=\"color:#ffffff;font-weight:700\">There are no media-error counters anywhere in vSAN.</b> No SMART, no reallocated sectors, no uncorrectable errors. A failing drive is inferred from timing alone &mdash; these tables cannot see a device admitting fault, only one getting slow.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><b style=\"color:#ffffff;font-weight:700\">Rows are not all vSAN-backed.</b> The VM table lists every virtual disk vSAN reports on, including volumes living on other datastores. A slow row may be a backend this dashboard does not monitor.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><b style=\"color:#ffffff;font-weight:700\">Kubernetes volumes appear as node disks.</b> A persistent volume attached to a pod shows up as another SCSI device on its node VM, named for the node rather than the workload.</p>\n\n<p style=\"margin:14px 0 5px 0;line-height:1.45;color:#b6c2ca;font-style:italic\">Latency columns are deliberately uncoloured. A fixed threshold would have missed the 824&micro;s outlier on this cluster, because 824&micro;s is not slow in itself &mdash; it was only wrong relative to six peers at 158.</p>\n</div>\n",
+      "editorData": "<div style=\"font-family:'Metropolis','Segoe UI',sans-serif;font-size:13px;color:#ffffff;padding:6px 12px\">\n<h2 style=\"font-size:15px;color:#ffffff;margin:4px 0 10px 0\">Resync &mdash; is it rebuilding, and will it finish?</h2>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">A host or disk was lost. Two questions: is vSAN actually rebuilding, and is the rebuild starving production while it does.</p>\n\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Rebuild activity</h3>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Resync Read IOPS / Throughput / Latency</span> &mdash; traffic vSAN is moving to restore policy compliance. <span style=\"font-weight:600;color:#8fd3ff\">Recovery Write</span> is the same for writes landing on their new home. <b style=\"color:#ffffff;font-weight:700\">All zero means nothing is rebuilding</b>, which is the healthy state.</p>\n\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Guest impact &mdash; the one that matters</h3>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Front-end latency beside the rebuild. <b style=\"color:#ffffff;font-weight:700\">Resync climbing while this stays flat is a healthy rebuild.</b> <b style=\"color:#ffffff;font-weight:700\">Both climbing means the rebuild is eating production IO</b> and wants throttling or scheduling.</p>\n\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Back end</h3>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Component Manager latency and congestion, to see whether the disks are coping with the extra write load the rebuild is putting on them.</p>\n\n<p style=\"margin:14px 0 5px 0;line-height:1.45;color:#b6c2ca;font-style:italic\">There is no completion percentage or time estimate in these metrics. This screen tells you a rebuild is happening and what it costs, not how far along it is.</p>\n</div>\n",
       "refreshInterval": 300,
-      "widgetId": "6116c42e-cc9e-438a-99a5-4b4927953317",
+      "widgetId": "7a16c959-edad-421e-8382-f98766119d60",
       "refreshContent": {
        "refreshContent": false
       },
@@ -237,34 +237,34 @@
    "homeTab": false,
    "rank": 0,
    "disabled": false,
-   "id": "1199c54f-410c-4b97-b946-5ea16e1b6244",
+   "id": "0f74798a-4dcd-418a-bebc-ec58059a493e",
    "adapterName": "vSAN Host Metrics",
    "locked": false,
    "dashboardNavigations": {},
    "widgetInteractions": [
     {
-     "widgetIdProvider": "5cc9f0bf-9b30-497a-9e6b-9287cc58c23b",
+     "widgetIdProvider": "c06e6a60-30ac-411d-a9b8-46ff3220a5dd",
      "type": "resourceId",
-     "widgetIdReceiver": "f3c0836e-38bb-4116-857f-ed45d114f6b7"
+     "widgetIdReceiver": "4c4e6c76-eb05-4de4-8ed1-b2eb0a699f11"
     },
     {
-     "widgetIdProvider": "5cc9f0bf-9b30-497a-9e6b-9287cc58c23b",
+     "widgetIdProvider": "c06e6a60-30ac-411d-a9b8-46ff3220a5dd",
      "type": "resourceId",
-     "widgetIdReceiver": "0b6a9eec-a83a-4c5b-843d-0e9cb65a152e"
+     "widgetIdReceiver": "69810061-0132-4ca2-9f24-453d6b7b0bfd"
     },
     {
-     "widgetIdProvider": "5cc9f0bf-9b30-497a-9e6b-9287cc58c23b",
+     "widgetIdProvider": "c06e6a60-30ac-411d-a9b8-46ff3220a5dd",
      "type": "resourceId",
-     "widgetIdReceiver": "438044aa-51d4-4437-8922-53b7926a61d3"
+     "widgetIdReceiver": "6e6b67c1-c840-467a-8eb0-002aa8a5ec8f"
     }
    ],
    "lastUpdateUserId": "833b693b-0960-4d05-b868-f14446488fc3",
    "columnCount": 1,
    "userId": "833b693b-0960-4d05-b868-f14446488fc3",
-   "name": "Rapid vSAN Storage",
+   "name": "Rapid vSAN Resync",
    "gridsterMaxColumns": 12,
    "lastUpdateTime": 1790823795066
   }
  ],
- "uuid": "ca37c3a5-d3be-4097-b4ba-549bd64da900"
+ "uuid": "5a19f4d4-7331-4f68-b21b-15254e91de76"
 }

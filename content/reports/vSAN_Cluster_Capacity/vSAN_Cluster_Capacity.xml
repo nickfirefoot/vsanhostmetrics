@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Content>
     <Views>
-        <ViewDef id="74e1354d-757f-5ca7-a9e4-25e01718c627">
-            <Title>vSAN ESA Disks</Title>
+        <ViewDef id="80f0f637-d7a6-5252-aaba-6c9d04772960">
+            <Title>vSAN Cluster Capacity</Title>
             <Description />
-            <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanEsaDiskLayer" type="descendant" />
-            <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanEsaDiskLayer" type="self" />
+            <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanClusterCapacity" type="descendant" />
+            <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanClusterCapacity" type="self" />
             <Usage>dashboard</Usage>
             <Usage>report</Usage>
             <Usage>content</Usage>
             <Controls>
-                <Control id="time-interval-selector_id_920" type="time-interval-selector" visible="false">
+                <Control id="time-interval-selector_id_720" type="time-interval-selector" visible="false">
                     <Property name="advancedTimeMode" value="false" />
                     <Property name="unit" value="DAYS" />
                     <Property name="count" value="7" />
                 </Control>
-                <Control id="attributes-selector_id_921" type="attributes-selector" visible="false">
+                <Control id="attributes-selector_id_721" type="attributes-selector" visible="false">
                     <Property name="attributeInfos">
                         <List>
                             <Item>
                                 <Value>
                                     <Property name="objectType" value="RESOURCE" />
-                                    <Property name="attributeKey" value="avgLatReadCapacity" />
+                                    <Property name="attributeKey" value="free" />
                                     <Property name="preferredUnitId" value="" />
                                     <Property name="isStringAttribute" value="false" />
                                     <Property name="adapterKind" value="VsanHostMetrics" />
-                                    <Property name="resourceKind" value="VsanEsaDiskLayer" />
+                                    <Property name="resourceKind" value="VsanClusterCapacity" />
                                     <Property name="rollUpType" value="NONE" />
                                     <Property name="rollUpCount" value="0" />
                                     <Property name="transformations">
                                         <List>
-                                            <Item value="MAX" />
+                                            <Item value="CURRENT" />
                                         </List>
                                     </Property>
                                     <Property name="sortCriteria" value="false" />
                                     <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="vSAN Layer Average Read Latency of vSAN ESA Disk" />
+                                    <Property name="displayName" value="Free Capacity" />
                                     <Property name="addTimestampAsColumn" value="false" />
                                     <Property name="isShowRelativeTimestamp" value="false" />
                                 </Value>
@@ -43,21 +43,21 @@
                             <Item>
                                 <Value>
                                     <Property name="objectType" value="RESOURCE" />
-                                    <Property name="attributeKey" value="avgLatWriteCapacity" />
+                                    <Property name="attributeKey" value="used" />
                                     <Property name="preferredUnitId" value="" />
                                     <Property name="isStringAttribute" value="false" />
                                     <Property name="adapterKind" value="VsanHostMetrics" />
-                                    <Property name="resourceKind" value="VsanEsaDiskLayer" />
+                                    <Property name="resourceKind" value="VsanClusterCapacity" />
                                     <Property name="rollUpType" value="NONE" />
                                     <Property name="rollUpCount" value="0" />
                                     <Property name="transformations">
                                         <List>
-                                            <Item value="MAX" />
+                                            <Item value="CURRENT" />
                                         </List>
                                     </Property>
                                     <Property name="sortCriteria" value="false" />
                                     <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="vSAN Layer Average Write Latency of vSAN ESA Disk" />
+                                    <Property name="displayName" value="Used Capacity" />
                                     <Property name="addTimestampAsColumn" value="false" />
                                     <Property name="isShowRelativeTimestamp" value="false" />
                                 </Value>
@@ -65,21 +65,21 @@
                             <Item>
                                 <Value>
                                     <Property name="objectType" value="RESOURCE" />
-                                    <Property name="attributeKey" value="avgLatWritePerf" />
+                                    <Property name="attributeKey" value="total" />
                                     <Property name="preferredUnitId" value="" />
                                     <Property name="isStringAttribute" value="false" />
                                     <Property name="adapterKind" value="VsanHostMetrics" />
-                                    <Property name="resourceKind" value="VsanEsaDiskLayer" />
+                                    <Property name="resourceKind" value="VsanClusterCapacity" />
                                     <Property name="rollUpType" value="NONE" />
                                     <Property name="rollUpCount" value="0" />
                                     <Property name="transformations">
                                         <List>
-                                            <Item value="MAX" />
+                                            <Item value="CURRENT" />
                                         </List>
                                     </Property>
                                     <Property name="sortCriteria" value="false" />
                                     <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="Perf Tier Average Write Latency of vSAN ESA Disk" />
+                                    <Property name="displayName" value="Total Capacity" />
                                     <Property name="addTimestampAsColumn" value="false" />
                                     <Property name="isShowRelativeTimestamp" value="false" />
                                 </Value>
@@ -87,21 +87,21 @@
                             <Item>
                                 <Value>
                                     <Property name="objectType" value="RESOURCE" />
-                                    <Property name="attributeKey" value="iopsReadCapacity" />
+                                    <Property name="attributeKey" value="dedupRatio" />
                                     <Property name="preferredUnitId" value="" />
                                     <Property name="isStringAttribute" value="false" />
                                     <Property name="adapterKind" value="VsanHostMetrics" />
-                                    <Property name="resourceKind" value="VsanEsaDiskLayer" />
+                                    <Property name="resourceKind" value="VsanClusterCapacity" />
                                     <Property name="rollUpType" value="NONE" />
                                     <Property name="rollUpCount" value="0" />
                                     <Property name="transformations">
                                         <List>
-                                            <Item value="MAX" />
+                                            <Item value="CURRENT" />
                                         </List>
                                     </Property>
                                     <Property name="sortCriteria" value="false" />
                                     <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="vSAN Layer Read IOPS of vSAN ESA Disk" />
+                                    <Property name="displayName" value="Space Efficiency Ratio" />
                                     <Property name="addTimestampAsColumn" value="false" />
                                     <Property name="isShowRelativeTimestamp" value="false" />
                                 </Value>
@@ -109,21 +109,21 @@
                             <Item>
                                 <Value>
                                     <Property name="objectType" value="RESOURCE" />
-                                    <Property name="attributeKey" value="iopsWriteCapacity" />
+                                    <Property name="attributeKey" value="savedByDedup" />
                                     <Property name="preferredUnitId" value="" />
                                     <Property name="isStringAttribute" value="false" />
                                     <Property name="adapterKind" value="VsanHostMetrics" />
-                                    <Property name="resourceKind" value="VsanEsaDiskLayer" />
+                                    <Property name="resourceKind" value="VsanClusterCapacity" />
                                     <Property name="rollUpType" value="NONE" />
                                     <Property name="rollUpCount" value="0" />
                                     <Property name="transformations">
                                         <List>
-                                            <Item value="MAX" />
+                                            <Item value="CURRENT" />
                                         </List>
                                     </Property>
                                     <Property name="sortCriteria" value="false" />
                                     <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="vSAN Layer Write IOPS of vSAN ESA Disk" />
+                                    <Property name="displayName" value="Saved Capacity" />
                                     <Property name="addTimestampAsColumn" value="false" />
                                     <Property name="isShowRelativeTimestamp" value="false" />
                                 </Value>
@@ -131,18 +131,18 @@
                         </List>
                     </Property>
                 </Control>
-                <Control id="pagination-control_id_922" type="pagination-control" visible="true">
+                <Control id="pagination-control_id_722" type="pagination-control" visible="true">
                     <Property name="start" value="0" />
                     <Property name="size" value="50" />
                 </Control>
-                <Control id="metadata_id_923" type="metadata" visible="false">
+                <Control id="metadata_id_723" type="metadata" visible="false">
                     <Property name="maxPointsCount" value="5000" />
                     <Property name="hideObjectNameColumn" value="false" />
                     <Property name="listTopResultSize" value="-1" />
                 </Control>
             </Controls>
             <DataProviders>
-                <DataProvider dataType="list-view" id="list-view_id_924" />
+                <DataProvider dataType="list-view" id="list-view_id_724" />
             </DataProviders>
             <Presentation type="list" />
         </ViewDef>

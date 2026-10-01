@@ -1,0 +1,368 @@
+{
+ "entries": {
+  "resource": [
+   {
+    "resourceKindKey": "VCFWorld",
+    "internalId": "resource:id:0_::_",
+    "adapterKindKey": "VcfAdapter",
+    "identifiers": [],
+    "name": "VCF World"
+   }
+  ]
+ },
+ "dashboards": [
+  {
+   "shared": false,
+   "hidden": false,
+   "creationTime": 1790366044998,
+   "autoswitchEnabled": false,
+   "importAttempts": 0,
+   "columnProportion": "1-1",
+   "importComplete": true,
+   "description": "",
+   "widgets": [
+    {
+     "tabId": "c2813589-d6f4-4eb5-a4a2-dc788fb3991f",
+     "collapsed": false,
+     "id": "88c0938e-4ea0-4614-b0e3-9ec739edf581",
+     "gridsterCoords": {
+      "w": 2,
+      "x": 1,
+      "h": 9,
+      "y": 1
+     },
+     "state": "",
+     "type": "View",
+     "title": "Select cluster",
+     "config": {
+      "refreshInterval": 400,
+      "resource": {
+       "resourceId": "resource:id:0_::_",
+       "traversalSpecId": "",
+       "resourceName": "VCF World",
+       "resourceKindId": "002010VcfAdapterVCFWorld",
+       "id": "Ext.vcops.chrome.model.Resource-592"
+      },
+      "widgetId": "88c0938e-4ea0-4614-b0e3-9ec739edf581",
+      "traversalSpecId": null,
+      "refreshContent": {
+       "refreshContent": true
+      },
+      "description": "",
+      "isUpdatedView": true,
+      "title": "Select cluster",
+      "viewDefinitionId": "057a006b-7ad1-5df7-af19-832b788b7b16",
+      "titleLocalized": "Select cluster",
+      "chartViewItems": [],
+      "selectFirstRow": {
+       "selectFirstRow": true
+      },
+      "viewDetails": "",
+      "selfProvider": {
+       "selfProvider": true
+      }
+     },
+     "height": 0,
+     "states": [
+      {
+       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_83991da8-7ec1-4ac1-88ec-2ff69255aa40-column-0%25255Ehidden%25253Db%2525253A1%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_83991da8-7ec1-4ac1-88ec-2ff69255aa40-column-config%2525257Cname1%25255Ehidden%25253Db%2525253A0",
+       "key": "permTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_83991da8-7ec1-4ac1-88ec-2ff69255aa40"
+      }
+     ]
+    },
+    {
+     "tabId": "c2813589-d6f4-4eb5-a4a2-dc788fb3991f",
+     "collapsed": false,
+     "id": "32f86599-387c-44c0-b247-06f344f6ab97",
+     "gridsterCoords": {
+      "w": 10,
+      "x": 3,
+      "h": 5,
+      "y": 1
+     },
+     "state": "",
+     "type": "View",
+     "title": "Capacity",
+     "config": {
+      "refreshInterval": 300,
+      "resource": null,
+      "widgetId": "32f86599-387c-44c0-b247-06f344f6ab97",
+      "traversalSpecId": "",
+      "refreshContent": {
+       "refreshContent": true
+      },
+      "description": "",
+      "isUpdatedView": true,
+      "title": "Capacity",
+      "viewDefinitionId": "80f0f637-d7a6-5252-aaba-6c9d04772960",
+      "titleLocalized": "Capacity",
+      "viewType": "LIST",
+      "chartViewItems": [],
+      "selectFirstRow": {
+       "selectFirstRow": false
+      },
+      "viewDetails": "",
+      "selfProvider": {
+       "selfProvider": false
+      }
+     },
+     "height": 0,
+     "states": [
+      {
+       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-0%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-avgLatency1%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A115%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-maxLatency2%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A109%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txQLatAvg3%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A136%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txQLatMax4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txSbSpaceMin5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-rxSbSpaceMin6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-kaReset7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-numReadyDelay8%25255Ehidden%25253Db%2525253A0",
+       "key": "permTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264"
+      }
+     ]
+    },
+    {
+     "tabId": "c2813589-d6f4-4eb5-a4a2-dc788fb3991f",
+     "collapsed": false,
+     "id": "c66a29da-6aa4-48b3-9538-2c1b65f326fd",
+     "gridsterCoords": {
+      "w": 12,
+      "x": 1,
+      "h": 6,
+      "y": 6
+     },
+     "state": "",
+     "type": "View",
+     "title": "Front end - what VMs feel",
+     "config": {
+      "refreshInterval": 300,
+      "resource": null,
+      "widgetId": "c66a29da-6aa4-48b3-9538-2c1b65f326fd",
+      "traversalSpecId": "",
+      "refreshContent": {
+       "refreshContent": true
+      },
+      "description": "",
+      "isUpdatedView": true,
+      "title": "Front end - what VMs feel",
+      "viewDefinitionId": "961aa3db-a230-5c2d-8ce5-00b666bdcdbd",
+      "titleLocalized": "Front end - what VMs feel",
+      "viewType": "LIST",
+      "chartViewItems": [],
+      "selectFirstRow": {
+       "selectFirstRow": false
+      },
+      "viewDetails": "",
+      "selfProvider": {
+       "selfProvider": false
+      }
+     },
+     "height": 0,
+     "states": [
+      {
+       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-0%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-avgLatency1%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A115%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-maxLatency2%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A109%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txQLatAvg3%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A136%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txQLatMax4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txSbSpaceMin5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-rxSbSpaceMin6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-kaReset7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-numReadyDelay8%25255Ehidden%25253Db%2525253A0",
+       "key": "permTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264"
+      }
+     ]
+    },
+    {
+     "tabId": "c2813589-d6f4-4eb5-a4a2-dc788fb3991f",
+     "collapsed": false,
+     "id": "891ee29a-eb76-456d-a011-5b239787ac0a",
+     "gridsterCoords": {
+      "w": 12,
+      "x": 1,
+      "h": 6,
+      "y": 12
+     },
+     "state": "",
+     "type": "View",
+     "title": "Back end - the disks",
+     "config": {
+      "refreshInterval": 300,
+      "resource": null,
+      "widgetId": "891ee29a-eb76-456d-a011-5b239787ac0a",
+      "traversalSpecId": "",
+      "refreshContent": {
+       "refreshContent": true
+      },
+      "description": "",
+      "isUpdatedView": true,
+      "title": "Back end - the disks",
+      "viewDefinitionId": "b597d3fd-2fbb-546e-88f8-3f6d42537dcf",
+      "titleLocalized": "Back end - the disks",
+      "viewType": "LIST",
+      "chartViewItems": [],
+      "selectFirstRow": {
+       "selectFirstRow": false
+      },
+      "viewDetails": "",
+      "selfProvider": {
+       "selfProvider": false
+      }
+     },
+     "height": 0,
+     "states": [
+      {
+       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-0%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-avgLatency1%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A115%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-maxLatency2%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A109%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txQLatAvg3%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A136%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txQLatMax4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txSbSpaceMin5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-rxSbSpaceMin6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-kaReset7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-numReadyDelay8%25255Ehidden%25253Db%2525253A0",
+       "key": "permTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264"
+      }
+     ]
+    },
+    {
+     "tabId": "c2813589-d6f4-4eb5-a4a2-dc788fb3991f",
+     "collapsed": false,
+     "id": "28e04db2-6217-4d1c-b3a3-a3125c38d758",
+     "gridsterCoords": {
+      "w": 12,
+      "x": 1,
+      "h": 6,
+      "y": 18
+     },
+     "state": "",
+     "type": "View",
+     "title": "Transport - RDT",
+     "config": {
+      "refreshInterval": 300,
+      "resource": null,
+      "widgetId": "28e04db2-6217-4d1c-b3a3-a3125c38d758",
+      "traversalSpecId": "",
+      "refreshContent": {
+       "refreshContent": true
+      },
+      "description": "",
+      "isUpdatedView": true,
+      "title": "Transport - RDT",
+      "viewDefinitionId": "c972e782-317e-55b8-b5db-400c703ccfa7",
+      "titleLocalized": "Transport - RDT",
+      "viewType": "LIST",
+      "chartViewItems": [],
+      "selectFirstRow": {
+       "selectFirstRow": false
+      },
+      "viewDetails": "",
+      "selfProvider": {
+       "selfProvider": false
+      }
+     },
+     "height": 0,
+     "states": [
+      {
+       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-0%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-avgLatency1%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A115%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-maxLatency2%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A109%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txQLatAvg3%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A136%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txQLatMax4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txSbSpaceMin5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-rxSbSpaceMin6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-kaReset7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-numReadyDelay8%25255Ehidden%25253Db%2525253A0",
+       "key": "permTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264"
+      }
+     ]
+    },
+    {
+     "tabId": "c2813589-d6f4-4eb5-a4a2-dc788fb3991f",
+     "collapsed": false,
+     "id": "22da59c7-6a92-41a5-ad01-181e3e3b4ef6",
+     "gridsterCoords": {
+      "w": 12,
+      "x": 1,
+      "h": 6,
+      "y": 24
+     },
+     "state": "",
+     "type": "View",
+     "title": "Rebuild activity",
+     "config": {
+      "refreshInterval": 300,
+      "resource": null,
+      "widgetId": "22da59c7-6a92-41a5-ad01-181e3e3b4ef6",
+      "traversalSpecId": "",
+      "refreshContent": {
+       "refreshContent": true
+      },
+      "description": "",
+      "isUpdatedView": true,
+      "title": "Rebuild activity",
+      "viewDefinitionId": "e12fcf23-eb55-5555-9bf9-b7c4c91d1135",
+      "titleLocalized": "Rebuild activity",
+      "viewType": "LIST",
+      "chartViewItems": [],
+      "selectFirstRow": {
+       "selectFirstRow": false
+      },
+      "viewDetails": "",
+      "selfProvider": {
+       "selfProvider": false
+      }
+     },
+     "height": 0,
+     "states": [
+      {
+       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-0%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-avgLatency1%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A115%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-maxLatency2%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A109%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txQLatAvg3%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A136%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txQLatMax4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txSbSpaceMin5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-rxSbSpaceMin6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-kaReset7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-numReadyDelay8%25255Ehidden%25253Db%2525253A0",
+       "key": "permTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264"
+      }
+     ]
+    },
+    {
+     "tabId": "c2813589-d6f4-4eb5-a4a2-dc788fb3991f",
+     "collapsed": false,
+     "id": "4de5df61-b18a-4181-93b6-16bf3f9fc38e",
+     "gridsterCoords": {
+      "w": 12,
+      "x": 1,
+      "h": 7,
+      "y": 30
+     },
+     "state": "",
+     "type": "TextDisplay",
+     "title": "How to read this",
+     "config": {
+      "locationUrl": "",
+      "locationFile": "",
+      "editorData": "<div style=\"font-family:'Metropolis','Segoe UI',sans-serif;font-size:13px;color:#ffffff;padding:6px 12px\">\n<h2 style=\"font-size:15px;color:#ffffff;margin:4px 0 10px 0\">vSAN overview &mdash; which layer is broken?</h2>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">The pager went off and you do not yet know where to look. Each table below is a <b style=\"color:#ffffff;font-weight:700\">layer of the IO path</b>, top to bottom, and the job of this screen is to point at one of them inside a minute. Then move to the matching detail screen.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><b style=\"color:#ffffff;font-weight:700\">Normal is front end above back end.</b> The front end carries network hops, owner coordination and policy work the disks never see, so it should read higher. <b style=\"color:#ffffff;font-weight:700\">The two converging, or inverting, is the anomaly</b> &mdash; not either number on its own.</p>\n\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Capacity</h3>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Free / Used / Total Capacity</span> and <span style=\"font-weight:600;color:#8fd3ff\">Space Efficiency Ratio</span> &mdash; here because exhaustion takes a cluster read-only, which is an outage rather than a performance problem.</p>\n\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Front end &mdash; what VMs feel</h3>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">DOM Client is where a guest's IO enters vSAN. <span style=\"font-weight:600;color:#8fd3ff\">Read / Write Latency</span> here is what a user means by \"the VM is slow\". <span style=\"font-weight:600;color:#8fd3ff\">Congestions</span> is vSAN deliberately slowing IO down to protect itself &mdash; any non-zero value is the cluster applying the brakes.</p>\n\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Back end &mdash; the disks</h3>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">DOM Component Manager is what the local devices actually did. Read it against the front end: <b style=\"color:#ffffff;font-weight:700\">front high and back low</b> means the problem is above the disks &mdash; network, owner, or policy. <b style=\"color:#ffffff;font-weight:700\">Both high</b> means the disks.</p>\n\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Transport &mdash; RDT</h3>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">vSAN's own protocol, above TCP. Can be slow with every NIC counter clean. <span style=\"font-weight:600;color:#8fd3ff\">Keepalive Reset</span> is cumulative since boot &mdash; watch whether it rises, not its value. The socket <span style=\"font-weight:600;color:#8fd3ff\">Min Outbound / Inbound Bytes</span> columns are free space, so <b style=\"color:#ffffff;font-weight:700\">low is bad</b>.</p>\n\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Rebuild activity</h3>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">All zero means nothing is rebuilding, which is the healthy idle state. During a rebuild, read it beside the front end above: <b style=\"color:#ffffff;font-weight:700\">resync climbing while guest latency stays flat is healthy</b>; both climbing means the rebuild is eating production IO.</p>\n\n<p style=\"margin:14px 0 5px 0;line-height:1.45;color:#b6c2ca;font-style:italic\">Each table is one object &mdash; the cluster &mdash; so this screen costs the same whether you run four hosts or sixty-four.</p>\n</div>\n",
+      "refreshInterval": 300,
+      "widgetId": "4de5df61-b18a-4181-93b6-16bf3f9fc38e",
+      "refreshContent": {
+       "refreshContent": false
+      },
+      "description": "",
+      "viewDetails": "",
+      "title": "How to read this",
+      "viewModeHTML": true
+     },
+     "height": 0
+    }
+   ],
+   "states": [],
+   "editAllowed": true,
+   "homeTab": false,
+   "rank": 0,
+   "disabled": false,
+   "id": "c2813589-d6f4-4eb5-a4a2-dc788fb3991f",
+   "adapterName": "vSAN Host Metrics",
+   "locked": false,
+   "dashboardNavigations": {},
+   "widgetInteractions": [
+    {
+     "widgetIdProvider": "88c0938e-4ea0-4614-b0e3-9ec739edf581",
+     "type": "resourceId",
+     "widgetIdReceiver": "32f86599-387c-44c0-b247-06f344f6ab97"
+    },
+    {
+     "widgetIdProvider": "88c0938e-4ea0-4614-b0e3-9ec739edf581",
+     "type": "resourceId",
+     "widgetIdReceiver": "c66a29da-6aa4-48b3-9538-2c1b65f326fd"
+    },
+    {
+     "widgetIdProvider": "88c0938e-4ea0-4614-b0e3-9ec739edf581",
+     "type": "resourceId",
+     "widgetIdReceiver": "891ee29a-eb76-456d-a011-5b239787ac0a"
+    },
+    {
+     "widgetIdProvider": "88c0938e-4ea0-4614-b0e3-9ec739edf581",
+     "type": "resourceId",
+     "widgetIdReceiver": "28e04db2-6217-4d1c-b3a3-a3125c38d758"
+    },
+    {
+     "widgetIdProvider": "88c0938e-4ea0-4614-b0e3-9ec739edf581",
+     "type": "resourceId",
+     "widgetIdReceiver": "22da59c7-6a92-41a5-ad01-181e3e3b4ef6"
+    }
+   ],
+   "lastUpdateUserId": "833b693b-0960-4d05-b868-f14446488fc3",
+   "columnCount": 1,
+   "userId": "833b693b-0960-4d05-b868-f14446488fc3",
+   "name": "Rapid vSAN Overview",
+   "gridsterMaxColumns": 12,
+   "lastUpdateTime": 1790823795066
+  }
+ ],
+ "uuid": "9b43014f-f52e-4a95-a479-ef14b58bdaff"
+}
