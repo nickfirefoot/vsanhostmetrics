@@ -36,7 +36,15 @@ ENT_FOR = {sp["kind"]: e for e, sp in perfsvc_model.ENTITIES.items()}
 TEMPLATE = "docs/assets/view.vsan-pnic-errors.xml"
 # The hand-built pNIC view keeps its original GUID so a regenerated
 # version UPDATES the one already imported rather than duplicating it.
-PINNED = {"vSAN pNIC Errors": "09f4cb2e-f52c-412a-826d-ee04a3d07d0f"}
+PINNED = {
+    # already imported and referenced by a dashboard -- regenerating must
+    # UPDATE these, not create a second copy under a new identity
+    "vSAN pNIC Errors": "09f4cb2e-f52c-412a-826d-ee04a3d07d0f",
+    # referenced as c51f5531 by "RDT latencies" on Rapid vSAN Network v4.
+    # The title gained "Per Host" after that dashboard was built, which would
+    # otherwise have moved the GUID and orphaned the widget.
+    "vSAN RDT Transport Per Host": "c51f5531-ccea-543d-9a73-0e0d5e359d1a",
+}
 OUTDIR = os.path.expanduser("~/ops-content/out")
 
 # (metricKey, displayName, preferredUnitId, transformation)

@@ -1,0 +1,230 @@
+{
+   "entries": {"resource": [{
+      "resourceKindKey": "VCFWorld",
+      "internalId": "resource:id:0_::_",
+      "adapterKindKey": "VcfAdapter",
+      "identifiers": [],
+      "name": "VCF World"
+   }]},
+   "dashboards": [{
+      "shared": false,
+      "hidden": false,
+      "creationTime": 1790366044998,
+      "autoswitchEnabled": false,
+      "importAttempts": 0,
+      "columnProportion": "1-1",
+      "importComplete": true,
+      "description": "Safe to delete.",
+      "widgets": [
+         {
+            "tabId": "fa578b63-94e2-441c-8dd2-11fd4ca2d063",
+            "collapsed": false,
+            "id": "fefa8db6-5e2d-4905-9d11-2f5e279ea264",
+            "gridsterCoords": {
+               "w": 10,
+               "x": 3,
+               "h": 9,
+               "y": 1
+            },
+            "state": "",
+            "type": "View",
+            "title": "RDT latencies",
+            "config": {
+               "refreshInterval": 300,
+               "resource": null,
+               "widgetId": "fefa8db6-5e2d-4905-9d11-2f5e279ea264",
+               "traversalSpecId": "",
+               "refreshContent": {"refreshContent": true},
+               "description": "",
+               "isUpdatedView": true,
+               "title": "RDT latencies",
+               "viewDefinitionId": "c51f5531-ccea-543d-9a73-0e0d5e359d1a",
+               "titleLocalized": "RDT latencies",
+               "viewType": "LIST",
+               "chartViewItems": [],
+               "selectFirstRow": {"selectFirstRow": false},
+               "viewDetails": "",
+               "selfProvider": {"selfProvider": false}
+            },
+            "height": 0,
+            "states": [{
+               "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-0%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-avgLatency1%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A115%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-maxLatency2%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A109%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txQLatAvg3%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A136%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txQLatMax4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txSbSpaceMin5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-rxSbSpaceMin6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-kaReset7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-numReadyDelay8%25255Ehidden%25253Db%2525253A0",
+               "key": "permTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264"
+            }]
+         },
+         {
+            "tabId": "fa578b63-94e2-441c-8dd2-11fd4ca2d063",
+            "collapsed": false,
+            "id": "fd232329-9ec2-4c33-869b-8b801588aff5",
+            "gridsterCoords": {
+               "w": 12,
+               "x": 1,
+               "h": 7,
+               "y": 18
+            },
+            "state": "",
+            "type": "View",
+            "title": "pnicstats",
+            "config": {
+               "refreshInterval": 300,
+               "resource": null,
+               "widgetId": "fd232329-9ec2-4c33-869b-8b801588aff5",
+               "traversalSpecId": "",
+               "refreshContent": {"refreshContent": true},
+               "description": "",
+               "isUpdatedView": true,
+               "title": "pnicstats",
+               "viewDefinitionId": "09f4cb2e-f52c-412a-826d-ee04a3d07d0f",
+               "titleLocalized": "pnicstats",
+               "viewType": "LIST",
+               "chartViewItems": [],
+               "selectFirstRow": {"selectFirstRow": true},
+               "viewDetails": "",
+               "selfProvider": {"selfProvider": false}
+            },
+            "height": 0,
+            "states": [{
+               "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fd232329-9ec2-4c33-869b-8b801588aff5-column-0%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fd232329-9ec2-4c33-869b-8b801588aff5-column-rxMissErr1%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fd232329-9ec2-4c33-869b-8b801588aff5-column-rxFifoErr2%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fd232329-9ec2-4c33-869b-8b801588aff5-column-rxErr3%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fd232329-9ec2-4c33-869b-8b801588aff5-column-rxCrcErr4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fd232329-9ec2-4c33-869b-8b801588aff5-column-rxOvErr5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fd232329-9ec2-4c33-869b-8b801588aff5-column-rxMissErrRaw6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fd232329-9ec2-4c33-869b-8b801588aff5-column-txCarErr7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fd232329-9ec2-4c33-869b-8b801588aff5-column-txErr8%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fd232329-9ec2-4c33-869b-8b801588aff5-column-portRxDrops9%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fd232329-9ec2-4c33-869b-8b801588aff5-column-portTxDrops10%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fd232329-9ec2-4c33-869b-8b801588aff5-column-pauseCount11%25255Ehidden%25253Db%2525253A0",
+               "key": "permTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fd232329-9ec2-4c33-869b-8b801588aff5"
+            }]
+         },
+         {
+            "tabId": "fa578b63-94e2-441c-8dd2-11fd4ca2d063",
+            "collapsed": false,
+            "id": "83991da8-7ec1-4ac1-88ec-2ff69255aa40",
+            "gridsterCoords": {
+               "w": 2,
+               "x": 1,
+               "h": 9,
+               "y": 1
+            },
+            "state": "",
+            "type": "View",
+            "title": "Select cluster",
+            "config": {
+               "refreshInterval": 400,
+               "resource": {
+                  "resourceId": "resource:id:0_::_",
+                  "traversalSpecId": "",
+                  "resourceName": "VCF World",
+                  "resourceKindId": "002010VcfAdapterVCFWorld",
+                  "id": "Ext.vcops.chrome.model.Resource-592"
+               },
+               "widgetId": "83991da8-7ec1-4ac1-88ec-2ff69255aa40",
+               "traversalSpecId": null,
+               "refreshContent": {"refreshContent": true},
+               "description": "",
+               "isUpdatedView": true,
+               "title": "Select cluster",
+               "viewDefinitionId": "bdf44c33-81b0-4780-bd5f-5dd871731ed0",
+               "titleLocalized": "Select cluster",
+               "chartViewItems": [],
+               "selectFirstRow": {"selectFirstRow": true},
+               "viewDetails": "",
+               "selfProvider": {"selfProvider": true}
+            },
+            "height": 0,
+            "states": [{
+               "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_83991da8-7ec1-4ac1-88ec-2ff69255aa40-column-0%25255Ehidden%25253Db%2525253A1%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_83991da8-7ec1-4ac1-88ec-2ff69255aa40-column-config%2525257Cname1%25255Ehidden%25253Db%2525253A0",
+               "key": "permTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_83991da8-7ec1-4ac1-88ec-2ff69255aa40"
+            }]
+         },
+         {
+            "tabId": "fa578b63-94e2-441c-8dd2-11fd4ca2d063",
+            "collapsed": false,
+            "id": "e05ce520-07da-4f6a-b158-07444630350d",
+            "gridsterCoords": {
+               "w": 12,
+               "x": 1,
+               "h": 8,
+               "y": 10
+            },
+            "state": "",
+            "type": "View",
+            "title": "TCP error types",
+            "config": {
+               "refreshInterval": 300,
+               "resource": null,
+               "widgetId": "e05ce520-07da-4f6a-b158-07444630350d",
+               "traversalSpecId": "",
+               "refreshContent": {"refreshContent": false},
+               "description": "",
+               "isUpdatedView": true,
+               "title": "TCP error types",
+               "viewDefinitionId": "c10ec3f1-e693-5b3d-af81-d2d19de1c341",
+               "titleLocalized": "TCP error types",
+               "viewType": "LIST",
+               "chartViewItems": [],
+               "selectFirstRow": {"selectFirstRow": true},
+               "viewDetails": "",
+               "selfProvider": {"selfProvider": false}
+            },
+            "height": 0,
+            "states": [{
+               "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_e05ce520-07da-4f6a-b158-07444630350d-column-0%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A192%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_e05ce520-07da-4f6a-b158-07444630350d-column-tcpTxRexmitRate1%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_e05ce520-07da-4f6a-b158-07444630350d-column-tcpRxErrRate2%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_e05ce520-07da-4f6a-b158-07444630350d-column-tcpRcvdupackRate3%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_e05ce520-07da-4f6a-b158-07444630350d-column-tcpRcvoopackRate4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_e05ce520-07da-4f6a-b158-07444630350d-column-tcpSackRcvBlocksRate5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_e05ce520-07da-4f6a-b158-07444630350d-column-tcpTimeoutDropRate6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_e05ce520-07da-4f6a-b158-07444630350d-column-tcpSndZeroWin7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_e05ce520-07da-4f6a-b158-07444630350d-column-tcpErrs8%25255Ehidden%25253Db%2525253A0",
+               "key": "permTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_e05ce520-07da-4f6a-b158-07444630350d"
+            }]
+         },
+         {
+            "tabId": "fa578b63-94e2-441c-8dd2-11fd4ca2d063",
+            "collapsed": false,
+            "id": "d962c088-a1df-49cb-8cb1-8b7173cce9fc",
+            "gridsterCoords": {
+               "w": 8,
+               "x": 1,
+               "h": 7,
+               "y": 25
+            },
+            "state": "",
+            "type": "TextDisplay",
+            "title": "Welcome to vSAN advanced network troubleshooting",
+            "config": {
+               "locationUrl": "",
+               "locationFile": "",
+               "editorData": "<font color=\"#ffffff\">Welcome to advanced vSAN network troubleshooting 201!\nAboove you will find 4 windows grouped by metric type.\nRDT latency tells you the latency of the vSAN transport protocol itself.\n\nTCP errors rolls up a few of the most common errors.\nbuffer overflow: likely increase your Pnic driver buffers\nCRC checksum mismatch: indicative of a upstream overrun and a tailstomp choping off the last of the packet.\nRX missed: typically buffer overflow, but this catches more. if buffer and this are equal, its a buffer increase to get rid of this.\n\n\nNetwork observations:\nThese are all counters showing whats happening on the network. duplicat acks are caused by latency and retransmission causing duplicate handshakes\nETC ETC<\/font>",
+               "refreshInterval": 300,
+               "widgetId": "d962c088-a1df-49cb-8cb1-8b7173cce9fc",
+               "refreshContent": {"refreshContent": false},
+               "description": "",
+               "viewDetails": "",
+               "title": "Welcome to vSAN advanced network troubleshooting",
+               "viewModeHTML": true
+            },
+            "height": 0
+         }
+      ],
+      "states": [],
+      "editAllowed": true,
+      "homeTab": false,
+      "rank": 0,
+      "disabled": false,
+      "id": "fa578b63-94e2-441c-8dd2-11fd4ca2d063",
+      "adapterName": "vSAN Host Metrics",
+      "locked": false,
+      "dashboardNavigations": {},
+      "widgetInteractions": [
+         {
+            "widgetIdProvider": "83991da8-7ec1-4ac1-88ec-2ff69255aa40",
+            "type": "resourceId",
+            "widgetIdReceiver": "fd232329-9ec2-4c33-869b-8b801588aff5"
+         },
+         {
+            "widgetIdProvider": "83991da8-7ec1-4ac1-88ec-2ff69255aa40",
+            "type": "resourceId",
+            "widgetIdReceiver": "e05ce520-07da-4f6a-b158-07444630350d"
+         },
+         {
+            "widgetIdProvider": "83991da8-7ec1-4ac1-88ec-2ff69255aa40",
+            "type": "resourceId",
+            "widgetIdReceiver": "fefa8db6-5e2d-4905-9d11-2f5e279ea264"
+         }
+      ],
+      "lastUpdateUserId": "833b693b-0960-4d05-b868-f14446488fc3",
+      "columnCount": 1,
+      "userId": "833b693b-0960-4d05-b868-f14446488fc3",
+      "name": "Rapid vSAN Network v4(High Pnic Error rate detect)",
+      "gridsterMaxColumns": 12,
+      "lastUpdateTime": 1790823795066
+   }],
+   "uuid": "c1188e32-f195-4016-a929-a1b2cb6160f2"
+}
