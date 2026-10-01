@@ -1140,3 +1140,59 @@ it.
 Variant A is a one-line addition to that `RUN`. Not applied yet -- it is a
 change to how the shipped image is built and should be a deliberate decision
 rather than a side effect of answering a question.
+
+## What Debian 13 would remediate -- and a retraction
+
+Measured 2026-10-01 by comparing the 97 packages in the shipped 1.4.0 image
+against the trixie archive index. This is a **version comparison, not a CVE
+scan**: it says which packages move, not which findings clear.
+
+| | |
+|---|---|
+| Packages with a newer version in trixie | 86 of 97 |
+| Packages absent from trixie | 11 |
+| Packages at the same version | 0 |
+
+**The 11 absent ones are not gone, they are renamed** by trixie's 64-bit
+`time_t` transition, and every one has a newer version under the new name:
+
+```
+libssl3 3.0.22     -> libssl3t64 3.5.7        libgdbm6    -> libgdbm6t64 1.24
+libgnutls30 3.7.9  -> libgnutls30t64 3.8.9    libreadline8 -> libreadline8t64 8.2-6
+libapt-pkg6.0 2.6  -> libapt-pkg7.0 3.0.3     libext2fs2  -> libext2fs2t64 1.47.2
+libunistring2 1.0  -> libunistring5 1.3        libdb5.3   -> libdb5.3t64 5.3.28-9
+libtirpc3 1.3.3    -> libtirpc3t64 1.3.6
+```
+
+So effectively **97 of 97 packages move**, and openssl goes 3.0.22 to 3.5.7.
+
+### Retraction: the remaining critical does not survive a trixie move
+
+This file has said that `zlib1g` CVE-2023-45853 survives every remediation
+because Debian marked it `will_not_fix` and Python links zlib so it cannot be
+purged. Both halves are still true and the conclusion was still wrong.
+
+The will-not-fix applies to **bookworm**, which ships zlib **1.2.13**. Trixie
+ships **1.3.1**, and the CVE's affected range is zlib through 1.3. The version
+bump carries it out of range, so a scanner stops reporting it without Debian
+ever backporting anything. **A trixie base clears the last critical.**
+
+### Why the finding count should fall a long way
+
+Of the 264 findings measured before the purge, 255 had no published fix: 198
+`affected`, 43 `fix_deferred`, 14 `will_not_fix`. `affected` means the version
+bookworm ships sits in the vulnerable range and Debian does not intend to
+backport -- which is **exactly the class a version bump clears**, for the same
+reason zlib's does. The same largely holds for `fix_deferred`.
+
+An exact number needs a trixie-based image built and scanned. What can be said
+without that: the overwhelming majority of the ~225 remaining findings are of
+the class that a distribution bump resolves, and the blocker is not whether it
+would work but that the base image is Broadcom's to change.
+
+**One caveat against over-selling it.** A new base is not zero findings, it is
+a different and smaller set; trixie accumulates its own over time. And trixie's
+Python is **3.13.5**, where the SDK pins 3.11, so moving the base is entangled
+with an interpreter move that would have to be validated against the SDK
+library, pyvmomi and the vendored vSAN bindings. It is not a one-line change
+for them in the way the `cryptography` pin is.
