@@ -238,16 +238,9 @@ NOTES.update({
  "mem|swapinRate_average": "Rate at which the host is reading memory back from disk. <b>Any sustained non-zero value is serious</b>: it means memory was overcommitted far enough to page, and every latency figure on every other panel becomes unreliable while it continues.",
  "sys|uptime_latest": "Host uptime. Relevant here because many counters in this pack are cumulative since boot, so a recently rebooted host has small totals for reasons that have nothing to do with health.",
  # ---- vSAN service health, from vCenter ---------------------------------
- "health|reports|vsan|status": "vCenter's overall vSAN health verdict for this host. Higher is better; it reads 3 on all three hosts here.",
- "health|reports|vsan|clomdLiveness": "Whether <b>clomd</b> is answering. 1 is alive. This pack can measure how much memory clomd consumes but has no way to tell whether it is responding, and vCenter checks exactly that, so the pair is more useful than either half.",
- "health|reports|vsan|cmmdsdLiveness": "Whether <b>cmmdsd</b> is answering. 1 is alive. If this drops the host is on its way out of the cluster.",
- "health|reports|vsan|epdLiveness": "Whether <b>epd</b> is answering. 1 is alive.",
- "health|reports|vsan|httpSvcResp": "Whether the host's vSAN HTTP service is responding. 1 is responding. This is the service the Performance Service queries, so a zero here also means this pack is about to stop collecting from that host.",
- "health|reports|memory|totalCorrectedErrorsSinceBoot": "Memory errors the hardware detected and corrected. <b>Cumulative since boot.</b> Corrected errors are not yet a failure, but a count that climbs predicts one.",
- "health|reports|memory|totalUncorrectedErrorsSinceBoot": "Memory errors the hardware could not correct. <b>Any non-zero value is a hardware fault</b> and outranks everything else on the screen.",
- "health|reports|psod|psod7DaysCount": "Purple diagnostic screens in the last seven days. Non-zero means this host crashed, and any latency history either side of that is not comparable.",
- "health|reports|hostd|status": "Health of <b>hostd</b>, the host management agent. Higher is better.",
- "health|reports|vpxa|status": "Health of <b>vpxa</b>, the agent connecting this host to vCenter. If this is unhealthy, vCenter's own figures for the host are suspect, including the borrowed columns on this view.",
+ "Sensor|status": "Overall hardware sensor health, as the host's own sensors report it. This replaced a set of vSAN daemon liveness columns that could not be displayed: those carry a current value but <b>no retained history</b>, and a view queries a time range, so every cell came back blank.",
+ "vcfHealth|connectivity|criticalCount": "Count of critical connectivity findings against this host. A tripwire rather than a diagnosis -- it tells you something is wrong and not what.",
+ "vcfHealth|utilization|criticalCount": "Count of critical utilisation findings against this host.",
 })
 
 PAGE = """<!DOCTYPE html>

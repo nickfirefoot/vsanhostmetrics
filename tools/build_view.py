@@ -358,21 +358,9 @@ VIEWS = [
         ("mem|host_usagePct", "", "MAX"),
         ("mem|swapinRate_average", "", "MAX"),
         ("sys|uptime_latest", "", "CURRENT"),
-    ], "VMWARE"),
-    # vSAN daemon liveness. This pack measures how much memory clomd and
-    # cmmdsd consume but has no way to say whether they are answering;
-    # vCenter checks exactly that. The pair is the useful thing.
-    ("vSphere Host vSAN Services", "HostSystem", [
-        ("health|reports|vsan|status", "", "MIN"),
-        ("health|reports|vsan|clomdLiveness", "", "MIN"),
-        ("health|reports|vsan|cmmdsdLiveness", "", "MIN"),
-        ("health|reports|vsan|epdLiveness", "", "MIN"),
-        ("health|reports|vsan|httpSvcResp", "", "MIN"),
-        ("health|reports|memory|totalCorrectedErrorsSinceBoot", "", "CURRENT"),
-        ("health|reports|memory|totalUncorrectedErrorsSinceBoot", "", "CURRENT"),
-        ("health|reports|psod|psod7DaysCount", "", "CURRENT"),
-        ("health|reports|hostd|status", "", "MIN"),
-        ("health|reports|vpxa|status", "", "MIN"),
+        ("Sensor|status", "", "MIN"),
+        ("vcfHealth|connectivity|criticalCount", "", "MAX"),
+        ("vcfHealth|utilization|criticalCount", "", "MAX"),
     ], "VMWARE"),
 ]
 
@@ -405,18 +393,9 @@ OVERRIDE = {
     ("HostSystem", "mem|host_usagePct"): "Host Memory Consumed",
     ("HostSystem", "mem|swapinRate_average"): "Host Memory Swap-In Rate",
     ("HostSystem", "sys|uptime_latest"): "Host Uptime",
-    ("HostSystem", "health|reports|vsan|status"): "vSAN Health Status",
-    ("HostSystem", "health|reports|vsan|clomdLiveness"): "clomd Alive",
-    ("HostSystem", "health|reports|vsan|cmmdsdLiveness"): "cmmdsd Alive",
-    ("HostSystem", "health|reports|vsan|epdLiveness"): "epd Alive",
-    ("HostSystem", "health|reports|vsan|httpSvcResp"): "vSAN HTTP Service Responding",
-    ("HostSystem", "health|reports|memory|totalCorrectedErrorsSinceBoot"):
-        "Corrected Memory Errors Since Boot",
-    ("HostSystem", "health|reports|memory|totalUncorrectedErrorsSinceBoot"):
-        "Uncorrected Memory Errors Since Boot",
-    ("HostSystem", "health|reports|psod|psod7DaysCount"): "Purple Screens, Last 7 Days",
-    ("HostSystem", "health|reports|hostd|status"): "hostd Status",
-    ("HostSystem", "health|reports|vpxa|status"): "vpxa Status",
+    ("HostSystem", "Sensor|status"): "Hardware Sensor Status",
+    ("HostSystem", "vcfHealth|connectivity|criticalCount"): "Connectivity Issues, Critical",
+    ("HostSystem", "vcfHealth|utilization|criticalCount"): "Utilisation Issues, Critical",
 }
 
 

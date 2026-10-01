@@ -67,7 +67,7 @@ DASHBOARDS = [
         ("Coordination - the owner",      "vSAN_Cluster_DOM_Owner",             {"w":12,"x":1,"h":6,"y":12}),
         ("Back end - the disks",          "vSAN_Cluster_DOM_Component_Manager", {"w":12,"x":1,"h":6,"y":18}),
         ("Transport - RDT",               "vSAN_Cluster_RDT",                   {"w":12,"x":1,"h":6,"y":24}),
-        ("Host services - are they up?",  "vSphere_Host_vSAN_Services",         {"w":12,"x":1,"h":6,"y":30}),
+        ("Host health and load",          "vSphere_Host_Uplinks_and_Load",      {"w":12,"x":1,"h":6,"y":30}),
     ]),
     # TCP sits BELOW the NIC panels, moved on review. The screen now reads
     # strictly top down through the layers that carry vSAN traffic: vSAN's own
@@ -116,11 +116,14 @@ DASHBOARDS = [
         ("Segment cleaning",              "vSAN_Segment_Cleaning_Per_Host",  {"w":12,"x":1,"h":8,"y":23}),
         ("Back end - per host",           "vSAN_Host_DOM_Component_Manager", {"w":12,"x":1,"h":8,"y":31}),
     ]),
+    # The "vSAN service health" panel is gone. It rendered its rows and left
+    # every cell blank, because the daemon liveness metrics behind it carry a
+    # current value and no retained history, and a view queries a time range.
+    # What survived of it folded into the vCenter host view below.
     ("Rapid vSAN Host Resources", "rapid-vsan-host-resources-help", [
-        ("vSAN service health",           "vSphere_Host_vSAN_Services",    {"w":10,"x":3,"h":6,"y":1}),
-        ("Host load - from vCenter",      "vSphere_Host_Uplinks_and_Load", {"w":12,"x":1,"h":7,"y":7}),
-        ("vSAN daemon memory",            "vSAN_Host_Memory",              {"w":12,"x":1,"h":8,"y":14}),
-        ("Physical CPU - per pCPU",       "vSAN_Host_CPU",                 {"w":12,"x":1,"h":8,"y":22}),
+        ("Host health and load",          "vSphere_Host_Uplinks_and_Load", {"w":10,"x":3,"h":7,"y":1}),
+        ("vSAN daemon memory",            "vSAN_Host_Memory",              {"w":12,"x":1,"h":8,"y":8}),
+        ("Physical CPU - per pCPU",       "vSAN_Host_CPU",                 {"w":12,"x":1,"h":8,"y":16}),
     ]),
 ]
 

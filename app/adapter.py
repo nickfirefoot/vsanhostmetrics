@@ -54,17 +54,29 @@ def get_adapter_definition() -> AdapterDefinition:
     with Timer(logger, "Get Adapter Definition"):
         d = AdapterDefinition(ADAPTER_KIND, ADAPTER_NAME)
 
+        # The descriptions carry WORKED EXAMPLES, not just prose. Both of these
+        # fields are filled in wrong on a first attempt often enough to be
+        # worth the words: the username gets typed without its domain, and the
+        # server gets an IP, which then fails certificate hostname matching in
+        # a way that looks like an untrusted chain rather than a wrong name.
         d.define_string_parameter(
             VC_HOST_PARAM,
             label="vCenter Server",
-            description="FQDN or IP of the vCenter Server managing the vSAN cluster.",
+            description="FQDN of the vCenter Server managing the vSAN cluster. "
+                        "Example: vc01.example.com -- NOT an IP address and NOT "
+                        "a URL. An IP works only if certificate verification is "
+                        "off; with it on, an IP fails hostname matching and the "
+                        "error looks identical to an untrusted certificate.",
             required=True,
         )
         d.define_string_parameter(
             VC_USER_PARAM,
             label="vCenter username",
-            description="Read-only is sufficient. Needs System.View and System.Read "
-                        "propagated from the vCenter root -- no cluster edit rights.",
+            description="Must include the domain. Example: "
+                        "vsanmon@vsphere.local -- a bare username without "
+                        "@vsphere.local will not authenticate. Read-only is "
+                        "sufficient: System.View and System.Read propagated "
+                        "from the vCenter root, no cluster edit rights.",
             required=True,
         )
         # NOTE: lib 1.1.0 has no define_bool_parameter; an enum of "true"/"false"
@@ -73,7 +85,13 @@ def get_adapter_definition() -> AdapterDefinition:
             VERIFY_PARAM,
             values=["true", "false"],
             label="Verify vCenter certificate",
-            description="Leave enabled. Disable only for initial bring-up.",
+            description="Set to false unless you have imported the VMCA root "
+                        "into the adapter's trust store. vCenter presents a "
+                        "VMCA-issued certificate (CN=CA, DC=vsphere, DC=local) "
+                        "that the adapter's base image does not trust, so the "
+                        "default of true does NOT work unmodified. If you do "
+                        "leave it true, the server field above must hold the "
+                        "FQDN rather than an IP.",
             default="true",
         )
         # Special key read by the collector to size the adapter container.
