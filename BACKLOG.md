@@ -947,3 +947,73 @@ rather than a cleanup. `THRESHOLDS` in `app/constants.py` already carries the
 Affected metrics are those whose official description begins "Percentage of"
 -- `portRxDrops`, `portTxDrops`, `pauseCount`, `rxPacketsLossRate`,
 `txPacketsLossRate`, `tcpRcvdupackRate` and the other `*Rate` ratios.
+
+## Dashboard refinement, 2026-10-01
+
+Full analysis in `content/DASHBOARD-REFINEMENT.md`. Summary of what changed and
+what was learned.
+
+### Confirmed: pak content import preserves view widget bindings
+
+The last open question about the delivery path, and it is now answered by
+installing. Importing a dashboard through the Operations **UI** strips
+`viewDefinitionId`, `selfProvider` and the provider's pinned resource; the
+**pak content path does not**. The 1.3.1 install populated with no manual
+re-wiring. The manual-import fallback bundle shipped with 1.3.1 is therefore
+insurance rather than a likely path.
+
+### Two portability defects in the cloned dashboard template
+
+Both were instance- or session-specific state copied verbatim from the export.
+
+**The provider's pinned root carried a browser-session handle.**
+
+```json
+{"resourceId": "resource:id:0_::_", "resourceName": "VCF World",
+ "resourceKindId": "002010VcfAdapterVCFWorld",
+ "id": "Ext.vcops.chrome.model.Resource-592"}
+```
+
+`id` is an ExtJS client-side model reference: it names a JavaScript object
+inside one page load. Stripped at build time. The rest is kept, and the
+document's top-level `entries` table shows why that is safe -- it resolves
+`resource:id:0_::_` by **kind key** (`VCFWorld` / `VcfAdapter`) with no
+instance identifier anywhere, so the pin is portable.
+
+**Every widget's `states` blob was keyed to the wrong widget.** The key is
+`permTableView_widget_<tabId>_<widgetId>`, and cloning copied it verbatim, so
+it named a dashboard and a widget absent from the output. Operations found no
+saved state for the widget it was drawing and fell back to defaults, which is
+why a cloned selector showed a column the hand-built original had hidden. Now
+rewritten to the generated identities; 441 references verified self-consistent.
+
+### mp-build cannot be run from a script without a pty
+
+It draws progress spinners, so it probes the terminal and **blocks when stdin
+is not one**, printing only `Warning: Input is not a terminal (fd=0).` Two
+builds were lost to this, one after fifteen minutes, with an empty log both
+times because the output was also sitting in a pipe buffer.
+`tools/mp_build_pty.py` allocates a pty, strips the escape sequences and
+returns the child's exit status.
+
+### Still open, carried forward
+
+- **`VsanDomWorld` is 243 of 739 objects and every one of its three metrics is
+  always zero.** `VsanHostVsansparse` is 21 metrics, all zero.
+  `VsanVirtualDisk` is 60 objects for one useful metric. A per-family toggle
+  would cut the collection by about a third at no loss of signal. The toggle
+  was already on this list; the measurement is new.
+- **`VsanCpu` populates `maxRunPct` and `maxUsedPct` and leaves `avgRunPct`,
+  `avgUsedPct`, `readyPct`, `runPct`, `usedPct` at zero.** Five of seven fields
+  never move. Either upstream does not fill them or this pack reads them
+  wrong, and that has not been determined.
+- **zDOM maximum latency reads in whole seconds** -- 9.7 s read, 2.7 s write.
+  Not credible as an interval maximum; very likely a since-boot high-water
+  mark the Performance Service does not document as such. The help text says
+  so and points at the averages.
+- **Shared cluster scope across the Rapid dashboards** needs the
+  `dashboardNavigations` block, which is empty in the only working export
+  available to clone. One hand-built example exported from the UI would be
+  enough to generate it for all seven. Until then each dashboard has its own
+  selector with `selectFirstRow` enabled, which auto-populates on a
+  single-cluster instance.

@@ -97,6 +97,159 @@ NOTES = {
  "iopsWrite": "Write operations per second.",
 }
 
+# ---------------------------------------------------------------------------
+# Added during the dashboard refinement. Every note below was written against
+# the live three-host ESA cluster, and where a measured value is quoted it is
+# from the collection of 2026-10-01.
+# ---------------------------------------------------------------------------
+NOTES.update({
+ # ---- the cluster selector ----------------------------------------------
+ "Configuration|Name": "The cluster name, from the vCenter adapter rather than this pack. Selecting a row here drives every other panel on the screen.",
+ # ---- capacity -----------------------------------------------------------
+ "free": "Unused vSAN capacity. Read it next to <b>Total</b>, not alone: the same free figure means very different things on a 10 TB and a 1 PB cluster.",
+ "used": "Consumed vSAN capacity, after deduplication and compression.",
+ "total": "Usable vSAN capacity. Already excludes the overhead vSAN reserves for itself, so it is smaller than the sum of the disks.",
+ "dedupRatio": "Space saving from deduplication and compression, expressed as a ratio scaled by 100 -- <b>134 means 1.34:1</b>, not 134:1. A ratio that falls sharply usually means new data that does not deduplicate, not a fault.",
+ "savedByDedup": "Bytes not written because deduplication and compression removed them. The absolute saving behind the ratio beside it.",
+ # ---- DOM, shared across client, owner and component manager -------------
+ "latencyAvgRead": "Average read latency at this layer. Compare the same column across the client, owner and component manager views: the layer where the number first becomes large is the layer to investigate.",
+ "latencyAvgWrite": "Average write latency at this layer. On ESA a write is acknowledged after it is logged, so this is usually far lower than the component manager's figure beneath it.",
+ "latencyMaxRead": "Worst read latency in the interval. Read beside the average: a large gap is a tail-latency problem, which guests feel as stalls even when the average looks fine.",
+ "latencyMaxWrite": "Worst write latency in the interval. Measured here at <b>14.9 ms against a 957 microsecond average</b> -- a fifteenfold tail on an idle cluster, and the kind of thing an average hides completely.",
+ "latencyStddevWrite": "Spread of write latency. High spread with a low average means the work is bimodal: most operations fast, some very slow.",
+ "congestion": "vSAN's own backpressure signal, raised when a layer cannot absorb the offered load and asks the layer above to slow down. <b>Zero on a healthy cluster</b>, and it reads zero here. Any sustained non-zero value is the single most important number on the screen.",
+ "readCongestion": "Backpressure attributed to reads.",
+ "writeCongestion": "Backpressure attributed to writes.",
+ "unmapCongestion": "Backpressure attributed to unmap and space-reclamation work.",
+ "oio": "Outstanding IO: operations issued and not yet completed. Latency multiplied by nothing tells you why it is high -- this does. High latency with high outstanding IO is queueing, high latency with low outstanding IO is a slow device.",
+ "oioWrite": "Outstanding write operations.",
+ "iops": "Total operations per second at this layer, reads and writes together.",
+ "throughputRead": "Bytes per second read at this layer.",
+ "throughputWrite": "Bytes per second written at this layer.",
+ "tputRead": "Bytes per second read. The owner layer names its throughput columns differently from the client layer; the quantity is the same.",
+ "tputWrite": "Bytes per second written.",
+ # ---- DOM owner ----------------------------------------------------------
+ "highOIODurationPercentWrite": "Proportion of the interval the owner spent with its write queue above its high-watermark. <b>Measured at 3% here on an otherwise idle cluster.</b> This is the metric vCenter surfaces as a top-line vSAN indicator, and it moves well before average latency does.",
+ "owner2PCCommitLatencyAvgUs": "Time to commit a write across its replicas using two-phase commit. This is the irreducible cost of making a write durable in more than one place, and it sets the floor under every write latency above it.",
+ "writeLeafOwnerLatencyLocal": "Write latency for replicas that live on <b>this</b> host, so no network is involved.",
+ "writeLeafOwnerLatencyRemote": "Write latency for replicas on <b>other</b> hosts, which includes the network round trip. Read as a pair with the local column: remote should be the slower of the two, and when it is not, the local disks are the problem.",
+ "readLeafOwnerLatencyLocal": "Read latency served from this host's own disks. <b>Measured at 1392 microseconds here against 905 for remote reads</b> -- local slower than across the network, which inverts the expected order and points at a local device rather than the fabric.",
+ "readLeafOwnerLatencyRemote": "Read latency served from another host's disks, network included.",
+ "serverSwitchCount": "Lifetime count of ownership changes: how often coordination of an object moved from one host to another. <b>Cumulative since boot</b>, so the value means little; a rate that climbs means objects are being handed around, which costs latency.",
+ # ---- DOM owner network scheduler ---------------------------------------
+ "numNetSchedRollingAvgLatUs": "The rolling average latency vSAN's own scheduler is working from. This is the input to its throttling decisions, not an observation of guest latency.",
+ "numNetSchedGuestLTLatUs": "Guest long-tail latency as the scheduler measures it. What it is trying to protect.",
+ "numNetSchedLowBandThreshUs": "The latency threshold at which the scheduler moves a host into its low band. Context for the band counters -- without it they are unreadable.",
+ "numNetSchedLowBand": "Times the scheduler placed this host in its <b>low</b> band, meaning it decided latency was bad enough to throttle rebuild and resync traffic hard to protect guest IO.",
+ "numNetSchedMidBand": "Times the scheduler placed this host in its <b>middle</b> band: some throttling, latency elevated but not severe.",
+ "numNetSchedLowBandSec": "Seconds spent in the low band. More useful than the count beside it -- one long episode and many brief ones are different problems.",
+ "numNetSchedMidBandSec": "Seconds spent in the middle band.",
+ "numNetSchedLowToMidBand": "Transitions from the low band up to the middle band, meaning conditions improved.",
+ "numNetSchedMidToLowBand": "Transitions from the middle band down to the low band, meaning conditions worsened. A host oscillating between bands is unstable in a way neither band counter alone reveals.",
+ "numNetSchedSeenTotalTpBps": "Total throughput the scheduler observed, guest and rebuild traffic together.",
+ "numNetSchedSeenNonResyncTpBps": "Throughput excluding resync. Subtract it from the total to see what rebuild traffic is actually consuming -- the pair answers 'is the rebuild hurting the guests'.",
+ "numNetSchedControllerIopsLimit": "The IOPS ceiling the scheduler is currently imposing. A limit far above actual load means it is not intervening.",
+ # ---- component manager queueing ----------------------------------------
+ "vmdiskQueueDepthWrite": "Queue depth for writes to virtual disk objects at the component manager. Depth is the cause; the latency columns are the effect.",
+ "vmdiskDispatchedCostWrite": "Accumulated cost of dispatched virtual disk writes, in vSAN's internal scheduling units. Not comparable to a time or a byte count -- useful for comparing hosts against each other, not against a threshold.",
+ "namespaceDispatchedCostWrite": "The same cost measure for namespace objects, which hold VM configuration rather than guest data. Large values here with small virtual disk values mean the work is metadata, not guest IO.",
+ # ---- resync -------------------------------------------------------------
+ "iopsResyncRead": "Read operations per second performed to rebuild redundancy. <b>Zero unless something is actually resyncing</b>, which is the normal and desirable reading.",
+ "tputResyncRead": "Bytes per second read for rebuild.",
+ "latAvgResyncRead": "Average latency of rebuild reads.",
+ "iopsRecWrite": "Write operations per second performed to restore redundancy -- the other half of a rebuild.",
+ "throughputRecWrite": "Bytes per second written to restore redundancy. Divide the outstanding work by this to estimate how long a rebuild has left.",
+ "latencyAvgRecWrite": "Average latency of recovery writes.",
+ "numPendingResyncJobs": "Rebuild jobs queued and not yet started. <b>The single best measure of outstanding risk</b>: until this reaches zero, some data is below its intended redundancy.",
+ "numRunningResyncJobs": "Rebuild jobs currently executing. vSAN limits concurrency deliberately, so a large pending count with a small running count is normal pacing, not a stall.",
+ "numSuspendedResyncJobs": "Rebuild jobs vSAN has paused, usually to protect guest IO. <b>Sustained non-zero here with a non-zero pending count means rebuilds are not progressing</b>, and the cluster is staying at reduced redundancy longer than it needs to.",
+ "numInflightPriorityResyncJobs": "Rebuilds vSAN has prioritised, which it does when data is at genuine risk rather than merely non-compliant.",
+ "numInflightSharedResyncJobs": "Rebuilds running at normal priority.",
+ "numPendingDecomResyncJobs": "Rebuilds queued because a host or disk is being evacuated. Non-zero means a maintenance operation is waiting on data movement.",
+ "numPendingFullResyncJobs": "Queued rebuilds that must copy a whole component rather than a delta. These are the expensive ones.",
+ "numRunningFullResyncJobs": "Full-component rebuilds currently running.",
+ "avgResyncParallelism": "How many rebuild operations vSAN is running at once on average. Low parallelism with a deep pending queue is the signature of throttling.",
+ "numCompleteResyncOps": "Lifetime count of completed rebuild operations. <b>Cumulative since boot</b>; the trend tells you whether progress is being made.",
+ "numCompleteFullResyncOps": "Lifetime count of completed full-component rebuilds.",
+ # ---- segment cleaning ---------------------------------------------------
+ "iopsSegCleanerUnmap": "Operations per second performed by the segment cleaner. ESA writes to a log and must later reclaim partially-used segments; this is that housekeeping, and it competes with guest IO for the same disks.",
+ "latencyAvgSegCleanerUnmap": "Average latency of segment cleaning work.",
+ "latencyMaxSegCleanerUnmap": "Worst segment cleaning latency in the interval. <b>Measured at 370 milliseconds here against a 1.3 millisecond average.</b> Housekeeping stalling for a third of a second is worth knowing about, and no other screen in this pack would show it.",
+ "latencyStddevSegCleanerUnmap": "Spread of segment cleaning latency.",
+ "throughputSegCleanerUnmap": "Bytes per second the segment cleaner is moving. This is write amplification made visible: capacity the disks are spending on vSAN's own bookkeeping rather than on guest data.",
+ "segCleanerUnmapLeafOwnerMaxLatencyAvgUs": "Worst average latency any single replica contributed to segment cleaning. Isolates one bad disk inside an otherwise healthy cleaning cycle.",
+ "iopsUnmap": "Space-reclamation operations per second, including those originated by guests trimming their filesystems.",
+ "latencyAvgUnmap": "Average latency of unmap operations.",
+ "latencyMaxUnmap": "Worst unmap latency in the interval.",
+ "unmapCount": "Lifetime count of unmap operations. <b>Cumulative since boot.</b>",
+ # ---- zDOM ---------------------------------------------------------------
+ "readLatencyMaxUs": "Worst read latency recorded in the zDOM layer. <b>Reads 9.7 seconds here, which is not credible as an interval maximum</b> -- it is very likely a since-boot high-water mark that the Performance Service does not document as such. Treat a large value as unverified until the behaviour is confirmed, and use the average column for decisions.",
+ "writeLatencyMaxUs": "Worst write latency recorded in the zDOM layer. Subject to the same caveat as the read column beside it.",
+ "unmapLatencyMaxUs": "Worst unmap latency recorded in the zDOM layer.",
+ "maxDiscUsedPct": "Highest proportion of the log structure in use. <b>Measured at 32% here.</b> As this climbs the segment cleaner has to work harder and write amplification rises, so it is a leading indicator for the latency columns on the segment cleaning view.",
+ "latAvgTotalOpIO": "Average latency of all zDOM operations together.",
+ "latAvgTxnBank": "Average latency of transaction bank operations -- the in-memory staging area a write passes through before it is logged.",
+ "rateTotalCacheRef": "Rate of references to zDOM's metadata cache, all kinds together. Context for the breakdown columns beside it rather than a health signal.",
+ "rateBankFlushTotalCacheRef": "Cache references caused by flushing the transaction bank to disk.",
+ "rateSegCleaningCtxDataTotalCacheRef": "Cache references caused by segment cleaning. Rising here while guest IOPS is flat means housekeeping is taking a larger share of the metadata path.",
+ "rateTxnPrefetchTotalCacheRef": "Cache references from prefetching metadata ahead of need. Effective prefetch is why read latency stays low; this is the work behind that.",
+ "rateTxnLookupCacheRef": "Cache references from metadata lookups that could not be satisfied by prefetch.",
+ "rateTxnReadWrite": "Ratio of read to write transactions in the zDOM layer. Characterises the workload rather than its health.",
+ "checkpointWorkerWakeupMs": "Interval at which the checkpoint worker wakes to persist metadata. Steady by design; a change means configuration changed or the worker is falling behind.",
+ # ---- vmknic -------------------------------------------------------------
+ "portRxpkts": "Packets received on this kernel port. <b>Cumulative since boot</b>, and context for the loss rates rather than a fault in itself.",
+ # ---- CMMDS --------------------------------------------------------------
+ "rdtTx": "Cluster directory messages sent by this host. CMMDS is how hosts agree on cluster membership and object placement; if it cannot talk, the cluster partitions, and that happens before any IO metric moves.",
+ "rdtRx": "Cluster directory messages received.",
+ "rdtTxThroughput": "Bytes per second of outbound cluster directory traffic. Small and steady by nature -- a sudden rise usually means membership churn.",
+ "rdtRxThroughput": "Bytes per second of inbound cluster directory traffic.",
+ "groupTxUcast": "Unicast membership messages sent. Modern vSAN uses unicast for membership, so this is the column that should be moving.",
+ "groupRx": "Membership messages received.",
+ "groupTxUcastThroughput": "Bytes per second of outbound unicast membership traffic.",
+ "groupRxThroughput": "Bytes per second of inbound membership traffic.",
+ "groupTxMcast": "Multicast membership messages sent. <b>Zero is expected</b> on any cluster since vSAN 6.6, which moved membership to unicast. Non-zero means a legacy configuration.",
+ "groupTxMcastThroughput": "Bytes per second of outbound multicast membership traffic. Expected to be zero.",
+ # ---- host memory --------------------------------------------------------
+ "kernelConsumedSize": "Memory the vSAN kernel modules are actually using. <b>Measured at 2.14 GB against 21.0 GB reserved</b>, so roughly a tenth of the reservation.",
+ "kernelReservedSize": "Memory reserved for the vSAN kernel modules. Reserved is not consumed -- compare the two columns rather than reading either alone.",
+ "uwConsumedSize": "Memory consumed by vSAN user-world processes in total.",
+ "uwReservedSize": "Memory reserved for vSAN user-world processes.",
+ "clomdConsumedSize": "Memory used by <b>clomd</b>, which decides where objects and their replicas are placed. Growth here tracks object count, not IO.",
+ "clomdReservedSize": "Memory reserved for clomd.",
+ "cmmdsdConsumedSize": "Memory used by <b>cmmdsd</b>, the cluster directory service that maintains membership and object metadata.",
+ "cmmdsdReservedSize": "Memory reserved for cmmdsd.",
+ "vsanmgmtdConsumedSize": "Memory used by the vSAN management daemon, which answers the API calls this pack itself makes.",
+ "epdConsumedSize": "Memory used by <b>epd</b>, which handles object distribution.",
+ "osfsdConsumedSize": "Memory used by <b>osfsd</b>, the object filesystem daemon that presents vSAN objects as namespaces.",
+ "vsandevicemonitordConsumedSize": "Memory used by the device monitor, which watches disks for failure and degradation.",
+ # ---- host CPU -----------------------------------------------------------
+ "pcpuUsedPct": "Proportion of this physical CPU that was used. Listed per CPU rather than per host, so a single hot CPU is visible instead of averaged away.",
+ "pcpuUtilPct": "Proportion of this physical CPU that was utilised. Differs from used where frequency scaling or hyperthreading is in play; read the two together.",
+ "coreUtilPct": "Utilisation of the physical core this CPU belongs to. A core near saturation while its CPUs look moderate is hyperthread contention.",
+ # ---- borrowed from the vCenter adapter ---------------------------------
+ "net|errorsRx_summation": "Inbound errors summed across <b>every</b> uplink on the host, counted by vCenter rather than by this pack. This pack only measures uplinks that carry vSAN traffic, which on this cluster is two of four per host, so a standby uplink going bad is invisible to it. This column is here to close that gap.",
+ "net|droppedRx_summation": "Inbound packets dropped across every uplink on the host.",
+ "net|errorsTx_summation": "Outbound errors across every uplink on the host.",
+ "net|droppedTx_summation": "Outbound packets dropped across every uplink on the host.",
+ "net|usage_average": "Total host network throughput, all uplinks and all traffic types. Context for the error columns and a check on whether vSAN is a large or a small share of what this host is doing.",
+ "cpu|usage_average": "Host CPU usage from vCenter. On the screen so that vSAN latency can be read against host load: a saturated host produces vSAN latency that is not a vSAN problem.",
+ "cpu|capacity_contentionPct": "Proportion of time virtual machines waited for CPU. <b>This, not usage, is the contention signal</b> -- a host can be busy without anything waiting, and can make things wait while looking only moderately busy.",
+ "mem|host_usagePct": "Proportion of host memory consumed.",
+ "mem|swapinRate_average": "Rate at which the host is reading memory back from disk. <b>Any sustained non-zero value is serious</b>: it means memory was overcommitted far enough to page, and every latency figure on every other panel becomes unreliable while it continues.",
+ "sys|uptime_latest": "Host uptime. Relevant here because many counters in this pack are cumulative since boot, so a recently rebooted host has small totals for reasons that have nothing to do with health.",
+ # ---- vSAN service health, from vCenter ---------------------------------
+ "health|reports|vsan|status": "vCenter's overall vSAN health verdict for this host. Higher is better; it reads 3 on all three hosts here.",
+ "health|reports|vsan|clomdLiveness": "Whether <b>clomd</b> is answering. 1 is alive. This pack can measure how much memory clomd consumes but has no way to tell whether it is responding, and vCenter checks exactly that, so the pair is more useful than either half.",
+ "health|reports|vsan|cmmdsdLiveness": "Whether <b>cmmdsd</b> is answering. 1 is alive. If this drops the host is on its way out of the cluster.",
+ "health|reports|vsan|epdLiveness": "Whether <b>epd</b> is answering. 1 is alive.",
+ "health|reports|vsan|httpSvcResp": "Whether the host's vSAN HTTP service is responding. 1 is responding. This is the service the Performance Service queries, so a zero here also means this pack is about to stop collecting from that host.",
+ "health|reports|memory|totalCorrectedErrorsSinceBoot": "Memory errors the hardware detected and corrected. <b>Cumulative since boot.</b> Corrected errors are not yet a failure, but a count that climbs predicts one.",
+ "health|reports|memory|totalUncorrectedErrorsSinceBoot": "Memory errors the hardware could not correct. <b>Any non-zero value is a hardware fault</b> and outranks everything else on the screen.",
+ "health|reports|psod|psod7DaysCount": "Purple diagnostic screens in the last seven days. Non-zero means this host crashed, and any latency history either side of that is not comparable.",
+ "health|reports|hostd|status": "Health of <b>hostd</b>, the host management agent. Higher is better.",
+ "health|reports|vpxa|status": "Health of <b>vpxa</b>, the agent connecting this host to vCenter. If this is unhealthy, vCenter's own figures for the host are suspect, including the borrowed columns on this view.",
+})
+
 PAGE = """<!DOCTYPE html>
 <html>
 <head>
@@ -136,7 +289,8 @@ def body_for(title, kind, columns):
 def main() -> None:
     os.makedirs(OUT, exist_ok=True)
     combined = []
-    for title, kind, columns in build_view.VIEWS:
+    for entry in build_view.VIEWS:
+        title, kind, columns = entry[0], entry[1], entry[2]
         body = body_for(title, kind, columns)
         combined.append(body)
         name = title.replace(" ", "_")

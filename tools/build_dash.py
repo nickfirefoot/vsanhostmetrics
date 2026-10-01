@@ -32,60 +32,122 @@ TEMPLATE = "docs/assets/dashboard.rapid-network-v4.json"
 OUT = os.path.expanduser("~/ops-content/out")
 HELP = os.path.expanduser("~/ops-content/out/help")
 
-# view GUIDs, from tools/build_view.py
-V = {
-    "vSAN_Cluster_Capacity": '80f0f637-d7a6-5252-aaba-6c9d04772960',
-    "vSAN_Cluster_DOM_Client": '961aa3db-a230-5c2d-8ce5-00b666bdcdbd',
-    "vSAN_Cluster_DOM_Component_Manager": 'b597d3fd-2fbb-546e-88f8-3f6d42537dcf',
-    "vSAN_Cluster_RDT": 'c972e782-317e-55b8-b5db-400c703ccfa7',
-    "vSAN_Cluster_Resync": 'e12fcf23-eb55-5555-9bf9-b7c4c91d1135',
-    "vSAN_Clusters": '057a006b-7ad1-5df7-af19-832b788b7b16',
-    "vSAN_ESA_Disk_Physical_Layer": '4edb922b-10e6-5f18-b0d8-77cdba6df121',
-    "vSAN_ESA_Disks": '74e1354d-757f-5ca7-a9e4-25e01718c627',
-    "vSAN_Host_DOM": 'bf403bc1-f535-5b44-b5d2-219cec8e662d',
-    "vSAN_Host_Network": 'd46f58a8-e3a4-519f-9124-ac8ff83871c5',
-    "vSAN_Host_TCP_Health": 'c10ec3f1-e693-5b3d-af81-d2d19de1c341',
-    "vSAN_RDT_Transport_Per_Host": 'c51f5531-ccea-543d-9a73-0e0d5e359d1a',
-    "vSAN_VM_Storage": '24773067-9b6e-536a-a39c-46353dfd5068',
-    "vSAN_pNIC_Errors": '09f4cb2e-f52c-412a-826d-ee04a3d07d0f',
-}
+# View GUIDs are DERIVED from build_view, not copied. They were previously
+# a hand-maintained table here, which is a drift waiting to happen: rename a
+# view and its uuid5 moves, and a stale literal points a widget at a GUID
+# that no longer exists. Importing the generator makes that impossible.
+import sys
+sys.path.insert(0, "tools")
+sys.path.insert(0, "app")
+import build_view                                        # noqa: E402
 
-# (title, view-key, gridster)  -- the cluster selector is added automatically
+V = {entry[0].replace(" ", "_"): build_view.guid_for(entry[0])
+     for entry in build_view.VIEWS}
+
+# (panel title, view key, gridster coords). The cluster selector is added
+# automatically as the provider, and the help panel is appended at the bottom.
+#
+# Refined 2026-10-01 against a live collection. Three problems were being
+# fixed, all of them visible only once the collected data was compared with
+# what the screens actually showed:
+#
+#   1. Resync had NO content of its own -- all three of its views also
+#      appeared on Overview, so it was a duplicate screen. It now leads with
+#      the resync JOB QUEUE, which nothing had surfaced.
+#   2. The DOM owner layer was entirely absent. It returns 272 metrics live,
+#      87 of which move, and it is the layer where distributed-write cost
+#      actually appears. Three new views cover it.
+#   3. zDOM, the ESA write path, was absent. Segment cleaning was measured at
+#      370 ms worst-case latency against a 1.3 ms average and no screen in
+#      the pack could have shown it.
 DASHBOARDS = [
     ("Rapid vSAN Overview", "rapid-vsan-overview-help", [
-        ("Capacity",                  "vSAN_Cluster_Capacity",             {"w":10,"x":3,"h":5,"y":1}),
-        ("Front end - what VMs feel", "vSAN_Cluster_DOM_Client",           {"w":12,"x":1,"h":6,"y":6}),
-        ("Back end - the disks",      "vSAN_Cluster_DOM_Component_Manager",{"w":12,"x":1,"h":6,"y":12}),
-        ("Transport - RDT",           "vSAN_Cluster_RDT",                  {"w":12,"x":1,"h":6,"y":18}),
-        ("Rebuild activity",          "vSAN_Cluster_Resync",               {"w":12,"x":1,"h":6,"y":24}),
+        ("Capacity",                      "vSAN_Cluster_Capacity",              {"w":10,"x":3,"h":5,"y":1}),
+        ("Front end - what VMs feel",     "vSAN_Cluster_DOM_Client",            {"w":12,"x":1,"h":6,"y":6}),
+        ("Coordination - the owner",      "vSAN_Cluster_DOM_Owner",             {"w":12,"x":1,"h":6,"y":12}),
+        ("Back end - the disks",          "vSAN_Cluster_DOM_Component_Manager", {"w":12,"x":1,"h":6,"y":18}),
+        ("Transport - RDT",               "vSAN_Cluster_RDT",                   {"w":12,"x":1,"h":6,"y":24}),
+        ("Host services - are they up?",  "vSphere_Host_vSAN_Services",         {"w":12,"x":1,"h":6,"y":30}),
     ]),
     ("Rapid vSAN Network", "rapid-vsan-network-help", [
-        ("RDT latencies",   "vSAN_RDT_Transport_Per_Host", {"w":10,"x":3,"h":9,"y":1}),
-        ("TCP error types", "vSAN_Host_TCP_Health",        {"w":12,"x":1,"h":8,"y":10}),
-        ("pNIC stats",      "vSAN_pNIC_Errors",            {"w":12,"x":1,"h":9,"y":18}),
-        ("Host network",    "vSAN_Host_Network",           {"w":12,"x":1,"h":7,"y":27}),
+        ("RDT latencies - per host",      "vSAN_RDT_Transport_Per_Host", {"w":10,"x":3,"h":9,"y":1}),
+        ("RDT latencies - per vmknic",    "vSAN_vmknic_RDT_Latency",     {"w":12,"x":1,"h":7,"y":10}),
+        ("TCP error types",               "vSAN_Host_TCP_Health",        {"w":12,"x":1,"h":8,"y":17}),
+        ("pNIC stats - vSAN uplinks",     "vSAN_pNIC_Errors",            {"w":12,"x":1,"h":9,"y":25}),
+        ("vmknic - the kernel port",      "vSAN_vmknic",                 {"w":12,"x":1,"h":7,"y":34}),
+        ("Host network - all vSAN",       "vSAN_Host_Network",           {"w":12,"x":1,"h":7,"y":41}),
+        ("Every uplink - from vCenter",   "vSphere_Host_Uplinks_and_Load", {"w":12,"x":1,"h":7,"y":48}),
+        ("CMMDS - cluster membership",    "vSAN_CMMDS_Network",          {"w":12,"x":1,"h":7,"y":55}),
     ]),
     ("Rapid vSAN Storage", "rapid-vsan-storage-help", [
-        ("ESA disks - vSAN layer",     "vSAN_ESA_Disks",               {"w":10,"x":3,"h":9,"y":1}),
-        ("ESA disks - physical layer", "vSAN_ESA_Disk_Physical_Layer", {"w":12,"x":1,"h":8,"y":10}),
-        ("VM storage",                 "vSAN_VM_Storage",              {"w":12,"x":1,"h":9,"y":18}),
+        ("ESA disks - vSAN layer",        "vSAN_ESA_Disks",                  {"w":10,"x":3,"h":9,"y":1}),
+        ("ESA disks - physical layer",    "vSAN_ESA_Disk_Physical_Layer",    {"w":12,"x":1,"h":8,"y":10}),
+        ("Back end - per host",           "vSAN_Host_DOM_Component_Manager", {"w":12,"x":1,"h":8,"y":18}),
+        ("Capacity",                      "vSAN_Cluster_Capacity",           {"w":12,"x":1,"h":5,"y":26}),
+        ("VM storage - per controller",   "vSAN_VM_Storage",                 {"w":12,"x":1,"h":9,"y":31}),
+        ("VM latency - per VM",           "vSAN_VM_Latency",                 {"w":12,"x":1,"h":8,"y":40}),
     ]),
     ("Rapid vSAN DOM", "rapid-vsan-dom-help", [
-        ("Cluster - client",         "vSAN_Cluster_DOM_Client",           {"w":10,"x":3,"h":7,"y":1}),
-        ("Cluster - comp manager",   "vSAN_Cluster_DOM_Component_Manager",{"w":12,"x":1,"h":6,"y":8}),
-        ("Per host - DOM client",    "vSAN_Host_DOM",                     {"w":12,"x":1,"h":8,"y":14}),
+        ("Cluster - client",              "vSAN_Cluster_DOM_Client",            {"w":10,"x":3,"h":7,"y":1}),
+        ("Cluster - owner",               "vSAN_Cluster_DOM_Owner",             {"w":12,"x":1,"h":6,"y":8}),
+        ("Cluster - component manager",   "vSAN_Cluster_DOM_Component_Manager", {"w":12,"x":1,"h":6,"y":14}),
+        ("Per host - client",             "vSAN_Host_DOM",                      {"w":12,"x":1,"h":7,"y":20}),
+        ("Per host - owner",              "vSAN_Host_DOM_Owner",                {"w":12,"x":1,"h":8,"y":27}),
+        ("Per host - component manager",  "vSAN_Host_DOM_Component_Manager",    {"w":12,"x":1,"h":8,"y":35}),
+        ("Owner network scheduler",       "vSAN_Host_DOM_Owner_Scheduler",      {"w":12,"x":1,"h":8,"y":43}),
     ]),
     ("Rapid vSAN Resync", "rapid-vsan-resync-help", [
-        ("Rebuild activity",      "vSAN_Cluster_Resync",     {"w":10,"x":3,"h":7,"y":1}),
-        ("Guest impact",          "vSAN_Cluster_DOM_Client", {"w":12,"x":1,"h":7,"y":8}),
-        ("Back end",              "vSAN_Cluster_DOM_Component_Manager", {"w":12,"x":1,"h":6,"y":15}),
+        ("Jobs outstanding - the risk",   "vSAN_Cluster_Resync_Jobs",           {"w":10,"x":3,"h":8,"y":1}),
+        ("Rebuild IO rates",              "vSAN_Cluster_Resync",                {"w":12,"x":1,"h":6,"y":9}),
+        ("Guest impact - front end",      "vSAN_Cluster_DOM_Client",            {"w":12,"x":1,"h":6,"y":15}),
+        ("Back end during rebuild",       "vSAN_Cluster_DOM_Component_Manager", {"w":12,"x":1,"h":6,"y":21}),
+        ("Is vSAN throttling itself?",    "vSAN_Host_DOM_Owner_Scheduler",      {"w":12,"x":1,"h":8,"y":27}),
+        ("Segment cleaning",              "vSAN_Segment_Cleaning_Per_Host",     {"w":12,"x":1,"h":8,"y":35}),
+    ]),
+    ("Rapid vSAN ESA Write Path", "rapid-vsan-esa-write-path-help", [
+        ("zDOM - cluster",                "vSAN_zDOM_Cluster",               {"w":10,"x":3,"h":6,"y":1}),
+        ("zDOM - per host",               "vSAN_zDOM_Per_Host",              {"w":12,"x":1,"h":8,"y":7}),
+        ("Write path internals",          "vSAN_zDOM_Write_Path",            {"w":12,"x":1,"h":8,"y":15}),
+        ("Segment cleaning",              "vSAN_Segment_Cleaning_Per_Host",  {"w":12,"x":1,"h":8,"y":23}),
+        ("Back end - per host",           "vSAN_Host_DOM_Component_Manager", {"w":12,"x":1,"h":8,"y":31}),
+    ]),
+    ("Rapid vSAN Host Resources", "rapid-vsan-host-resources-help", [
+        ("vSAN service health",           "vSphere_Host_vSAN_Services",    {"w":10,"x":3,"h":6,"y":1}),
+        ("Host load - from vCenter",      "vSphere_Host_Uplinks_and_Load", {"w":12,"x":1,"h":7,"y":7}),
+        ("vSAN daemon memory",            "vSAN_Host_Memory",              {"w":12,"x":1,"h":8,"y":14}),
+        ("Physical CPU - per pCPU",       "vSAN_Host_CPU",                 {"w":12,"x":1,"h":8,"y":22}),
     ]),
 ]
+
+
+# The template's widgets carry a `states` blob holding column visibility,
+# keyed by the dashboard and widget it was saved against:
+#
+#   permTableView_widget_<tabId>_<widgetId>
+#
+# Cloning copies that key verbatim, so it names a dashboard and a widget that
+# do not exist in the generated output. Operations then has no state for the
+# widget it is actually drawing and falls back to defaults, which is why a
+# cloned selector showed a column the original had hidden. The ids are plain
+# hex and hyphens, so they survive the blob's URL encoding untouched and a
+# literal substitution is enough.
+TEMPLATE_TAB = None      # discovered from the template at build time
+
+
+def restate(widget, old_tab, old_wid, new_tab, new_wid):
+    """Repoint a cloned widget's saved state at its own identity."""
+    states = widget.get("states")
+    if not states:
+        return
+    blob = json.dumps(states)
+    blob = blob.replace(old_tab, new_tab).replace(old_wid, new_wid)
+    widget["states"] = json.loads(blob)
 
 
 def receiver(template_receiver, title, view_guid, coords, tab):
     w = copy.deepcopy(template_receiver)
     wid = str(uuid.uuid4())
+    restate(w, w.get("tabId") or "", w["id"], tab, wid)
     w["id"] = wid
     w["tabId"] = tab
     w["gridsterCoords"] = dict(coords)
@@ -121,12 +183,34 @@ def build(template, name, help_file, panels):
 
     prov = copy.deepcopy(provider)
     pid = str(uuid.uuid4())
+    restate(prov, prov.get("tabId") or "", prov["id"], tab, pid)
     prov["id"] = pid
     prov["tabId"] = tab
     prov["config"]["widgetId"] = pid
     prov["title"] = prov["config"].get("title") or "Select cluster"
     prov["gridsterCoords"] = {"w": 2, "x": 1, "h": 9, "y": 1}
     prov["config"]["viewDefinitionId"] = V["vSAN_Clusters"]
+    # The template's provider carries a pinned root that came out of the
+    # browser session the dashboard was exported from:
+    #
+    #   {"resourceId": "resource:id:0_::_", "resourceName": "VCF World",
+    #    "resourceKindId": "002010VcfAdapterVCFWorld",
+    #    "id": "Ext.vcops.chrome.model.Resource-592"}
+    #
+    # `id` is an ExtJS client-side model instance reference. It identifies a
+    # JavaScript object in one page load, nothing more, and it is meaningless
+    # on any other instance or even on a later visit to the same one. Shipping
+    # it asks Operations to resolve a reference that cannot resolve, and the
+    # observed symptom was a cluster selector scoped to the wrong thing.
+    #
+    # The rest of the blob is kept: resourceKindId is a kind key rather than
+    # an instance id, and every VCF Operations instance has exactly one VCF
+    # World at the root of its hierarchy, so pinning there is portable in a
+    # way the ExtJS handle is not.
+    res = prov["config"].get("resource")
+    if isinstance(res, dict):
+        res.pop("id", None)
+        prov["config"]["resource"] = res
 
     out = [prov]
     for title, key, coords in panels:

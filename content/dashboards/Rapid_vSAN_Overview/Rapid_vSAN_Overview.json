@@ -22,9 +22,9 @@
    "description": "",
    "widgets": [
     {
-     "tabId": "c2813589-d6f4-4eb5-a4a2-dc788fb3991f",
+     "tabId": "c77ac843-b88e-4e4e-bfbc-221596d9dea6",
      "collapsed": false,
-     "id": "88c0938e-4ea0-4614-b0e3-9ec739edf581",
+     "id": "a767fb7b-fe2c-4f57-91dd-30a29380b96f",
      "gridsterCoords": {
       "w": 2,
       "x": 1,
@@ -40,10 +40,9 @@
        "resourceId": "resource:id:0_::_",
        "traversalSpecId": "",
        "resourceName": "VCF World",
-       "resourceKindId": "002010VcfAdapterVCFWorld",
-       "id": "Ext.vcops.chrome.model.Resource-592"
+       "resourceKindId": "002010VcfAdapterVCFWorld"
       },
-      "widgetId": "88c0938e-4ea0-4614-b0e3-9ec739edf581",
+      "widgetId": "a767fb7b-fe2c-4f57-91dd-30a29380b96f",
       "traversalSpecId": null,
       "refreshContent": {
        "refreshContent": true
@@ -71,9 +70,9 @@
      ]
     },
     {
-     "tabId": "c2813589-d6f4-4eb5-a4a2-dc788fb3991f",
+     "tabId": "c77ac843-b88e-4e4e-bfbc-221596d9dea6",
      "collapsed": false,
-     "id": "32f86599-387c-44c0-b247-06f344f6ab97",
+     "id": "7726db60-45ca-4e9b-a3a1-79a267a54bf6",
      "gridsterCoords": {
       "w": 10,
       "x": 3,
@@ -86,7 +85,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "32f86599-387c-44c0-b247-06f344f6ab97",
+      "widgetId": "7726db60-45ca-4e9b-a3a1-79a267a54bf6",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -115,9 +114,9 @@
      ]
     },
     {
-     "tabId": "c2813589-d6f4-4eb5-a4a2-dc788fb3991f",
+     "tabId": "c77ac843-b88e-4e4e-bfbc-221596d9dea6",
      "collapsed": false,
-     "id": "c66a29da-6aa4-48b3-9538-2c1b65f326fd",
+     "id": "79ecf82d-454d-45ae-9161-e200a44040cf",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -130,7 +129,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "c66a29da-6aa4-48b3-9538-2c1b65f326fd",
+      "widgetId": "79ecf82d-454d-45ae-9161-e200a44040cf",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -159,9 +158,9 @@
      ]
     },
     {
-     "tabId": "c2813589-d6f4-4eb5-a4a2-dc788fb3991f",
+     "tabId": "c77ac843-b88e-4e4e-bfbc-221596d9dea6",
      "collapsed": false,
-     "id": "891ee29a-eb76-456d-a011-5b239787ac0a",
+     "id": "6d1a164f-85bb-4e04-8094-562d66f1f7c3",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -170,11 +169,55 @@
      },
      "state": "",
      "type": "View",
+     "title": "Coordination - the owner",
+     "config": {
+      "refreshInterval": 300,
+      "resource": null,
+      "widgetId": "6d1a164f-85bb-4e04-8094-562d66f1f7c3",
+      "traversalSpecId": "",
+      "refreshContent": {
+       "refreshContent": true
+      },
+      "description": "",
+      "isUpdatedView": true,
+      "title": "Coordination - the owner",
+      "viewDefinitionId": "4d71fbcc-a7c2-5f19-8940-b1601efcb0d1",
+      "titleLocalized": "Coordination - the owner",
+      "viewType": "LIST",
+      "chartViewItems": [],
+      "selectFirstRow": {
+       "selectFirstRow": false
+      },
+      "viewDetails": "",
+      "selfProvider": {
+       "selfProvider": false
+      }
+     },
+     "height": 0,
+     "states": [
+      {
+       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-0%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-avgLatency1%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A115%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-maxLatency2%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A109%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txQLatAvg3%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A136%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txQLatMax4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-txSbSpaceMin5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-rxSbSpaceMin6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-kaReset7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264-column-numReadyDelay8%25255Ehidden%25253Db%2525253A0",
+       "key": "permTableView_widget_fa578b63-94e2-441c-8dd2-11fd4ca2d063_fefa8db6-5e2d-4905-9d11-2f5e279ea264"
+      }
+     ]
+    },
+    {
+     "tabId": "c77ac843-b88e-4e4e-bfbc-221596d9dea6",
+     "collapsed": false,
+     "id": "f778b151-2ec1-457d-a4d4-987f1dc18fe7",
+     "gridsterCoords": {
+      "w": 12,
+      "x": 1,
+      "h": 6,
+      "y": 18
+     },
+     "state": "",
+     "type": "View",
      "title": "Back end - the disks",
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "891ee29a-eb76-456d-a011-5b239787ac0a",
+      "widgetId": "f778b151-2ec1-457d-a4d4-987f1dc18fe7",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -203,14 +246,14 @@
      ]
     },
     {
-     "tabId": "c2813589-d6f4-4eb5-a4a2-dc788fb3991f",
+     "tabId": "c77ac843-b88e-4e4e-bfbc-221596d9dea6",
      "collapsed": false,
-     "id": "28e04db2-6217-4d1c-b3a3-a3125c38d758",
+     "id": "52a29539-7491-43b7-a63f-fb822c369c8a",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
       "h": 6,
-      "y": 18
+      "y": 24
      },
      "state": "",
      "type": "View",
@@ -218,7 +261,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "28e04db2-6217-4d1c-b3a3-a3125c38d758",
+      "widgetId": "52a29539-7491-43b7-a63f-fb822c369c8a",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -247,31 +290,31 @@
      ]
     },
     {
-     "tabId": "c2813589-d6f4-4eb5-a4a2-dc788fb3991f",
+     "tabId": "c77ac843-b88e-4e4e-bfbc-221596d9dea6",
      "collapsed": false,
-     "id": "22da59c7-6a92-41a5-ad01-181e3e3b4ef6",
+     "id": "b6f54348-9fe3-4d40-ab9d-76ac54151882",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
       "h": 6,
-      "y": 24
+      "y": 30
      },
      "state": "",
      "type": "View",
-     "title": "Rebuild activity",
+     "title": "Host services - are they up?",
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "22da59c7-6a92-41a5-ad01-181e3e3b4ef6",
+      "widgetId": "b6f54348-9fe3-4d40-ab9d-76ac54151882",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
       },
       "description": "",
       "isUpdatedView": true,
-      "title": "Rebuild activity",
-      "viewDefinitionId": "e12fcf23-eb55-5555-9bf9-b7c4c91d1135",
-      "titleLocalized": "Rebuild activity",
+      "title": "Host services - are they up?",
+      "viewDefinitionId": "638c556a-4216-542a-b345-36590a55c442",
+      "titleLocalized": "Host services - are they up?",
       "viewType": "LIST",
       "chartViewItems": [],
       "selectFirstRow": {
@@ -291,14 +334,14 @@
      ]
     },
     {
-     "tabId": "c2813589-d6f4-4eb5-a4a2-dc788fb3991f",
+     "tabId": "c77ac843-b88e-4e4e-bfbc-221596d9dea6",
      "collapsed": false,
-     "id": "4de5df61-b18a-4181-93b6-16bf3f9fc38e",
+     "id": "3abbfe6d-fefb-4aab-9fef-d5c1de3e3f2d",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
       "h": 7,
-      "y": 30
+      "y": 36
      },
      "state": "",
      "type": "TextDisplay",
@@ -306,9 +349,9 @@
      "config": {
       "locationUrl": "",
       "locationFile": "",
-      "editorData": "<div style=\"font-family:'Metropolis','Segoe UI',sans-serif;font-size:13px;color:#ffffff;padding:6px 12px\">\n<h2 style=\"font-size:15px;color:#ffffff;margin:4px 0 10px 0\">vSAN overview &mdash; which layer is broken?</h2>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">The pager went off and you do not yet know where to look. Each table below is a <b style=\"color:#ffffff;font-weight:700\">layer of the IO path</b>, top to bottom, and the job of this screen is to point at one of them inside a minute. Then move to the matching detail screen.</p>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><b style=\"color:#ffffff;font-weight:700\">Normal is front end above back end.</b> The front end carries network hops, owner coordination and policy work the disks never see, so it should read higher. <b style=\"color:#ffffff;font-weight:700\">The two converging, or inverting, is the anomaly</b> &mdash; not either number on its own.</p>\n\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Capacity</h3>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Free / Used / Total Capacity</span> and <span style=\"font-weight:600;color:#8fd3ff\">Space Efficiency Ratio</span> &mdash; here because exhaustion takes a cluster read-only, which is an outage rather than a performance problem.</p>\n\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Front end &mdash; what VMs feel</h3>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">DOM Client is where a guest's IO enters vSAN. <span style=\"font-weight:600;color:#8fd3ff\">Read / Write Latency</span> here is what a user means by \"the VM is slow\". <span style=\"font-weight:600;color:#8fd3ff\">Congestions</span> is vSAN deliberately slowing IO down to protect itself &mdash; any non-zero value is the cluster applying the brakes.</p>\n\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Back end &mdash; the disks</h3>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">DOM Component Manager is what the local devices actually did. Read it against the front end: <b style=\"color:#ffffff;font-weight:700\">front high and back low</b> means the problem is above the disks &mdash; network, owner, or policy. <b style=\"color:#ffffff;font-weight:700\">Both high</b> means the disks.</p>\n\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Transport &mdash; RDT</h3>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">vSAN's own protocol, above TCP. Can be slow with every NIC counter clean. <span style=\"font-weight:600;color:#8fd3ff\">Keepalive Reset</span> is cumulative since boot &mdash; watch whether it rises, not its value. The socket <span style=\"font-weight:600;color:#8fd3ff\">Min Outbound / Inbound Bytes</span> columns are free space, so <b style=\"color:#ffffff;font-weight:700\">low is bad</b>.</p>\n\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Rebuild activity</h3>\n\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">All zero means nothing is rebuilding, which is the healthy idle state. During a rebuild, read it beside the front end above: <b style=\"color:#ffffff;font-weight:700\">resync climbing while guest latency stays flat is healthy</b>; both climbing means the rebuild is eating production IO.</p>\n\n<p style=\"margin:14px 0 5px 0;line-height:1.45;color:#b6c2ca;font-style:italic\">Each table is one object &mdash; the cluster &mdash; so this screen costs the same whether you run four hosts or sixty-four.</p>\n</div>\n",
+      "editorData": "<div style=\"font-family:'Metropolis','Segoe UI',sans-serif;font-size:13px;color:#ffffff;padding:6px 12px\">\n<h2 style=\"font-size:15px;color:#ffffff;margin:4px 0 10px 0\">vSAN overview &mdash; which layer is broken?</h2>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">The pager went off and you do not yet know where to look. Each table below is a <b style=\"color:#ffffff;font-weight:700\">layer of the IO path</b>, top to bottom, and the job of this screen is to point at one of them inside a minute. Then move to the matching detail screen.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><b style=\"color:#ffffff;font-weight:700\">Normal is front end above back end.</b> The front end carries network hops, owner coordination and policy work the disks never see, so it should read higher. <b style=\"color:#ffffff;font-weight:700\">The two converging, or inverting, is the anomaly</b> &mdash; not either number on its own.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">The owner row between them is new. It is the layer that coordinates each write across its replicas, so it holds the cost of making a write durable in more than one place. When the front end is slow and the back end is not, the owner row is usually where the difference went.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Capacity</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Cluster Capacity</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Free Capacity</span> &mdash; Unused vSAN capacity. Read it next to <b style=\"color:#ffffff;font-weight:700\">Total</b>, not alone: the same free figure means very different things on a 10 TB and a 1 PB cluster.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Used Capacity</span> &mdash; Consumed vSAN capacity, after deduplication and compression.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Total Capacity</span> &mdash; Usable vSAN capacity. Already excludes the overhead vSAN reserves for itself, so it is smaller than the sum of the disks.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Space Efficiency Ratio</span> &mdash; Space saving from deduplication and compression, expressed as a ratio scaled by 100 -- <b style=\"color:#ffffff;font-weight:700\">134 means 1.34:1</b>, not 134:1. A ratio that falls sharply usually means new data that does not deduplicate, not a fault.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Saved Capacity</span> &mdash; Bytes not written because deduplication and compression removed them. The absolute saving behind the ratio beside it.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Front end - what VMs feel</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Cluster DOM Client</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Average read latency at this layer. Compare the same column across the client, owner and component manager views: the layer where the number first becomes large is the layer to investigate.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Average write latency at this layer. On ESA a write is acknowledged after it is logged, so this is usually far lower than the component manager's figure beneath it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Congestions</span> &mdash; vSAN's own backpressure signal, raised when a layer cannot absorb the offered load and asks the layer above to slow down. <b style=\"color:#ffffff;font-weight:700\">Zero on a healthy cluster</b>, and it reads zero here. Any sustained non-zero value is the single most important number on the screen.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Congestions</span> &mdash; Backpressure attributed to reads.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Congestions</span> &mdash; Backpressure attributed to writes.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Unmap congestion</span> &mdash; Backpressure attributed to unmap and space-reclamation work.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read IOPS</span> &mdash; Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Outstanding IO</span> &mdash; Outstanding IO: operations issued and not yet completed. Latency multiplied by nothing tells you why it is high -- this does. High latency with high outstanding IO is queueing, high latency with low outstanding IO is a slow device.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Throughput</span> &mdash; Bytes per second read at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Throughput</span> &mdash; Bytes per second written at this layer.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Coordination - the owner</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Cluster DOM Owner</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Average read latency at this layer. Compare the same column across the client, owner and component manager views: the layer where the number first becomes large is the layer to investigate.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Average write latency at this layer. On ESA a write is acknowledged after it is logged, so this is usually far lower than the component manager's figure beneath it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read IOPS</span> &mdash; Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Throughput</span> &mdash; Bytes per second read. The owner layer names its throughput columns differently from the client layer; the quantity is the same.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Throughput</span> &mdash; Bytes per second written.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Outstanding IO</span> &mdash; Outstanding IO: operations issued and not yet completed. Latency multiplied by nothing tells you why it is high -- this does. High latency with high outstanding IO is queueing, high latency with low outstanding IO is a slow device.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Congestions</span> &mdash; vSAN's own backpressure signal, raised when a layer cannot absorb the offered load and asks the layer above to slow down. <b style=\"color:#ffffff;font-weight:700\">Zero on a healthy cluster</b>, and it reads zero here. Any sustained non-zero value is the single most important number on the screen.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Congestions</span> &mdash; Backpressure attributed to reads.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Congestions</span> &mdash; Backpressure attributed to writes.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Back end - the disks</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Cluster DOM Component Manager</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Average read latency at this layer. Compare the same column across the client, owner and component manager views: the layer where the number first becomes large is the layer to investigate.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Average write latency at this layer. On ESA a write is acknowledged after it is logged, so this is usually far lower than the component manager's figure beneath it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Congestions</span> &mdash; vSAN's own backpressure signal, raised when a layer cannot absorb the offered load and asks the layer above to slow down. <b style=\"color:#ffffff;font-weight:700\">Zero on a healthy cluster</b>, and it reads zero here. Any sustained non-zero value is the single most important number on the screen.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Outstanding IO</span> &mdash; Outstanding IO: operations issued and not yet completed. Latency multiplied by nothing tells you why it is high -- this does. High latency with high outstanding IO is queueing, high latency with low outstanding IO is a slow device.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read IOPS</span> &mdash; Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Transport - RDT</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Cluster RDT</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">RDT Network Cluster Average Latency</span> &mdash; Average round-trip latency of vSAN's own transport between hosts. This sits above TCP, so it can be slow while every NIC counter is clean.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">RDT Network Cluster Max Latency</span> &mdash; Worst round-trip latency observed. Spikes here matter more than the average -- one stalled transfer blocks whatever was waiting on it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">RDT Network Cluster Min Latency</span> &mdash; Best round-trip latency observed. Useful only as a floor to compare the average against.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">RDT Network Average Outbound Queueing Latency</span> &mdash; Average time a message waited in the outbound queue before being sent. Queueing, as opposed to time on the wire.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">RDT Network Socket Min Outbound Bytes (Low Is Bad)</span> &mdash; Lowest free space seen in the outbound socket buffer. <b style=\"color:#ffffff;font-weight:700\">Low is bad</b> -- this measures headroom remaining, so it reads backwards from every other column. Zero means exhaustion and a stalled transport.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">RDT Network Socket Min Inbound Bytes (Low Is Bad)</span> &mdash; Lowest free space seen in the inbound socket buffer. <b style=\"color:#ffffff;font-weight:700\">Low is bad</b>, for the same reason.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Keepalive reset (Total)</span> &mdash; Lifetime count of keepalive resets: RDT gave up on a peer connection and re-established it. <b style=\"color:#ffffff;font-weight:700\">Cumulative since boot</b>, so the number itself means little -- watch whether it is <i>increasing</i>.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num ready delay (Total)</span> &mdash; Lifetime count of delays waiting for a connection to become ready. <b style=\"color:#ffffff;font-weight:700\">Cumulative since boot</b>; the trend is the signal.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Host services - are they up?</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSphere Host vSAN Services</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN Health Status</span> &mdash; vCenter's overall vSAN health verdict for this host. Higher is better; it reads 3 on all three hosts here.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">clomd Alive</span> &mdash; Whether <b style=\"color:#ffffff;font-weight:700\">clomd</b> is answering. 1 is alive. This pack can measure how much memory clomd consumes but has no way to tell whether it is responding, and vCenter checks exactly that, so the pair is more useful than either half.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">cmmdsd Alive</span> &mdash; Whether <b style=\"color:#ffffff;font-weight:700\">cmmdsd</b> is answering. 1 is alive. If this drops the host is on its way out of the cluster.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">epd Alive</span> &mdash; Whether <b style=\"color:#ffffff;font-weight:700\">epd</b> is answering. 1 is alive.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN HTTP Service Responding</span> &mdash; Whether the host's vSAN HTTP service is responding. 1 is responding. This is the service the Performance Service queries, so a zero here also means this pack is about to stop collecting from that host.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Corrected Memory Errors Since Boot</span> &mdash; Memory errors the hardware detected and corrected. <b style=\"color:#ffffff;font-weight:700\">Cumulative since boot.</b> Corrected errors are not yet a failure, but a count that climbs predicts one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Uncorrected Memory Errors Since Boot</span> &mdash; Memory errors the hardware could not correct. <b style=\"color:#ffffff;font-weight:700\">Any non-zero value is a hardware fault</b> and outranks everything else on the screen.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Purple Screens, Last 7 Days</span> &mdash; Purple diagnostic screens in the last seven days. Non-zero means this host crashed, and any latency history either side of that is not comparable.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">hostd Status</span> &mdash; Health of <b style=\"color:#ffffff;font-weight:700\">hostd</b>, the host management agent. Higher is better.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vpxa Status</span> &mdash; Health of <b style=\"color:#ffffff;font-weight:700\">vpxa</b>, the agent connecting this host to vCenter. If this is unhealthy, vCenter's own figures for the host are suspect, including the borrowed columns on this view.</p>\n</div>\n",
       "refreshInterval": 300,
-      "widgetId": "4de5df61-b18a-4181-93b6-16bf3f9fc38e",
+      "widgetId": "3abbfe6d-fefb-4aab-9fef-d5c1de3e3f2d",
       "refreshContent": {
        "refreshContent": false
       },
@@ -325,35 +368,40 @@
    "homeTab": false,
    "rank": 0,
    "disabled": false,
-   "id": "c2813589-d6f4-4eb5-a4a2-dc788fb3991f",
+   "id": "c77ac843-b88e-4e4e-bfbc-221596d9dea6",
    "adapterName": "vSAN Host Metrics",
    "locked": false,
    "dashboardNavigations": {},
    "widgetInteractions": [
     {
-     "widgetIdProvider": "88c0938e-4ea0-4614-b0e3-9ec739edf581",
+     "widgetIdProvider": "a767fb7b-fe2c-4f57-91dd-30a29380b96f",
      "type": "resourceId",
-     "widgetIdReceiver": "32f86599-387c-44c0-b247-06f344f6ab97"
+     "widgetIdReceiver": "7726db60-45ca-4e9b-a3a1-79a267a54bf6"
     },
     {
-     "widgetIdProvider": "88c0938e-4ea0-4614-b0e3-9ec739edf581",
+     "widgetIdProvider": "a767fb7b-fe2c-4f57-91dd-30a29380b96f",
      "type": "resourceId",
-     "widgetIdReceiver": "c66a29da-6aa4-48b3-9538-2c1b65f326fd"
+     "widgetIdReceiver": "79ecf82d-454d-45ae-9161-e200a44040cf"
     },
     {
-     "widgetIdProvider": "88c0938e-4ea0-4614-b0e3-9ec739edf581",
+     "widgetIdProvider": "a767fb7b-fe2c-4f57-91dd-30a29380b96f",
      "type": "resourceId",
-     "widgetIdReceiver": "891ee29a-eb76-456d-a011-5b239787ac0a"
+     "widgetIdReceiver": "6d1a164f-85bb-4e04-8094-562d66f1f7c3"
     },
     {
-     "widgetIdProvider": "88c0938e-4ea0-4614-b0e3-9ec739edf581",
+     "widgetIdProvider": "a767fb7b-fe2c-4f57-91dd-30a29380b96f",
      "type": "resourceId",
-     "widgetIdReceiver": "28e04db2-6217-4d1c-b3a3-a3125c38d758"
+     "widgetIdReceiver": "f778b151-2ec1-457d-a4d4-987f1dc18fe7"
     },
     {
-     "widgetIdProvider": "88c0938e-4ea0-4614-b0e3-9ec739edf581",
+     "widgetIdProvider": "a767fb7b-fe2c-4f57-91dd-30a29380b96f",
      "type": "resourceId",
-     "widgetIdReceiver": "22da59c7-6a92-41a5-ad01-181e3e3b4ef6"
+     "widgetIdReceiver": "52a29539-7491-43b7-a63f-fb822c369c8a"
+    },
+    {
+     "widgetIdProvider": "a767fb7b-fe2c-4f57-91dd-30a29380b96f",
+     "type": "resourceId",
+     "widgetIdReceiver": "b6f54348-9fe3-4d40-ab9d-76ac54151882"
     }
    ],
    "lastUpdateUserId": "833b693b-0960-4d05-b868-f14446488fc3",
@@ -364,5 +412,5 @@
    "lastUpdateTime": 1790823795066
   }
  ],
- "uuid": "9b43014f-f52e-4a95-a479-ef14b58bdaff"
+ "uuid": "ee617d20-eefb-4060-8add-bd1180f16cd7"
 }

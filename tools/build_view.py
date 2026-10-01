@@ -172,6 +172,208 @@ VIEWS = [
         ("iopsRead",     "", "MAX"),
         ("iopsWrite",    "", "MAX"),
     ]),
+    # ---- DOM owner: the coordination layer, previously unsurfaced ---------
+    # 272 metrics come back live and 87 of them move. None were on a screen.
+    # The owner is the host that coordinates each object's writes, so its
+    # latency is the distributed-write cost that the client layer inherits.
+    ("vSAN Cluster DOM Owner", "VsanClusterDomowner", [
+        ("latencyAvgRead", "", "MAX"), ("latencyAvgWrite", "", "MAX"),
+        ("iopsRead", "", "MAX"), ("iopsWrite", "", "MAX"),
+        ("tputRead", "", "MAX"), ("tputWrite", "", "MAX"),
+        ("oio", "", "MAX"),
+        ("congestion", "", "MAX"), ("readCongestion", "", "MAX"),
+        ("writeCongestion", "", "MAX"),
+    ]),
+    # The resync JOB QUEUE, which no screen had. The existing resync view
+    # shows rebuild IO rates; these show the work outstanding. On a healthy
+    # cluster every one of them is zero, and that zero is the answer -- which
+    # is why the IO columns sit alongside, to prove the view is collecting.
+    ("vSAN Cluster Resync Jobs", "VsanClusterDomowner", [
+        ("numPendingResyncJobs", "", "MAX"),
+        ("numRunningResyncJobs", "", "MAX"),
+        ("numSuspendedResyncJobs", "", "MAX"),
+        ("numInflightPriorityResyncJobs", "", "MAX"),
+        ("numInflightSharedResyncJobs", "", "MAX"),
+        ("numPendingDecomResyncJobs", "", "MAX"),
+        ("numPendingFullResyncJobs", "", "MAX"),
+        ("numRunningFullResyncJobs", "", "MAX"),
+        ("avgResyncParallelism", "", "MAX"),
+        ("numCompleteResyncOps", "", "CURRENT"),
+        ("numCompleteFullResyncOps", "", "CURRENT"),
+        ("iopsResyncRead", "", "MAX"),
+        ("iopsRecWrite", "", "MAX"),
+        ("iopsWrite", "", "MAX"),
+    ]),
+    ("vSAN Host DOM Owner", "VsanHostDomowner", [
+        ("latencyAvgWrite", "", "MAX"), ("latencyMaxWrite", "", "MAX"),
+        ("latencyStddevWrite", "", "MAX"),
+        ("latencyAvgRead", "", "MAX"), ("latencyMaxRead", "", "MAX"),
+        ("highOIODurationPercentWrite", "percent", "MAX"),
+        ("owner2PCCommitLatencyAvgUs", "", "MAX"),
+        ("writeLeafOwnerLatencyLocal", "", "MAX"),
+        ("writeLeafOwnerLatencyRemote", "", "MAX"),
+        ("readLeafOwnerLatencyLocal", "", "MAX"),
+        ("readLeafOwnerLatencyRemote", "", "MAX"),
+        ("serverSwitchCount", "", "CURRENT"),
+        ("iops", "", "MAX"), ("oio", "", "MAX"),
+    ]),
+    # vSAN's own congestion controller. It bands hosts by observed latency and
+    # throttles to protect guest IO; the band counters say whether it is
+    # intervening, which no other view here can show.
+    ("vSAN Host DOM Owner Scheduler", "VsanHostDomowner", [
+        ("numNetSchedRollingAvgLatUs", "", "MAX"),
+        ("numNetSchedGuestLTLatUs", "", "MAX"),
+        ("numNetSchedLowBandThreshUs", "", "MAX"),
+        ("numNetSchedLowBand", "", "CURRENT"),
+        ("numNetSchedMidBand", "", "CURRENT"),
+        ("numNetSchedLowBandSec", "", "CURRENT"),
+        ("numNetSchedMidBandSec", "", "CURRENT"),
+        ("numNetSchedLowToMidBand", "", "CURRENT"),
+        ("numNetSchedMidToLowBand", "", "CURRENT"),
+        ("numNetSchedSeenTotalTpBps", "", "MAX"),
+        ("numNetSchedSeenNonResyncTpBps", "", "MAX"),
+        ("numNetSchedControllerIopsLimit", "", "MAX"),
+    ]),
+    # Per-host back end. Only the cluster aggregate was on a screen, which
+    # cannot answer "which host's disks are slow".
+    ("vSAN Host DOM Component Manager", "VsanHostDomcompmgr", [
+        ("latencyAvgRead", "", "MAX"), ("latencyMaxRead", "", "MAX"),
+        ("latencyAvgWrite", "", "MAX"), ("latencyMaxWrite", "", "MAX"),
+        ("latencyStddevWrite", "", "MAX"),
+        ("iopsRead", "", "MAX"), ("iopsWrite", "", "MAX"),
+        ("oio", "", "MAX"),
+        ("throughputRead", "", "MAX"), ("throughputWrite", "", "MAX"),
+        ("vmdiskQueueDepthWrite", "", "MAX"),
+        ("vmdiskDispatchedCostWrite", "", "MAX"),
+        ("namespaceDispatchedCostWrite", "", "MAX"),
+    ]),
+    # ESA housekeeping. The log-structured write path reclaims space by
+    # cleaning segments, and that work competes with guest IO. Measured here
+    # at 370 ms max unmap latency against a 1.3 ms average -- invisible on
+    # every other screen.
+    ("vSAN Segment Cleaning Per Host", "VsanHostDomowner", [
+        ("iopsSegCleanerUnmap", "", "MAX"),
+        ("latencyAvgSegCleanerUnmap", "", "MAX"),
+        ("latencyMaxSegCleanerUnmap", "", "MAX"),
+        ("latencyStddevSegCleanerUnmap", "", "MAX"),
+        ("throughputSegCleanerUnmap", "", "MAX"),
+        ("segCleanerUnmapLeafOwnerMaxLatencyAvgUs", "", "MAX"),
+        ("iopsUnmap", "", "MAX"),
+        ("latencyAvgUnmap", "", "MAX"),
+        ("latencyMaxUnmap", "", "MAX"),
+        ("unmapCount", "", "CURRENT"),
+    ]),
+    # ---- zDOM: the ESA write path, entirely unsurfaced --------------------
+    ("vSAN zDOM Cluster", "VsanClusterZdomTopStats", [
+        ("latencyAvgRead", "", "MAX"), ("latencyAvgWrite", "", "MAX"),
+        ("iopsRead", "", "MAX"), ("iopsWrite", "", "MAX"),
+        ("throughputRead", "", "MAX"), ("throughputWrite", "", "MAX"),
+        ("oio", "", "MAX"),
+    ]),
+    ("vSAN zDOM Per Host", "VsanHostZdomTopStats", [
+        ("latencyAvgRead", "", "MAX"), ("latencyAvgWrite", "", "MAX"),
+        ("readLatencyMaxUs", "", "MAX"), ("writeLatencyMaxUs", "", "MAX"),
+        ("unmapLatencyMaxUs", "", "MAX"),
+        ("iopsRead", "", "MAX"), ("iopsWrite", "", "MAX"),
+        ("throughputRead", "", "MAX"), ("throughputWrite", "", "MAX"),
+        ("oio", "", "MAX"), ("oioWrite", "", "MAX"),
+    ]),
+    ("vSAN zDOM Write Path", "VsanZdomVtx", [
+        ("maxDiscUsedPct", "percent", "MAX"),
+        ("latAvgTotalOpIO", "", "MAX"),
+        ("latAvgTxnBank", "", "MAX"),
+        ("rateTotalCacheRef", "", "MAX"),
+        ("rateBankFlushTotalCacheRef", "", "MAX"),
+        ("rateSegCleaningCtxDataTotalCacheRef", "", "MAX"),
+        ("rateTxnPrefetchTotalCacheRef", "", "MAX"),
+        ("rateTxnLookupCacheRef", "", "MAX"),
+        ("rateTxnReadWrite", "", "MAX"),
+        ("checkpointWorkerWakeupMs", "", "MAX"),
+    ]),
+    # ---- the vmknic, not the physical NIC --------------------------------
+    # vSAN traffic leaves through a vmknic. The pNIC view shows the wire; this
+    # shows the kernel port, which is where loss attributable to the host
+    # rather than the fabric appears first.
+    ("vSAN vmknic", "VsanVnic", [
+        ("txPacketsLossRate", "percent", "MAX"),
+        ("rxPacketsLossRate", "percent", "MAX"),
+        ("rxThroughput", "", "MAX"), ("txThroughput", "", "MAX"),
+        ("rxPackets", "", "MAX"), ("txPackets", "", "MAX"),
+        ("portRxpkts", "", "CURRENT"), ("portTxpkts", "", "CURRENT"),
+        ("portRxDrops", "", "MAX"), ("portTxDrops", "", "MAX"),
+    ]),
+    ("vSAN vmknic RDT Latency", "VsanVnicRdtLatency", [
+        ("avgLatency", "", "MAX"), ("maxLatency", "", "MAX"),
+        ("minLatency", "", "MIN"),
+        ("txQLatAvg", "", "MAX"), ("txQLatMax", "", "MAX"),
+        ("txSbSpaceMin", "", "MIN"), ("rxSbSpaceMin", "", "MIN"),
+        ("kaReset", "", "CURRENT"), ("numReadyDelay", "", "CURRENT"),
+    ]),
+    # Cluster membership traffic. If CMMDS cannot talk, the cluster partitions
+    # -- and that happens before any IO metric moves.
+    ("vSAN CMMDS Network", "VsanCmmdsNet", [
+        ("rdtTx", "", "MAX"), ("rdtRx", "", "MAX"),
+        ("rdtTxThroughput", "", "MAX"), ("rdtRxThroughput", "", "MAX"),
+        ("groupTxUcast", "", "MAX"), ("groupRx", "", "MAX"),
+        ("groupTxUcastThroughput", "", "MAX"), ("groupRxThroughput", "", "MAX"),
+        ("groupTxMcast", "", "MAX"), ("groupTxMcastThroughput", "", "MAX"),
+    ]),
+    # ---- host resources: is vSAN slow, or is the host out of road? --------
+    ("vSAN Host Memory", "VsanMemory", [
+        ("kernelConsumedSize", "", "MAX"), ("kernelReservedSize", "", "CURRENT"),
+        ("uwConsumedSize", "", "MAX"), ("uwReservedSize", "", "CURRENT"),
+        ("clomdConsumedSize", "", "MAX"), ("clomdReservedSize", "", "CURRENT"),
+        ("cmmdsdConsumedSize", "", "MAX"), ("cmmdsdReservedSize", "", "CURRENT"),
+        ("vsanmgmtdConsumedSize", "", "MAX"), ("epdConsumedSize", "", "MAX"),
+        ("osfsdConsumedSize", "", "MAX"),
+        ("vsandevicemonitordConsumedSize", "", "MAX"),
+    ]),
+    ("vSAN Host CPU", "VsanHostCpu", [
+        ("pcpuUsedPct", "percent", "MAX"),
+        ("pcpuUtilPct", "percent", "MAX"),
+        ("coreUtilPct", "percent", "MAX"),
+    ]),
+    # ---- the guest view -------------------------------------------------
+    # vSAN VM Storage is per-vSCSI-controller. This is per-VM, which is the
+    # unit a ticket is raised about.
+    ("vSAN VM Latency", "VsanVirtualMachine", [
+        ("latencyRead", "", "MAX"), ("latencyWrite", "", "MAX"),
+        ("iopsRead", "", "MAX"), ("iopsWrite", "", "MAX"),
+        ("throughputRead", "", "MAX"), ("throughputWrite", "", "MAX"),
+    ]),
+    # ---- borrowed from the vCenter adapter, collected by nothing here -----
+    # Our VsanPnic only sees uplinks carrying vSAN traffic, which on this
+    # cluster is two of four per host; a standby uplink dropping frames is
+    # invisible to it. vCenter counts every uplink, so this closes that gap
+    # without collecting anything new. It also carries host CPU and memory
+    # pressure, which answers "is this vSAN or is the host saturated".
+    ("vSphere Host Uplinks and Load", "HostSystem", [
+        ("net|errorsRx_summation", "", "MAX"),
+        ("net|droppedRx_summation", "", "MAX"),
+        ("net|errorsTx_summation", "", "MAX"),
+        ("net|droppedTx_summation", "", "MAX"),
+        ("net|usage_average", "", "MAX"),
+        ("cpu|usage_average", "", "MAX"),
+        ("cpu|capacity_contentionPct", "", "MAX"),
+        ("mem|host_usagePct", "", "MAX"),
+        ("mem|swapinRate_average", "", "MAX"),
+        ("sys|uptime_latest", "", "CURRENT"),
+    ], "VMWARE"),
+    # vSAN daemon liveness. This pack measures how much memory clomd and
+    # cmmdsd consume but has no way to say whether they are answering;
+    # vCenter checks exactly that. The pair is the useful thing.
+    ("vSphere Host vSAN Services", "HostSystem", [
+        ("health|reports|vsan|status", "", "MIN"),
+        ("health|reports|vsan|clomdLiveness", "", "MIN"),
+        ("health|reports|vsan|cmmdsdLiveness", "", "MIN"),
+        ("health|reports|vsan|epdLiveness", "", "MIN"),
+        ("health|reports|vsan|httpSvcResp", "", "MIN"),
+        ("health|reports|memory|totalCorrectedErrorsSinceBoot", "", "CURRENT"),
+        ("health|reports|memory|totalUncorrectedErrorsSinceBoot", "", "CURRENT"),
+        ("health|reports|psod|psod7DaysCount", "", "CURRENT"),
+        ("health|reports|hostd|status", "", "MIN"),
+        ("health|reports|vpxa|status", "", "MIN"),
+    ], "VMWARE"),
 ]
 
 
@@ -192,6 +394,29 @@ OVERRIDE = {
     ("VsanPnic", "rxMissErrRaw"): "pNIC RX Missed Error",
     ("VsanPnic", "rxCrcErrRaw"):  "pNIC RX CRC Error",
     ("VsanPnic", "pfcCountRaw"):  "pNIC PFC Count",
+    # ---- borrowed vCenter columns: these kinds have no schema here -------
+    ("HostSystem", "net|errorsRx_summation"): "Uplink RX Errors, All NICs",
+    ("HostSystem", "net|droppedRx_summation"): "Uplink RX Dropped, All NICs",
+    ("HostSystem", "net|errorsTx_summation"): "Uplink TX Errors, All NICs",
+    ("HostSystem", "net|droppedTx_summation"): "Uplink TX Dropped, All NICs",
+    ("HostSystem", "net|usage_average"): "Host Network Throughput",
+    ("HostSystem", "cpu|usage_average"): "Host CPU Usage",
+    ("HostSystem", "cpu|capacity_contentionPct"): "Host CPU Contention",
+    ("HostSystem", "mem|host_usagePct"): "Host Memory Consumed",
+    ("HostSystem", "mem|swapinRate_average"): "Host Memory Swap-In Rate",
+    ("HostSystem", "sys|uptime_latest"): "Host Uptime",
+    ("HostSystem", "health|reports|vsan|status"): "vSAN Health Status",
+    ("HostSystem", "health|reports|vsan|clomdLiveness"): "clomd Alive",
+    ("HostSystem", "health|reports|vsan|cmmdsdLiveness"): "cmmdsd Alive",
+    ("HostSystem", "health|reports|vsan|epdLiveness"): "epd Alive",
+    ("HostSystem", "health|reports|vsan|httpSvcResp"): "vSAN HTTP Service Responding",
+    ("HostSystem", "health|reports|memory|totalCorrectedErrorsSinceBoot"):
+        "Corrected Memory Errors Since Boot",
+    ("HostSystem", "health|reports|memory|totalUncorrectedErrorsSinceBoot"):
+        "Uncorrected Memory Errors Since Boot",
+    ("HostSystem", "health|reports|psod|psod7DaysCount"): "Purple Screens, Last 7 Days",
+    ("HostSystem", "health|reports|hostd|status"): "hostd Status",
+    ("HostSystem", "health|reports|vpxa|status"): "vpxa Status",
 }
 
 
@@ -199,7 +424,10 @@ def label_for(kind, key):
     """Broadcom's official name verbatim, else the pack's derived label."""
     ent = ENT_FOR.get(kind)
     if ent is None:
-        return key.split("|")[-1]
+        # borrowed columns: the kind belongs to another adapter, so there is
+        # no schema to consult. OVERRIDE is checked FIRST because the raw key
+        # tail ("errorsRx_summation") is not a label anyone should read.
+        return OVERRIDE.get((kind, key)) or key.split("|")[-1]
     official = ((SCHEMA.get(ent) or {}).get(key) or {}).get("name")
     label = (OVERRIDE.get((kind, key)) or official
              or metric_labels.LABELS.get(key) or key)
@@ -214,6 +442,16 @@ ADAPTER = "VsanHostMetrics"
 
 # Fixed namespace so view GUIDs are reproducible across machines and runs.
 NAMESPACE = uuid.UUID("6f3c9b1e-4a2d-5e8f-9c1b-2d7a4e6f8b03")
+
+
+def guid_for(title):
+    """The view's identity, derived from its title and nothing else.
+
+    Single source of truth: build_dash imports this rather than keeping its
+    own table of literals, which previously had to be updated by hand every
+    time a view was added or renamed.
+    """
+    return PINNED.get(title) or str(uuid.uuid5(NAMESPACE, title))
 
 
 def make_item(key, label, unit, transform, kind, adapter=None):
@@ -255,7 +493,7 @@ def build(template, title, kind, columns, seed, adapter=None):
     # regenerating after a label fix UPDATES the view in place rather than
     # creating a duplicate, and any dashboard referencing it keeps resolving.
     # uuid4 here would mean every edit orphaned the previous import.
-    vd.set("id", PINNED.get(title) or str(uuid.uuid5(NAMESPACE, title)))
+    vd.set("id", guid_for(title))
     vd.find("Title").text = title
     for st in vd.findall("SubjectType"):
         st.set("adapterKind", adapter)
