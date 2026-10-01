@@ -115,6 +115,33 @@ Click **Validate Connection** before saving. That runs a real Performance
 Service query, so green proves credential, privilege and network path at once.
 Expect one certificate-acceptance prompt for vCenter.
 
+## 2b. Give the dashboards two or three collection cycles before judging them
+
+**Observed 2026-10-01 on a fresh install, and it will mislead you if you do not
+expect it.** After the pak is installed and the adapter instance created, panels
+come alive at different times rather than all at once. Measured on this lab:
+
+| Panel | Rendered after |
+|---|---|
+| Most | first cycle |
+| Network and Storage tables | two cycles |
+| zDOM per host | roughly ten minutes, two cycles behind its neighbours |
+
+Nothing was changed between a panel reading "no data" and the same panel
+working. It simply arrived.
+
+The reason is that a view traverses from the selected cluster down to its
+descendants, so it cannot resolve until **both** the objects exist **and** their
+parent relationships have been built. Object creation and relationship creation
+do not complete in the same cycle, and different resource kinds land in
+different cycles. On a fresh install every object and every relationship is new
+at once, which is the worst case for this.
+
+**So: wait fifteen minutes before concluding a panel is broken.** A panel that
+is genuinely misconfigured says it needs a view selected. A panel that is merely
+waiting renders its headers with no rows. Those two look different, and only the
+first is a fault.
+
 ## 3. Confirm it is collecting
 
 The first collection carries data — there is no warm-up. An empty first cycle
