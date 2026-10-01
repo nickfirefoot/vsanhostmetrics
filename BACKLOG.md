@@ -1196,3 +1196,67 @@ Python is **3.13.5**, where the SDK pins 3.11, so moving the base is entangled
 with an interpreter move that would have to be validated against the SDK
 library, pyvmomi and the vendored vSAN bindings. It is not a one-line change
 for them in the way the `cryptography` pin is.
+
+## BIOS version: already collected, as a property
+
+**Correction.** I said nothing in Operations carries BIOS version. Wrong. I
+searched the 864 HostSystem *statkeys* and then misparsed the properties
+response as empty. BIOS version is a **property**, not a metric, which is why a
+statkey search missed it.
+
+Present on every `VMWARE`/`HostSystem` object today, no configuration needed:
+
+| Property | Value on esxi03 |
+|---|---|
+| `hardware|biosVersion` | `P3.30` |
+| `hardware|vendor` | `To Be Filled By O.E.M.` |
+| `hardware|vendorModel` | `To Be Filled By O.E.M. ROMED4ID-2T` |
+| `hardware|confidential|hardwareCompatibility` | `Unsupported` |
+| `hardware|serviceTag`, `serialNumberTag` | `To Be Filled By O.E.M.` |
+| `sys|build` / `summary|version` | `25714478` / `9.1.1-25714478` |
+
+The O.E.M. placeholders are this lab's whitebox board, not a collection fault;
+vendor hardware populates them.
+
+**This is vSAN-independent.** It arrives on the vCenter adapter's HostSystem
+object, so it covers every host vCenter manages whether or not it runs vSAN.
+There is nothing to configure and no second adapter involved.
+
+### What the vSphere API has that Operations does not surface
+
+`vim.host.BIOSInfo`, reached as `HostSystem.hardware.biosInfo`, carries eight
+fields. Operations exposes **one** of them:
+
+```
+biosVersion            <- the only one Operations surfaces
+releaseDate            <- the one that answers "is this BIOS old"
+vendor
+majorRelease, minorRelease
+firmwareMajorRelease, firmwareMinorRelease
+firmwareType           <- BIOS or UEFI
+```
+
+So Operations gives the version string without its age. Judging staleness from
+a vendor-specific string like `P3.30` is guesswork; `releaseDate` makes it a
+date comparison. Getting it means reading `hardware.biosInfo` from the vSphere
+API directly, which this pack's existing vCenter connection could already do --
+it is one property fetch on objects it already walks.
+
+### The built-in vSAN adapter is not the route, and barely configurable anyway
+
+`VirtualAndPhysicalSANAdapter` reports `adapterKindType: GENERAL` with
+`identifiers: []` and no credential kinds, and **zero adapter instances exist**
+on this instance. It takes no connection parameters of its own because current
+Operations drives vSAN collection from the vCenter adapter instance rather than
+a separately credentialed one. It is also the wrong place to look for BIOS: its
+firmware surface is the vSAN HCL types (`VsanCompliantFirmware`,
+`VsanHclFirmwareFile`, `VsanHclFirmwareUpdateSpec`) which are about storage
+controller and drive firmware against the compatibility list, not host BIOS.
+
+### Candidate work
+
+A `vSphere Host BIOS and Hardware` view, cross-adapter on
+`VMWARE`/`HostSystem`, using the same mechanism as the two `vSphere ...` views
+already shipping. Properties rather than metrics, so the column `isProperty`
+flag needs setting -- which no view in this pack does yet, so it is unverified.
+Would answer "which hosts are on which BIOS" with no new collection at all.
