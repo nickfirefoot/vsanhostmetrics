@@ -631,6 +631,40 @@ and their 30 findings are 5 unique CVEs counted six times because one source
 ships six binaries. `zlib1g` cannot go -- Python links it -- and its
 CVE-2023-45853 is `will_not_fix`, which is the one critical that remains.
 
+### Verified: the purge does not break collection
+
+Purging eight packages was previously justified only by "the adapter imports
+and the swagger server starts". That proves the image boots, not that it
+works. It now has the stronger proof, measured 2026-10-01 against the live
+3-host ESA cluster through the adapter's own HTTP endpoints -- the same ones
+Operations calls:
+
+| Endpoint | Result |
+|---|---|
+| `POST /test` | 200, no errors, 13.0 s |
+| `POST /collect` | 200, no errors, 18.7 s |
+
+739 objects, 5,203 metric values, 1,510 properties, 34 resource kinds, real
+values on every sampled object. Identical counts from `isdk_vsanhostmetrics-test:1.3.1`
+and from a direct `perfsvc` call in the same image, so nothing is being
+swallowed between the collector and the server.
+
+`import sqlite3` raising `ImportError` is confirmed harmless: every module in
+`app/` and every `aria.ops.*` module the adapter touches imports cleanly, and
+so does `swagger_server`, the container's actual entrypoint.
+
+**Retraction.** The earlier claim that installing the pak was "the only true
+manner to test" was wrong about the image half of the risk. `mp-test` is
+interactive and hangs with stdin closed, which is what made this look
+untestable, but the server it drives has a plain HTTP API. `tools/probe_adapter.py`
+posts to it headless and exits non-zero on an empty or failed collection. Run
+it before cutting any release that changes the base image or the package set.
+
+What installing the pak *does* uniquely test is the **content import**:
+whether the pak path preserves `viewDefinitionId`, `selfProvider` and the
+provider's pinned `resource` on view widgets, where UI dashboard import strips
+all three. That one genuinely cannot be answered without installing.
+
 ### Still not fixable here
 
 
