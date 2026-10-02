@@ -1460,3 +1460,94 @@ here, and a hierarchy that is a graph rather than a tree. Worth it if the
 flapping turns out to be normal rather than a fault in this environment --
 which is the thing to establish first, because designing around someone else's
 intermittent bug is a poor trade if the bug is fixable.
+
+## CRITICAL: this pack strips vCenter's own relationships every collection
+
+Found 2026-10-02 after Nick asked whether the pack was contending with the
+default vCenter collection. It is, and worse than contention: **we overwrite
+vCenter's object relationships every five minutes.**
+
+### The mechanism
+
+`adapter.py:377` adds the vCenter parent objects into our own result:
+
+```python
+for parent in vc_cache.values():
+    result.add_object(parent)
+```
+
+The SDK serialises relationships **parent-centric**, one entry per object in
+the result:
+
+```python
+"relationships": [
+    {"parent": obj.get_key().get_json(),
+     "children": [k.get_json() for k in obj.get_children()]}
+    for obj in self.objects.values() ...
+]
+```
+
+So for each vCenter object we touch we emit a complete `children` list
+containing **only our children**. Operations takes that as the authoritative
+child set and discards everything else. The SDK's own docstring on
+`add_children` confirms the semantics are replace rather than merge: *"We want
+to set this even in the case where the list is empty, as the user could be
+intentionally calling with no children to remove."*
+
+### The measurement that proves it
+
+Sampling the relationship graph every 25 seconds:
+
+| Object | Normal | After our collection | Difference |
+|---|---|---|---|
+| Cluster children | 12 | **7** | the 4 HostSystems and a ResourcePool |
+| Host children | 184 | **168** | 7 Pods, 7 VMs, 2 Datastores |
+
+7 is exactly our cluster-scoped object count. 168 is exactly our host-scoped
+count. We do not damage the sets at random -- we **replace** them with ours.
+The VMWARE adapter's next cycle restores its own, and the two adapters
+alternate on their five-minute cycles, which is the oscillation observed.
+
+### Consequences beyond our own dashboards
+
+- Hosts vanish from inventory views for other users of the same instance.
+- Any view, dashboard or report traversing cluster to host breaks while we hold
+  the relationship.
+- VMs, pods and datastores detach from their host for the same window.
+- This affects **everything on the instance**, not just this pack's content.
+
+Our host-scoped panels failing intermittently is the *least* of it, and is a
+symptom of damage we are doing to someone else's data.
+
+### Why `PER_OBJECT` does not save us
+
+`add_parent(p)` is implemented as `p.add_child(self)`, which sets
+`p._updated_children = True`. So the vCenter object always counts as updated
+and is always emitted, whatever the mode. There is no child-side declaration in
+this API: relationships can only be stated from the parent.
+
+### Options, none free
+
+1. **`RelationshipUpdateModes.NONE`.** We emit no relationships. Our objects
+   become orphans with no parent, losing the traversal every view depends on
+   and the whole "appears under the host you are already looking at" design.
+   Safe immediately, costs the integration.
+2. **Declare the union.** Query the object's existing children through the
+   suite-api client and emit ours *plus* theirs. Preserves the integration but
+   is racy by construction -- we would be asserting a set we read a moment ago
+   -- and adds an API dependency the adapter does not currently have.
+3. **Build our own hierarchy.** A vSAN World of our own kinds, parented among
+   themselves, touching nothing of vCenter's. Safe and self-contained; loses
+   the co-location with vCenter objects that was a deliberate design goal.
+
+Option 1 is the correct immediate action if this has to stop today. Option 3 is
+probably the right end state. Option 2 is the only one that keeps what we built
+and it needs care.
+
+### Retraction
+
+`_vc_parent`'s docstring says attaching this way means "Operations matches the
+existing object rather than creating a second one". True, and incomplete: it
+matches the object and then overwrites its relationships. The earlier rename
+bug was the same root cause showing in a different field -- we are writing to
+objects we do not own, and the name was simply the first symptom noticed.
