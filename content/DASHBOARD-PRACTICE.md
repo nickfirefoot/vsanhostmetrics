@@ -13,6 +13,26 @@ open product defect).
 
 ---
 
+## Provenance
+
+Two sources, and they are not equivalent.
+
+**Measured here**, against a live VCF Operations 9.1 instance and the exports
+it produced. Everything in sections 1 to 5 that carries a number or names a
+JSON field is of this kind, and section 6 records the ones that turned out to
+be wrong.
+
+**A practitioner guide Nick supplied**, "PART 2 - Consumption", 239 pages,
+obtained from `https://isvara.io/api/download/part-2`. It is the reason this
+project abandoned Scoreboards for View Lists. **This document is a distillation
+of the parts that bore on the work, not a substitute for it** -- it was read
+selectively and against one product version. For anything load-bearing, go to
+the guide rather than to this summary, and treat a disagreement between them as
+the guide being right until measured otherwise.
+
+The separation into verified, observed and assumed exists because several days
+were lost to inferences presented as facts. Keep it when editing.
+
 ## 1. The scale limit, and the widget that solves it
 
 **A Scoreboard renders at most 100 cells. Cells = metrics x objects.** The
