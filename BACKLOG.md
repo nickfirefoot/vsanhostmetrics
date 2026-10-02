@@ -1367,3 +1367,41 @@ behaviour being replaced, not worse.
 **The general shape, worth remembering:** a UI picker shows you a *label*, and
 a view needs a *key*. They are not the same string, and an invented key fails
 silently as an empty column rather than as an error.
+
+## Requested: NVMe drive driver and firmware versions
+
+Asked for 2026-10-02, explicitly for later rather than now. Recording the
+feasibility work already done so it is not repeated.
+
+**The data exists and this pack cannot currently reach it.** The Performance
+Service returns performance counters only, so nothing in the 1,035 metrics
+carries a firmware or driver level.
+
+**Three routes, in order of how much they cost:**
+
+1. **The vSAN HCL API**, which is the purpose-built one. The vSphere type
+   registry carries `VsanCompliantFirmware`, `VsanHclFirmwareFile` and
+   `VsanHclFirmwareUpdateSpec`, confirmed present in the vendored bindings.
+   That is the machinery behind Skyline Health's hardware compatibility check,
+   which compares controller and drive firmware against the compatibility list.
+   It answers not just "what firmware" but "is it the right firmware", which is
+   the question actually worth asking.
+2. **`vim.host.HostStorageDeviceInfo`** via the same vCenter connection this
+   pack already holds, for per-device model, revision and driver. Cheaper than
+   route 1 and gives versions without compliance.
+3. **The built-in vSAN adapter**, whose `Vsan2Disk` kind defines 25
+   `ScsiSmartStatistics` keys. That is SMART data rather than firmware, so it
+   does not answer the question, but the adapter is installed and not
+   collecting on this instance -- worth checking what else it exposes before
+   building anything.
+
+**Not available where you might look first.** vCenter's `HostSystem` carries
+`hardware|biosVersion` as a property, so host BIOS is free, but there is no
+equivalent for drives. All 864 host statkeys were searched for firmware,
+driver, hcl and version: five matched and none was a drive.
+
+**The shape this would take:** per-device properties rather than metrics, on
+the existing `VsanEsaDiskLayer` or `VsanEsaDiskScsifw` objects, which already
+exist per drive and already parent correctly. So it is a collection change, not
+a modelling one. Wait until `isProperty=true` is confirmed working on the
+cluster selector before building property columns for it.
