@@ -1405,3 +1405,58 @@ the existing `VsanEsaDiskLayer` or `VsanEsaDiskScsifw` objects, which already
 exist per drive and already parent correctly. So it is a collection change, not
 a modelling one. Wait until `isProperty=true` is confirmed working on the
 cluster selector before building property columns for it.
+
+## Host-scoped panels flap because vCenter's own cluster membership flaps
+
+Measured 2026-10-02. Symptom: host-level panels render or fail to render in
+alternation every few minutes, all of them together, while cluster-level panels
+on the same dashboard never fail. Refreshing sometimes fixes it and sometimes
+does not.
+
+**Not this pack.** Sampling the relationship graph every 25 seconds for ten
+minutes, our numbers never moved: 706 objects throughout, and 168 children of
+a HostSystem throughout, including both ESA disk objects.
+
+**The VMWARE adapter's relationships do move.** The cluster's direct children
+oscillate between 12 and 7, and the five that disappear are the **four
+HostSystem objects and a ResourcePool**. Measured directly:
+
+```
+20:35:53   12 total   HostSystem=4
+20:36:33   12 total   HostSystem=4
+20:37:13    7 total   HostSystem=0
+```
+
+The host's own children move the same way, 184 to 168, losing 7 Pods, 7 VMs
+and 2 Datastores.
+
+**Why that produces exactly this symptom.** Our cluster-scoped objects are
+*direct* children of `ClusterComputeResource`, so they resolve whatever else is
+happening. Our host-scoped objects are reached as
+`cluster -> HostSystem -> object`. When `HostSystem` is not a child of the
+cluster, that path does not exist and every host-scoped view fails together
+with "The view cannot be rendered for the specified Object". When it comes
+back, they all work. One hop versus two is the whole explanation.
+
+**Two hypotheses ruled out.** It is not the time range: all 30 views request
+7 DAYS, not 5 minutes. It is not the browser: this was observed through the
+REST API with no browser involved.
+
+**Possibly related, unconfirmed:** three of the four hosts report
+`resourceStatus=NONE` rather than `DATA_RECEIVING`, and `esxi02` returned
+`connection_state: NOT_RESPONDING` from vCenter's own REST API earlier the same
+day.
+
+### What we could do about it, since we cannot fix vCenter
+
+Give host-scoped objects the **cluster as an additional parent**, alongside the
+host. Operations supports multiple parents, and our cluster-scoped objects
+already prove a direct cluster link resolves reliably. Every view would then be
+one hop from the selected object and immune to the host link disappearing. The
+host relationship stays, so an operator still finds the metrics under the host.
+
+Cost: a second relationship per host-scoped object, roughly 60 extra links
+here, and a hierarchy that is a graph rather than a tree. Worth it if the
+flapping turns out to be normal rather than a fault in this environment --
+which is the thing to establish first, because designing around someone else's
+intermittent bug is a poor trade if the bug is fixable.
