@@ -22,16 +22,15 @@
    "description": "",
    "widgets": [
     {
-     "tabId": "620b297d-475f-4199-bdd2-8383b6bed398",
+     "tabId": "3738fc34-bf6f-4b70-a992-e74f72eb3215",
      "collapsed": false,
-     "id": "829c4cc7-0767-4344-839e-134fc1121159",
+     "id": "fd18e89a-8c9e-4219-90ba-0a58a430087d",
      "gridsterCoords": {
       "w": 2,
       "x": 1,
       "h": 7,
       "y": 1
      },
-     "state": "",
      "type": "View",
      "title": "Select cluster",
      "config": {
@@ -42,7 +41,7 @@
        "resourceName": "VCF World",
        "resourceKindId": "002010VcfAdapterVCFWorld"
       },
-      "widgetId": "829c4cc7-0767-4344-839e-134fc1121159",
+      "widgetId": "fd18e89a-8c9e-4219-90ba-0a58a430087d",
       "traversalSpecId": null,
       "refreshContent": {
        "refreshContent": true
@@ -61,31 +60,24 @@
        "selfProvider": true
       }
      },
-     "height": 0,
-     "states": [
-      {
-       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_829c4cc7-0767-4344-839e-134fc1121159-column-0%25255Ehidden%25253Db%2525253A1%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_829c4cc7-0767-4344-839e-134fc1121159-column-config%2525257Cname1%25255Ehidden%25253Db%2525253A0",
-       "key": "permTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_829c4cc7-0767-4344-839e-134fc1121159"
-      }
-     ]
+     "height": 0
     },
     {
-     "tabId": "620b297d-475f-4199-bdd2-8383b6bed398",
+     "tabId": "3738fc34-bf6f-4b70-a992-e74f72eb3215",
      "collapsed": false,
-     "id": "02cbb6cb-6bbc-4d46-8b07-81bc1921bfa7",
+     "id": "61083287-b056-4ee7-bd27-485195194db0",
      "gridsterCoords": {
       "w": 10,
       "x": 3,
       "h": 7,
       "y": 1
      },
-     "state": "",
      "type": "View",
      "title": "Cluster - client",
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "02cbb6cb-6bbc-4d46-8b07-81bc1921bfa7",
+      "widgetId": "61083287-b056-4ee7-bd27-485195194db0",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -105,31 +97,24 @@
        "selfProvider": false
       }
      },
-     "height": 0,
-     "states": [
-      {
-       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_02cbb6cb-6bbc-4d46-8b07-81bc1921bfa7-column-0%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_02cbb6cb-6bbc-4d46-8b07-81bc1921bfa7-column-avgLatency1%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A115%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_02cbb6cb-6bbc-4d46-8b07-81bc1921bfa7-column-maxLatency2%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A109%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_02cbb6cb-6bbc-4d46-8b07-81bc1921bfa7-column-txQLatAvg3%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A136%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_02cbb6cb-6bbc-4d46-8b07-81bc1921bfa7-column-txQLatMax4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_02cbb6cb-6bbc-4d46-8b07-81bc1921bfa7-column-txSbSpaceMin5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_02cbb6cb-6bbc-4d46-8b07-81bc1921bfa7-column-rxSbSpaceMin6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_02cbb6cb-6bbc-4d46-8b07-81bc1921bfa7-column-kaReset7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_02cbb6cb-6bbc-4d46-8b07-81bc1921bfa7-column-numReadyDelay8%25255Ehidden%25253Db%2525253A0",
-       "key": "permTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_02cbb6cb-6bbc-4d46-8b07-81bc1921bfa7"
-      }
-     ]
+     "height": 0
     },
     {
-     "tabId": "620b297d-475f-4199-bdd2-8383b6bed398",
+     "tabId": "3738fc34-bf6f-4b70-a992-e74f72eb3215",
      "collapsed": false,
-     "id": "fa86cf70-9e10-4b3e-b230-dbc8526bd993",
+     "id": "b1a43d76-eadf-468c-a5cd-180f1665a647",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
       "h": 6,
       "y": 8
      },
-     "state": "",
      "type": "View",
      "title": "Cluster - owner",
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "fa86cf70-9e10-4b3e-b230-dbc8526bd993",
+      "widgetId": "b1a43d76-eadf-468c-a5cd-180f1665a647",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -149,31 +134,24 @@
        "selfProvider": false
       }
      },
-     "height": 0,
-     "states": [
-      {
-       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_fa86cf70-9e10-4b3e-b230-dbc8526bd993-column-0%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_fa86cf70-9e10-4b3e-b230-dbc8526bd993-column-avgLatency1%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A115%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_fa86cf70-9e10-4b3e-b230-dbc8526bd993-column-maxLatency2%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A109%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_fa86cf70-9e10-4b3e-b230-dbc8526bd993-column-txQLatAvg3%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A136%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_fa86cf70-9e10-4b3e-b230-dbc8526bd993-column-txQLatMax4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_fa86cf70-9e10-4b3e-b230-dbc8526bd993-column-txSbSpaceMin5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_fa86cf70-9e10-4b3e-b230-dbc8526bd993-column-rxSbSpaceMin6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_fa86cf70-9e10-4b3e-b230-dbc8526bd993-column-kaReset7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_fa86cf70-9e10-4b3e-b230-dbc8526bd993-column-numReadyDelay8%25255Ehidden%25253Db%2525253A0",
-       "key": "permTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_fa86cf70-9e10-4b3e-b230-dbc8526bd993"
-      }
-     ]
+     "height": 0
     },
     {
-     "tabId": "620b297d-475f-4199-bdd2-8383b6bed398",
+     "tabId": "3738fc34-bf6f-4b70-a992-e74f72eb3215",
      "collapsed": false,
-     "id": "01df9134-5601-4472-9065-15df9fb31179",
+     "id": "7088cce7-47a4-4dbd-93b7-81327ae0da37",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
       "h": 6,
       "y": 14
      },
-     "state": "",
      "type": "View",
      "title": "Cluster - component manager",
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "01df9134-5601-4472-9065-15df9fb31179",
+      "widgetId": "7088cce7-47a4-4dbd-93b7-81327ae0da37",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -193,31 +171,24 @@
        "selfProvider": false
       }
      },
-     "height": 0,
-     "states": [
-      {
-       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_01df9134-5601-4472-9065-15df9fb31179-column-0%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_01df9134-5601-4472-9065-15df9fb31179-column-avgLatency1%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A115%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_01df9134-5601-4472-9065-15df9fb31179-column-maxLatency2%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A109%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_01df9134-5601-4472-9065-15df9fb31179-column-txQLatAvg3%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A136%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_01df9134-5601-4472-9065-15df9fb31179-column-txQLatMax4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_01df9134-5601-4472-9065-15df9fb31179-column-txSbSpaceMin5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_01df9134-5601-4472-9065-15df9fb31179-column-rxSbSpaceMin6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_01df9134-5601-4472-9065-15df9fb31179-column-kaReset7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_01df9134-5601-4472-9065-15df9fb31179-column-numReadyDelay8%25255Ehidden%25253Db%2525253A0",
-       "key": "permTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_01df9134-5601-4472-9065-15df9fb31179"
-      }
-     ]
+     "height": 0
     },
     {
-     "tabId": "620b297d-475f-4199-bdd2-8383b6bed398",
+     "tabId": "3738fc34-bf6f-4b70-a992-e74f72eb3215",
      "collapsed": false,
-     "id": "a6fc4096-5fb6-4fac-971e-e85d3704b7f9",
+     "id": "13f28df1-9cb9-484d-92a9-ca86fb2692f9",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
       "h": 7,
       "y": 20
      },
-     "state": "",
      "type": "View",
      "title": "Per host - client",
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "a6fc4096-5fb6-4fac-971e-e85d3704b7f9",
+      "widgetId": "13f28df1-9cb9-484d-92a9-ca86fb2692f9",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -237,31 +208,24 @@
        "selfProvider": false
       }
      },
-     "height": 0,
-     "states": [
-      {
-       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_a6fc4096-5fb6-4fac-971e-e85d3704b7f9-column-0%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_a6fc4096-5fb6-4fac-971e-e85d3704b7f9-column-avgLatency1%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A115%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_a6fc4096-5fb6-4fac-971e-e85d3704b7f9-column-maxLatency2%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A109%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_a6fc4096-5fb6-4fac-971e-e85d3704b7f9-column-txQLatAvg3%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A136%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_a6fc4096-5fb6-4fac-971e-e85d3704b7f9-column-txQLatMax4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_a6fc4096-5fb6-4fac-971e-e85d3704b7f9-column-txSbSpaceMin5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_a6fc4096-5fb6-4fac-971e-e85d3704b7f9-column-rxSbSpaceMin6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_a6fc4096-5fb6-4fac-971e-e85d3704b7f9-column-kaReset7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_a6fc4096-5fb6-4fac-971e-e85d3704b7f9-column-numReadyDelay8%25255Ehidden%25253Db%2525253A0",
-       "key": "permTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_a6fc4096-5fb6-4fac-971e-e85d3704b7f9"
-      }
-     ]
+     "height": 0
     },
     {
-     "tabId": "620b297d-475f-4199-bdd2-8383b6bed398",
+     "tabId": "3738fc34-bf6f-4b70-a992-e74f72eb3215",
      "collapsed": false,
-     "id": "3b67b2e8-ff08-4f80-9225-dbd794bfc9d0",
+     "id": "5259057e-e71a-49df-a02a-c42f23f8c2a3",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
       "h": 8,
       "y": 27
      },
-     "state": "",
      "type": "View",
      "title": "Per host - owner",
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "3b67b2e8-ff08-4f80-9225-dbd794bfc9d0",
+      "widgetId": "5259057e-e71a-49df-a02a-c42f23f8c2a3",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -281,31 +245,24 @@
        "selfProvider": false
       }
      },
-     "height": 0,
-     "states": [
-      {
-       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_3b67b2e8-ff08-4f80-9225-dbd794bfc9d0-column-0%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_3b67b2e8-ff08-4f80-9225-dbd794bfc9d0-column-avgLatency1%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A115%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_3b67b2e8-ff08-4f80-9225-dbd794bfc9d0-column-maxLatency2%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A109%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_3b67b2e8-ff08-4f80-9225-dbd794bfc9d0-column-txQLatAvg3%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A136%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_3b67b2e8-ff08-4f80-9225-dbd794bfc9d0-column-txQLatMax4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_3b67b2e8-ff08-4f80-9225-dbd794bfc9d0-column-txSbSpaceMin5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_3b67b2e8-ff08-4f80-9225-dbd794bfc9d0-column-rxSbSpaceMin6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_3b67b2e8-ff08-4f80-9225-dbd794bfc9d0-column-kaReset7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_3b67b2e8-ff08-4f80-9225-dbd794bfc9d0-column-numReadyDelay8%25255Ehidden%25253Db%2525253A0",
-       "key": "permTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_3b67b2e8-ff08-4f80-9225-dbd794bfc9d0"
-      }
-     ]
+     "height": 0
     },
     {
-     "tabId": "620b297d-475f-4199-bdd2-8383b6bed398",
+     "tabId": "3738fc34-bf6f-4b70-a992-e74f72eb3215",
      "collapsed": false,
-     "id": "c5b159d8-676f-4009-b1f3-132eb7bb1689",
+     "id": "5af59d27-187f-4fa4-918e-618c89e9b780",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
       "h": 8,
       "y": 35
      },
-     "state": "",
      "type": "View",
      "title": "Per host - component manager",
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "c5b159d8-676f-4009-b1f3-132eb7bb1689",
+      "widgetId": "5af59d27-187f-4fa4-918e-618c89e9b780",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -325,31 +282,24 @@
        "selfProvider": false
       }
      },
-     "height": 0,
-     "states": [
-      {
-       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_c5b159d8-676f-4009-b1f3-132eb7bb1689-column-0%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_c5b159d8-676f-4009-b1f3-132eb7bb1689-column-avgLatency1%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A115%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_c5b159d8-676f-4009-b1f3-132eb7bb1689-column-maxLatency2%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A109%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_c5b159d8-676f-4009-b1f3-132eb7bb1689-column-txQLatAvg3%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A136%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_c5b159d8-676f-4009-b1f3-132eb7bb1689-column-txQLatMax4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_c5b159d8-676f-4009-b1f3-132eb7bb1689-column-txSbSpaceMin5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_c5b159d8-676f-4009-b1f3-132eb7bb1689-column-rxSbSpaceMin6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_c5b159d8-676f-4009-b1f3-132eb7bb1689-column-kaReset7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_c5b159d8-676f-4009-b1f3-132eb7bb1689-column-numReadyDelay8%25255Ehidden%25253Db%2525253A0",
-       "key": "permTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_c5b159d8-676f-4009-b1f3-132eb7bb1689"
-      }
-     ]
+     "height": 0
     },
     {
-     "tabId": "620b297d-475f-4199-bdd2-8383b6bed398",
+     "tabId": "3738fc34-bf6f-4b70-a992-e74f72eb3215",
      "collapsed": false,
-     "id": "ffdbbbe8-02da-4df5-9005-7182781b09cb",
+     "id": "75d34809-7492-4ff3-9c5b-d3f7c2ec5d48",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
       "h": 8,
       "y": 43
      },
-     "state": "",
      "type": "View",
      "title": "Owner network scheduler",
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "ffdbbbe8-02da-4df5-9005-7182781b09cb",
+      "widgetId": "75d34809-7492-4ff3-9c5b-d3f7c2ec5d48",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -369,25 +319,18 @@
        "selfProvider": false
       }
      },
-     "height": 0,
-     "states": [
-      {
-       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_ffdbbbe8-02da-4df5-9005-7182781b09cb-column-0%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_ffdbbbe8-02da-4df5-9005-7182781b09cb-column-avgLatency1%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A115%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_ffdbbbe8-02da-4df5-9005-7182781b09cb-column-maxLatency2%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A109%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_ffdbbbe8-02da-4df5-9005-7182781b09cb-column-txQLatAvg3%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A136%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_ffdbbbe8-02da-4df5-9005-7182781b09cb-column-txQLatMax4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_ffdbbbe8-02da-4df5-9005-7182781b09cb-column-txSbSpaceMin5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_ffdbbbe8-02da-4df5-9005-7182781b09cb-column-rxSbSpaceMin6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_ffdbbbe8-02da-4df5-9005-7182781b09cb-column-kaReset7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_ffdbbbe8-02da-4df5-9005-7182781b09cb-column-numReadyDelay8%25255Ehidden%25253Db%2525253A0",
-       "key": "permTableView_widget_620b297d-475f-4199-bdd2-8383b6bed398_ffdbbbe8-02da-4df5-9005-7182781b09cb"
-      }
-     ]
+     "height": 0
     },
     {
-     "tabId": "620b297d-475f-4199-bdd2-8383b6bed398",
+     "tabId": "3738fc34-bf6f-4b70-a992-e74f72eb3215",
      "collapsed": false,
-     "id": "74fb4020-f4b1-4070-8cad-c82fb1ed969a",
+     "id": "59f31545-e485-4bbd-a70d-e93b806490eb",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
       "h": 7,
       "y": 51
      },
-     "state": "",
      "type": "TextDisplay",
      "title": "How to read this",
      "config": {
@@ -395,7 +338,7 @@
       "locationFile": "",
       "editorData": "<div style=\"font-family:'Metropolis','Segoe UI',sans-serif;font-size:13px;color:#ffffff;padding:6px 12px\">\n<h2 style=\"font-size:15px;color:#ffffff;margin:4px 0 10px 0\">DOM &mdash; the three layers of a vSAN write</h2>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">DOM is the distributed object manager, and it has three layers. The <b style=\"color:#ffffff;font-weight:700\">client</b> is the host a guest is running on. The <b style=\"color:#ffffff;font-weight:700\">owner</b> is the host that coordinates a given object's writes, which may be a different host entirely. The <b style=\"color:#ffffff;font-weight:700\">component manager</b> is what talks to the disks.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">A write passes through all three, so latency accumulates downward and should read highest at the client. Reading the same column across the three tables localises a problem to one layer in a way no single table can.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><b style=\"color:#ffffff;font-weight:700\">The owner layer was previously absent from every screen in this pack.</b> It returns 272 metrics and 87 of them move on an idle cluster. Its latency maximum was measured at 14.9 milliseconds against a 957 microsecond average, a fifteenfold tail that the averages everywhere else hide completely.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">The last table is vSAN's own congestion controller. It bands hosts by observed latency and throttles rebuild traffic to protect guest IO. The band counters say whether it is intervening, which nothing else here can show.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Cluster - client</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Cluster DOM Client</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Average read latency at this layer. Compare the same column across the client, owner and component manager views: the layer where the number first becomes large is the layer to investigate.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Average write latency at this layer. On ESA a write is acknowledged after it is logged, so this is usually far lower than the component manager's figure beneath it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Congestions</span> &mdash; vSAN's own backpressure signal, raised when a layer cannot absorb the offered load and asks the layer above to slow down. <b style=\"color:#ffffff;font-weight:700\">Zero on a healthy cluster</b>, and it reads zero here. Any sustained non-zero value is the single most important number on the screen.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Congestions</span> &mdash; Backpressure attributed to reads.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Congestions</span> &mdash; Backpressure attributed to writes.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Unmap congestion</span> &mdash; Backpressure attributed to unmap and space-reclamation work.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read IOPS</span> &mdash; Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Outstanding IO</span> &mdash; Outstanding IO: operations issued and not yet completed. Latency multiplied by nothing tells you why it is high -- this does. High latency with high outstanding IO is queueing, high latency with low outstanding IO is a slow device.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Throughput</span> &mdash; Bytes per second read at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Throughput</span> &mdash; Bytes per second written at this layer.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Cluster - owner</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Cluster DOM Owner</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Average read latency at this layer. Compare the same column across the client, owner and component manager views: the layer where the number first becomes large is the layer to investigate.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Average write latency at this layer. On ESA a write is acknowledged after it is logged, so this is usually far lower than the component manager's figure beneath it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read IOPS</span> &mdash; Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Throughput</span> &mdash; Bytes per second read. The owner layer names its throughput columns differently from the client layer; the quantity is the same.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Throughput</span> &mdash; Bytes per second written.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Outstanding IO</span> &mdash; Outstanding IO: operations issued and not yet completed. Latency multiplied by nothing tells you why it is high -- this does. High latency with high outstanding IO is queueing, high latency with low outstanding IO is a slow device.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Congestions</span> &mdash; vSAN's own backpressure signal, raised when a layer cannot absorb the offered load and asks the layer above to slow down. <b style=\"color:#ffffff;font-weight:700\">Zero on a healthy cluster</b>, and it reads zero here. Any sustained non-zero value is the single most important number on the screen.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Congestions</span> &mdash; Backpressure attributed to reads.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Congestions</span> &mdash; Backpressure attributed to writes.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Cluster - component manager</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Cluster DOM Component Manager</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Average read latency at this layer. Compare the same column across the client, owner and component manager views: the layer where the number first becomes large is the layer to investigate.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Average write latency at this layer. On ESA a write is acknowledged after it is logged, so this is usually far lower than the component manager's figure beneath it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Congestions</span> &mdash; vSAN's own backpressure signal, raised when a layer cannot absorb the offered load and asks the layer above to slow down. <b style=\"color:#ffffff;font-weight:700\">Zero on a healthy cluster</b>, and it reads zero here. Any sustained non-zero value is the single most important number on the screen.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Outstanding IO</span> &mdash; Outstanding IO: operations issued and not yet completed. Latency multiplied by nothing tells you why it is high -- this does. High latency with high outstanding IO is queueing, high latency with low outstanding IO is a slow device.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read IOPS</span> &mdash; Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Per host - client</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Host DOM</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Average read latency at this layer. Compare the same column across the client, owner and component manager views: the layer where the number first becomes large is the layer to investigate.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Average write latency at this layer. On ESA a write is acknowledged after it is logged, so this is usually far lower than the component manager's figure beneath it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Congestions</span> &mdash; vSAN's own backpressure signal, raised when a layer cannot absorb the offered load and asks the layer above to slow down. <b style=\"color:#ffffff;font-weight:700\">Zero on a healthy cluster</b>, and it reads zero here. Any sustained non-zero value is the single most important number on the screen.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read IOPS</span> &mdash; Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Outstanding IO</span> &mdash; Outstanding IO: operations issued and not yet completed. Latency multiplied by nothing tells you why it is high -- this does. High latency with high outstanding IO is queueing, high latency with low outstanding IO is a slow device.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Per host - owner</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Host DOM Owner</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Average write latency at this layer. On ESA a write is acknowledged after it is logged, so this is usually far lower than the component manager's figure beneath it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency (max, write)</span> &mdash; Worst write latency in the interval. Measured here at <b style=\"color:#ffffff;font-weight:700\">14.9 ms against a 957 microsecond average</b> -- a fifteenfold tail on an idle cluster, and the kind of thing an average hides completely.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency standard deviation (write)</span> &mdash; Spread of write latency. High spread with a low average means the work is bimodal: most operations fast, some very slow.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Average read latency at this layer. Compare the same column across the client, owner and component manager views: the layer where the number first becomes large is the layer to investigate.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency (max, read)</span> &mdash; Worst read latency in the interval. Read beside the average: a large gap is a tail-latency problem, which guests feel as stalls even when the average looks fine.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">High outstanding IO duration percent (write)</span> &mdash; Proportion of the interval the owner spent with its write queue above its high-watermark. <b style=\"color:#ffffff;font-weight:700\">Measured at 3% here on an otherwise idle cluster.</b> This is the metric vCenter surfaces as a top-line vSAN indicator, and it moves well before average latency does.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Owner2 pc commit latency avg us</span> &mdash; Time to commit a write across its replicas using two-phase commit. This is the irreducible cost of making a write durable in more than one place, and it sets the floor under every write latency above it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write leaf owner latency local</span> &mdash; Write latency for replicas that live on <b style=\"color:#ffffff;font-weight:700\">this</b> host, so no network is involved.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write leaf owner latency remote</span> &mdash; Write latency for replicas on <b style=\"color:#ffffff;font-weight:700\">other</b> hosts, which includes the network round trip. Read as a pair with the local column: remote should be the slower of the two, and when it is not, the local disks are the problem.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read leaf owner latency local</span> &mdash; Read latency served from this host's own disks. <b style=\"color:#ffffff;font-weight:700\">Measured at 1392 microseconds here against 905 for remote reads</b> -- local slower than across the network, which inverts the expected order and points at a local device rather than the fabric.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read leaf owner latency remote</span> &mdash; Read latency served from another host's disks, network included.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Server switch count</span> &mdash; Lifetime count of ownership changes: how often coordination of an object moved from one host to another. <b style=\"color:#ffffff;font-weight:700\">Cumulative since boot</b>, so the value means little; a rate that climbs means objects are being handed around, which costs latency.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">IOPS</span> &mdash; Total operations per second at this layer, reads and writes together.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Outstanding IO</span> &mdash; Outstanding IO: operations issued and not yet completed. Latency multiplied by nothing tells you why it is high -- this does. High latency with high outstanding IO is queueing, high latency with low outstanding IO is a slow device.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Per host - component manager</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Host DOM Component Manager</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Average read latency at this layer. Compare the same column across the client, owner and component manager views: the layer where the number first becomes large is the layer to investigate.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency (max, read)</span> &mdash; Worst read latency in the interval. Read beside the average: a large gap is a tail-latency problem, which guests feel as stalls even when the average looks fine.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Average write latency at this layer. On ESA a write is acknowledged after it is logged, so this is usually far lower than the component manager's figure beneath it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency (max, write)</span> &mdash; Worst write latency in the interval. Measured here at <b style=\"color:#ffffff;font-weight:700\">14.9 ms against a 957 microsecond average</b> -- a fifteenfold tail on an idle cluster, and the kind of thing an average hides completely.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency standard deviation (write)</span> &mdash; Spread of write latency. High spread with a low average means the work is bimodal: most operations fast, some very slow.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read IOPS</span> &mdash; Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Outstanding IO</span> &mdash; Outstanding IO: operations issued and not yet completed. Latency multiplied by nothing tells you why it is high -- this does. High latency with high outstanding IO is queueing, high latency with low outstanding IO is a slow device.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Throughput</span> &mdash; Bytes per second read at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Throughput</span> &mdash; Bytes per second written at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">VM disk queue depth (write)</span> &mdash; Queue depth for writes to virtual disk objects at the component manager. Depth is the cause; the latency columns are the effect.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">VM disk dispatched cost (write)</span> &mdash; Accumulated cost of dispatched virtual disk writes, in vSAN's internal scheduling units. Not comparable to a time or a byte count -- useful for comparing hosts against each other, not against a threshold.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Namespace dispatched cost (write)</span> &mdash; The same cost measure for namespace objects, which hold VM configuration rather than guest data. Large values here with small virtual disk values mean the work is metadata, not guest IO.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Owner network scheduler</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Host DOM Owner Scheduler</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched rolling avg latency us</span> &mdash; The rolling average latency vSAN's own scheduler is working from. This is the input to its throttling decisions, not an observation of guest latency.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched guest lt latency us</span> &mdash; Guest long-tail latency as the scheduler measures it. What it is trying to protect.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched low band thresh us</span> &mdash; The latency threshold at which the scheduler moves a host into its low band. Context for the band counters -- without it they are unreadable.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched low band</span> &mdash; Times the scheduler placed this host in its <b style=\"color:#ffffff;font-weight:700\">low</b> band, meaning it decided latency was bad enough to throttle rebuild and resync traffic hard to protect guest IO.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched mid band</span> &mdash; Times the scheduler placed this host in its <b style=\"color:#ffffff;font-weight:700\">middle</b> band: some throttling, latency elevated but not severe.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched low band sec</span> &mdash; Seconds spent in the low band. More useful than the count beside it -- one long episode and many brief ones are different problems.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched mid band sec</span> &mdash; Seconds spent in the middle band.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched low to mid band</span> &mdash; Transitions from the low band up to the middle band, meaning conditions improved.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched mid to low band</span> &mdash; Transitions from the middle band down to the low band, meaning conditions worsened. A host oscillating between bands is unstable in a way neither band counter alone reveals.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched seen total tp bps</span> &mdash; Total throughput the scheduler observed, guest and rebuild traffic together.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched seen non resync tp bps</span> &mdash; Throughput excluding resync. Subtract it from the total to see what rebuild traffic is actually consuming -- the pair answers 'is the rebuild hurting the guests'.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched controller IOPS limit</span> &mdash; The IOPS ceiling the scheduler is currently imposing. A limit far above actual load means it is not intervening.</p>\n</div>\n",
       "refreshInterval": 300,
-      "widgetId": "74fb4020-f4b1-4070-8cad-c82fb1ed969a",
+      "widgetId": "59f31545-e485-4bbd-a70d-e93b806490eb",
       "refreshContent": {
        "refreshContent": false
       },
@@ -412,45 +355,45 @@
    "homeTab": false,
    "rank": 0,
    "disabled": false,
-   "id": "620b297d-475f-4199-bdd2-8383b6bed398",
+   "id": "3738fc34-bf6f-4b70-a992-e74f72eb3215",
    "adapterName": "iSDK_VsanHostMetrics",
    "locked": false,
    "dashboardNavigations": {},
    "widgetInteractions": [
     {
-     "widgetIdProvider": "829c4cc7-0767-4344-839e-134fc1121159",
+     "widgetIdProvider": "fd18e89a-8c9e-4219-90ba-0a58a430087d",
      "type": "resourceId",
-     "widgetIdReceiver": "02cbb6cb-6bbc-4d46-8b07-81bc1921bfa7"
+     "widgetIdReceiver": "61083287-b056-4ee7-bd27-485195194db0"
     },
     {
-     "widgetIdProvider": "829c4cc7-0767-4344-839e-134fc1121159",
+     "widgetIdProvider": "fd18e89a-8c9e-4219-90ba-0a58a430087d",
      "type": "resourceId",
-     "widgetIdReceiver": "fa86cf70-9e10-4b3e-b230-dbc8526bd993"
+     "widgetIdReceiver": "b1a43d76-eadf-468c-a5cd-180f1665a647"
     },
     {
-     "widgetIdProvider": "829c4cc7-0767-4344-839e-134fc1121159",
+     "widgetIdProvider": "fd18e89a-8c9e-4219-90ba-0a58a430087d",
      "type": "resourceId",
-     "widgetIdReceiver": "01df9134-5601-4472-9065-15df9fb31179"
+     "widgetIdReceiver": "7088cce7-47a4-4dbd-93b7-81327ae0da37"
     },
     {
-     "widgetIdProvider": "829c4cc7-0767-4344-839e-134fc1121159",
+     "widgetIdProvider": "fd18e89a-8c9e-4219-90ba-0a58a430087d",
      "type": "resourceId",
-     "widgetIdReceiver": "a6fc4096-5fb6-4fac-971e-e85d3704b7f9"
+     "widgetIdReceiver": "13f28df1-9cb9-484d-92a9-ca86fb2692f9"
     },
     {
-     "widgetIdProvider": "829c4cc7-0767-4344-839e-134fc1121159",
+     "widgetIdProvider": "fd18e89a-8c9e-4219-90ba-0a58a430087d",
      "type": "resourceId",
-     "widgetIdReceiver": "3b67b2e8-ff08-4f80-9225-dbd794bfc9d0"
+     "widgetIdReceiver": "5259057e-e71a-49df-a02a-c42f23f8c2a3"
     },
     {
-     "widgetIdProvider": "829c4cc7-0767-4344-839e-134fc1121159",
+     "widgetIdProvider": "fd18e89a-8c9e-4219-90ba-0a58a430087d",
      "type": "resourceId",
-     "widgetIdReceiver": "c5b159d8-676f-4009-b1f3-132eb7bb1689"
+     "widgetIdReceiver": "5af59d27-187f-4fa4-918e-618c89e9b780"
     },
     {
-     "widgetIdProvider": "829c4cc7-0767-4344-839e-134fc1121159",
+     "widgetIdProvider": "fd18e89a-8c9e-4219-90ba-0a58a430087d",
      "type": "resourceId",
-     "widgetIdReceiver": "ffdbbbe8-02da-4df5-9005-7182781b09cb"
+     "widgetIdReceiver": "75d34809-7492-4ff3-9c5b-d3f7c2ec5d48"
     }
    ],
    "lastUpdateUserId": "833b693b-0960-4d05-b868-f14446488fc3",
@@ -461,5 +404,5 @@
    "lastUpdateTime": 1790823795066
   }
  ],
- "uuid": "f11fe97d-ff33-4e5f-9b9b-e083c3633889"
+ "uuid": "b256d0a5-eb8f-4227-bc51-bd8cf10a46f4"
 }

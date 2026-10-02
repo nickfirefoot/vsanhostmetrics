@@ -310,3 +310,44 @@ limits, and that many widgets on one dashboard hurt load time.
   value, as against its *breadth*, meaning how many objects it touches
   (p90, p114). It never discusses traversal depth or `depth=` syntax. The
   traversal finding is measured here.
+
+## 8. The saved column state must be stripped, not repaired
+
+Every widget in a UI-exported dashboard carries a `states` blob holding
+per-widget column visibility, keyed:
+
+```
+permTableView_widget_<tabId>_<widgetId>
+```
+
+**Strip it. Do not clone it, and do not repair it.** The repair was worse than
+the bug, and the sequence is worth keeping because it is not obvious.
+
+**Cloning it verbatim** leaves a key naming a widget that does not exist in the
+generated dashboard. Operations finds no state for the widget it is drawing and
+falls back to showing every column the view defines. This works, by accident.
+
+**Rewriting the ids to the generated ones** makes the state apply. And the
+state was written against a **different view**. Ours decoded to:
+
+```
+column-0            hidden=1
+column-config|name1 hidden=0
+```
+
+The cluster selector renders a view whose only column is `Configuration|Name`,
+not `config|name1`. So the state hid the object-name column and un-hid a column
+that does not exist in that view. The widget still drew its frame, still found
+the cluster, still auto-selected it and still drove every receiver on the
+dashboard -- it simply showed one row containing `-`. It reads as a rendering
+failure and is a column-visibility failure, which sent the first diagnosis at
+the widget's height instead.
+
+A states blob is one person's interface preference, captured in one browser
+session, against one view. It has no business on generated content. Dropping it
+restores the working behaviour by intent rather than by accident.
+
+**The general lesson:** in a cloned export, a field that references its own
+widget by id is inert while the id is wrong. Making the id right activates
+whatever it says. Before repairing such a field, read what it will do once it
+works.

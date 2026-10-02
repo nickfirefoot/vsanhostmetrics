@@ -128,34 +128,40 @@ DASHBOARDS = [
 ]
 
 
-# The template's widgets carry a `states` blob holding column visibility,
-# keyed by the dashboard and widget it was saved against:
+# The template's widgets carry a `states` blob holding per-widget column
+# visibility, keyed `permTableView_widget_<tabId>_<widgetId>`. It is STRIPPED,
+# not repaired, and the history is worth keeping because the repair was worse
+# than the bug.
 #
-#   permTableView_widget_<tabId>_<widgetId>
+# 1.4.0 cloned the blob verbatim, so its key named a widget that did not exist.
+#    Operations found no state for the widget it was drawing and fell back to
+#    showing every column. That worked.
+# 1.4.1 "fixed" it by rewriting the ids to the generated ones. The state then
+#    APPLIED -- and it had been written against a different view. It says
+#    `column-0 hidden=1` and `column-config|name1 hidden=0`. Our cluster
+#    selector renders a view whose only column is `Configuration|Name`, so the
+#    state hid the object-name column and un-hid a column that does not exist.
+#    The selector drew one blank row reading "-", still selected a cluster and
+#    still drove every panel, which is why it looked like a rendering failure
+#    rather than a column-visibility one.
 #
-# Cloning copies that key verbatim, so it names a dashboard and a widget that
-# do not exist in the generated output. Operations then has no state for the
-# widget it is actually drawing and falls back to defaults, which is why a
-# cloned selector showed a column the original had hidden. The ids are plain
-# hex and hyphens, so they survive the blob's URL encoding untouched and a
-# literal substitution is enough.
-TEMPLATE_TAB = None      # discovered from the template at build time
+# A states blob is one person's UI preference, captured in one browser session,
+# against one view. It has no business being cloned onto generated content at
+# all. Dropping it restores the 1.4.0 behaviour by intent rather than by
+# accident: Operations has no saved state and shows the columns the view
+# defines, which is what we want.
 
 
-def restate(widget, old_tab, old_wid, new_tab, new_wid):
-    """Repoint a cloned widget's saved state at its own identity."""
-    states = widget.get("states")
-    if not states:
-        return
-    blob = json.dumps(states)
-    blob = blob.replace(old_tab, new_tab).replace(old_wid, new_wid)
-    widget["states"] = json.loads(blob)
+def destate(widget):
+    """Drop saved per-widget UI state. See the note above."""
+    widget.pop("states", None)
+    widget.pop("state", None)
 
 
 def receiver(template_receiver, title, view_guid, coords, tab):
     w = copy.deepcopy(template_receiver)
     wid = str(uuid.uuid4())
-    restate(w, w.get("tabId") or "", w["id"], tab, wid)
+    destate(w)
     w["id"] = wid
     w["tabId"] = tab
     w["gridsterCoords"] = dict(coords)
@@ -202,7 +208,7 @@ def build(template, name, help_file, panels):
 
     prov = copy.deepcopy(provider)
     pid = str(uuid.uuid4())
-    restate(prov, prov.get("tabId") or "", prov["id"], tab, pid)
+    destate(prov)
     prov["id"] = pid
     prov["tabId"] = tab
     prov["config"]["widgetId"] = pid
@@ -245,6 +251,7 @@ def build(template, name, help_file, panels):
 
     if text_tpl is not None:
         t = copy.deepcopy(text_tpl)
+        destate(t)
         tid = str(uuid.uuid4())
         t["id"] = tid
         t["tabId"] = tab

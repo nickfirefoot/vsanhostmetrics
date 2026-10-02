@@ -22,16 +22,15 @@
    "description": "",
    "widgets": [
     {
-     "tabId": "76b62564-96ae-4213-9e25-6be586931cf5",
+     "tabId": "9b3e5d32-a293-44b5-9525-3c64dccee1a8",
      "collapsed": false,
-     "id": "6cd9f166-8c21-4e51-bef9-b7bfa1c6505c",
+     "id": "f1dfdcbd-9c2c-4263-bdd9-0e9cb6fd991b",
      "gridsterCoords": {
       "w": 2,
       "x": 1,
       "h": 7,
       "y": 1
      },
-     "state": "",
      "type": "View",
      "title": "Select cluster",
      "config": {
@@ -42,7 +41,7 @@
        "resourceName": "VCF World",
        "resourceKindId": "002010VcfAdapterVCFWorld"
       },
-      "widgetId": "6cd9f166-8c21-4e51-bef9-b7bfa1c6505c",
+      "widgetId": "f1dfdcbd-9c2c-4263-bdd9-0e9cb6fd991b",
       "traversalSpecId": null,
       "refreshContent": {
        "refreshContent": true
@@ -61,31 +60,24 @@
        "selfProvider": true
       }
      },
-     "height": 0,
-     "states": [
-      {
-       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_6cd9f166-8c21-4e51-bef9-b7bfa1c6505c-column-0%25255Ehidden%25253Db%2525253A1%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_6cd9f166-8c21-4e51-bef9-b7bfa1c6505c-column-config%2525257Cname1%25255Ehidden%25253Db%2525253A0",
-       "key": "permTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_6cd9f166-8c21-4e51-bef9-b7bfa1c6505c"
-      }
-     ]
+     "height": 0
     },
     {
-     "tabId": "76b62564-96ae-4213-9e25-6be586931cf5",
+     "tabId": "9b3e5d32-a293-44b5-9525-3c64dccee1a8",
      "collapsed": false,
-     "id": "dddf9df8-8070-4053-a425-c3783d2dffee",
+     "id": "99982109-7b91-4065-9488-fa965fb35f6f",
      "gridsterCoords": {
       "w": 10,
       "x": 3,
       "h": 7,
       "y": 1
      },
-     "state": "",
      "type": "View",
      "title": "Host health and load",
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "dddf9df8-8070-4053-a425-c3783d2dffee",
+      "widgetId": "99982109-7b91-4065-9488-fa965fb35f6f",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -105,31 +97,24 @@
        "selfProvider": false
       }
      },
-     "height": 0,
-     "states": [
-      {
-       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_dddf9df8-8070-4053-a425-c3783d2dffee-column-0%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_dddf9df8-8070-4053-a425-c3783d2dffee-column-avgLatency1%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A115%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_dddf9df8-8070-4053-a425-c3783d2dffee-column-maxLatency2%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A109%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_dddf9df8-8070-4053-a425-c3783d2dffee-column-txQLatAvg3%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A136%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_dddf9df8-8070-4053-a425-c3783d2dffee-column-txQLatMax4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_dddf9df8-8070-4053-a425-c3783d2dffee-column-txSbSpaceMin5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_dddf9df8-8070-4053-a425-c3783d2dffee-column-rxSbSpaceMin6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_dddf9df8-8070-4053-a425-c3783d2dffee-column-kaReset7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_dddf9df8-8070-4053-a425-c3783d2dffee-column-numReadyDelay8%25255Ehidden%25253Db%2525253A0",
-       "key": "permTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_dddf9df8-8070-4053-a425-c3783d2dffee"
-      }
-     ]
+     "height": 0
     },
     {
-     "tabId": "76b62564-96ae-4213-9e25-6be586931cf5",
+     "tabId": "9b3e5d32-a293-44b5-9525-3c64dccee1a8",
      "collapsed": false,
-     "id": "a2df6840-75dd-4d35-9fdf-36d95838681e",
+     "id": "99c91dbc-9eab-4698-be73-814d900bbefa",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
       "h": 8,
       "y": 8
      },
-     "state": "",
      "type": "View",
      "title": "vSAN daemon memory",
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "a2df6840-75dd-4d35-9fdf-36d95838681e",
+      "widgetId": "99c91dbc-9eab-4698-be73-814d900bbefa",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -149,31 +134,24 @@
        "selfProvider": false
       }
      },
-     "height": 0,
-     "states": [
-      {
-       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_a2df6840-75dd-4d35-9fdf-36d95838681e-column-0%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_a2df6840-75dd-4d35-9fdf-36d95838681e-column-avgLatency1%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A115%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_a2df6840-75dd-4d35-9fdf-36d95838681e-column-maxLatency2%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A109%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_a2df6840-75dd-4d35-9fdf-36d95838681e-column-txQLatAvg3%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A136%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_a2df6840-75dd-4d35-9fdf-36d95838681e-column-txQLatMax4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_a2df6840-75dd-4d35-9fdf-36d95838681e-column-txSbSpaceMin5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_a2df6840-75dd-4d35-9fdf-36d95838681e-column-rxSbSpaceMin6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_a2df6840-75dd-4d35-9fdf-36d95838681e-column-kaReset7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_a2df6840-75dd-4d35-9fdf-36d95838681e-column-numReadyDelay8%25255Ehidden%25253Db%2525253A0",
-       "key": "permTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_a2df6840-75dd-4d35-9fdf-36d95838681e"
-      }
-     ]
+     "height": 0
     },
     {
-     "tabId": "76b62564-96ae-4213-9e25-6be586931cf5",
+     "tabId": "9b3e5d32-a293-44b5-9525-3c64dccee1a8",
      "collapsed": false,
-     "id": "8e12f40d-129e-46c8-bb28-11481bbd0ab0",
+     "id": "48fa2e1e-d079-421c-b87e-7492884f3fe7",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
       "h": 8,
       "y": 16
      },
-     "state": "",
      "type": "View",
      "title": "Physical CPU - per pCPU",
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "8e12f40d-129e-46c8-bb28-11481bbd0ab0",
+      "widgetId": "48fa2e1e-d079-421c-b87e-7492884f3fe7",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -193,25 +171,18 @@
        "selfProvider": false
       }
      },
-     "height": 0,
-     "states": [
-      {
-       "value": "o%3Acolumns%3Da%253Ao%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_8e12f40d-129e-46c8-bb28-11481bbd0ab0-column-0%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_8e12f40d-129e-46c8-bb28-11481bbd0ab0-column-avgLatency1%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A115%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_8e12f40d-129e-46c8-bb28-11481bbd0ab0-column-maxLatency2%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A109%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_8e12f40d-129e-46c8-bb28-11481bbd0ab0-column-txQLatAvg3%25255Ehidden%25253Db%2525253A0%25255Ewidth%25253Dn%2525253A136%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_8e12f40d-129e-46c8-bb28-11481bbd0ab0-column-txQLatMax4%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_8e12f40d-129e-46c8-bb28-11481bbd0ab0-column-txSbSpaceMin5%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_8e12f40d-129e-46c8-bb28-11481bbd0ab0-column-rxSbSpaceMin6%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_8e12f40d-129e-46c8-bb28-11481bbd0ab0-column-kaReset7%25255Ehidden%25253Db%2525253A0%255Eo%25253Aid%25253Ds%2525253ApermTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_8e12f40d-129e-46c8-bb28-11481bbd0ab0-column-numReadyDelay8%25255Ehidden%25253Db%2525253A0",
-       "key": "permTableView_widget_76b62564-96ae-4213-9e25-6be586931cf5_8e12f40d-129e-46c8-bb28-11481bbd0ab0"
-      }
-     ]
+     "height": 0
     },
     {
-     "tabId": "76b62564-96ae-4213-9e25-6be586931cf5",
+     "tabId": "9b3e5d32-a293-44b5-9525-3c64dccee1a8",
      "collapsed": false,
-     "id": "02b94c1d-b97f-4645-9d83-7efa86114da6",
+     "id": "09c424a9-8625-4dcd-8ec8-b6076f8ac46e",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
       "h": 7,
       "y": 24
      },
-     "state": "",
      "type": "TextDisplay",
      "title": "How to read this",
      "config": {
@@ -219,7 +190,7 @@
       "locationFile": "",
       "editorData": "<div style=\"font-family:'Metropolis','Segoe UI',sans-serif;font-size:13px;color:#ffffff;padding:6px 12px\">\n<h2 style=\"font-size:15px;color:#ffffff;margin:4px 0 10px 0\">Host resources &mdash; is vSAN slow, or is the host out of road?</h2>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Every latency figure on every other screen is only meaningful if the host had capacity to spare. This screen answers that question first, so the others can be trusted.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><b style=\"color:#ffffff;font-weight:700\">Start with service health.</b> A daemon that is not answering explains more than any latency number will. This pack can measure how much memory clomd and cmmdsd consume but has no way to tell whether they are responding, and vCenter checks exactly that, so the two halves are on the same screen deliberately.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><b style=\"color:#ffffff;font-weight:700\">CPU contention matters more than CPU usage.</b> A host can be busy without anything waiting, and can make things wait while looking only moderately busy. Memory swap-in is the hard stop: any sustained non-zero value means memory was overcommitted far enough to page, and no latency figure anywhere else is reliable while it continues.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">The physical CPU table is listed per CPU rather than per host, so a single hot core is visible instead of averaged away.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Host health and load</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSphere Host Uplinks and Load</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Uplink RX Errors, All NICs</span> &mdash; Inbound errors summed across <b style=\"color:#ffffff;font-weight:700\">every</b> uplink on the host, counted by vCenter rather than by this pack. This pack only measures uplinks that carry vSAN traffic, which on this cluster is two of four per host, so a standby uplink going bad is invisible to it. This column is here to close that gap.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Uplink RX Dropped, All NICs</span> &mdash; Inbound packets dropped across every uplink on the host.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Uplink TX Errors, All NICs</span> &mdash; Outbound errors across every uplink on the host.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Uplink TX Dropped, All NICs</span> &mdash; Outbound packets dropped across every uplink on the host.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Host Network Throughput</span> &mdash; Total host network throughput, all uplinks and all traffic types. Context for the error columns and a check on whether vSAN is a large or a small share of what this host is doing.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Host CPU Usage</span> &mdash; Host CPU usage from vCenter. On the screen so that vSAN latency can be read against host load: a saturated host produces vSAN latency that is not a vSAN problem.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Host CPU Contention</span> &mdash; Proportion of time virtual machines waited for CPU. <b style=\"color:#ffffff;font-weight:700\">This, not usage, is the contention signal</b> -- a host can be busy without anything waiting, and can make things wait while looking only moderately busy.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Host Memory Consumed</span> &mdash; Proportion of host memory consumed.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Host Memory Swap-In Rate</span> &mdash; Rate at which the host is reading memory back from disk. <b style=\"color:#ffffff;font-weight:700\">Any sustained non-zero value is serious</b>: it means memory was overcommitted far enough to page, and every latency figure on every other panel becomes unreliable while it continues.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Host Uptime</span> &mdash; Host uptime. Relevant here because many counters in this pack are cumulative since boot, so a recently rebooted host has small totals for reasons that have nothing to do with health.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Hardware Sensor Status</span> &mdash; Overall hardware sensor health, as the host's own sensors report it. This replaced a set of vSAN daemon liveness columns that could not be displayed: those carry a current value but <b style=\"color:#ffffff;font-weight:700\">no retained history</b>, and a view queries a time range, so every cell came back blank.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Connectivity Issues, Critical</span> &mdash; Count of critical connectivity findings against this host. A tripwire rather than a diagnosis -- it tells you something is wrong and not what.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Utilisation Issues, Critical</span> &mdash; Count of critical utilisation findings against this host.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">vSAN daemon memory</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Host Memory</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Kernel consumed size</span> &mdash; Memory the vSAN kernel modules are actually using. <b style=\"color:#ffffff;font-weight:700\">Measured at 2.14 GB against 21.0 GB reserved</b>, so roughly a tenth of the reservation.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Kernel Reserved Memory Size</span> &mdash; Memory reserved for the vSAN kernel modules. Reserved is not consumed -- compare the two columns rather than reading either alone.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Uw consumed size</span> &mdash; Memory consumed by vSAN user-world processes in total.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">User world Reserved Memory Size</span> &mdash; Memory reserved for vSAN user-world processes.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Clomd consumed size</span> &mdash; Memory used by <b style=\"color:#ffffff;font-weight:700\">clomd</b>, which decides where objects and their replicas are placed. Growth here tracks object count, not IO.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Clomd reserved size</span> &mdash; Memory reserved for clomd.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Cmmdsd consumed size</span> &mdash; Memory used by <b style=\"color:#ffffff;font-weight:700\">cmmdsd</b>, the cluster directory service that maintains membership and object metadata.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Cmmdsd reserved size</span> &mdash; Memory reserved for cmmdsd.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Vsanmgmtd consumed size</span> &mdash; Memory used by the vSAN management daemon, which answers the API calls this pack itself makes.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Epd consumed size</span> &mdash; Memory used by <b style=\"color:#ffffff;font-weight:700\">epd</b>, which handles object distribution.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Osfsd consumed size</span> &mdash; Memory used by <b style=\"color:#ffffff;font-weight:700\">osfsd</b>, the object filesystem daemon that presents vSAN objects as namespaces.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Vsandevicemonitord consumed size</span> &mdash; Memory used by the device monitor, which watches disks for failure and degradation.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Physical CPU - per pCPU</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Host CPU</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Percentage of Used Physical CPU Time</span> &mdash; Proportion of this physical CPU that was used. Listed per CPU rather than per host, so a single hot CPU is visible instead of averaged away.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Percentage of Physical CPU Utilization</span> &mdash; Proportion of this physical CPU that was utilised. Differs from used where frequency scaling or hyperthreading is in play; read the two together.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Percentage of CPU core uitilization</span> &mdash; Utilisation of the physical core this CPU belongs to. A core near saturation while its CPUs look moderate is hyperthread contention.</p>\n</div>\n",
       "refreshInterval": 300,
-      "widgetId": "02b94c1d-b97f-4645-9d83-7efa86114da6",
+      "widgetId": "09c424a9-8625-4dcd-8ec8-b6076f8ac46e",
       "refreshContent": {
        "refreshContent": false
       },
@@ -236,25 +207,25 @@
    "homeTab": false,
    "rank": 0,
    "disabled": false,
-   "id": "76b62564-96ae-4213-9e25-6be586931cf5",
+   "id": "9b3e5d32-a293-44b5-9525-3c64dccee1a8",
    "adapterName": "iSDK_VsanHostMetrics",
    "locked": false,
    "dashboardNavigations": {},
    "widgetInteractions": [
     {
-     "widgetIdProvider": "6cd9f166-8c21-4e51-bef9-b7bfa1c6505c",
+     "widgetIdProvider": "f1dfdcbd-9c2c-4263-bdd9-0e9cb6fd991b",
      "type": "resourceId",
-     "widgetIdReceiver": "dddf9df8-8070-4053-a425-c3783d2dffee"
+     "widgetIdReceiver": "99982109-7b91-4065-9488-fa965fb35f6f"
     },
     {
-     "widgetIdProvider": "6cd9f166-8c21-4e51-bef9-b7bfa1c6505c",
+     "widgetIdProvider": "f1dfdcbd-9c2c-4263-bdd9-0e9cb6fd991b",
      "type": "resourceId",
-     "widgetIdReceiver": "a2df6840-75dd-4d35-9fdf-36d95838681e"
+     "widgetIdReceiver": "99c91dbc-9eab-4698-be73-814d900bbefa"
     },
     {
-     "widgetIdProvider": "6cd9f166-8c21-4e51-bef9-b7bfa1c6505c",
+     "widgetIdProvider": "f1dfdcbd-9c2c-4263-bdd9-0e9cb6fd991b",
      "type": "resourceId",
-     "widgetIdReceiver": "8e12f40d-129e-46c8-bb28-11481bbd0ab0"
+     "widgetIdReceiver": "48fa2e1e-d079-421c-b87e-7492884f3fe7"
     }
    ],
    "lastUpdateUserId": "833b693b-0960-4d05-b868-f14446488fc3",
@@ -265,5 +236,5 @@
    "lastUpdateTime": 1790823795066
   }
  ],
- "uuid": "c850d58c-3df3-426a-b3f7-34dca943f61a"
+ "uuid": "b3775526-659a-4845-b85d-e161f06f6583"
 }
