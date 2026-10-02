@@ -202,6 +202,96 @@ def _vc_parent(cache, parents, bucket, uuid):
     return cache[ckey]
 
 
+
+def _resource_id(client, parent):
+    """Operations' internal identifier for a vCenter object we reference.
+
+    We key these objects the way the VMWARE adapter keys them, so a query on
+    the same identifiers finds the one that already exists. Returns None if the
+    lookup is ambiguous or empty -- the caller then declines to claim anything
+    about that object, which is the safe direction.
+    """
+    key = parent.get_key()
+    # Key.identifiers is a DICT of name -> Identifier, not a list.
+    idents = {name: ident.value for name, ident in key.identifiers.items()}
+    query = {
+        "adapterKind": [key.adapter_kind],
+        "resourceKind": [key.object_kind],
+        "identifiers": idents,
+    }
+    try:
+        found = client.query_for_resources(query)
+    except Exception as exc:                     # noqa: BLE001
+        logger.warning("suite-api query failed for %s: %s", key.name, exc)
+        return None
+    if len(found) != 1:
+        logger.warning("suite-api query for %s returned %d matches; expected 1",
+                       key.name, len(found))
+        return None
+    return getattr(found[0], "id", None) or getattr(found[0], "uuid", None)
+
+
+def _key_from_suite_api(res):
+    """Build an Object Key from a suite-api resourceList entry."""
+    try:
+        rk = res["resourceKey"]
+        return Key(
+            adapter_kind=rk["adapterKindKey"],
+            object_kind=rk["resourceKindKey"],
+            name=rk["name"],
+            identifiers=[Identifier(i["identifierType"]["name"], i.get("value") or "",
+                                    bool(i["identifierType"].get("isPartOfUniqueness")))
+                         for i in rk.get("resourceIdentifiers", [])
+                         if i.get("identifierType", {}).get("isPartOfUniqueness")],
+        )
+    except Exception as exc:                     # noqa: BLE001
+        logger.warning("could not rebuild a key from suite-api entry: %s", exc)
+        return None
+
+
+def _preserve_existing_children(adapter_instance, vc_cache):
+    """Add each vCenter object's CURRENT children to what we are about to claim.
+
+    Returns the parents that are safe to put in the result. A parent whose
+    existing children could not be read is omitted -- see the caller.
+
+    The race is real and is the lesser evil: a child created between our read
+    and our write is dropped until the owning adapter's next collection. That
+    is one object for one cycle, against the previous behaviour of dropping
+    every object every cycle.
+    """
+    try:
+        client = adapter_instance.get_suite_api_client()
+    except Exception as exc:                     # noqa: BLE001
+        logger.warning("no suite-api client (%s); claiming NO vCenter "
+                       "relationships this cycle rather than overwriting "
+                       "theirs", exc)
+        return []
+
+    safe = []
+    for parent in vc_cache.values():
+        ident = _resource_id(client, parent)
+        if ident is None:
+            logger.warning("could not resolve %s %s in the suite API; leaving "
+                           "it out rather than claiming its children",
+                           parent.get_key().object_kind, parent.get_key().name)
+            continue
+        try:
+            existing = client.paged_get(
+                f"api/resources/{ident}/relationships/children", "resourceList")
+        except Exception as exc:                 # noqa: BLE001
+            logger.warning("could not read children of %s (%s); leaving it out",
+                           parent.get_key().name, exc)
+            continue
+        ours = {k for k in parent.get_children()}
+        for res in existing.get("resourceList", existing.get("values", [])) or []:
+            key = _key_from_suite_api(res)
+            if key is not None and key not in ours:
+                parent._children.add(key)
+        safe.append(parent)
+    return safe
+
+
 def _metric_label(key: str) -> str:
     """Readable label for a perfsvc metric id.
 
@@ -373,10 +463,34 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
                             linked += 1
                         break
 
-            for parent in vc_cache.values():
+            # Re-attach the children that already belonged to each vCenter
+            # object before adding it to our result.
+            #
+            # THIS IS NOT OPTIONAL. The SDK serialises relationships
+            # parent-centric -- one {"parent": key, "children": [...]} entry per
+            # object in the result -- and the swagger contract describes that as
+            # "the relationship of all objects", not a delta. So the moment a
+            # vCenter object enters our result, we are asserting its COMPLETE
+            # child set. Before this, we asserted it had only our children, and
+            # Operations believed us: the cluster lost its four hosts and a
+            # resource pool on every collection, and each host lost its VMs,
+            # pods and datastores, until the vCenter adapter's next cycle put
+            # them back. Measured, with timestamps -- our collect at 21:22:08
+            # dropped them, vCenter's at 21:25:43 restored them.
+            #
+            # That damaged the whole instance, not just this pack's dashboards.
+            #
+            # There is no additive mode in the API, so the only way to add a
+            # child without removing the others is to state the others too.
+            # Fail CLOSED: if we cannot read an object's existing children we
+            # leave that object out of the result entirely, losing our own
+            # relationship for a cycle rather than destroying someone else's.
+            kept = _preserve_existing_children(adapter_instance, vc_cache)
+            for parent in kept:
                 result.add_object(parent)
-            logger.info("linked %d objects to %d vCenter parents",
-                        linked, len(vc_cache))
+            logger.info("linked %d objects to %d vCenter parents "
+                        "(%d parents skipped: existing children unreadable)",
+                        linked, len(kept), len(vc_cache) - len(kept))
 
             if total_problems:
                 # Loud on purpose. A silently dropped sample is how the io_type
