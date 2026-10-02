@@ -1299,3 +1299,33 @@ Worth noting for anyone building a pack that attaches to VMWARE objects: the
 identifiers decide WHICH object you match, and the name decides what it is
 CALLED. Getting the identifiers right and the name wrong does not create a
 duplicate, it overwrites a real one.
+
+## Design gap: every view reports depth and none reports breadth
+
+Surfaced 2026-10-02 by the memory-tiering session reading the practitioner
+guide directly. The guide uses "depth" and "breadth" for a problem's severity
+and its spread (p90, p114), and the point it makes is one this pack does not
+act on:
+
+> A problem that impacts 1-2 VMs requires a different troubleshooting process
+> than a problem that impacts all VMs in the cluster. The depth is shown by
+> reporting the worst among any VM counter ... If the worst number is good,
+> then you do not need to look at the rest.
+
+**Every column in all 30 views is depth.** The transformations are `MAX`,
+`CURRENT` and `MIN`. A panel says the worst host write latency is 14.9 ms and
+has no way to say whether that is one host or all four. On a three-host lab the
+table itself supplies the breadth, because every row fits on screen. At forty
+hosts, paginated at fifty, it does not -- and that is exactly where the
+operator most needs to know whether to drain one host or stop the rollout.
+
+Depth alone is the right default: a good worst case means stop looking, which
+is cheap and conclusive. Breadth is what depth cannot answer when the worst
+case is bad.
+
+Candidate without new collection, since the data is already there: a cluster
+row carrying "hosts above threshold" counts beside the existing worst-case
+columns. That is a super metric or a computed column, neither of which this
+pack has ever shipped, so it is real work rather than a layout change. Worth
+scoping before adding more views -- adding breadth to the panels that exist
+beats adding more depth.

@@ -95,8 +95,20 @@ A consistent scale so operators learn one rule: **Yellow = 2x Green, Orange =
 | Colour | Meaning |
 |---|---|
 | Green -> Yellow -> Orange -> Red | performance and compliance, worsening |
+| **Dark grey** | **wastage -- capacity allocated and not used.** On a capacity screen, low utilisation is dark grey rather than green, because the guide treats waste as a bigger problem than over-utilisation and because low usage can itself be the symptom of a bottleneck elsewhere (p44, p136-137). Omitted from the first version of this document |
 | Grey | **collection error / missing data** -- not zero, and not healthy |
 | Blue | neutral, no good/bad meaning |
+
+The dark grey and plain grey bands are different things and the distinction is
+easy to lose: one means nobody is using it, the other means we failed to find
+out. On a performance screen rather than a capacity one the guide suggests red
+for oversized instead, since oversizing hurts performance.
+
+**A ratio without a super metric (p51).** A Gauge is a Scoreboard variant that
+can take **another metric as its "total"**, so a percentage can be displayed
+without authoring a super metric to compute it. Not needed by this project,
+which has no super metrics, but it is the cheapest route to a ratio for anyone
+who does.
 
 ## 2. Architecture: roll up, then dive
 
@@ -277,7 +289,7 @@ What it settled that this project had open:
 | Question | Answer |
 |---|---|
 | Does clicking a Scoreboard metric reach its trend? | **Yes -- double-click.** Drill-down is based on the object owning the metric |
-| How do you show many objects past the 100-cell cap? | **View List**, filtered. Not more Scoreboards |
+| How do you show many objects? | **View List**, filtered. p47: "Use a filter if the number of items is large" |
 | Is Heat Map right for the network sweep? | Only for **present value** / live NOC. Not for performance trend |
 | Which statistic for a summary? | Worst and worst 5th percentile. **Never average** -- a lagging indicator |
 | Is Object List ever right? | Only for throwaway dashboards. View List is a superset |
@@ -285,3 +297,16 @@ What it settled that this project had open:
 It also corroborated, independently, two things this project had reached the
 hard way: that cluster-level rollups are how you escape per-object scale
 limits, and that many widgets on one dashboard hurt load time.
+
+**What is NOT the guide's, checked against all 239 pages:**
+
+- **The 100-cell Scoreboard cap and the 7-to-14-host thresholds.** Zero hits
+  for `maxCellCount`, "100 cells" or "cell limit" anywhere in it. The guide
+  says to filter a View List when the item count is large; the number and the
+  breaking point are this project's, from the Broadcom documentation and from
+  measuring. An earlier version of the table above implied otherwise.
+- **"Depth is cumulative" in relationship traversal.** The guide uses "depth"
+  for something else entirely -- the depth of a *problem*, meaning its worst
+  value, as against its *breadth*, meaning how many objects it touches
+  (p90, p114). It never discusses traversal depth or `depth=` syntax. The
+  traversal finding is measured here.

@@ -174,6 +174,10 @@ Sensible split: essentials inline via `description`, depth via `locationUrl`.
                  "type": "resourceKind", "text": "Cluster Compute Resource" },
     "colorBy": { "value": "" },          // the metric to colour cells by
     "sizeBy":  { "value": "" },
+    // THESE THRESHOLDS ARE PERCENT-SCALE. Cloning them onto a metric in
+    // bytes, KB or microseconds paints every cell red, because every real
+    // value exceeds 100. Rescale to the metric's own range, or colour by a
+    // percentage metric instead. Reported by a peer who hit exactly this.
     "color": { "thresholds": { "values": [0, 50, 100],
                                "colors": ["#67CA16", "#FFDB24", "#FF4D2E"] } },
     "solidColoring": false, "relationalGrouping": false, "focusOnGroups": true
