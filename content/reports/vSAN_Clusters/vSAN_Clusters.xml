@@ -21,7 +21,7 @@
                             <Item>
                                 <Value>
                                     <Property name="objectType" value="RESOURCE" />
-                                    <Property name="attributeKey" value="Configuration|Name" />
+                                    <Property name="attributeKey" value="config|name" />
                                     <Property name="preferredUnitId" value="" />
                                     <Property name="isStringAttribute" value="false" />
                                     <Property name="adapterKind" value="VMWARE" />
@@ -34,8 +34,8 @@
                                         </List>
                                     </Property>
                                     <Property name="sortCriteria" value="false" />
-                                    <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="Name" />
+                                    <Property name="isProperty" value="true" />
+                                    <Property name="displayName" value="Cluster Name" />
                                     <Property name="addTimestampAsColumn" value="false" />
                                     <Property name="isShowRelativeTimestamp" value="false" />
                                 </Value>

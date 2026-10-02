@@ -63,8 +63,18 @@ VIEWS = [
     # vCenter object, not one of ours, so it carries its own adapter kind --
     # shipping it means the dashboards do not depend on a view the customer
     # happens to have built.
+    # The column key here was INVENTED and never resolved. "Configuration|Name"
+    # is the label the Operations UI shows in its picker tree; the actual key
+    # is "config|name", and it is a PROPERTY rather than a metric. The view
+    # rendered two columns both headed "Name" -- the built-in object-name
+    # column with the real value, and this one showing "-" forever.
+    #
+    # The object-name column is deliberately left visible. If the isProperty
+    # handling below turns out to be wrong too, the view still shows the
+    # cluster name and the selector still works, which is no worse than the
+    # behaviour this replaces.
     ("vSAN Clusters", "ClusterComputeResource", [
-        ("Configuration|Name", "", "CURRENT"),
+        ("config|name", "", "CURRENT"),
     ], "VMWARE"),
     ("vSAN Cluster Capacity", "VsanClusterCapacity", [
         ("free", "", "CURRENT"), ("used", "", "CURRENT"), ("total", "", "CURRENT"),
@@ -392,6 +402,7 @@ OVERRIDE = {
     ("HostSystem", "cpu|capacity_contentionPct"): "Host CPU Contention",
     ("HostSystem", "mem|host_usagePct"): "Host Memory Consumed",
     ("HostSystem", "mem|swapinRate_average"): "Host Memory Swap-In Rate",
+    ("ClusterComputeResource", "config|name"): "Cluster Name",
     ("HostSystem", "sys|uptime_latest"): "Host Uptime",
     ("HostSystem", "Sensor|status"): "Hardware Sensor Status",
     ("HostSystem", "vcfHealth|connectivity|criticalCount"): "Connectivity Issues, Critical",
@@ -416,6 +427,15 @@ def label_for(kind, key):
         label += " (Low Is Bad)"
     return label
 
+
+# Columns that are PROPERTIES rather than metrics. Operations stores the two
+# separately: a property has a current value and no time series, so a column
+# left marked as a metric queries a time range and finds nothing. This is the
+# first column in the pack to need the flag, and the flag is UNVERIFIED -- see
+# the note on the vSAN Clusters view.
+PROPERTY_COLUMNS = {
+    ("ClusterComputeResource", "config|name"),
+}
 
 ADAPTER = "VsanHostMetrics"
 
@@ -451,7 +471,7 @@ def make_item(key, label, unit, transform, kind, adapter=None):
     lst = ET.SubElement(tp, "List")
     ET.SubElement(lst, "Item", {"value": transform})
     prop("sortCriteria", "false")
-    prop("isProperty", "false")
+    prop("isProperty", "true" if (kind, key) in PROPERTY_COLUMNS else "false")
     prop("displayName", label)
     prop("addTimestampAsColumn", "false")
     prop("isShowRelativeTimestamp", "false")

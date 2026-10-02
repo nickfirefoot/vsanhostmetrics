@@ -104,7 +104,7 @@ NOTES = {
 # ---------------------------------------------------------------------------
 NOTES.update({
  # ---- the cluster selector ----------------------------------------------
- "Configuration|Name": "The cluster name, from the vCenter adapter rather than this pack. Selecting a row here drives every other panel on the screen.",
+ "config|name": "The cluster name, from the vCenter adapter rather than this pack. Selecting a row here drives every other panel on the screen. This is a <b>property</b>, not a metric, which is why the column carries the isProperty flag.",
  # ---- capacity -----------------------------------------------------------
  "free": "Unused vSAN capacity. Read it next to <b>Total</b>, not alone: the same free figure means very different things on a 10 TB and a 1 PB cluster.",
  "used": "Consumed vSAN capacity, after deduplication and compression.",

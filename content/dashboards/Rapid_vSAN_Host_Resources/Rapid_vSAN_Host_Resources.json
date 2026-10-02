@@ -22,9 +22,9 @@
    "description": "",
    "widgets": [
     {
-     "tabId": "9b3e5d32-a293-44b5-9525-3c64dccee1a8",
+     "tabId": "b0b88fc1-2c8c-4374-aee9-7bbfb77ce40a",
      "collapsed": false,
-     "id": "f1dfdcbd-9c2c-4263-bdd9-0e9cb6fd991b",
+     "id": "36006c31-2273-43e7-8a25-f29fb1e1b93f",
      "gridsterCoords": {
       "w": 2,
       "x": 1,
@@ -41,7 +41,7 @@
        "resourceName": "VCF World",
        "resourceKindId": "002010VcfAdapterVCFWorld"
       },
-      "widgetId": "f1dfdcbd-9c2c-4263-bdd9-0e9cb6fd991b",
+      "widgetId": "36006c31-2273-43e7-8a25-f29fb1e1b93f",
       "traversalSpecId": null,
       "refreshContent": {
        "refreshContent": true
@@ -63,9 +63,9 @@
      "height": 0
     },
     {
-     "tabId": "9b3e5d32-a293-44b5-9525-3c64dccee1a8",
+     "tabId": "b0b88fc1-2c8c-4374-aee9-7bbfb77ce40a",
      "collapsed": false,
-     "id": "99982109-7b91-4065-9488-fa965fb35f6f",
+     "id": "c133d064-d12b-4b6a-a190-7146bcae3e5c",
      "gridsterCoords": {
       "w": 10,
       "x": 3,
@@ -77,7 +77,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "99982109-7b91-4065-9488-fa965fb35f6f",
+      "widgetId": "c133d064-d12b-4b6a-a190-7146bcae3e5c",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -100,9 +100,9 @@
      "height": 0
     },
     {
-     "tabId": "9b3e5d32-a293-44b5-9525-3c64dccee1a8",
+     "tabId": "b0b88fc1-2c8c-4374-aee9-7bbfb77ce40a",
      "collapsed": false,
-     "id": "99c91dbc-9eab-4698-be73-814d900bbefa",
+     "id": "9eed89c4-c585-4aa7-8f5d-88b1a66acb73",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -114,7 +114,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "99c91dbc-9eab-4698-be73-814d900bbefa",
+      "widgetId": "9eed89c4-c585-4aa7-8f5d-88b1a66acb73",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -137,9 +137,9 @@
      "height": 0
     },
     {
-     "tabId": "9b3e5d32-a293-44b5-9525-3c64dccee1a8",
+     "tabId": "b0b88fc1-2c8c-4374-aee9-7bbfb77ce40a",
      "collapsed": false,
-     "id": "48fa2e1e-d079-421c-b87e-7492884f3fe7",
+     "id": "bdaada51-4f89-42b5-9037-95e711595993",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -151,7 +151,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "48fa2e1e-d079-421c-b87e-7492884f3fe7",
+      "widgetId": "bdaada51-4f89-42b5-9037-95e711595993",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -174,9 +174,9 @@
      "height": 0
     },
     {
-     "tabId": "9b3e5d32-a293-44b5-9525-3c64dccee1a8",
+     "tabId": "b0b88fc1-2c8c-4374-aee9-7bbfb77ce40a",
      "collapsed": false,
-     "id": "09c424a9-8625-4dcd-8ec8-b6076f8ac46e",
+     "id": "4c984492-e49b-4f1c-8dcc-4dab718b399f",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -190,7 +190,7 @@
       "locationFile": "",
       "editorData": "<div style=\"font-family:'Metropolis','Segoe UI',sans-serif;font-size:13px;color:#ffffff;padding:6px 12px\">\n<h2 style=\"font-size:15px;color:#ffffff;margin:4px 0 10px 0\">Host resources &mdash; is vSAN slow, or is the host out of road?</h2>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Every latency figure on every other screen is only meaningful if the host had capacity to spare. This screen answers that question first, so the others can be trusted.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><b style=\"color:#ffffff;font-weight:700\">Start with service health.</b> A daemon that is not answering explains more than any latency number will. This pack can measure how much memory clomd and cmmdsd consume but has no way to tell whether they are responding, and vCenter checks exactly that, so the two halves are on the same screen deliberately.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><b style=\"color:#ffffff;font-weight:700\">CPU contention matters more than CPU usage.</b> A host can be busy without anything waiting, and can make things wait while looking only moderately busy. Memory swap-in is the hard stop: any sustained non-zero value means memory was overcommitted far enough to page, and no latency figure anywhere else is reliable while it continues.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">The physical CPU table is listed per CPU rather than per host, so a single hot core is visible instead of averaged away.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Host health and load</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSphere Host Uplinks and Load</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Uplink RX Errors, All NICs</span> &mdash; Inbound errors summed across <b style=\"color:#ffffff;font-weight:700\">every</b> uplink on the host, counted by vCenter rather than by this pack. This pack only measures uplinks that carry vSAN traffic, which on this cluster is two of four per host, so a standby uplink going bad is invisible to it. This column is here to close that gap.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Uplink RX Dropped, All NICs</span> &mdash; Inbound packets dropped across every uplink on the host.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Uplink TX Errors, All NICs</span> &mdash; Outbound errors across every uplink on the host.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Uplink TX Dropped, All NICs</span> &mdash; Outbound packets dropped across every uplink on the host.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Host Network Throughput</span> &mdash; Total host network throughput, all uplinks and all traffic types. Context for the error columns and a check on whether vSAN is a large or a small share of what this host is doing.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Host CPU Usage</span> &mdash; Host CPU usage from vCenter. On the screen so that vSAN latency can be read against host load: a saturated host produces vSAN latency that is not a vSAN problem.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Host CPU Contention</span> &mdash; Proportion of time virtual machines waited for CPU. <b style=\"color:#ffffff;font-weight:700\">This, not usage, is the contention signal</b> -- a host can be busy without anything waiting, and can make things wait while looking only moderately busy.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Host Memory Consumed</span> &mdash; Proportion of host memory consumed.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Host Memory Swap-In Rate</span> &mdash; Rate at which the host is reading memory back from disk. <b style=\"color:#ffffff;font-weight:700\">Any sustained non-zero value is serious</b>: it means memory was overcommitted far enough to page, and every latency figure on every other panel becomes unreliable while it continues.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Host Uptime</span> &mdash; Host uptime. Relevant here because many counters in this pack are cumulative since boot, so a recently rebooted host has small totals for reasons that have nothing to do with health.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Hardware Sensor Status</span> &mdash; Overall hardware sensor health, as the host's own sensors report it. This replaced a set of vSAN daemon liveness columns that could not be displayed: those carry a current value but <b style=\"color:#ffffff;font-weight:700\">no retained history</b>, and a view queries a time range, so every cell came back blank.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Connectivity Issues, Critical</span> &mdash; Count of critical connectivity findings against this host. A tripwire rather than a diagnosis -- it tells you something is wrong and not what.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Utilisation Issues, Critical</span> &mdash; Count of critical utilisation findings against this host.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">vSAN daemon memory</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Host Memory</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Kernel consumed size</span> &mdash; Memory the vSAN kernel modules are actually using. <b style=\"color:#ffffff;font-weight:700\">Measured at 2.14 GB against 21.0 GB reserved</b>, so roughly a tenth of the reservation.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Kernel Reserved Memory Size</span> &mdash; Memory reserved for the vSAN kernel modules. Reserved is not consumed -- compare the two columns rather than reading either alone.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Uw consumed size</span> &mdash; Memory consumed by vSAN user-world processes in total.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">User world Reserved Memory Size</span> &mdash; Memory reserved for vSAN user-world processes.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Clomd consumed size</span> &mdash; Memory used by <b style=\"color:#ffffff;font-weight:700\">clomd</b>, which decides where objects and their replicas are placed. Growth here tracks object count, not IO.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Clomd reserved size</span> &mdash; Memory reserved for clomd.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Cmmdsd consumed size</span> &mdash; Memory used by <b style=\"color:#ffffff;font-weight:700\">cmmdsd</b>, the cluster directory service that maintains membership and object metadata.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Cmmdsd reserved size</span> &mdash; Memory reserved for cmmdsd.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Vsanmgmtd consumed size</span> &mdash; Memory used by the vSAN management daemon, which answers the API calls this pack itself makes.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Epd consumed size</span> &mdash; Memory used by <b style=\"color:#ffffff;font-weight:700\">epd</b>, which handles object distribution.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Osfsd consumed size</span> &mdash; Memory used by <b style=\"color:#ffffff;font-weight:700\">osfsd</b>, the object filesystem daemon that presents vSAN objects as namespaces.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Vsandevicemonitord consumed size</span> &mdash; Memory used by the device monitor, which watches disks for failure and degradation.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Physical CPU - per pCPU</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Host CPU</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Percentage of Used Physical CPU Time</span> &mdash; Proportion of this physical CPU that was used. Listed per CPU rather than per host, so a single hot CPU is visible instead of averaged away.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Percentage of Physical CPU Utilization</span> &mdash; Proportion of this physical CPU that was utilised. Differs from used where frequency scaling or hyperthreading is in play; read the two together.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Percentage of CPU core uitilization</span> &mdash; Utilisation of the physical core this CPU belongs to. A core near saturation while its CPUs look moderate is hyperthread contention.</p>\n</div>\n",
       "refreshInterval": 300,
-      "widgetId": "09c424a9-8625-4dcd-8ec8-b6076f8ac46e",
+      "widgetId": "4c984492-e49b-4f1c-8dcc-4dab718b399f",
       "refreshContent": {
        "refreshContent": false
       },
@@ -207,25 +207,25 @@
    "homeTab": false,
    "rank": 0,
    "disabled": false,
-   "id": "9b3e5d32-a293-44b5-9525-3c64dccee1a8",
+   "id": "b0b88fc1-2c8c-4374-aee9-7bbfb77ce40a",
    "adapterName": "iSDK_VsanHostMetrics",
    "locked": false,
    "dashboardNavigations": {},
    "widgetInteractions": [
     {
-     "widgetIdProvider": "f1dfdcbd-9c2c-4263-bdd9-0e9cb6fd991b",
+     "widgetIdProvider": "36006c31-2273-43e7-8a25-f29fb1e1b93f",
      "type": "resourceId",
-     "widgetIdReceiver": "99982109-7b91-4065-9488-fa965fb35f6f"
+     "widgetIdReceiver": "c133d064-d12b-4b6a-a190-7146bcae3e5c"
     },
     {
-     "widgetIdProvider": "f1dfdcbd-9c2c-4263-bdd9-0e9cb6fd991b",
+     "widgetIdProvider": "36006c31-2273-43e7-8a25-f29fb1e1b93f",
      "type": "resourceId",
-     "widgetIdReceiver": "99c91dbc-9eab-4698-be73-814d900bbefa"
+     "widgetIdReceiver": "9eed89c4-c585-4aa7-8f5d-88b1a66acb73"
     },
     {
-     "widgetIdProvider": "f1dfdcbd-9c2c-4263-bdd9-0e9cb6fd991b",
+     "widgetIdProvider": "36006c31-2273-43e7-8a25-f29fb1e1b93f",
      "type": "resourceId",
-     "widgetIdReceiver": "48fa2e1e-d079-421c-b87e-7492884f3fe7"
+     "widgetIdReceiver": "bdaada51-4f89-42b5-9037-95e711595993"
     }
    ],
    "lastUpdateUserId": "833b693b-0960-4d05-b868-f14446488fc3",
@@ -236,5 +236,5 @@
    "lastUpdateTime": 1790823795066
   }
  ],
- "uuid": "b3775526-659a-4845-b85d-e161f06f6583"
+ "uuid": "40628c8e-56e8-4a39-9d50-68e8e4b0ec32"
 }

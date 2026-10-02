@@ -1329,3 +1329,41 @@ columns. That is a super metric or a computed column, neither of which this
 pack has ever shipped, so it is real work rather than a layout change. Worth
 scoping before adding more views -- adding breadth to the panels that exist
 beats adding more depth.
+
+## An invented column key, and how it hid for so long
+
+The cluster selector showed two columns both headed "Name": the built-in
+object-name column with the real value, and a second reading `-` forever.
+
+`Configuration|Name` **does not exist**. Not a statkey on
+`ClusterComputeResource`, not a property on the object. I took it from the
+label the Operations UI shows in its metric picker tree -- *Configuration >
+Name* -- and wrote that as the key. The real key is `config|name`, and it is a
+**property**, not a metric.
+
+**Why the existing validation missed it.** `tools/build_view.py`'s column check
+validates against `perfsvc_model.py`, which only describes **this pack's own**
+kinds. The three borrowed `VMWARE` views have no model to check against, so
+their columns were never validated at all. All 13 columns on
+`vSphere Host Uplinks and Load` have since been confirmed against the live
+statkey list and are real; this was the only invented one.
+
+**Follow-on:** validating borrowed columns needs a live Operations API call, so
+it cannot sit in the build the way the model check does. It belongs in a
+pre-release step. Until that exists, any column added to a `VMWARE`-subject
+view should be confirmed by hand against
+`/suite-api/api/adapterkinds/VMWARE/resourcekinds/<kind>/statkeys` and the
+object's `/properties`.
+
+**First use of `isProperty`.** Operations stores properties and metrics
+separately: a property has a current value and no time series, so a column left
+marked as a metric queries a time range and finds nothing -- the same mechanism
+that killed the host services view. `config|name` is the first column in this
+pack declared with `isProperty=true`, and **that flag is unverified**. The
+object-name column is deliberately left visible, so if the flag is wrong too,
+the selector still shows the cluster name and still works. Worst case is the
+behaviour being replaced, not worse.
+
+**The general shape, worth remembering:** a UI picker shows you a *label*, and
+a view needs a *key*. They are not the same string, and an invented key fails
+silently as an empty column rather than as an error.
