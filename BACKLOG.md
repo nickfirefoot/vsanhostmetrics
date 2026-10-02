@@ -1260,3 +1260,42 @@ A `vSphere Host BIOS and Hardware` view, cross-adapter on
 already shipping. Properties rather than metrics, so the column `isProperty`
 flag needs setting -- which no view in this pack does yet, so it is unverified.
 Would answer "which hosts are on which BIOS" with no new collection at all.
+
+## The vCenter rename bug is fixed, but its fallback still re-arms it
+
+Raised 2026-10-02 by the memory-tiering session, which had logged host naming
+instability on the shared lab as an Operations quirk and then traced it to this
+pack.
+
+**The original defect.** `_vc_parent` builds an Object keyed exactly as the
+VMWARE adapter keys its own, so Operations matches the existing object instead
+of creating a second one. The `name` passed with that key is **authoritative**:
+supplying anything other than the object's real vCenter name RENAMES it. An
+early version passed the managed object reference, which turned every host in
+the shared lab into `host-27` and the cluster into `domain-c9` -- for every
+other consumer of that vCenter, not just for us.
+
+Fixed in a124ecd and present in every released version: v1.2.3, v1.3.1 and
+v1.4.1 all carry it.
+
+**What is still wrong.** `app/adapter.py:198` reads
+
+```python
+name=parents.get("names", {}).get(moid) or moid,
+```
+
+so a name-resolution miss falls back to the MoRef and renames the object again.
+The fix removed the systematic case and left the intermittent one. On this lab
+every name resolves -- 308 of them -- so it never fires, which is exactly why it
+would go unnoticed on a slower or larger vCenter where a lookup can fail.
+
+**The correct behaviour is to drop the relationship, not rename the object.**
+An object that loses its parent for one cycle is a gap in traversal and is
+caught by the no-orphan guard. An object renamed to `host-27` is damage to
+someone else's inventory that persists until that adapter corrects it. Return
+None when the name is unresolvable.
+
+Worth noting for anyone building a pack that attaches to VMWARE objects: the
+identifiers decide WHICH object you match, and the name decides what it is
+CALLED. Getting the identifiers right and the name wrong does not create a
+duplicate, it overwrites a real one.
