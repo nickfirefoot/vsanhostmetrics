@@ -332,6 +332,24 @@ def _disk_label(scsi) -> Optional[str]:
     return " ".join([match.group("bus")] + tokens)
 
 
+def _host_aliases(name):
+    """Every spelling of a host name worth matching on.
+
+    vCenter and the Performance Service do not have to agree on whether a host
+    is "esxi01.example.com", "esxi01" or "ESXI01.", and an exact match on the
+    wrong one yields no relationship rather than an error.
+    """
+    if not name:
+        return []
+    raw = str(name).strip().rstrip(".")
+    low = raw.lower()
+    out = [low]
+    short = low.split(".", 1)[0]
+    if short and short != low:
+        out.append(short)
+    return out
+
+
 def build_parent_map(service_instance, clusters, perf,
                      _mos: Optional[Dict] = None) -> Dict[str, Dict[str, str]]:
     """Identity of the vCenter objects our objects should hang off.
@@ -385,22 +403,53 @@ def build_parent_map(service_instance, clusters, perf,
         except Exception:                                # noqa: BLE001
             pass
 
-        # vSAN node uuid -> host MoRef, joined on hostname because perfsvc
-        # reports the vSAN node uuid and vCenter reports the MoRef, with the
-        # hostname the only field both agree on.
+        # vSAN node uuid -> host MoRef.
+        #
+        # This used to join on HOSTNAME STRING EQUALITY, vCenter's host.name
+        # against the Performance Service's node.hostname, and that is why the
+        # pack worked on one lab and produced no host relationships at all on
+        # every other one. The two agree only when a host was added to vCenter
+        # by exactly the name vSAN reports. Added by IP, or by short name, or
+        # with any difference in spelling or case, and the lookup misses, no
+        # parent is resolved, every host-scoped object is orphaned, and every
+        # host-scoped view reports it is not applicable for the selected
+        # object. Cluster-scoped views keep working, because those join on the
+        # vSAN cluster uuid and never touch a hostname.
+        #
+        # vCenter knows each host's vSAN node uuid directly, so the join needs
+        # no string matching:
+        #     host.configManager.vsanSystem.config.clusterInfo.nodeUuid
+        # Verified against a live vCenter: all four hosts returned it.
         by_name: Dict[str, str] = {}
         for host in (getattr(cluster, "host", None) or []):
             try:
-                by_name[host.name] = host._moId
-                out["names"][host._moId] = host.name
+                moid = host._moId
+                out["names"][moid] = host.name
+                try:
+                    node_uuid = (host.configManager.vsanSystem.config
+                                 .clusterInfo.nodeUuid)
+                except Exception:                        # noqa: BLE001
+                    node_uuid = None
+                if node_uuid:
+                    out["hosts"][node_uuid] = moid
+                for alias in _host_aliases(host.name):
+                    by_name.setdefault(alias, moid)
             except Exception:                            # noqa: BLE001
                 pass
+
+        # Fallback for any host whose vsanSystem is unreadable: the old
+        # hostname join, but case-insensitive and tolerant of short name
+        # against FQDN, which covers most of the ways the two disagree.
         try:
             for node in (perf.VsanPerfQueryNodeInformation(cluster) or []):
                 uuid = getattr(node, "vsanNodeUuid", None)
-                moid = by_name.get(getattr(node, "hostname", None) or "")
-                if uuid and moid:
-                    out["hosts"][uuid] = moid
+                if not uuid or uuid in out["hosts"]:
+                    continue
+                for alias in _host_aliases(getattr(node, "hostname", None)):
+                    moid = by_name.get(alias)
+                    if moid:
+                        out["hosts"][uuid] = moid
+                        break
         except Exception:                                # noqa: BLE001
             pass
 
