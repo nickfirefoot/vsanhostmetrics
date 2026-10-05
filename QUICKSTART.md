@@ -142,6 +142,35 @@ is genuinely misconfigured says it needs a view selected. A panel that is merely
 waiting renders its headers with no rows. Those two look different, and only the
 first is a fault.
 
+## 2c. "The widget is not configured" with an hourglass means WAIT
+
+**Observed 2026-10-05, and it looks exactly like a broken dashboard.** Shortly
+after installing, a dashboard can show every widget reading:
+
+> The widget is not configured. Select a view to render.
+
+including the cluster selector, with a small hourglass beside each widget
+title. Another dashboard in the same pak renders perfectly at the same moment.
+
+**That is the content import still running, not a fault.** The hourglass is the
+in-progress marker. The widgets bind themselves when it completes, with no
+action taken and nothing changed. Larger dashboards finish later than small
+ones, which is why one screen works while another does not.
+
+The two states are worth telling apart, because they look similar and only one
+is a problem:
+
+| What you see | What it means |
+|---|---|
+| "Widget is not configured", hourglass present | Import still running. **Wait.** |
+| "Widget is not configured", no hourglass, settled | The widget genuinely has no view bound |
+| "The view cannot be rendered for the specified object" | The view resolved but the selected object is not a valid subject |
+| Headers render, no rows | Bound and working, waiting on data or relationships |
+
+Combined with the collection-cycle lag above, **budget fifteen minutes after an
+install before investigating anything.** Several hours were spent chasing two
+unrelated code defects that this paragraph would have prevented.
+
 ## 3. Confirm it is collecting
 
 The first collection carries data — there is no warm-up. An empty first cycle

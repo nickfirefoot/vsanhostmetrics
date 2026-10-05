@@ -152,15 +152,36 @@ DASHBOARDS = [
 # defines, which is what we want.
 
 
+# Dashboards need a STABLE identity, for the same reason views do.
+#
+# Views derive their GUID from their title with uuid5, so regenerating one
+# updates the existing view in place. Dashboards used uuid4 for both the
+# document uuid and the tab id, so every rebuild produced a dashboard with the
+# same NAME and a different IDENTITY. Installing a new pak therefore did not
+# update the dashboards already there -- it added a second set alongside them,
+# and which one an operator opens is then luck. A half-imported leftover from
+# an earlier install shows every widget as "not configured", which is
+# indistinguishable from a real binding failure and sent this hunt a long way
+# in the wrong direction.
+#
+# Same namespace as build_view, so the two generators cannot collide.
+DASH_NAMESPACE = uuid.UUID("6f3c9b1e-4a2d-5e8f-9c1b-2d7a4e6f8b03")
+
+
+def stable_id(*parts):
+    """A reproducible uuid for a dashboard, tab or widget."""
+    return str(uuid.uuid5(DASH_NAMESPACE, "dashboard:" + "/".join(parts)))
+
+
 def destate(widget):
     """Drop saved per-widget UI state. See the note above."""
     widget.pop("states", None)
     widget.pop("state", None)
 
 
-def receiver(template_receiver, title, view_guid, coords, tab):
+def receiver(template_receiver, title, view_guid, coords, tab, dash_name):
     w = copy.deepcopy(template_receiver)
-    wid = str(uuid.uuid4())
+    wid = stable_id(dash_name, "widget", title)
     destate(w)
     w["id"] = wid
     w["tabId"] = tab
@@ -179,11 +200,11 @@ def receiver(template_receiver, title, view_guid, coords, tab):
 def build(template, name, help_file, panels):
     doc = copy.deepcopy(template)
     db = doc["dashboards"][0]
-    tab = str(uuid.uuid4())
+    tab = stable_id(name, "tab")
     db["id"] = tab
     db["name"] = name
     db["description"] = ""
-    doc["uuid"] = str(uuid.uuid4())
+    doc["uuid"] = stable_id(name, "doc")
     # Taken from a dashboard corrected in the UI and re-exported, diffed
     # against the generated one. Both of these were wrong in the template.
     #
@@ -207,7 +228,7 @@ def build(template, name, help_file, panels):
     text_tpl = next((w for w in db["widgets"] if w["type"] == "TextDisplay"), None)
 
     prov = copy.deepcopy(provider)
-    pid = str(uuid.uuid4())
+    pid = stable_id(name, "widget", "Select cluster")
     destate(prov)
     prov["id"] = pid
     prov["tabId"] = tab
@@ -259,33 +280,52 @@ def build(template, name, help_file, panels):
     #   002006VMWAREHostSystem
     #   002010VcfAdapterVCFWorld
     #   002028VirtualAndPhysicalSANAdaptervSAN World
-    ROOT_ADAPTER, ROOT_KIND = "VMWARE", "vSphere World"
-    root_kind_id = f"002{len(ROOT_ADAPTER):03d}{ROOT_ADAPTER}{ROOT_KIND}"
+    # REVERTED to VCF World in 1.4.5, and the reason is worth keeping.
+    #
+    # 1.4.4 changed this to vSphere World on the theory that pinning a
+    # VcfAdapter object would break non-VCF instances. The theory may still be
+    # right, but I CONSTRUCTED the id from a pattern rather than reading it
+    # from a working export, and shipped it unverified. Result: "widget is not
+    # configured", which is what a provider with an unresolvable root looks
+    # like. The sites that reported the original problem are VCF 9.1.1 anyway,
+    # so VCF World exists there and was never their fault.
+    #
+    # The only two provider roots ever observed in a real export are:
+    #     002010VcfAdapterVCFWorld                      (this one, works here)
+    #     002028VirtualAndPhysicalSANAdaptervSAN World  (Broadcom's ESA dash)
+    # Both are verified. "002006VMWAREvSphere World" is not, and guessing the
+    # encoding is exactly the mistake that produced Configuration|Name.
+    #
+    # Making this portable to non-VCF Operations needs a verified value, which
+    # means building one provider in the UI on such an instance and exporting
+    # it. Until that exists, ship what is known to work.
+    ROOT_ADAPTER, ROOT_KIND = "VcfAdapter", "VCFWorld"
+    root_kind_id = "002010VcfAdapterVCFWorld"
     res = prov["config"].get("resource")
     if isinstance(res, dict):
         # `id` was an ExtJS client-side model handle from the exporting
         # browser session and means nothing anywhere else.
         res.pop("id", None)
         res["resourceKindId"] = root_kind_id
-        res["resourceName"] = ROOT_KIND
+        res["resourceName"] = "VCF World"
         prov["config"]["resource"] = res
     # The document-level entries table is what resolves the resourceId
     # sentinel, by kind and name rather than by instance id, so it has to name
     # the same object.
     for entry in (doc.get("entries") or {}).get("resource") or []:
-        if entry.get("resourceKindKey") == "VCFWorld":
+        if entry.get("resourceKindKey") in ("VCFWorld", "vSphere World"):
             entry["adapterKindKey"] = ROOT_ADAPTER
             entry["resourceKindKey"] = ROOT_KIND
-            entry["name"] = ROOT_KIND
+            entry["name"] = "VCF World"
 
     out = [prov]
     for title, key, coords in panels:
-        out.append(receiver(recv_tpl, title, V[key], coords, tab))
+        out.append(receiver(recv_tpl, title, V[key], coords, tab, name))
 
     if text_tpl is not None:
         t = copy.deepcopy(text_tpl)
         destate(t)
-        tid = str(uuid.uuid4())
+        tid = stable_id(name, "widget", "How to read this")
         t["id"] = tid
         t["tabId"] = tab
         t["config"]["widgetId"] = tid
