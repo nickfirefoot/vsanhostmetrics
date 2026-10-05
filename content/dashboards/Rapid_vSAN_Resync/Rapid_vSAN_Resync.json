@@ -2,11 +2,11 @@
  "entries": {
   "resource": [
    {
-    "resourceKindKey": "VCFWorld",
+    "resourceKindKey": "vSphere World",
     "internalId": "resource:id:0_::_",
-    "adapterKindKey": "VcfAdapter",
+    "adapterKindKey": "VMWARE",
     "identifiers": [],
-    "name": "VCF World"
+    "name": "vSphere World"
    }
   ]
  },
@@ -22,9 +22,9 @@
    "description": "",
    "widgets": [
     {
-     "tabId": "77c1ad51-3d01-4b35-a9f7-da50be0954cd",
+     "tabId": "397f38b0-450e-4b03-a2b3-6f735ecbcf88",
      "collapsed": false,
-     "id": "0fbc0003-5723-41d7-b74c-140c940060d3",
+     "id": "3fa28f45-dad6-4618-bdb0-e0c12e45919e",
      "gridsterCoords": {
       "w": 2,
       "x": 1,
@@ -38,10 +38,10 @@
       "resource": {
        "resourceId": "resource:id:0_::_",
        "traversalSpecId": "",
-       "resourceName": "VCF World",
-       "resourceKindId": "002010VcfAdapterVCFWorld"
+       "resourceName": "vSphere World",
+       "resourceKindId": "002006VMWAREvSphere World"
       },
-      "widgetId": "0fbc0003-5723-41d7-b74c-140c940060d3",
+      "widgetId": "3fa28f45-dad6-4618-bdb0-e0c12e45919e",
       "traversalSpecId": null,
       "refreshContent": {
        "refreshContent": true
@@ -63,9 +63,9 @@
      "height": 0
     },
     {
-     "tabId": "77c1ad51-3d01-4b35-a9f7-da50be0954cd",
+     "tabId": "397f38b0-450e-4b03-a2b3-6f735ecbcf88",
      "collapsed": false,
-     "id": "0ae11630-d6b8-4e52-9962-778fefdb1f57",
+     "id": "1edb66e7-6854-4fed-8a1b-e90f1d6f3fc9",
      "gridsterCoords": {
       "w": 10,
       "x": 3,
@@ -77,7 +77,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "0ae11630-d6b8-4e52-9962-778fefdb1f57",
+      "widgetId": "1edb66e7-6854-4fed-8a1b-e90f1d6f3fc9",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -100,9 +100,9 @@
      "height": 0
     },
     {
-     "tabId": "77c1ad51-3d01-4b35-a9f7-da50be0954cd",
+     "tabId": "397f38b0-450e-4b03-a2b3-6f735ecbcf88",
      "collapsed": false,
-     "id": "c6204e4f-bb8b-4820-a004-26e26a23e509",
+     "id": "ffe31fe1-bb84-48ff-a0b5-1a7e9cd14886",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -114,7 +114,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "c6204e4f-bb8b-4820-a004-26e26a23e509",
+      "widgetId": "ffe31fe1-bb84-48ff-a0b5-1a7e9cd14886",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -137,9 +137,9 @@
      "height": 0
     },
     {
-     "tabId": "77c1ad51-3d01-4b35-a9f7-da50be0954cd",
+     "tabId": "397f38b0-450e-4b03-a2b3-6f735ecbcf88",
      "collapsed": false,
-     "id": "836a9ce2-9b79-4deb-834f-0839498374f0",
+     "id": "93732ca4-d7cd-47a5-a8c6-b98b1057b2c9",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -151,7 +151,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "836a9ce2-9b79-4deb-834f-0839498374f0",
+      "widgetId": "93732ca4-d7cd-47a5-a8c6-b98b1057b2c9",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -174,9 +174,9 @@
      "height": 0
     },
     {
-     "tabId": "77c1ad51-3d01-4b35-a9f7-da50be0954cd",
+     "tabId": "397f38b0-450e-4b03-a2b3-6f735ecbcf88",
      "collapsed": false,
-     "id": "46bcfa5b-46c7-40d9-a112-b2d8d32c0f88",
+     "id": "3028674d-d166-4b97-82df-1cc2c8899332",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -188,7 +188,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "46bcfa5b-46c7-40d9-a112-b2d8d32c0f88",
+      "widgetId": "3028674d-d166-4b97-82df-1cc2c8899332",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -211,9 +211,9 @@
      "height": 0
     },
     {
-     "tabId": "77c1ad51-3d01-4b35-a9f7-da50be0954cd",
+     "tabId": "397f38b0-450e-4b03-a2b3-6f735ecbcf88",
      "collapsed": false,
-     "id": "54308150-9280-407f-9fcc-413950afe629",
+     "id": "76c68c28-a997-4057-aca0-dfa27a473140",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -225,7 +225,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "54308150-9280-407f-9fcc-413950afe629",
+      "widgetId": "76c68c28-a997-4057-aca0-dfa27a473140",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -248,9 +248,9 @@
      "height": 0
     },
     {
-     "tabId": "77c1ad51-3d01-4b35-a9f7-da50be0954cd",
+     "tabId": "397f38b0-450e-4b03-a2b3-6f735ecbcf88",
      "collapsed": false,
-     "id": "06361c79-cfe2-4b81-a7eb-638becae55fa",
+     "id": "9930b288-f437-4041-ac72-add3c8a747dc",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -262,7 +262,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "06361c79-cfe2-4b81-a7eb-638becae55fa",
+      "widgetId": "9930b288-f437-4041-ac72-add3c8a747dc",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -285,9 +285,9 @@
      "height": 0
     },
     {
-     "tabId": "77c1ad51-3d01-4b35-a9f7-da50be0954cd",
+     "tabId": "397f38b0-450e-4b03-a2b3-6f735ecbcf88",
      "collapsed": false,
-     "id": "9b05fda7-7f63-452e-ab1e-c26069aceb23",
+     "id": "185f7e45-3901-49e2-8e28-e83c0a380a2f",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -301,7 +301,7 @@
       "locationFile": "",
       "editorData": "<div style=\"font-family:'Metropolis','Segoe UI',sans-serif;font-size:13px;color:#ffffff;padding:6px 12px\">\n<h2 style=\"font-size:15px;color:#ffffff;margin:4px 0 10px 0\">Resync &mdash; how much risk is outstanding, and who is paying for it?</h2>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">A resync means some data is below the redundancy its policy asks for. Two questions matter and they are different: <b style=\"color:#ffffff;font-weight:700\">how much work is left</b>, and <b style=\"color:#ffffff;font-weight:700\">what is that work costing the guests</b>.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><b style=\"color:#ffffff;font-weight:700\">Zero across the top table is the normal and desirable reading.</b> Nothing is rebuilding, so nothing is at reduced redundancy. The IO columns beside the job counts are there so that a screen of zeros can be told apart from a screen that is not collecting.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">If jobs are pending but not running, look at the scheduler table. vSAN deliberately throttles rebuild traffic when guest latency rises, so a deep queue with low parallelism is usually correct behaviour rather than a stall &mdash; but it does mean the cluster stays at reduced redundancy for longer, and that is a risk decision somebody should be making knowingly.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Segment cleaning sits at the bottom because on ESA it competes with rebuild work for the same disks.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Jobs outstanding - the risk</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Cluster Resync Jobs</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num pending resync jobs</span> &mdash; Rebuild jobs queued and not yet started. <b style=\"color:#ffffff;font-weight:700\">The single best measure of outstanding risk</b>: until this reaches zero, some data is below its intended redundancy.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num running resync jobs</span> &mdash; Rebuild jobs currently executing. vSAN limits concurrency deliberately, so a large pending count with a small running count is normal pacing, not a stall.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num suspended resync jobs</span> &mdash; Rebuild jobs vSAN has paused, usually to protect guest IO. <b style=\"color:#ffffff;font-weight:700\">Sustained non-zero here with a non-zero pending count means rebuilds are not progressing</b>, and the cluster is staying at reduced redundancy longer than it needs to.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num inflight priority resync jobs</span> &mdash; Rebuilds vSAN has prioritised, which it does when data is at genuine risk rather than merely non-compliant.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num inflight shared resync jobs</span> &mdash; Rebuilds running at normal priority.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num pending decom resync jobs</span> &mdash; Rebuilds queued because a host or disk is being evacuated. Non-zero means a maintenance operation is waiting on data movement.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num pending full resync jobs</span> &mdash; Queued rebuilds that must copy a whole component rather than a delta. These are the expensive ones.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num running full resync jobs</span> &mdash; Full-component rebuilds currently running.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Resync parallelism (average)</span> &mdash; How many rebuild operations vSAN is running at once on average. Low parallelism with a deep pending queue is the signature of throttling.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num complete resync ops</span> &mdash; Lifetime count of completed rebuild operations. <b style=\"color:#ffffff;font-weight:700\">Cumulative since boot</b>; the trend tells you whether progress is being made.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num complete full resync ops</span> &mdash; Lifetime count of completed full-component rebuilds.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Resync Read IOPS</span> &mdash; Read operations per second performed to rebuild redundancy. <b style=\"color:#ffffff;font-weight:700\">Zero unless something is actually resyncing</b>, which is the normal and desirable reading.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Recovery Write IOPS</span> &mdash; Write operations per second performed to restore redundancy -- the other half of a rebuild.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Rebuild IO rates</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Cluster Resync</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Resync Read IOPS</span> &mdash; Read operations per second performed to rebuild redundancy. <b style=\"color:#ffffff;font-weight:700\">Zero unless something is actually resyncing</b>, which is the normal and desirable reading.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Resync Read Throughput</span> &mdash; Bytes per second read for rebuild.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Resync Read Latency</span> &mdash; Average latency of rebuild reads.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Recovery Write IOPS</span> &mdash; Write operations per second performed to restore redundancy -- the other half of a rebuild.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Recovery Write Throughput</span> &mdash; Bytes per second written to restore redundancy. Divide the outstanding work by this to estimate how long a rebuild has left.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Recovery Write Latency</span> &mdash; Average latency of recovery writes.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Guest impact - front end</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Cluster DOM Client</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Average read latency at this layer. Compare the same column across the client, owner and component manager views: the layer where the number first becomes large is the layer to investigate.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Average write latency at this layer. On ESA a write is acknowledged after it is logged, so this is usually far lower than the component manager's figure beneath it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Congestions</span> &mdash; vSAN's own backpressure signal, raised when a layer cannot absorb the offered load and asks the layer above to slow down. <b style=\"color:#ffffff;font-weight:700\">Zero on a healthy cluster</b>, and it reads zero here. Any sustained non-zero value is the single most important number on the screen.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Congestions</span> &mdash; Backpressure attributed to reads.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Congestions</span> &mdash; Backpressure attributed to writes.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Unmap congestion</span> &mdash; Backpressure attributed to unmap and space-reclamation work.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read IOPS</span> &mdash; Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Outstanding IO</span> &mdash; Outstanding IO: operations issued and not yet completed. Latency multiplied by nothing tells you why it is high -- this does. High latency with high outstanding IO is queueing, high latency with low outstanding IO is a slow device.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Throughput</span> &mdash; Bytes per second read at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Throughput</span> &mdash; Bytes per second written at this layer.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Back end during rebuild</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Cluster DOM Component Manager</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Average read latency at this layer. Compare the same column across the client, owner and component manager views: the layer where the number first becomes large is the layer to investigate.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Average write latency at this layer. On ESA a write is acknowledged after it is logged, so this is usually far lower than the component manager's figure beneath it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Congestions</span> &mdash; vSAN's own backpressure signal, raised when a layer cannot absorb the offered load and asks the layer above to slow down. <b style=\"color:#ffffff;font-weight:700\">Zero on a healthy cluster</b>, and it reads zero here. Any sustained non-zero value is the single most important number on the screen.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Outstanding IO</span> &mdash; Outstanding IO: operations issued and not yet completed. Latency multiplied by nothing tells you why it is high -- this does. High latency with high outstanding IO is queueing, high latency with low outstanding IO is a slow device.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read IOPS</span> &mdash; Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Is vSAN throttling itself?</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Host DOM Owner Scheduler</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched rolling avg latency us</span> &mdash; The rolling average latency vSAN's own scheduler is working from. This is the input to its throttling decisions, not an observation of guest latency.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched guest lt latency us</span> &mdash; Guest long-tail latency as the scheduler measures it. What it is trying to protect.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched low band thresh us</span> &mdash; The latency threshold at which the scheduler moves a host into its low band. Context for the band counters -- without it they are unreadable.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched low band</span> &mdash; Times the scheduler placed this host in its <b style=\"color:#ffffff;font-weight:700\">low</b> band, meaning it decided latency was bad enough to throttle rebuild and resync traffic hard to protect guest IO.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched mid band</span> &mdash; Times the scheduler placed this host in its <b style=\"color:#ffffff;font-weight:700\">middle</b> band: some throttling, latency elevated but not severe.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched low band sec</span> &mdash; Seconds spent in the low band. More useful than the count beside it -- one long episode and many brief ones are different problems.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched mid band sec</span> &mdash; Seconds spent in the middle band.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched low to mid band</span> &mdash; Transitions from the low band up to the middle band, meaning conditions improved.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched mid to low band</span> &mdash; Transitions from the middle band down to the low band, meaning conditions worsened. A host oscillating between bands is unstable in a way neither band counter alone reveals.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched seen total tp bps</span> &mdash; Total throughput the scheduler observed, guest and rebuild traffic together.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched seen non resync tp bps</span> &mdash; Throughput excluding resync. Subtract it from the total to see what rebuild traffic is actually consuming -- the pair answers 'is the rebuild hurting the guests'.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Num net sched controller IOPS limit</span> &mdash; The IOPS ceiling the scheduler is currently imposing. A limit far above actual load means it is not intervening.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Segment cleaning</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Segment Cleaning Per Host</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">IOPS seg cleaner unmap</span> &mdash; Operations per second performed by the segment cleaner. ESA writes to a log and must later reclaim partially-used segments; this is that housekeeping, and it competes with guest IO for the same disks.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency avg seg cleaner unmap</span> &mdash; Average latency of segment cleaning work.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency max seg cleaner unmap</span> &mdash; Worst segment cleaning latency in the interval. <b style=\"color:#ffffff;font-weight:700\">Measured at 370 milliseconds here against a 1.3 millisecond average.</b> Housekeeping stalling for a third of a second is worth knowing about, and no other screen in this pack would show it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency standard deviation seg cleaner unmap</span> &mdash; Spread of segment cleaning latency.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Throughput seg cleaner unmap</span> &mdash; Bytes per second the segment cleaner is moving. This is write amplification made visible: capacity the disks are spending on vSAN's own bookkeeping rather than on guest data.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Seg cleaner unmap leaf owner max latency avg us</span> &mdash; Worst average latency any single replica contributed to segment cleaning. Isolates one bad disk inside an otherwise healthy cleaning cycle.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Unmap IOPS</span> &mdash; Space-reclamation operations per second, including those originated by guests trimming their filesystems.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Unmap Latency</span> &mdash; Average latency of unmap operations.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency max unmap</span> &mdash; Worst unmap latency in the interval.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Unmap count</span> &mdash; Lifetime count of unmap operations. <b style=\"color:#ffffff;font-weight:700\">Cumulative since boot.</b></p>\n</div>\n",
       "refreshInterval": 300,
-      "widgetId": "9b05fda7-7f63-452e-ab1e-c26069aceb23",
+      "widgetId": "185f7e45-3901-49e2-8e28-e83c0a380a2f",
       "refreshContent": {
        "refreshContent": false
       },
@@ -318,40 +318,40 @@
    "homeTab": false,
    "rank": 0,
    "disabled": false,
-   "id": "77c1ad51-3d01-4b35-a9f7-da50be0954cd",
+   "id": "397f38b0-450e-4b03-a2b3-6f735ecbcf88",
    "adapterName": "iSDK_VsanHostMetrics",
    "locked": false,
    "dashboardNavigations": {},
    "widgetInteractions": [
     {
-     "widgetIdProvider": "0fbc0003-5723-41d7-b74c-140c940060d3",
+     "widgetIdProvider": "3fa28f45-dad6-4618-bdb0-e0c12e45919e",
      "type": "resourceId",
-     "widgetIdReceiver": "0ae11630-d6b8-4e52-9962-778fefdb1f57"
+     "widgetIdReceiver": "1edb66e7-6854-4fed-8a1b-e90f1d6f3fc9"
     },
     {
-     "widgetIdProvider": "0fbc0003-5723-41d7-b74c-140c940060d3",
+     "widgetIdProvider": "3fa28f45-dad6-4618-bdb0-e0c12e45919e",
      "type": "resourceId",
-     "widgetIdReceiver": "c6204e4f-bb8b-4820-a004-26e26a23e509"
+     "widgetIdReceiver": "ffe31fe1-bb84-48ff-a0b5-1a7e9cd14886"
     },
     {
-     "widgetIdProvider": "0fbc0003-5723-41d7-b74c-140c940060d3",
+     "widgetIdProvider": "3fa28f45-dad6-4618-bdb0-e0c12e45919e",
      "type": "resourceId",
-     "widgetIdReceiver": "836a9ce2-9b79-4deb-834f-0839498374f0"
+     "widgetIdReceiver": "93732ca4-d7cd-47a5-a8c6-b98b1057b2c9"
     },
     {
-     "widgetIdProvider": "0fbc0003-5723-41d7-b74c-140c940060d3",
+     "widgetIdProvider": "3fa28f45-dad6-4618-bdb0-e0c12e45919e",
      "type": "resourceId",
-     "widgetIdReceiver": "46bcfa5b-46c7-40d9-a112-b2d8d32c0f88"
+     "widgetIdReceiver": "3028674d-d166-4b97-82df-1cc2c8899332"
     },
     {
-     "widgetIdProvider": "0fbc0003-5723-41d7-b74c-140c940060d3",
+     "widgetIdProvider": "3fa28f45-dad6-4618-bdb0-e0c12e45919e",
      "type": "resourceId",
-     "widgetIdReceiver": "54308150-9280-407f-9fcc-413950afe629"
+     "widgetIdReceiver": "76c68c28-a997-4057-aca0-dfa27a473140"
     },
     {
-     "widgetIdProvider": "0fbc0003-5723-41d7-b74c-140c940060d3",
+     "widgetIdProvider": "3fa28f45-dad6-4618-bdb0-e0c12e45919e",
      "type": "resourceId",
-     "widgetIdReceiver": "06361c79-cfe2-4b81-a7eb-638becae55fa"
+     "widgetIdReceiver": "9930b288-f437-4041-ac72-add3c8a747dc"
     }
    ],
    "lastUpdateUserId": "833b693b-0960-4d05-b868-f14446488fc3",
@@ -362,5 +362,5 @@
    "lastUpdateTime": 1790823795066
   }
  ],
- "uuid": "3e9bd2b7-3579-484d-a55a-3333347a05d7"
+ "uuid": "8aea1c8a-3684-4fda-9b06-cf01286f2340"
 }

@@ -240,10 +240,43 @@ def build(template, name, help_file, panels):
     # an instance id, and every VCF Operations instance has exactly one VCF
     # World at the root of its hierarchy, so pinning there is portable in a
     # way the ExtJS handle is not.
+    # Re-root the selector on vSPHERE World, not VCF World.
+    #
+    # The template was exported from a VCF deployment and pinned the selector
+    # to "VCF World", an object owned by VcfAdapter. On an Operations instance
+    # that is not VCF, or where the VCF adapter is installed but unconfigured,
+    # that object does not exist, the selector's root fails to resolve, and
+    # every panel reports it cannot render for the specified object. It worked
+    # on the build instance for the one reason that does not generalise: that
+    # instance is VCF.
+    #
+    # vSphere World belongs to the VMWARE adapter, so it exists on every
+    # instance collecting from a vCenter, which this pack already requires.
+    #
+    # The id encoding is "002" + the adapter kind's length as three digits +
+    # the adapter kind + the resource kind, confirmed against three real
+    # exports including one whose resource kind contains a space:
+    #   002006VMWAREHostSystem
+    #   002010VcfAdapterVCFWorld
+    #   002028VirtualAndPhysicalSANAdaptervSAN World
+    ROOT_ADAPTER, ROOT_KIND = "VMWARE", "vSphere World"
+    root_kind_id = f"002{len(ROOT_ADAPTER):03d}{ROOT_ADAPTER}{ROOT_KIND}"
     res = prov["config"].get("resource")
     if isinstance(res, dict):
+        # `id` was an ExtJS client-side model handle from the exporting
+        # browser session and means nothing anywhere else.
         res.pop("id", None)
+        res["resourceKindId"] = root_kind_id
+        res["resourceName"] = ROOT_KIND
         prov["config"]["resource"] = res
+    # The document-level entries table is what resolves the resourceId
+    # sentinel, by kind and name rather than by instance id, so it has to name
+    # the same object.
+    for entry in (doc.get("entries") or {}).get("resource") or []:
+        if entry.get("resourceKindKey") == "VCFWorld":
+            entry["adapterKindKey"] = ROOT_ADAPTER
+            entry["resourceKindKey"] = ROOT_KIND
+            entry["name"] = ROOT_KIND
 
     out = [prov]
     for title, key, coords in panels:
