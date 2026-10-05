@@ -605,6 +605,42 @@ def parse_ref(ref: str) -> Optional[ObjectKey]:
     return ObjectKey(entity, tuple(idents))
 
 
+PROBE_ENTITY = "cluster-domclient"
+
+
+def probe(perf, cluster, entity: str = PROBE_ENTITY,
+          window_minutes: int = 15) -> Tuple[int, Optional[str]]:
+    """One query against one entity type. For Validate Connection ONLY.
+
+    `collect` issues a separate VsanPerfQueryPerf per modelled entity type --
+    69 round trips. That is right for a collection and badly wrong for a
+    connection test: measured on a four-host lab, connecting and listing
+    clusters takes 0.08 s and the full collection takes 13.1 s, so 99% of the
+    test was work nobody asked for. On a large cluster that overruns the UI's
+    Validate Connection timeout and the user is told the connection timed out
+    when the credentials, privileges and network path are all fine.
+
+    One query against a cluster-scoped entity proves the same three things:
+    we authenticated, the account can see the cluster, and the Performance
+    Service answers.
+
+    Returns (result_count, problem). A problem of None means the service
+    answered. An entity type being unsupported is NOT a problem -- it still
+    proves the service is there.
+    """
+    now = datetime.datetime.now(datetime.timezone.utc)
+    start = now - datetime.timedelta(minutes=window_minutes)
+    spec = vim.cluster.VsanPerfQuerySpec(
+        entityRefId=f"{entity}:*", startTime=start, endTime=now)
+    try:
+        results = perf.VsanPerfQueryPerf([spec], cluster) or []
+    except (vmodl.fault.InvalidArgument, vmodl.fault.NotSupported):
+        return 0, None
+    except Exception as exc:                             # noqa: BLE001
+        return 0, f"{type(exc).__name__}: {exc}"
+    return len(results), None
+
+
 def collect(perf, cluster, window_minutes: int = 15
             ) -> Tuple[Dict[ObjectKey, Grouped], List[str]]:
     """Query every modeled entity type; return the most recent sample of each.

@@ -369,14 +369,21 @@ def test(adapter_instance: AdapterInstance) -> TestResult:
                     "Connected to vCenter but no clusters are visible. The "
                     "account likely lacks Read-only propagated from the root.")
                 return result
-            objs, problems = perfsvc.collect(mos["vsan-performance-manager"],
-                                             clusters[0])
-            logger.info("%s: %d clusters, %d objects, %d metrics",
-                        host, len(clusters), len(objs),
-                        sum(len(g.gauges) for g in objs.values()))
-            if problems:
-                logger.warning("%s: %d problem(s): %s", host, len(problems),
-                               problems[:5])
+            # A single query, NOT a full collection. This used to call
+            # perfsvc.collect, which queries all 69 entity types; 99% of the
+            # test's runtime was that call, and on a large cluster it overran
+            # the Validate Connection timeout so a correctly configured
+            # account was told the connection timed out.
+            found, problem = perfsvc.probe(mos["vsan-performance-manager"],
+                                           clusters[0])
+            if problem:
+                result.with_error(
+                    f"Connected to {host} and found {len(clusters)} cluster(s), "
+                    f"but the vSAN Performance Service did not answer: {problem}. "
+                    "Check that it is enabled on the cluster.")
+                return result
+            logger.info("%s: %d cluster(s), probe returned %d result(s)",
+                        host, len(clusters), found)
         except perfsvc.PerfSvcError as exc:
             result.with_error(str(exc))
         except Exception as exc:                    # noqa: BLE001
