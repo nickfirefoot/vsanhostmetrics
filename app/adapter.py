@@ -261,34 +261,54 @@ def _preserve_existing_children(adapter_instance, vc_cache):
     every object every cycle.
     """
     try:
-        client = adapter_instance.get_suite_api_client()
+        api = adapter_instance.get_suite_api_client()
     except Exception as exc:                     # noqa: BLE001
         logger.warning("no suite-api client (%s); claiming NO vCenter "
                        "relationships this cycle rather than overwriting "
                        "theirs", exc)
         return []
+    if api is None:
+        logger.error("Operations supplied no cluster_connection_info, so there "
+                     "is no suite-api client. Every vCenter parent will be "
+                     "skipped and every object orphaned.")
+        return []
 
     safe = []
-    for parent in vc_cache.values():
-        ident = _resource_id(client, parent)
-        if ident is None:
-            logger.warning("could not resolve %s %s in the suite API; leaving "
-                           "it out rather than claiming its children",
-                           parent.get_key().object_kind, parent.get_key().name)
-            continue
-        try:
-            existing = client.paged_get(
-                f"api/resources/{ident}/relationships/children", "resourceList")
-        except Exception as exc:                 # noqa: BLE001
-            logger.warning("could not read children of %s (%s); leaving it out",
-                           parent.get_key().name, exc)
-            continue
-        ours = {k for k in parent.get_children()}
-        for res in existing.get("resourceList", existing.get("values", [])) or []:
-            key = _key_from_suite_api(res)
-            if key is not None and key not in ours:
-                parent._children.add(key)
-        safe.append(parent)
+    # The SDK acquires its token in __enter__ and NOWHERE else
+    # (suite_api_client.py:79), and _to_vrops_request only sets the
+    # Authorization header 'if self.token'. Calling the client without this
+    # 'with' sends every request unauthenticated, which Operations answers
+    # with 401 -- silently, because a 401 is a Response, not an exception.
+    # That is what orphaned every object at every site from 1.4.3 to 1.4.4.
+    with api as client:
+        if not getattr(client, "token", ""):
+            logger.error("suite-api token acquisition produced no token; "
+                         "every request will be unauthenticated. Check the "
+                         "credentials Operations injected for this instance.")
+            return []
+        for parent in vc_cache.values():
+            ident = _resource_id(client, parent)
+            if ident is None:
+                logger.warning("could not resolve %s %s in the suite API; "
+                               "leaving it out rather than claiming its "
+                               "children", parent.get_key().object_kind,
+                               parent.get_key().name)
+                continue
+            try:
+                existing = client.paged_get(
+                    f"api/resources/{ident}/relationships/children",
+                    "resourceList")
+            except Exception as exc:             # noqa: BLE001
+                logger.warning("could not read children of %s (%s); leaving "
+                               "it out", parent.get_key().name, exc)
+                continue
+            ours = {k for k in parent.get_children()}
+            for res in existing.get("resourceList",
+                                    existing.get("values", [])) or []:
+                key = _key_from_suite_api(res)
+                if key is not None and key not in ours:
+                    parent._children.add(key)
+            safe.append(parent)
     return safe
 
 
