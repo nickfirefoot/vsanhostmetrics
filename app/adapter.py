@@ -499,6 +499,22 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
                         "(%d parents skipped: existing children unreadable)",
                         linked, len(kept), len(vc_cache) - len(kept))
 
+            # Orphaning everything must not be silent. Without a parent, no
+            # view can resolve from a host or cluster and every panel reports
+            # the selected object as not applicable -- which reads as broken
+            # content rather than a broken collection, and has sent several
+            # investigations in the wrong direction.
+            if not linked:
+                total_problems.append(
+                    "No vSAN object could be attached to any vCenter object. "
+                    "Views will report the selected object as not applicable "
+                    "and dashboards will be empty. Check the vCenter account "
+                    "can read host and cluster configuration, and that this "
+                    "adapter and the vCenter adapter point at the SAME "
+                    "vCenter.")
+                logger.error("ORPHANED: 0 of the collected objects attached "
+                             "to a vCenter parent")
+
             if total_problems:
                 # Loud on purpose. A silently dropped sample is how the io_type
                 # collision survived a green test suite.

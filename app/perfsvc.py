@@ -389,6 +389,17 @@ def build_parent_map(service_instance, clusters, perf,
         content = None
     out["vcid"] = vcid                                   # type: ignore[assignment]
     if not vcid:
+        # SINGLE POINT OF FAILURE, and it used to be silent. Every parent
+        # lookup requires this value, so an empty one orphans EVERY object --
+        # cluster-scoped and host-scoped alike -- with no error anywhere.
+        # Downstream that presents as "the selected Object is not applicable"
+        # on every view and empty panels on every dashboard, which looks like a
+        # content problem and is not one. Days were lost to that.
+        logger.error(
+            "vCenter instanceUuid is empty (content.about unreadable). EVERY "
+            "object will be orphaned: no vSAN object will attach to a host, VM "
+            "or cluster, and every view will report the selected object as not "
+            "applicable. This is a collection failure, not a content problem.")
         return out
 
     for cluster in clusters:
