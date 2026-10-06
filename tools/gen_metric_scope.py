@@ -21,6 +21,50 @@ import perfsvc_model            # noqa: E402
 import perfsvc_model_extra      # noqa: E402
 
 
+# Kinds collected by default even though no shipped view references them yet.
+# A product decision, not a derived fact, so it lives here in the open with a
+# reason per entry rather than being quietly folded into the generated set.
+DEFAULT_EXTRA = {
+    # Asked for explicitly: per-VM IO profiling.
+    "VsanIoinsight": "per-VM IO profiling",
+
+    # Dedup/compression basics. The SAME 24 metric names appear at domclient,
+    # domcompmgr and domowner for both cluster and host -- three layers of one
+    # IO path. Keep the domclient layer, which is what the guest sees. The two
+    # Store services (122 metrics: currentGenNum, latencyReadLockWait,
+    # latencyReserveMba) are dedup engine lock and generation counters and are
+    # not interpretable outside Broadcom engineering.
+    "VsanClusterEsaDedupDomclientIo": "dedup basics, cluster",
+    "VsanHostEsaDedupDomclientIo": "dedup basics, host",
+
+    # OSA basics: per-device iops, latency and throughput. DiskGroup (38) is
+    # excluded deliberately -- it is scheduler internals
+    # (componentCongestionReadSched, iopsDelayPctSched), not a basic. DdhDisk
+    # (10) is destaging detail.
+    "VsanCacheDisk": "OSA cache tier basics",
+    "VsanCapacityDisk": "OSA capacity tier basics",
+
+    # Container / PVC storage. First-class virtual disks back block PVCs,
+    # vSAN Direct is the cloud-native local-disk path, and file shares back
+    # ReadWriteMany PVCs. iSCSI is NOT here: the target service serves
+    # physical and legacy initiators, not Kubernetes.
+    "VsanVirtualDisk": "FCDs back block PVCs",
+    "VsanDirectCluster": "cloud-native local disk, cluster",
+    "VsanDirectHost": "cloud-native local disk, host",
+    "VsanFileService": "file shares back RWX PVCs",
+    # Already queried for 4 of its 8 metrics by a view; completing it adds no
+    # round trip, and a half-populated vSCSI object reads as broken.
+    "VsanVscsi": "guest vSCSI, completing a kind already collected",
+}
+
+# Kinds identified by an ESXi THREAD -- one Operations object per world. These
+# are not merely unused, they inflate object count, which is the unit
+# Operations is sized and licensed by. VsanDomWorld was measured at 243
+# objects carrying 3 metrics each, every one of them zero. Never collect by
+# default; "all" still reaches them.
+THREAD_SCOPED = ("VsanDomWorld", "VsanLsomWorldCpu")
+
+
 def load_views():
     spec = importlib.util.spec_from_file_location(
         "build_view", ROOT / "tools" / "build_view.py")
@@ -46,6 +90,11 @@ def main():
 
     covered = {}
     for kind, metrics in by_kind.items():
+        if kind in THREAD_SCOPED:
+            continue
+        if kind in DEFAULT_EXTRA:
+            covered[kind] = sorted(metrics)       # whole kind; it is queried anyway
+            continue
         hit = sorted(m for m in metrics if m in used.get(kind, set()))
         if hit:
             covered[kind] = hit
