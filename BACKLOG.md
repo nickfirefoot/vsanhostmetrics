@@ -1650,10 +1650,31 @@ as not applicable; Topology is a single node.
   (suite_api_client.py:111) but the lab authenticates with LOCAL and works.
 - The configured vCenter credential is unrelated; it is a different connection.
 
-### Unknown
+### RESOLVED 2026-10-06: the adapter never acquired a token
 
-Why gillaspy returns 401. Not established whether authentication or
-authorisation failed, nor which account Operations injects there.
+SuiteApiClient acquires its token in __enter__ and NOWHERE else
+(suite_api_client.py:79), and _to_vrops_request sets the Authorization header
+only `if self.token`. _preserve_existing_children called the client without a
+`with`, so every suite-api request since 1.4.3 went out unauthenticated.
+
+Reproduced directly against the lab with the same credentials:
+
+    no 'with':  token='' -> POST api/resources/query -> HTTP 401
+    with:       token acquired -> HTTP 200, 4 HostSystem objects
+
+Confirmed in the field. The LAB adapter log shows the identical failure:
+
+    post https://10.20.0.129/suite-api/api/resources/query: ERROR(401)
+    linked 848 objects to 0 vCenter parents (35 parents skipped)
+
+So the lab was never working. Its visible relationships were written by 1.4.2
+or earlier and survived only because 1.4.3 stopped claiming those parents, so
+nothing overwrote them. Sites that installed fresh at 1.4.3+ had no such
+history and reported the bug. There was no environmental difference between
+the lab and any failing site.
+
+Fixed in 84ebf45. Still needs end-to-end proof: a real collection logging a
+non-zero parent count.
 
 ### The two measurements that would end it
 
