@@ -22,9 +22,9 @@
    "description": "",
    "widgets": [
     {
-     "tabId": "c05f01e2-76ad-4e24-874c-ea3756f4d04a",
+     "tabId": "1b6094dc-1e7b-502e-94a7-d6c94e8c043b",
      "collapsed": false,
-     "id": "1047637f-7cfb-4657-ba8b-07515aaff1a2",
+     "id": "5f889755-af17-5fef-9934-968e0274525f",
      "gridsterCoords": {
       "w": 2,
       "x": 1,
@@ -41,7 +41,7 @@
        "resourceName": "vSphere World",
        "resourceKindId": "002006VMWAREvSphere World"
       },
-      "widgetId": "1047637f-7cfb-4657-ba8b-07515aaff1a2",
+      "widgetId": "5f889755-af17-5fef-9934-968e0274525f",
       "traversalSpecId": null,
       "refreshContent": {
        "refreshContent": true
@@ -63,9 +63,9 @@
      "height": 0
     },
     {
-     "tabId": "c05f01e2-76ad-4e24-874c-ea3756f4d04a",
+     "tabId": "1b6094dc-1e7b-502e-94a7-d6c94e8c043b",
      "collapsed": false,
-     "id": "813a8b48-0f71-4db8-b7be-ef93d02ea4a2",
+     "id": "cfe36c11-2df9-5ea9-a316-00f8b6e34706",
      "gridsterCoords": {
       "w": 10,
       "x": 3,
@@ -77,7 +77,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "813a8b48-0f71-4db8-b7be-ef93d02ea4a2",
+      "widgetId": "cfe36c11-2df9-5ea9-a316-00f8b6e34706",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -95,14 +95,15 @@
       "viewDetails": "",
       "selfProvider": {
        "selfProvider": false
-      }
+      },
+      "periodLength": "dashboardTime"
      },
      "height": 0
     },
     {
-     "tabId": "c05f01e2-76ad-4e24-874c-ea3756f4d04a",
+     "tabId": "1b6094dc-1e7b-502e-94a7-d6c94e8c043b",
      "collapsed": false,
-     "id": "9051da40-aa64-4980-a642-6ad6089d91fa",
+     "id": "a1007a26-2ecb-53d0-83a5-1354d7da7f9b",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -114,7 +115,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "9051da40-aa64-4980-a642-6ad6089d91fa",
+      "widgetId": "a1007a26-2ecb-53d0-83a5-1354d7da7f9b",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -132,14 +133,15 @@
       "viewDetails": "",
       "selfProvider": {
        "selfProvider": false
-      }
+      },
+      "periodLength": "dashboardTime"
      },
      "height": 0
     },
     {
-     "tabId": "c05f01e2-76ad-4e24-874c-ea3756f4d04a",
+     "tabId": "1b6094dc-1e7b-502e-94a7-d6c94e8c043b",
      "collapsed": false,
-     "id": "38c7fb0a-1974-4178-a1f8-fcf46b70e340",
+     "id": "c3eb674c-25d2-548f-a65e-32334cd250ad",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -151,7 +153,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "38c7fb0a-1974-4178-a1f8-fcf46b70e340",
+      "widgetId": "c3eb674c-25d2-548f-a65e-32334cd250ad",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -169,14 +171,15 @@
       "viewDetails": "",
       "selfProvider": {
        "selfProvider": false
-      }
+      },
+      "periodLength": "dashboardTime"
      },
      "height": 0
     },
     {
-     "tabId": "c05f01e2-76ad-4e24-874c-ea3756f4d04a",
+     "tabId": "1b6094dc-1e7b-502e-94a7-d6c94e8c043b",
      "collapsed": false,
-     "id": "0309e891-faed-4d67-960a-12b2e7f4d604",
+     "id": "b3b32bc0-3f93-5f7e-96df-80807bb0e22b",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -188,7 +191,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "0309e891-faed-4d67-960a-12b2e7f4d604",
+      "widgetId": "b3b32bc0-3f93-5f7e-96df-80807bb0e22b",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -206,14 +209,15 @@
       "viewDetails": "",
       "selfProvider": {
        "selfProvider": false
-      }
+      },
+      "periodLength": "dashboardTime"
      },
      "height": 0
     },
     {
-     "tabId": "c05f01e2-76ad-4e24-874c-ea3756f4d04a",
+     "tabId": "1b6094dc-1e7b-502e-94a7-d6c94e8c043b",
      "collapsed": false,
-     "id": "9014d628-3a89-4b3e-af2f-51c608496e50",
+     "id": "2bf5148b-f624-5c99-85f3-5292b3056adf",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -225,7 +229,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "9014d628-3a89-4b3e-af2f-51c608496e50",
+      "widgetId": "2bf5148b-f624-5c99-85f3-5292b3056adf",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -243,14 +247,15 @@
       "viewDetails": "",
       "selfProvider": {
        "selfProvider": false
-      }
+      },
+      "periodLength": "dashboardTime"
      },
      "height": 0
     },
     {
-     "tabId": "c05f01e2-76ad-4e24-874c-ea3756f4d04a",
+     "tabId": "1b6094dc-1e7b-502e-94a7-d6c94e8c043b",
      "collapsed": false,
-     "id": "8476691e-0857-4b43-89c8-b893d6089372",
+     "id": "2c5ba8bc-b1db-57b1-92b1-7631b0b1fe4a",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -262,9 +267,9 @@
      "config": {
       "locationUrl": "",
       "locationFile": "",
-      "editorData": "<div style=\"font-family:'Metropolis','Segoe UI',sans-serif;font-size:13px;color:#ffffff;padding:6px 12px\">\n<h2 style=\"font-size:15px;color:#ffffff;margin:4px 0 10px 0\">ESA write path &mdash; the log, and the cost of keeping it tidy</h2>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">ESA does not write in place. It appends to a log, acknowledges the write once it is logged, and later reclaims space by cleaning partially-used segments. That makes writes fast and makes <b style=\"color:#ffffff;font-weight:700\">housekeeping a first-class source of latency</b>.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">This screen exists because none of that work was visible anywhere in this pack. Worst case segment cleaning latency was measured at <b style=\"color:#ffffff;font-weight:700\">370 milliseconds against a 1.3 millisecond average</b> on an otherwise idle cluster.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Read it top down: the zDOM tables give the layer's own latency and throughput, the write path internals show how hard the metadata and caching machinery is working, and segment cleaning shows the reclamation cost. The log fill percentage is the leading indicator &mdash; as it rises, cleaning has to work harder and write amplification goes up with it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><b style=\"color:#ffffff;font-weight:700\">One caveat, stated plainly.</b> The zDOM maximum latency columns read in whole seconds, which is not credible as an interval maximum and is very likely a since-boot high-water mark that the Performance Service does not document as such. Use the average columns for decisions until that is confirmed.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">zDOM - cluster</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN zDOM Cluster</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Average read latency at this layer. Compare the same column across the client, owner and component manager views: the layer where the number first becomes large is the layer to investigate.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Average write latency at this layer. On ESA a write is acknowledged after it is logged, so this is usually far lower than the component manager's figure beneath it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read IOPS</span> &mdash; Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Throughput</span> &mdash; Bytes per second read at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Throughput</span> &mdash; Bytes per second written at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Outstanding IO</span> &mdash; Outstanding IO: operations issued and not yet completed. Latency multiplied by nothing tells you why it is high -- this does. High latency with high outstanding IO is queueing, high latency with low outstanding IO is a slow device.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">zDOM - per host</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN zDOM Per Host</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Average read latency at this layer. Compare the same column across the client, owner and component manager views: the layer where the number first becomes large is the layer to investigate.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Average write latency at this layer. On ESA a write is acknowledged after it is logged, so this is usually far lower than the component manager's figure beneath it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read latency max us</span> &mdash; Worst read latency recorded in the zDOM layer. <b style=\"color:#ffffff;font-weight:700\">Reads 9.7 seconds here, which is not credible as an interval maximum</b> -- it is very likely a since-boot high-water mark that the Performance Service does not document as such. Treat a large value as unverified until the behaviour is confirmed, and use the average column for decisions.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write latency max us</span> &mdash; Worst write latency recorded in the zDOM layer. Subject to the same caveat as the read column beside it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Unmap latency max us</span> &mdash; Worst unmap latency recorded in the zDOM layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read IOPS</span> &mdash; Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Throughput</span> &mdash; Bytes per second read at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Throughput</span> &mdash; Bytes per second written at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Outstanding IO</span> &mdash; Outstanding IO: operations issued and not yet completed. Latency multiplied by nothing tells you why it is high -- this does. High latency with high outstanding IO is queueing, high latency with low outstanding IO is a slow device.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Outstanding IO (write)</span> &mdash; Outstanding write operations.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Write path internals</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN zDOM Write Path</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Disc used percent (max)</span> &mdash; Highest proportion of the log structure in use. <b style=\"color:#ffffff;font-weight:700\">Measured at 32% here.</b> As this climbs the segment cleaner has to work harder and write amplification rises, so it is a leading indicator for the latency columns on the segment cleaning view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency avg total op IO</span> &mdash; Average latency of all zDOM operations together.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency avg transaction bank</span> &mdash; Average latency of transaction bank operations -- the in-memory staging area a write passes through before it is logged.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Cache ref (rate, total)</span> &mdash; Rate of references to zDOM's metadata cache, all kinds together. Context for the breakdown columns beside it rather than a health signal.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Bank flush total cache ref (rate)</span> &mdash; Cache references caused by flushing the transaction bank to disk.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Seg cleaning context data total cache ref (rate)</span> &mdash; Cache references caused by segment cleaning. Rising here while guest IOPS is flat means housekeeping is taking a larger share of the metadata path.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Transaction prefetch total cache ref (rate)</span> &mdash; Cache references from prefetching metadata ahead of need. Effective prefetch is why read latency stays low; this is the work behind that.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Transaction lookup cache ref (rate)</span> &mdash; Cache references from metadata lookups that could not be satisfied by prefetch.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Transaction (read, write, rate)</span> &mdash; Ratio of read to write transactions in the zDOM layer. Characterises the workload rather than its health.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Checkpoint worker wakeup ms</span> &mdash; Interval at which the checkpoint worker wakes to persist metadata. Steady by design; a change means configuration changed or the worker is falling behind.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Segment cleaning</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Segment Cleaning Per Host</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">IOPS seg cleaner unmap</span> &mdash; Operations per second performed by the segment cleaner. ESA writes to a log and must later reclaim partially-used segments; this is that housekeeping, and it competes with guest IO for the same disks.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency avg seg cleaner unmap</span> &mdash; Average latency of segment cleaning work.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency max seg cleaner unmap</span> &mdash; Worst segment cleaning latency in the interval. <b style=\"color:#ffffff;font-weight:700\">Measured at 370 milliseconds here against a 1.3 millisecond average.</b> Housekeeping stalling for a third of a second is worth knowing about, and no other screen in this pack would show it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency standard deviation seg cleaner unmap</span> &mdash; Spread of segment cleaning latency.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Throughput seg cleaner unmap</span> &mdash; Bytes per second the segment cleaner is moving. This is write amplification made visible: capacity the disks are spending on vSAN's own bookkeeping rather than on guest data.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Seg cleaner unmap leaf owner max latency avg us</span> &mdash; Worst average latency any single replica contributed to segment cleaning. Isolates one bad disk inside an otherwise healthy cleaning cycle.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Unmap IOPS</span> &mdash; Space-reclamation operations per second, including those originated by guests trimming their filesystems.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Unmap Latency</span> &mdash; Average latency of unmap operations.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency max unmap</span> &mdash; Worst unmap latency in the interval.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Unmap count</span> &mdash; Lifetime count of unmap operations. <b style=\"color:#ffffff;font-weight:700\">Cumulative since boot.</b></p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Back end - per host</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Host DOM Component Manager</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Average read latency at this layer. Compare the same column across the client, owner and component manager views: the layer where the number first becomes large is the layer to investigate.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency (max, read)</span> &mdash; Worst read latency in the interval. Read beside the average: a large gap is a tail-latency problem, which guests feel as stalls even when the average looks fine.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Average write latency at this layer. On ESA a write is acknowledged after it is logged, so this is usually far lower than the component manager's figure beneath it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency (max, write)</span> &mdash; Worst write latency in the interval. Measured here at <b style=\"color:#ffffff;font-weight:700\">14.9 ms against a 957 microsecond average</b> -- a fifteenfold tail on an idle cluster, and the kind of thing an average hides completely.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency standard deviation (write)</span> &mdash; Spread of write latency. High spread with a low average means the work is bimodal: most operations fast, some very slow.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read IOPS</span> &mdash; Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Outstanding IO</span> &mdash; Outstanding IO: operations issued and not yet completed. Latency multiplied by nothing tells you why it is high -- this does. High latency with high outstanding IO is queueing, high latency with low outstanding IO is a slow device.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Throughput</span> &mdash; Bytes per second read at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Throughput</span> &mdash; Bytes per second written at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">VM disk queue depth (write)</span> &mdash; Queue depth for writes to virtual disk objects at the component manager. Depth is the cause; the latency columns are the effect.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">VM disk dispatched cost (write)</span> &mdash; Accumulated cost of dispatched virtual disk writes, in vSAN's internal scheduling units. Not comparable to a time or a byte count -- useful for comparing hosts against each other, not against a threshold.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Namespace dispatched cost (write)</span> &mdash; The same cost measure for namespace objects, which hold VM configuration rather than guest data. Large values here with small virtual disk values mean the work is metadata, not guest IO.</p>\n</div>\n",
+      "editorData": "<div style=\"font-family:'Metropolis','Segoe UI',sans-serif;font-size:13px;color:#ffffff;padding:6px 12px\">\n<h2 style=\"font-size:15px;color:#ffffff;margin:4px 0 10px 0\">ESA write path &mdash; the log, and the cost of keeping it tidy</h2>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">ESA does not write in place. It appends to a log, acknowledges the write once it is logged, and later reclaims space by cleaning partially-used segments. That makes writes fast and makes <b style=\"color:#ffffff;font-weight:700\">housekeeping a first-class source of latency</b>.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">This screen exists because none of that work was visible anywhere in this pack. Worst case segment cleaning latency was measured at <b style=\"color:#ffffff;font-weight:700\">370 milliseconds against a 1.3 millisecond average</b> on an otherwise idle cluster.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Read it top down: the zDOM tables give the layer's own latency and throughput, the write path internals show how hard the metadata and caching machinery is working, and segment cleaning shows the reclamation cost. The log fill percentage is the leading indicator &mdash; as it rises, cleaning has to work harder and write amplification goes up with it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><b style=\"color:#ffffff;font-weight:700\">One caveat, stated plainly.</b> The zDOM maximum latency columns read in whole seconds, which is not credible as an interval maximum and is very likely a since-boot high-water mark that the Performance Service does not document as such. Use the average columns for decisions until that is confirmed.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">zDOM - cluster</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN zDOM Cluster</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Average read latency at this layer. <b style=\"color:#ffffff;font-weight:700\">Broadcom's own threshold for this metric is 15 ms warning and 30 ms critical</b>, published in the Performance Service graph definition as yellow=15000 red=30000 microseconds, direction upper. That is a badly-wrong line rather than a tuning line -- a healthy cluster here runs under 1.5 ms, so the product only flags at roughly ten times normal. Compare the same column across the client, owner and component manager views: the layer where the number first becomes large is the layer to investigate.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Average write latency at this layer. On ESA a write is acknowledged after it is logged, so this is usually far lower than the component manager's figure beneath it. <b style=\"color:#ffffff;font-weight:700\">Product threshold 15 ms warning, 30 ms critical.</b></p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read IOPS</span> &mdash; Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Throughput</span> &mdash; Bytes per second read at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Throughput</span> &mdash; Bytes per second written at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Outstanding IO</span> &mdash; Outstanding IO: operations issued and not yet completed. Latency multiplied by nothing tells you why it is high -- this does. High latency with high outstanding IO is queueing, high latency with low outstanding IO is a slow device.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">zDOM - per host</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN zDOM Per Host</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Average read latency at this layer. <b style=\"color:#ffffff;font-weight:700\">Broadcom's own threshold for this metric is 15 ms warning and 30 ms critical</b>, published in the Performance Service graph definition as yellow=15000 red=30000 microseconds, direction upper. That is a badly-wrong line rather than a tuning line -- a healthy cluster here runs under 1.5 ms, so the product only flags at roughly ten times normal. Compare the same column across the client, owner and component manager views: the layer where the number first becomes large is the layer to investigate.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Average write latency at this layer. On ESA a write is acknowledged after it is logged, so this is usually far lower than the component manager's figure beneath it. <b style=\"color:#ffffff;font-weight:700\">Product threshold 15 ms warning, 30 ms critical.</b></p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read latency max us</span> &mdash; Worst read latency recorded in the zDOM layer. <b style=\"color:#ffffff;font-weight:700\">Reads 9.7 seconds here, which is not credible as an interval maximum</b> -- it is very likely a since-boot high-water mark that the Performance Service does not document as such. Treat a large value as unverified until the behaviour is confirmed, and use the average column for decisions.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write latency max us</span> &mdash; Worst write latency recorded in the zDOM layer. Subject to the same caveat as the read column beside it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Unmap latency max us</span> &mdash; Worst unmap latency recorded in the zDOM layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read IOPS</span> &mdash; Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Throughput</span> &mdash; Bytes per second read at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Throughput</span> &mdash; Bytes per second written at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Outstanding IO</span> &mdash; Outstanding IO: operations issued and not yet completed. Latency multiplied by nothing tells you why it is high -- this does. High latency with high outstanding IO is queueing, high latency with low outstanding IO is a slow device.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Outstanding IO (write)</span> &mdash; Outstanding write operations.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Write path internals</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN zDOM Write Path</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Disc used percent (max)</span> &mdash; Highest proportion of the log structure in use. <b style=\"color:#ffffff;font-weight:700\">Measured at 32% here.</b> As this climbs the segment cleaner has to work harder and write amplification rises, so it is a leading indicator for the latency columns on the segment cleaning view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency avg total op IO</span> &mdash; Average latency of all zDOM operations together.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency avg transaction bank</span> &mdash; Average latency of transaction bank operations -- the in-memory staging area a write passes through before it is logged.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Cache ref (rate, total)</span> &mdash; Rate of references to zDOM's metadata cache, all kinds together. Context for the breakdown columns beside it rather than a health signal.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Bank flush total cache ref (rate)</span> &mdash; Cache references caused by flushing the transaction bank to disk.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Seg cleaning context data total cache ref (rate)</span> &mdash; Cache references caused by segment cleaning. Rising here while guest IOPS is flat means housekeeping is taking a larger share of the metadata path.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Transaction prefetch total cache ref (rate)</span> &mdash; Cache references from prefetching metadata ahead of need. Effective prefetch is why read latency stays low; this is the work behind that.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Transaction lookup cache ref (rate)</span> &mdash; Cache references from metadata lookups that could not be satisfied by prefetch.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Transaction (read, write, rate)</span> &mdash; Ratio of read to write transactions in the zDOM layer. Characterises the workload rather than its health.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Checkpoint worker wakeup ms</span> &mdash; Interval at which the checkpoint worker wakes to persist metadata. Steady by design; a change means configuration changed or the worker is falling behind.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Segment cleaning</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Segment Cleaning Per Host</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">IOPS seg cleaner unmap</span> &mdash; Operations per second performed by the segment cleaner. ESA writes to a log and must later reclaim partially-used segments; this is that housekeeping, and it competes with guest IO for the same disks.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency avg seg cleaner unmap</span> &mdash; Average latency of segment cleaning work.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency max seg cleaner unmap</span> &mdash; Worst segment cleaning latency in the interval. <b style=\"color:#ffffff;font-weight:700\">Measured at 370 milliseconds here against a 1.3 millisecond average.</b> Housekeeping stalling for a third of a second is worth knowing about, and no other screen in this pack would show it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency standard deviation seg cleaner unmap</span> &mdash; Spread of segment cleaning latency.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Throughput seg cleaner unmap</span> &mdash; Bytes per second the segment cleaner is moving. This is write amplification made visible: capacity the disks are spending on vSAN's own bookkeeping rather than on guest data.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Seg cleaner unmap leaf owner max latency avg us</span> &mdash; Worst average latency any single replica contributed to segment cleaning. Isolates one bad disk inside an otherwise healthy cleaning cycle.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Unmap IOPS</span> &mdash; Space-reclamation operations per second, including those originated by guests trimming their filesystems.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Unmap Latency</span> &mdash; Average latency of unmap operations.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency max unmap</span> &mdash; Worst unmap latency in the interval.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Unmap count</span> &mdash; Lifetime count of unmap operations. <b style=\"color:#ffffff;font-weight:700\">Cumulative since boot.</b></p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Back end - per host</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Host DOM Component Manager</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Average read latency at this layer. <b style=\"color:#ffffff;font-weight:700\">Broadcom's own threshold for this metric is 15 ms warning and 30 ms critical</b>, published in the Performance Service graph definition as yellow=15000 red=30000 microseconds, direction upper. That is a badly-wrong line rather than a tuning line -- a healthy cluster here runs under 1.5 ms, so the product only flags at roughly ten times normal. Compare the same column across the client, owner and component manager views: the layer where the number first becomes large is the layer to investigate.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency (max, read)</span> &mdash; Worst read latency in the interval. Read beside the average: a large gap is a tail-latency problem, which guests feel as stalls even when the average looks fine.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Average write latency at this layer. On ESA a write is acknowledged after it is logged, so this is usually far lower than the component manager's figure beneath it. <b style=\"color:#ffffff;font-weight:700\">Product threshold 15 ms warning, 30 ms critical.</b></p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency (max, write)</span> &mdash; Worst write latency in the interval. Measured here at <b style=\"color:#ffffff;font-weight:700\">14.9 ms against a 957 microsecond average</b> -- a fifteenfold tail on an idle cluster, and the kind of thing an average hides completely.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency standard deviation (write)</span> &mdash; Spread of write latency. High spread with a low average means the work is bimodal: most operations fast, some very slow.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read IOPS</span> &mdash; Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Outstanding IO</span> &mdash; Outstanding IO: operations issued and not yet completed. Latency multiplied by nothing tells you why it is high -- this does. High latency with high outstanding IO is queueing, high latency with low outstanding IO is a slow device.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Throughput</span> &mdash; Bytes per second read at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Throughput</span> &mdash; Bytes per second written at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">VM disk queue depth (write)</span> &mdash; Queue depth for writes to virtual disk objects at the component manager. Depth is the cause; the latency columns are the effect.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">VM disk dispatched cost (write)</span> &mdash; Accumulated cost of dispatched virtual disk writes, in vSAN's internal scheduling units. Not comparable to a time or a byte count -- useful for comparing hosts against each other, not against a threshold.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Namespace dispatched cost (write)</span> &mdash; The same cost measure for namespace objects, which hold VM configuration rather than guest data. Large values here with small virtual disk values mean the work is metadata, not guest IO.</p>\n</div>\n",
       "refreshInterval": 300,
-      "widgetId": "8476691e-0857-4b43-89c8-b893d6089372",
+      "widgetId": "2c5ba8bc-b1db-57b1-92b1-7631b0b1fe4a",
       "refreshContent": {
        "refreshContent": false
       },
@@ -281,35 +286,35 @@
    "homeTab": false,
    "rank": 0,
    "disabled": false,
-   "id": "c05f01e2-76ad-4e24-874c-ea3756f4d04a",
+   "id": "1b6094dc-1e7b-502e-94a7-d6c94e8c043b",
    "adapterName": "iSDK_VsanHostMetrics",
    "locked": false,
    "dashboardNavigations": {},
    "widgetInteractions": [
     {
-     "widgetIdProvider": "1047637f-7cfb-4657-ba8b-07515aaff1a2",
+     "widgetIdProvider": "5f889755-af17-5fef-9934-968e0274525f",
      "type": "resourceId",
-     "widgetIdReceiver": "813a8b48-0f71-4db8-b7be-ef93d02ea4a2"
+     "widgetIdReceiver": "cfe36c11-2df9-5ea9-a316-00f8b6e34706"
     },
     {
-     "widgetIdProvider": "1047637f-7cfb-4657-ba8b-07515aaff1a2",
+     "widgetIdProvider": "5f889755-af17-5fef-9934-968e0274525f",
      "type": "resourceId",
-     "widgetIdReceiver": "9051da40-aa64-4980-a642-6ad6089d91fa"
+     "widgetIdReceiver": "a1007a26-2ecb-53d0-83a5-1354d7da7f9b"
     },
     {
-     "widgetIdProvider": "1047637f-7cfb-4657-ba8b-07515aaff1a2",
+     "widgetIdProvider": "5f889755-af17-5fef-9934-968e0274525f",
      "type": "resourceId",
-     "widgetIdReceiver": "38c7fb0a-1974-4178-a1f8-fcf46b70e340"
+     "widgetIdReceiver": "c3eb674c-25d2-548f-a65e-32334cd250ad"
     },
     {
-     "widgetIdProvider": "1047637f-7cfb-4657-ba8b-07515aaff1a2",
+     "widgetIdProvider": "5f889755-af17-5fef-9934-968e0274525f",
      "type": "resourceId",
-     "widgetIdReceiver": "0309e891-faed-4d67-960a-12b2e7f4d604"
+     "widgetIdReceiver": "b3b32bc0-3f93-5f7e-96df-80807bb0e22b"
     },
     {
-     "widgetIdProvider": "1047637f-7cfb-4657-ba8b-07515aaff1a2",
+     "widgetIdProvider": "5f889755-af17-5fef-9934-968e0274525f",
      "type": "resourceId",
-     "widgetIdReceiver": "9014d628-3a89-4b3e-af2f-51c608496e50"
+     "widgetIdReceiver": "2bf5148b-f624-5c99-85f3-5292b3056adf"
     }
    ],
    "lastUpdateUserId": "833b693b-0960-4d05-b868-f14446488fc3",
@@ -320,5 +325,5 @@
    "lastUpdateTime": 1790823795066
   }
  ],
- "uuid": "0ad7de5d-7792-49ea-a328-9d67c3a7941c"
+ "uuid": "9550c27e-ea90-5f65-9307-744bac6fd4f7"
 }

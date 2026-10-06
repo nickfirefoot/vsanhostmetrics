@@ -222,11 +222,17 @@ python3 -m venv ~/.mp && . ~/.mp/bin/activate
 pip install vmware-aria-operations-integration-sdk==1.3.1
 
 git clone https://github.com/nickfirefoot/vsanhostmetrics && cd vsanhostmetrics
-python3 test_perfsvc.py                      # expect 26/26 — if not, stop
+python3 test_perfsvc.py                      # expect 33/33 — if not, stop
+python3 test_vsanmetrics.py                  # expect 16/16
 
 python3 scaffold_project.py ~/vsan-host-metrics
 cp -a app/. ~/vsan-host-metrics/app/ && cp pak_icon.png ~/vsan-host-metrics/
+cp resources/resources.properties ~/vsan-host-metrics/resources/
 # bump "version" in ~/vsan-host-metrics/manifest.txt
+
+# content is GENERATED; the project tree does not update itself
+python3 tools/build_view.py && python3 tools/build_dash.py
+python3 tools/sync_content.py ~/vsan-host-metrics
 
 cd ~/vsan-host-metrics
 mp-build --no-ttl -r "<your-registry>/<project>/vsanhostmetrics" \

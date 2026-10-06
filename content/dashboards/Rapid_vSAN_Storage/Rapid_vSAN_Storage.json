@@ -22,9 +22,9 @@
    "description": "",
    "widgets": [
     {
-     "tabId": "35c18c27-2799-4f39-b884-8afa4afeec80",
+     "tabId": "8d310efa-93d0-54a5-a62a-202adc8e04e8",
      "collapsed": false,
-     "id": "5b797fbe-c669-4189-81c5-67259ea9c270",
+     "id": "6cc0a58f-f4b1-54da-a40d-19903fc5f78e",
      "gridsterCoords": {
       "w": 2,
       "x": 1,
@@ -41,7 +41,7 @@
        "resourceName": "vSphere World",
        "resourceKindId": "002006VMWAREvSphere World"
       },
-      "widgetId": "5b797fbe-c669-4189-81c5-67259ea9c270",
+      "widgetId": "6cc0a58f-f4b1-54da-a40d-19903fc5f78e",
       "traversalSpecId": null,
       "refreshContent": {
        "refreshContent": true
@@ -63,9 +63,9 @@
      "height": 0
     },
     {
-     "tabId": "35c18c27-2799-4f39-b884-8afa4afeec80",
+     "tabId": "8d310efa-93d0-54a5-a62a-202adc8e04e8",
      "collapsed": false,
-     "id": "efbdebb0-51b5-4538-97df-f7c92eabfa5e",
+     "id": "b4f26b44-75b8-5bb7-b942-6c24b594e4b2",
      "gridsterCoords": {
       "w": 10,
       "x": 3,
@@ -77,7 +77,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "efbdebb0-51b5-4538-97df-f7c92eabfa5e",
+      "widgetId": "b4f26b44-75b8-5bb7-b942-6c24b594e4b2",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -95,14 +95,15 @@
       "viewDetails": "",
       "selfProvider": {
        "selfProvider": false
-      }
+      },
+      "periodLength": "dashboardTime"
      },
      "height": 0
     },
     {
-     "tabId": "35c18c27-2799-4f39-b884-8afa4afeec80",
+     "tabId": "8d310efa-93d0-54a5-a62a-202adc8e04e8",
      "collapsed": false,
-     "id": "562608c8-caa4-43d2-904f-428184ff5cc2",
+     "id": "411b6a29-6c51-5ee1-a97a-ff2e79c52171",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -114,7 +115,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "562608c8-caa4-43d2-904f-428184ff5cc2",
+      "widgetId": "411b6a29-6c51-5ee1-a97a-ff2e79c52171",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -132,14 +133,15 @@
       "viewDetails": "",
       "selfProvider": {
        "selfProvider": false
-      }
+      },
+      "periodLength": "dashboardTime"
      },
      "height": 0
     },
     {
-     "tabId": "35c18c27-2799-4f39-b884-8afa4afeec80",
+     "tabId": "8d310efa-93d0-54a5-a62a-202adc8e04e8",
      "collapsed": false,
-     "id": "13d14874-da06-47f8-9baf-5cfcf5e76d23",
+     "id": "39559ea4-a87d-54be-ac72-a9e3bde76c9a",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -151,7 +153,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "13d14874-da06-47f8-9baf-5cfcf5e76d23",
+      "widgetId": "39559ea4-a87d-54be-ac72-a9e3bde76c9a",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -169,14 +171,15 @@
       "viewDetails": "",
       "selfProvider": {
        "selfProvider": false
-      }
+      },
+      "periodLength": "dashboardTime"
      },
      "height": 0
     },
     {
-     "tabId": "35c18c27-2799-4f39-b884-8afa4afeec80",
+     "tabId": "8d310efa-93d0-54a5-a62a-202adc8e04e8",
      "collapsed": false,
-     "id": "2e7abff1-4d5c-4d35-bf97-33945a05ba96",
+     "id": "27c43fdf-f1a5-5d92-96e8-2d57ebccbb25",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -188,7 +191,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "2e7abff1-4d5c-4d35-bf97-33945a05ba96",
+      "widgetId": "27c43fdf-f1a5-5d92-96e8-2d57ebccbb25",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -206,14 +209,15 @@
       "viewDetails": "",
       "selfProvider": {
        "selfProvider": false
-      }
+      },
+      "periodLength": "dashboardTime"
      },
      "height": 0
     },
     {
-     "tabId": "35c18c27-2799-4f39-b884-8afa4afeec80",
+     "tabId": "8d310efa-93d0-54a5-a62a-202adc8e04e8",
      "collapsed": false,
-     "id": "8321fbea-37cb-43e7-8cad-b391359ba2d7",
+     "id": "e562947d-c2de-52cf-977b-8a5e7a4d4985",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -225,7 +229,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "8321fbea-37cb-43e7-8cad-b391359ba2d7",
+      "widgetId": "e562947d-c2de-52cf-977b-8a5e7a4d4985",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -243,14 +247,15 @@
       "viewDetails": "",
       "selfProvider": {
        "selfProvider": false
-      }
+      },
+      "periodLength": "dashboardTime"
      },
      "height": 0
     },
     {
-     "tabId": "35c18c27-2799-4f39-b884-8afa4afeec80",
+     "tabId": "8d310efa-93d0-54a5-a62a-202adc8e04e8",
      "collapsed": false,
-     "id": "7da33c12-304f-43fe-8a24-664c69d21b6c",
+     "id": "3d2a8411-d249-50ec-bc0f-3e806f718a44",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -262,7 +267,7 @@
      "config": {
       "refreshInterval": 300,
       "resource": null,
-      "widgetId": "7da33c12-304f-43fe-8a24-664c69d21b6c",
+      "widgetId": "3d2a8411-d249-50ec-bc0f-3e806f718a44",
       "traversalSpecId": "",
       "refreshContent": {
        "refreshContent": true
@@ -280,14 +285,15 @@
       "viewDetails": "",
       "selfProvider": {
        "selfProvider": false
-      }
+      },
+      "periodLength": "dashboardTime"
      },
      "height": 0
     },
     {
-     "tabId": "35c18c27-2799-4f39-b884-8afa4afeec80",
+     "tabId": "8d310efa-93d0-54a5-a62a-202adc8e04e8",
      "collapsed": false,
-     "id": "9b86e71b-f23a-425d-b47b-056336031875",
+     "id": "bccf863e-60d6-59d0-a14d-d01261618ddd",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
@@ -299,9 +305,9 @@
      "config": {
       "locationUrl": "",
       "locationFile": "",
-      "editorData": "<div style=\"font-family:'Metropolis','Segoe UI',sans-serif;font-size:13px;color:#ffffff;padding:6px 12px\">\n<h2 style=\"font-size:15px;color:#ffffff;margin:4px 0 10px 0\">vSAN storage &mdash; is it the disk or the queue?</h2>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">This screen descends from the vSAN view of a disk to the device itself, then back up to what a guest experiences. The useful comparison is <b style=\"color:#ffffff;font-weight:700\">between the layers</b>, not against any fixed threshold.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><b style=\"color:#ffffff;font-weight:700\">Compare disks against their peers, not against a number.</b> A cluster of disks at 40 microseconds and one at 500 is the finding, whatever the absolute values are. One disk here was measured at 495 microseconds of device latency against 38 to 58 for its peers, with kernel latency flat &mdash; which is a slow device, not contention.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">The guest tables at the bottom come in two forms: per vSCSI controller, which is how vSAN accounts for IO, and per virtual machine, which is the unit a ticket gets raised about.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">ESA disks - vSAN layer</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN ESA Disks</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN Layer Average Read Latency of vSAN ESA Disk</span> &mdash; Read latency as vSAN sees it, above the device. Compare across disks rather than against a fixed number: the signal is one disk diverging from its peers.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN Layer Average Write Latency of vSAN ESA Disk</span> &mdash; Write latency as vSAN sees it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Perf Tier Average Write Latency of vSAN ESA Disk</span> &mdash; Write latency at the performance tier.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN Layer Read IOPS of vSAN ESA Disk</span> &mdash; Read operations per second at the vSAN layer. Context -- high latency at high IOPS is a busy disk, high latency at low IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN Layer Write IOPS of vSAN ESA Disk</span> &mdash; Write operations per second at the vSAN layer.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">ESA disks - physical layer</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN ESA Disk Physical Layer</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN ESA Disk Physical/Firmware Layer Read Latency</span> &mdash; Read latency at the physical and firmware layer, below vSAN. Compare with the vSAN layer column: if both are high the device is slow, if only the vSAN layer is high the delay is above the disk.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN ESA Disk Physical/Firmware Layer Write Latency</span> &mdash; Write latency at the physical and firmware layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN ESA Disk Physical/Firmware Layer Device Average Latency</span> &mdash; <b style=\"color:#ffffff;font-weight:700\">DAVG</b> -- time spent in the device itself. High DAVG is a slow or failing drive.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN ESA Disk Physical/Firmware Layer Kernel Average Latency</span> &mdash; <b style=\"color:#ffffff;font-weight:700\">KAVG</b> -- time spent queued in the VMkernel before reaching the device. High KAVG is contention, not a bad disk.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN ESA Disk Physical/Firmware Layer Guest Average Latency</span> &mdash; <b style=\"color:#ffffff;font-weight:700\">GAVG</b> -- what the guest actually experiences, being DAVG plus KAVG. Read the three together: GAVG tells you it hurts, DAVG and KAVG tell you which to fix.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Back end - per host</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Host DOM Component Manager</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Average read latency at this layer. Compare the same column across the client, owner and component manager views: the layer where the number first becomes large is the layer to investigate.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency (max, read)</span> &mdash; Worst read latency in the interval. Read beside the average: a large gap is a tail-latency problem, which guests feel as stalls even when the average looks fine.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Average write latency at this layer. On ESA a write is acknowledged after it is logged, so this is usually far lower than the component manager's figure beneath it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency (max, write)</span> &mdash; Worst write latency in the interval. Measured here at <b style=\"color:#ffffff;font-weight:700\">14.9 ms against a 957 microsecond average</b> -- a fifteenfold tail on an idle cluster, and the kind of thing an average hides completely.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency standard deviation (write)</span> &mdash; Spread of write latency. High spread with a low average means the work is bimodal: most operations fast, some very slow.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read IOPS</span> &mdash; Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Outstanding IO</span> &mdash; Outstanding IO: operations issued and not yet completed. Latency multiplied by nothing tells you why it is high -- this does. High latency with high outstanding IO is queueing, high latency with low outstanding IO is a slow device.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Throughput</span> &mdash; Bytes per second read at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Throughput</span> &mdash; Bytes per second written at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">VM disk queue depth (write)</span> &mdash; Queue depth for writes to virtual disk objects at the component manager. Depth is the cause; the latency columns are the effect.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">VM disk dispatched cost (write)</span> &mdash; Accumulated cost of dispatched virtual disk writes, in vSAN's internal scheduling units. Not comparable to a time or a byte count -- useful for comparing hosts against each other, not against a threshold.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Namespace dispatched cost (write)</span> &mdash; The same cost measure for namespace objects, which hold VM configuration rather than guest data. Large values here with small virtual disk values mean the work is metadata, not guest IO.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Capacity</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Cluster Capacity</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Free Capacity</span> &mdash; Unused vSAN capacity. Read it next to <b style=\"color:#ffffff;font-weight:700\">Total</b>, not alone: the same free figure means very different things on a 10 TB and a 1 PB cluster.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Used Capacity</span> &mdash; Consumed vSAN capacity, after deduplication and compression.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Total Capacity</span> &mdash; Usable vSAN capacity. Already excludes the overhead vSAN reserves for itself, so it is smaller than the sum of the disks.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Space Efficiency Ratio</span> &mdash; Space saving from deduplication and compression, expressed as a ratio scaled by 100 -- <b style=\"color:#ffffff;font-weight:700\">134 means 1.34:1</b>, not 134:1. A ratio that falls sharply usually means new data that does not deduplicate, not a fault.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Saved Capacity</span> &mdash; Bytes not written because deduplication and compression removed them. The absolute saving behind the ratio beside it.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">VM storage - per controller</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN VM Storage</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Read latency for this virtual disk, measured at the vSAN layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Write latency for this virtual disk, measured at the vSAN layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read IOPS</span> &mdash; Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">VM latency - per VM</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN VM Latency</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Read latency for this virtual disk, measured at the vSAN layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Write latency for this virtual disk, measured at the vSAN layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read IOPS</span> &mdash; Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Throughput</span> &mdash; Bytes per second read at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Throughput</span> &mdash; Bytes per second written at this layer.</p>\n</div>\n",
+      "editorData": "<div style=\"font-family:'Metropolis','Segoe UI',sans-serif;font-size:13px;color:#ffffff;padding:6px 12px\">\n<h2 style=\"font-size:15px;color:#ffffff;margin:4px 0 10px 0\">vSAN storage &mdash; is it the disk or the queue?</h2>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">This screen descends from the vSAN view of a disk to the device itself, then back up to what a guest experiences. The useful comparison is <b style=\"color:#ffffff;font-weight:700\">between the layers</b>, not against any fixed threshold.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><b style=\"color:#ffffff;font-weight:700\">Compare disks against their peers, not against a number.</b> A cluster of disks at 40 microseconds and one at 500 is the finding, whatever the absolute values are. One disk here was measured at 495 microseconds of device latency against 38 to 58 for its peers, with kernel latency flat &mdash; which is a slow device, not contention.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">The guest tables at the bottom come in two forms: per vSCSI controller, which is how vSAN accounts for IO, and per virtual machine, which is the unit a ticket gets raised about.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">ESA disks - vSAN layer</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN ESA Disks</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN Layer Average Read Latency of vSAN ESA Disk</span> &mdash; Read latency as vSAN sees it, above the device. Compare across disks rather than against a fixed number: the signal is one disk diverging from its peers.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN Layer Average Write Latency of vSAN ESA Disk</span> &mdash; Write latency as vSAN sees it.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Perf Tier Average Write Latency of vSAN ESA Disk</span> &mdash; Write latency at the performance tier.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN Layer Read IOPS of vSAN ESA Disk</span> &mdash; Read operations per second at the vSAN layer. Context -- high latency at high IOPS is a busy disk, high latency at low IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN Layer Write IOPS of vSAN ESA Disk</span> &mdash; Write operations per second at the vSAN layer.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">ESA disks - physical layer</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN ESA Disk Physical Layer</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN ESA Disk Physical/Firmware Layer Read Latency</span> &mdash; Read latency at the physical and firmware layer, below vSAN. Compare with the vSAN layer column: if both are high the device is slow, if only the vSAN layer is high the delay is above the disk. <b style=\"color:#ffffff;font-weight:700\">Product threshold 15 ms warning, 30 ms critical.</b></p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN ESA Disk Physical/Firmware Layer Write Latency</span> &mdash; Write latency at the physical and firmware layer. <b style=\"color:#ffffff;font-weight:700\">Product threshold 15 ms warning, 30 ms critical.</b></p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN ESA Disk Physical/Firmware Layer Device Average Latency</span> &mdash; <b style=\"color:#ffffff;font-weight:700\">DAVG</b> -- time spent in the device itself. High DAVG is a slow or failing drive.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN ESA Disk Physical/Firmware Layer Kernel Average Latency</span> &mdash; <b style=\"color:#ffffff;font-weight:700\">KAVG</b> -- time spent queued in the VMkernel before reaching the device. High KAVG is contention, not a bad disk.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">vSAN ESA Disk Physical/Firmware Layer Guest Average Latency</span> &mdash; <b style=\"color:#ffffff;font-weight:700\">GAVG</b> -- what the guest actually experiences, being DAVG plus KAVG. Read the three together: GAVG tells you it hurts, DAVG and KAVG tell you which to fix.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Back end - per host</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Host DOM Component Manager</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Average read latency at this layer. <b style=\"color:#ffffff;font-weight:700\">Broadcom's own threshold for this metric is 15 ms warning and 30 ms critical</b>, published in the Performance Service graph definition as yellow=15000 red=30000 microseconds, direction upper. That is a badly-wrong line rather than a tuning line -- a healthy cluster here runs under 1.5 ms, so the product only flags at roughly ten times normal. Compare the same column across the client, owner and component manager views: the layer where the number first becomes large is the layer to investigate.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency (max, read)</span> &mdash; Worst read latency in the interval. Read beside the average: a large gap is a tail-latency problem, which guests feel as stalls even when the average looks fine.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Average write latency at this layer. On ESA a write is acknowledged after it is logged, so this is usually far lower than the component manager's figure beneath it. <b style=\"color:#ffffff;font-weight:700\">Product threshold 15 ms warning, 30 ms critical.</b></p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency (max, write)</span> &mdash; Worst write latency in the interval. Measured here at <b style=\"color:#ffffff;font-weight:700\">14.9 ms against a 957 microsecond average</b> -- a fifteenfold tail on an idle cluster, and the kind of thing an average hides completely.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Latency standard deviation (write)</span> &mdash; Spread of write latency. High spread with a low average means the work is bimodal: most operations fast, some very slow.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read IOPS</span> &mdash; Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Outstanding IO</span> &mdash; Outstanding IO: operations issued and not yet completed. Latency multiplied by nothing tells you why it is high -- this does. High latency with high outstanding IO is queueing, high latency with low outstanding IO is a slow device.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Throughput</span> &mdash; Bytes per second read at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Throughput</span> &mdash; Bytes per second written at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">VM disk queue depth (write)</span> &mdash; Queue depth for writes to virtual disk objects at the component manager. Depth is the cause; the latency columns are the effect.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">VM disk dispatched cost (write)</span> &mdash; Accumulated cost of dispatched virtual disk writes, in vSAN's internal scheduling units. Not comparable to a time or a byte count -- useful for comparing hosts against each other, not against a threshold.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Namespace dispatched cost (write)</span> &mdash; The same cost measure for namespace objects, which hold VM configuration rather than guest data. Large values here with small virtual disk values mean the work is metadata, not guest IO.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">Capacity</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN Cluster Capacity</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Free Capacity</span> &mdash; Unused vSAN capacity. Read it next to <b style=\"color:#ffffff;font-weight:700\">Total</b>, not alone: the same free figure means very different things on a 10 TB and a 1 PB cluster.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Used Capacity</span> &mdash; Consumed vSAN capacity, after deduplication and compression.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Total Capacity</span> &mdash; Usable vSAN capacity. Already excludes the overhead vSAN reserves for itself, so it is smaller than the sum of the disks.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Space Efficiency Ratio</span> &mdash; Space saving from deduplication and compression, expressed as a ratio scaled by 100 -- <b style=\"color:#ffffff;font-weight:700\">134 means 1.34:1</b>, not 134:1. A ratio that falls sharply usually means new data that does not deduplicate, not a fault.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Saved Capacity</span> &mdash; Bytes not written because deduplication and compression removed them. The absolute saving behind the ratio beside it.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">VM storage - per controller</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN VM Storage</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Read latency for this virtual disk, measured at the vSAN layer. <b style=\"color:#ffffff;font-weight:700\">Product threshold 15 ms warning, 30 ms critical.</b></p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Write latency for this virtual disk, measured at the vSAN layer. <b style=\"color:#ffffff;font-weight:700\">Product threshold 15 ms warning, 30 ms critical.</b></p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read IOPS</span> &mdash; Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<h3 style=\"font-size:13px;color:#ffffff;margin:16px 0 6px 0;border-bottom:1px solid #4a5a66;padding-bottom:3px\">VM latency - per VM</h3>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\">Renders the <b style=\"color:#ffffff\">vSAN VM Latency</b> view.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Latency</span> &mdash; Read latency for this virtual disk, measured at the vSAN layer. <b style=\"color:#ffffff;font-weight:700\">Product threshold 15 ms warning, 30 ms critical.</b></p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Latency</span> &mdash; Write latency for this virtual disk, measured at the vSAN layer. <b style=\"color:#ffffff;font-weight:700\">Product threshold 15 ms warning, 30 ms critical.</b></p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read IOPS</span> &mdash; Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write IOPS</span> &mdash; Write operations per second.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Read Throughput</span> &mdash; Bytes per second read at this layer.</p>\n<p style=\"margin:5px 0;line-height:1.45;color:#ffffff\"><span style=\"font-weight:600;color:#8fd3ff\">Write Throughput</span> &mdash; Bytes per second written at this layer.</p>\n</div>\n",
       "refreshInterval": 300,
-      "widgetId": "9b86e71b-f23a-425d-b47b-056336031875",
+      "widgetId": "bccf863e-60d6-59d0-a14d-d01261618ddd",
       "refreshContent": {
        "refreshContent": false
       },
@@ -318,40 +324,40 @@
    "homeTab": false,
    "rank": 0,
    "disabled": false,
-   "id": "35c18c27-2799-4f39-b884-8afa4afeec80",
+   "id": "8d310efa-93d0-54a5-a62a-202adc8e04e8",
    "adapterName": "iSDK_VsanHostMetrics",
    "locked": false,
    "dashboardNavigations": {},
    "widgetInteractions": [
     {
-     "widgetIdProvider": "5b797fbe-c669-4189-81c5-67259ea9c270",
+     "widgetIdProvider": "6cc0a58f-f4b1-54da-a40d-19903fc5f78e",
      "type": "resourceId",
-     "widgetIdReceiver": "efbdebb0-51b5-4538-97df-f7c92eabfa5e"
+     "widgetIdReceiver": "b4f26b44-75b8-5bb7-b942-6c24b594e4b2"
     },
     {
-     "widgetIdProvider": "5b797fbe-c669-4189-81c5-67259ea9c270",
+     "widgetIdProvider": "6cc0a58f-f4b1-54da-a40d-19903fc5f78e",
      "type": "resourceId",
-     "widgetIdReceiver": "562608c8-caa4-43d2-904f-428184ff5cc2"
+     "widgetIdReceiver": "411b6a29-6c51-5ee1-a97a-ff2e79c52171"
     },
     {
-     "widgetIdProvider": "5b797fbe-c669-4189-81c5-67259ea9c270",
+     "widgetIdProvider": "6cc0a58f-f4b1-54da-a40d-19903fc5f78e",
      "type": "resourceId",
-     "widgetIdReceiver": "13d14874-da06-47f8-9baf-5cfcf5e76d23"
+     "widgetIdReceiver": "39559ea4-a87d-54be-ac72-a9e3bde76c9a"
     },
     {
-     "widgetIdProvider": "5b797fbe-c669-4189-81c5-67259ea9c270",
+     "widgetIdProvider": "6cc0a58f-f4b1-54da-a40d-19903fc5f78e",
      "type": "resourceId",
-     "widgetIdReceiver": "2e7abff1-4d5c-4d35-bf97-33945a05ba96"
+     "widgetIdReceiver": "27c43fdf-f1a5-5d92-96e8-2d57ebccbb25"
     },
     {
-     "widgetIdProvider": "5b797fbe-c669-4189-81c5-67259ea9c270",
+     "widgetIdProvider": "6cc0a58f-f4b1-54da-a40d-19903fc5f78e",
      "type": "resourceId",
-     "widgetIdReceiver": "8321fbea-37cb-43e7-8cad-b391359ba2d7"
+     "widgetIdReceiver": "e562947d-c2de-52cf-977b-8a5e7a4d4985"
     },
     {
-     "widgetIdProvider": "5b797fbe-c669-4189-81c5-67259ea9c270",
+     "widgetIdProvider": "6cc0a58f-f4b1-54da-a40d-19903fc5f78e",
      "type": "resourceId",
-     "widgetIdReceiver": "7da33c12-304f-43fe-8a24-664c69d21b6c"
+     "widgetIdReceiver": "3d2a8411-d249-50ec-bc0f-3e806f718a44"
     }
    ],
    "lastUpdateUserId": "833b693b-0960-4d05-b868-f14446488fc3",
@@ -362,5 +368,5 @@
    "lastUpdateTime": 1790823795066
   }
  ],
- "uuid": "169311ae-9eb5-4642-b5e1-0ff7667fbc4c"
+ "uuid": "006f7bb6-bd93-5c6d-894e-62f92a5ac074"
 }
