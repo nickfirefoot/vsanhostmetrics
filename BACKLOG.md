@@ -1673,8 +1673,14 @@ nothing overwrote them. Sites that installed fresh at 1.4.3+ had no such
 history and reported the bug. There was no environmental difference between
 the lab and any failing site.
 
-Fixed in 84ebf45. Still needs end-to-end proof: a real collection logging a
-non-zero parent count.
+Fixed in two parts. 84ebf45 (1.4.5) acquired the token, which removed the 401
+and revealed a second defect it had been hiding: the suite API does not filter
+on identifiers at all, so every lookup returned the whole resource kind and
+every parent was rejected as ambiguous. 1.4.6 resolves parents from a per-kind
+index matched client-side.
+
+CONFIRMED IN THE FIELD 2026-10-06: relationships attach in two environments on
+1.4.6. The three-release orphaning is closed.
 
 ### The two measurements that would end it
 
