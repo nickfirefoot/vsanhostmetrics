@@ -92,6 +92,21 @@ For summarising a period, the choice of statistic matters more than the widget:
 A consistent scale so operators learn one rule: **Yellow = 2x Green, Orange =
 2x Yellow, Red = 2x Orange** -- red ends up 8x green.
 
+**Provenance, recorded because this will otherwise be re-litigated.** That scale
+was chosen here for internal consistency alone: one rule an operator can hold in
+their head, with no reference to any published figure. On the pNIC error columns
+it puts yellow at **0.1%**.
+
+vCenter's own `alarm-261`, "High pNic error rate detected", fires at **1 per
+mille** on seven driver error counters -- the same number, arrived at by a
+completely different route, and discovered afterwards rather than designed
+toward. Broadcom use 0.1% as their published network warning figure generally,
+which is also where the TCP out-of-order band here came from.
+
+Two independent derivations landing on the same threshold is stronger evidence
+than either on its own. **Do not "correct" the doubling scale toward some other
+number without a measurement that beats both.**
+
 | Colour | Meaning |
 |---|---|
 | Green -> Yellow -> Orange -> Red | performance and compliance, worsening |

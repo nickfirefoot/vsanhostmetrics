@@ -1551,3 +1551,39 @@ existing object rather than creating a second one". True, and incomplete: it
 matches the object and then overwrites its relationships. The earlier rename
 bug was the same root cause showing in a different field -- we are writing to
 objects we do not own, and the name was simply the first symptom noticed.
+
+## Identity: the TCP/IP stack should probably be a property, not a key
+
+Raised 2026-10-06 by the netstats pack, which models the same kernel ports from
+the host command surface and made the opposite choice.
+
+Two kinds here put the TCP/IP stack **inside object identity**:
+
+```
+vsan-vnic-net      identity: ['host_uuid', 'stack', 'vmknic']
+vsan-tcpip-stats   identity: ['host_uuid', 'stack']
+```
+
+That is faithful to the source -- the Performance Service reports the stack as a
+component of `entityRefId`, so it falls out of parsing. It is not obviously
+right for Operations.
+
+**The consequence: a vmknic moved between TCP/IP stacks becomes a different
+object and loses its history.** netstats keeps `netstack` as a *property*, so
+identity is host plus vmk and the interface keeps its history across a move.
+Theirs follows what the interface *is*; this pack follows how perfsvc *reports*
+it.
+
+A vmk name is unique per host regardless of stack, so `host_uuid + vmknic` is a
+sufficient key. The stack adds nothing to uniqueness and costs history on the
+one occasion it changes. On that reading netstats has it right and this pack
+does not.
+
+**Not changed, because changing identity is a schema change**: existing objects
+would be abandoned and recreated, which means a real uninstall rather than an
+install over the top, and it discards the history it is meant to protect. Worth
+doing at the next release that breaks schema anyway, not before.
+
+**Cross-pack consequence, worth knowing before anyone writes a comparison:** the
+two packs' object keys for the same kernel port do not match. A comparison must
+join on **host plus vmk**, never on the object key.
