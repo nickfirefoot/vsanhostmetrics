@@ -451,6 +451,28 @@ ADAPTER = "VsanHostMetrics"
 NAMESPACE = uuid.UUID("6f3c9b1e-4a2d-5e8f-9c1b-2d7a4e6f8b03")
 
 
+# Appended to the DISPLAYED title only. Searching the Views list for "vSAN"
+# also returns the built-in vSAN management pack's views, so a marker is the
+# only way to tell ours apart -- uninstalling leaves views behind and nothing
+# else identifies their origin.
+#
+# Deliberately carries NO version. Identity is uuid5 of the title, so a version
+# here would rename all 30 views every release, orphaning 30 and creating 30
+# more each time; three releases would leave 90 stale views, which is worse
+# than the problem. The version is already shown under Administration ->
+# Solutions. This marker says WHICH PACK, nothing else.
+#
+# The GUID keeps deriving from the BASE title, so adding this renames nothing
+# as far as Operations is concerned: existing views update in place and every
+# dashboard reference keeps resolving.
+TITLE_SUFFIX = " [VHM]"
+
+
+def display_title(title):
+    """What the Views list shows. Identity stays with the base title."""
+    return title if title.endswith(TITLE_SUFFIX) else title + TITLE_SUFFIX
+
+
 def guid_for(title):
     """The view's identity, derived from its title and nothing else.
 
@@ -501,7 +523,7 @@ def build(template, title, kind, columns, seed, adapter=None):
     # creating a duplicate, and any dashboard referencing it keeps resolving.
     # uuid4 here would mean every edit orphaned the previous import.
     vd.set("id", guid_for(title))
-    vd.find("Title").text = title
+    vd.find("Title").text = display_title(title)
     for st in vd.findall("SubjectType"):
         st.set("adapterKind", adapter)
         st.set("resourceKind", kind)

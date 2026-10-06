@@ -56,36 +56,36 @@ Delete. These are the titles as the UI shows them.
 
 | title | subject |
 |---|---|
-| vSAN CMMDS Network | `VsanHostMetrics/VsanCmmdsNet` |
-| vSAN Cluster Capacity | `VsanHostMetrics/VsanClusterCapacity` |
-| vSAN Cluster DOM Client | `VsanHostMetrics/VsanClusterDomclient` |
-| vSAN Cluster DOM Component Manager | `VsanHostMetrics/VsanClusterDomcompmgr` |
-| vSAN Cluster DOM Owner | `VsanHostMetrics/VsanClusterDomowner` |
-| vSAN Cluster RDT | `VsanHostMetrics/VsanClusterRdtLatency` |
-| vSAN Cluster Resync | `VsanHostMetrics/VsanClusterDomcompmgr` |
-| vSAN Cluster Resync Jobs | `VsanHostMetrics/VsanClusterDomowner` |
-| vSAN Clusters | `VMWARE/ClusterComputeResource` |
-| vSAN ESA Disk Physical Layer | `VsanHostMetrics/VsanEsaDiskScsifw` |
-| vSAN ESA Disks | `VsanHostMetrics/VsanEsaDiskLayer` |
-| vSAN Host CPU | `VsanHostMetrics/VsanHostCpu` |
-| vSAN Host DOM | `VsanHostMetrics/VsanHostDomclient` |
-| vSAN Host DOM Component Manager | `VsanHostMetrics/VsanHostDomcompmgr` |
-| vSAN Host DOM Owner | `VsanHostMetrics/VsanHostDomowner` |
-| vSAN Host DOM Owner Scheduler | `VsanHostMetrics/VsanHostDomowner` |
-| vSAN Host Memory | `VsanHostMetrics/VsanMemory` |
-| vSAN Host Network | `VsanHostMetrics/VsanHostNet` |
-| vSAN Host TCP Health | `VsanHostMetrics/VsanTcpIp` |
-| vSAN Host Uplinks and Load | `VMWARE/HostSystem` |
-| vSAN RDT Transport Per Host | `VsanHostMetrics/VsanRdtLatency` |
-| vSAN Segment Cleaning Per Host | `VsanHostMetrics/VsanHostDomowner` |
-| vSAN VM Latency | `VsanHostMetrics/VsanVirtualMachine` |
-| vSAN VM Storage | `VsanHostMetrics/VsanVscsi` |
-| vSAN pNIC Errors | `VsanHostMetrics/VsanPnic` |
-| vSAN vmknic | `VsanHostMetrics/VsanVnic` |
-| vSAN vmknic RDT Latency | `VsanHostMetrics/VsanVnicRdtLatency` |
-| vSAN zDOM Cluster | `VsanHostMetrics/VsanClusterZdomTopStats` |
-| vSAN zDOM Per Host | `VsanHostMetrics/VsanHostZdomTopStats` |
-| vSAN zDOM Write Path | `VsanHostMetrics/VsanZdomVtx` |
+| vSAN CMMDS Network [VHM] | `VsanHostMetrics/VsanCmmdsNet` |
+| vSAN Cluster Capacity [VHM] | `VsanHostMetrics/VsanClusterCapacity` |
+| vSAN Cluster DOM Client [VHM] | `VsanHostMetrics/VsanClusterDomclient` |
+| vSAN Cluster DOM Component Manager [VHM] | `VsanHostMetrics/VsanClusterDomcompmgr` |
+| vSAN Cluster DOM Owner [VHM] | `VsanHostMetrics/VsanClusterDomowner` |
+| vSAN Cluster RDT [VHM] | `VsanHostMetrics/VsanClusterRdtLatency` |
+| vSAN Cluster Resync Jobs [VHM] | `VsanHostMetrics/VsanClusterDomowner` |
+| vSAN Cluster Resync [VHM] | `VsanHostMetrics/VsanClusterDomcompmgr` |
+| vSAN Clusters [VHM] | `VMWARE/ClusterComputeResource` |
+| vSAN ESA Disk Physical Layer [VHM] | `VsanHostMetrics/VsanEsaDiskScsifw` |
+| vSAN ESA Disks [VHM] | `VsanHostMetrics/VsanEsaDiskLayer` |
+| vSAN Host CPU [VHM] | `VsanHostMetrics/VsanHostCpu` |
+| vSAN Host DOM Component Manager [VHM] | `VsanHostMetrics/VsanHostDomcompmgr` |
+| vSAN Host DOM Owner Scheduler [VHM] | `VsanHostMetrics/VsanHostDomowner` |
+| vSAN Host DOM Owner [VHM] | `VsanHostMetrics/VsanHostDomowner` |
+| vSAN Host DOM [VHM] | `VsanHostMetrics/VsanHostDomclient` |
+| vSAN Host Memory [VHM] | `VsanHostMetrics/VsanMemory` |
+| vSAN Host Network [VHM] | `VsanHostMetrics/VsanHostNet` |
+| vSAN Host TCP Health [VHM] | `VsanHostMetrics/VsanTcpIp` |
+| vSAN Host Uplinks and Load [VHM] | `VMWARE/HostSystem` |
+| vSAN RDT Transport Per Host [VHM] | `VsanHostMetrics/VsanRdtLatency` |
+| vSAN Segment Cleaning Per Host [VHM] | `VsanHostMetrics/VsanHostDomowner` |
+| vSAN VM Latency [VHM] | `VsanHostMetrics/VsanVirtualMachine` |
+| vSAN VM Storage [VHM] | `VsanHostMetrics/VsanVscsi` |
+| vSAN pNIC Errors [VHM] | `VsanHostMetrics/VsanPnic` |
+| vSAN vmknic RDT Latency [VHM] | `VsanHostMetrics/VsanVnicRdtLatency` |
+| vSAN vmknic [VHM] | `VsanHostMetrics/VsanVnic` |
+| vSAN zDOM Cluster [VHM] | `VsanHostMetrics/VsanClusterZdomTopStats` |
+| vSAN zDOM Per Host [VHM] | `VsanHostMetrics/VsanHostZdomTopStats` |
+| vSAN zDOM Write Path [VHM] | `VsanHostMetrics/VsanZdomVtx` |
 
 ## Objects
 
