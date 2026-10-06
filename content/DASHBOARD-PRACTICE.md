@@ -351,3 +351,59 @@ restores the working behaviour by intent rather than by accident.
 widget by id is inert while the id is wrong. Making the id right activates
 whatever it says. Before repairing such a field, read what it will do once it
 works.
+
+## 9. Why two packs read the same pNIC error counters
+
+Settled 2026-10-06 with the netstats pack (`VsphereNetStats`). The duplication is
+deliberate and the reasoning is recorded because "why are two packs reading the
+same counter" will be asked again.
+
+**The counters are not vSAN's.** vCenter's `alarm-261`, "High pNic error rate
+detected", is an OR of sixteen expressions: eight event types at yellow and red.
+Seven of the eight map to ordinary driver error fields present on **every**
+uplink in the estate, measured 15 of 15 including USB adapters and non-vSAN
+Intel uplinks. Only `pausecount` is unavailable through esxcli. So neither the
+counters nor the 1 per mille cutoff are vSAN judgements -- 1‰ is Broadcom's
+published network warning figure.
+
+**What is vSAN-specific is the collection path.** The Performance Service models
+uplinks carrying vSAN traffic, so the alarm can only fire on those -- 7 of 18
+here -- and is structurally silent on the rest.
+
+**Both packs keep their own, by Nick's decision.** netstats collects the driver
+breakdown for every vmnic through esxcli; this pack keeps its set on the vSAN
+path. Three reasons worth preserving:
+
+1. **The sources differ, so they corroborate rather than repeat.** vSAN health
+   fired at 1‰ and 3‰ on five-minute samples while netstats' lifetime delta on
+   the same uplink averaged **0.0027‰**. That is 370 to 1,100 times the weekly
+   mean, and the disagreement is the finding: it localises the fault to bursts.
+   Either number alone misleads. It is a third independent confirmation of the
+   burst already measured here -- 1,140 packets in one interval, with the rate
+   registering for one sample in eleven -- and of choosing MAX over the period.
+2. **Neither may become a single point of failure.** If netstats deferred on
+   vSAN uplinks the blind spot returns the moment it is uninstalled; if this
+   pack deferred, the pause counts and the vSAN data-path depth go with it.
+3. **Only the labelling needed fixing, and it was on this side.** The pNIC view
+   now states it covers vSAN-tagged uplinks only.
+
+### Corroboration this pack gained from that work
+
+- **The 0.1% yellow band is the product's own threshold.** The strict-doubling
+  scale put yellow at 0.1% on these columns, and `alarm-261` fires at exactly
+  1‰. That was arrived at independently and lands on the same number.
+- **A zero pause count is often meaningless, now with evidence.** Measured
+  through `network.nic.pauseParams.list`: `nmlx5_core` uplinks have PauseRX and
+  PauseTX on, `ixgben` uplinks have both off. On every Intel uplink there, a
+  zero says nothing at all. The help text says so now.
+- **Ring size is driver-dependent**, confirming BACKLOG §3.1: `ixgben` answers,
+  `nmlx5_core` faults on all eight uplinks. Ring *utilisation* does not exist as
+  a counter on either path.
+- **The standby-uplink gap is closed by labelling, not by building.** netstats
+  covers every vmnic regardless of vSAN tagging, so this pack needs a pointer on
+  the screen rather than empty objects or a divergence supermetric.
+
+**Not a correction this pack needs:** netstats had written that no vendor
+publishes a threshold for these counters and corrected it. Nothing here ever
+claimed that. This pack already attributed 0.1% to Broadcom for TCP
+out-of-order, and now attributes the pNIC band to `alarm-261`.

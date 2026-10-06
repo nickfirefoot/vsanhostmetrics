@@ -30,8 +30,8 @@ OUT = os.path.expanduser("~/ops-content/out/help")
 # you. Written against measurements from a live cluster where one exists.
 NOTES = {
  # ---- physical NIC -------------------------------------------------------
- "rxMissErr": "The NIC's receive ring had no free descriptor, so the packet was dropped before the driver ever saw it. The clearest single sign that a NIC is being overrun. Distinct from a drop (discarded higher up) and an error (arrived damaged).",
- "rxCrcErr": "The frame arrived damaged and failed its checksum. Almost always physical: cable, connector, optic or port. Not a capacity problem.",
+ "rxMissErr": "The NIC's receive ring had no free descriptor, so the packet was dropped before the driver ever saw it. The clearest single sign that a NIC is being overrun. Distinct from a drop (discarded higher up) and an error (arrived damaged). <b>Scope: this table covers vSAN-tagged uplinks only</b> -- the Performance Service models the uplinks carrying vSAN traffic, so an uplink not carrying it, including a standby, does not appear here at all and cannot be judged from this screen.",
+ "rxCrcErr": "The frame arrived damaged and failed its checksum. Almost always physical: cable, connector, optic or port. Not a capacity problem. <b>The 0.1% threshold on this column is the product's own</b>, not a figure invented here: vCenter's <code>alarm-261</code>, \"High pNic error rate detected\", fires at 1 per mille on this counter and seven of its siblings. So the yellow band here coincides with when vSAN itself raises an alarm.",
  "rxErr": "Receive errors not attributed to a more specific counter. Useful as a catch-all; look to the specific counters first.",
  "rxFifoErr": "The NIC's own on-chip buffer overflowed before it could move packets across PCIe into host memory. The NIC could not hand data over fast enough.",
  "rxOvErr": "Receive buffer overrun. Driver-dependent and often moves with FIFO errors; both mean the receive path could not keep up.",
@@ -39,7 +39,7 @@ NOTES = {
  "txErr": "Transmit errors not attributed to a more specific counter.",
  "portRxDrops": "The vSwitch discarded inbound packets for this port. A small, constant rate is usually normal: broadcast and multicast traffic the switch has nowhere to deliver. A rate that <i>changes</i> is the signal, not its presence.",
  "portTxDrops": "The vSwitch discarded outbound packets for this port.",
- "pauseCount": "802.3x pause frames. These are flow control -- the host and the switch asking each other to slow down. <b>No direction is available</b>, so a non-zero value cannot distinguish 'this host is drowning' from 'the fabric is congested'. Check flow control is even enabled on the uplink before reading a zero as healthy.",
+ "pauseCount": "802.3x pause frames. These are flow control -- the host and the switch asking each other to slow down. <b>No direction is available</b>, so a non-zero value cannot distinguish 'this host is drowning' from 'the fabric is congested'. <b>And a zero is often meaningless</b>: flow control has to be enabled on the uplink for the counter to move at all. Measured on the lab through <code>network.nic.pauseParams.list</code>: <b>nmlx5_core uplinks have PauseRX and PauseTX on, ixgben uplinks have both off</b>, so on every Intel uplink there a zero says nothing whatsoever. Check the uplink's pause configuration before reading this column either way.",
  "ioChainDrops": "Packets dropped inside the ESXi IO chain, above the NIC and below the vSwitch port.",
  "ioChainRxdrops": "Inbound packets dropped inside the ESXi IO chain.",
  "ioChainTxdrops": "Outbound packets dropped inside the ESXi IO chain.",
