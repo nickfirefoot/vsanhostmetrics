@@ -70,8 +70,20 @@ def schema(p):
     z = zipfile.ZipFile(p)
     a = zipfile.ZipFile(io.BytesIO(z.read('adapter.zip')))
     d = a.read('VsanHostMetrics/conf/describe.xml').decode('utf-8', 'replace')
-    return (set(re.findall(r'<ResourceKind key="([^"]+)"', d)),
-            set(re.findall(r'<ResourceAttribute key="([^"]+)"', d)))
+    # NB: `key` is NOT the first attribute on these elements. An earlier
+    # version of this snippet anchored on `<ResourceKind key="` and silently
+    # found ZERO ResourceIdentifiers, so it compared two empty sets and never
+    # checked identity at all -- which is the one dimension that actually
+    # forces an uninstall. Match the tag, then the attribute, anywhere in it.
+    def keys(tag):
+        return set(re.findall(r'<%s\b[^>]*?\bkey="([^"]+)"' % tag, d))
+    # identType 1 = part of uniqueness, 2 = informational. A key DEMOTED from
+    # 1 to 2 keeps the field in the schema and still changes every computed
+    # object identity, so compare the pair rather than the name.
+    idents = set(re.findall(
+        r'<ResourceIdentifier\b[^>]*?\bkey="([^"]+)"[^>]*?identType="(\d)"', d))
+    return (keys('ResourceKind'), keys('ResourceAttribute'),
+            keys('CredentialKind'), idents)
 old, new = schema(sys.argv[1]), schema(sys.argv[2])
 print("schema unchanged" if old == new else "SCHEMA CHANGED -- uninstall first")
 PY

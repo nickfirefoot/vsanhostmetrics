@@ -1587,3 +1587,32 @@ doing at the next release that breaks schema anyway, not before.
 **Cross-pack consequence, worth knowing before anyone writes a comparison:** the
 two packs' object keys for the same kernel port do not match. A comparison must
 join on **host plus vmk**, never on the object key.
+
+### Correction: the upgrade check was blind to identity
+
+Found 2026-10-06 while verifying a netstats claim. The schema comparison used to
+decide "install over the top" versus "uninstall first" matched on
+`<ResourceKind key="` -- anchoring `key` as the **first** attribute. It is not:
+
+```xml
+<ResourceIdentifier default="" key="vcenter_host" nameKey="5" required="true"
+                    dispOrder="0" enum="false" type="string" identType="1"/>
+```
+
+So the identifier comparison found **zero of 90** and silently compared two
+empty sets. Every upgrade verdict given so far rested on kinds, attributes and
+credential kinds only, and never checked identity -- which is precisely the
+dimension that forces an uninstall.
+
+The verdicts were right anyway, because no identity has changed since 1.3.1. Right
+by luck, not by checking.
+
+Corrected in QUICKSTART, and the comparison now includes the **key and identType
+pair** rather than the key alone. netstats established that `identType` 1 means
+part of uniqueness and 2 means informational, and that demoting 1 to 2 leaves
+the field in the schema while still changing every computed identity. Comparing
+names alone would miss a demotion, which is the exact change contemplated for
+`stack`.
+
+Re-verified across every build: 1.3.1 through 1.4.3 to 1.4.4, all still over the
+top, now on 70 kinds, 971 attributes and 20 identifier pairs.
