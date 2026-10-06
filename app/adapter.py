@@ -186,6 +186,8 @@ def _label_for(key: str) -> str:
 # vCenter objects our objects attach to. Operations already holds these from
 # the built-in VMWARE adapter, keyed on the managed object reference plus the
 # vCenter instance UUID; see perfsvc.build_parent_map.
+_PAGE = 1000
+
 VC_ADAPTER = "VMWARE"
 VC_KINDS = {"hosts": "HostSystem", "vms": "VirtualMachine",
             "clusters": "ClusterComputeResource",
@@ -226,32 +228,56 @@ def _vc_parent(cache, parents, bucket, uuid):
 
 
 
-def _resource_id(client, parent):
-    """Operations' internal identifier for a vCenter object we reference.
+def _uniqueness_key(idents):
+    """Hashable identity from {name: value}, order-independent."""
+    return frozenset((str(n), str(v)) for n, v in idents.items())
 
-    We key these objects the way the VMWARE adapter keys them, so a query on
-    the same identifiers finds the one that already exists. Returns None if the
-    lookup is ambiguous or empty -- the caller then declines to claim anything
-    about that object, which is the safe direction.
+
+def _resource_index(client, adapter_kind, object_kind):
+    """Every object of one kind, keyed by its uniqueness identifiers.
+
+    This used to be one query PER PARENT, filtered on identifiers. That never
+    worked: /api/resources/query IGNORES identifier filtering. Verified against
+    a live Operations -- a query naming one host's VMEntityObjectID returned
+    all four hosts, and so did `resourceIdentifiers` and
+    `GET ?identifiers[k]=v`. `propertyConditions` returned zero. Only `name`
+    filters, and names are neither unique across vCenters nor stable, so they
+    are not an identity.
+
+    The 401 hid this for three releases: every query failed before anyone could
+    notice that a successful one answers with the whole kind.
+
+    So fetch each kind once and match here. Three calls instead of one per
+    parent, and correct rather than ambiguous.
     """
-    key = parent.get_key()
-    # Key.identifiers is a DICT of name -> Identifier, not a list.
-    idents = {name: ident.value for name, ident in key.identifiers.items()}
-    query = {
-        "adapterKind": [key.adapter_kind],
-        "resourceKind": [key.object_kind],
-        "identifiers": idents,
-    }
-    try:
-        found = client.query_for_resources(query)
-    except Exception as exc:                     # noqa: BLE001
-        logger.warning("suite-api query failed for %s: %s", key.name, exc)
-        return None
-    if len(found) != 1:
-        logger.warning("suite-api query for %s returned %d matches; expected 1",
-                       key.name, len(found))
-        return None
-    return getattr(found[0], "id", None) or getattr(found[0], "uuid", None)
+    out = {}
+    page = 0
+    while True:
+        try:
+            batch = client.paged_get(
+                "api/resources", "resourceList",
+                params={"adapterKindKey": adapter_kind,
+                        "resourceKind": object_kind,
+                        "pageSize": _PAGE, "page": page})
+        except Exception as exc:                 # noqa: BLE001
+            logger.warning("could not list %s/%s from the suite API (%s)",
+                           adapter_kind, object_kind, exc)
+            return out
+        found = batch.get("resourceList", batch.get("values", [])) or []
+        for res in found:
+            rk = res.get("resourceKey", {})
+            idents = {i["identifierType"]["name"]: i.get("value", "")
+                      for i in rk.get("resourceIdentifiers", [])
+                      if str(i.get("identifierType", {})
+                             .get("isPartOfUniqueness", "")).lower()
+                      in ("true", "1")}
+            rid = res.get("identifier") or res.get("id") or res.get("uuid")
+            if idents and rid:
+                out[_uniqueness_key(idents)] = rid
+        if len(found) < _PAGE:
+            break
+        page += 1
+    return out
 
 
 def _key_from_suite_api(res):
@@ -309,13 +335,30 @@ def _preserve_existing_children(adapter_instance, vc_cache):
                          "every request will be unauthenticated. Check the "
                          "credentials Operations injected for this instance.")
             return []
+        # One index per kind, built once, instead of a query per parent.
+        index = {}
+        for ak, ok in sorted({(p.get_key().adapter_kind,
+                               p.get_key().object_kind)
+                              for p in vc_cache.values()}):
+            index[(ak, ok)] = _resource_index(client, ak, ok)
+            logger.info("indexed %d %s/%s objects from the suite API",
+                        len(index[(ak, ok)]), ak, ok)
+        if not any(index.values()):
+            logger.error("the suite API returned no objects for any vCenter "
+                         "kind we attach to. Every object will be orphaned. "
+                         "This is a collection failure, not a content problem.")
+            return []
+
         for parent in vc_cache.values():
-            ident = _resource_id(client, parent)
+            key = parent.get_key()
+            want = _uniqueness_key({n: i.value
+                                    for n, i in key.identifiers.items()})
+            ident = index.get((key.adapter_kind, key.object_kind), {}).get(want)
             if ident is None:
-                logger.warning("could not resolve %s %s in the suite API; "
+                logger.warning("no %s in the suite API matches %s on %s; "
                                "leaving it out rather than claiming its "
-                               "children", parent.get_key().object_kind,
-                               parent.get_key().name)
+                               "children", key.object_kind, key.name,
+                               sorted(n for n, _ in want))
                 continue
             try:
                 existing = client.paged_get(
