@@ -24,9 +24,14 @@ uninstall.
 | `GET /suite-api/api/views`, `/api/viewdefinitions` | 404 |
 | `GET /suite-api/api/reportdefinitions` | 200, but contains none of ours |
 
-The views carry no marking that identifies them as this pack's, which is
-why they are tedious to find among the built-in ones. Searching the Views
-list for **`vSAN`** finds 29 of the 30. The exception is listed below.
+Since 1.4.6 every view title ends in **`[VHM]`**, so one search of the
+Views list finds exactly this pack's 30 and nothing else. Searching for
+`vSAN` is not enough -- the built-in vSAN management pack's views match
+that too.
+
+The marker carries no version on purpose: view identity is a uuid5 of the
+title, so a version in the name would rename all 30 every release and
+leave the old ones behind. It says which pack, not which build.
 
 Since 1.4.5 every id is a uuid5 derived from the title, so **reinstalling
 replaces rather than duplicates**. You only need this list to remove the
@@ -51,8 +56,8 @@ earlier, whose ids were random rather than derived.
 
 ## Views (30)
 
-**NOT removed by uninstalling.** Visualize -> Views, search `vSAN`, select,
-Delete. These are the titles as the UI shows them.
+**NOT removed by uninstalling.** Visualize -> Views, search **`[VHM]`**,
+select all, Delete. These are the titles as the UI shows them.
 
 | title | subject |
 |---|---|

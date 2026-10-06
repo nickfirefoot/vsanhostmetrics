@@ -60,9 +60,13 @@ def main() -> int:
     for a, b in PROBED:
         w(f"| {a} | {b} |")
     w("")
-    w("The views carry no marking that identifies them as this pack's, which is")
-    w("why they are tedious to find among the built-in ones. Searching the Views")
-    w("list for **`vSAN`** finds 29 of the 30. The exception is listed below.\n")
+    w("Since 1.4.6 every view title ends in **`[VHM]`**, so one search of the")
+    w("Views list finds exactly this pack's 30 and nothing else. Searching for")
+    w("`vSAN` is not enough -- the built-in vSAN management pack's views match")
+    w("that too.\n")
+    w("The marker carries no version on purpose: view identity is a uuid5 of the")
+    w("title, so a version in the name would rename all 30 every release and")
+    w("leave the old ones behind. It says which pack, not which build.\n")
     w("Since 1.4.5 every id is a uuid5 derived from the title, so **reinstalling")
     w("replaces rather than duplicates**. You only need this list to remove the")
     w("pack entirely, or to clear the one-off duplicates left by upgrading from")
@@ -79,8 +83,8 @@ def main() -> int:
         w(f"| {db.get('name') or n.split('/')[-1][:-5]} | `{db['id']}` |")
 
     w(f"\n## Views ({len(views)})\n")
-    w("**NOT removed by uninstalling.** Visualize -> Views, search `vSAN`, select,")
-    w("Delete. These are the titles as the UI shows them.\n")
+    w("**NOT removed by uninstalling.** Visualize -> Views, search **`[VHM]`**,")
+    w("select all, Delete. These are the titles as the UI shows them.\n")
     w("| title | subject |")
     w("|---|---|")
     rows = []
@@ -93,7 +97,7 @@ def main() -> int:
         rows.append((name, f"{subj.get('adapterKind','?')}/{subj.get('resourceKind','?')}"
                      if subj is not None else "-"))
     for name, subj in sorted(rows):
-        flag = "" if "vsan" in name.lower() else "  **<- a `vSAN` search misses this one**"
+        flag = "" if "[VHM]" in name else "  **<- unmarked; a `[VHM]` search misses it**"
         w(f"| {name}{flag} | `{subj}` |")
 
     w("\n## Objects\n")
