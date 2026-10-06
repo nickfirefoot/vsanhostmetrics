@@ -464,3 +464,45 @@ with the red bound weak -- one event at 3‰ never went red.
 Generic Error*, *RX FIFO Error*, *RX Missed Error*, *RX Buffer Overflow Error*,
 *TX Carrier Error*, *TX Generic Error*, and `pNic 802.3x Pause Rate` -- `pNic`,
 not `pNIC`, in Broadcom's own string. Official unit is `permille`.
+
+## 11. The selector root, and reverting a correct change
+
+Recorded because the mistake was not the technical one.
+
+The template was exported from a VCF deployment and pinned the cluster
+selector's root to **VCF World**, owned by `VcfAdapter`. On an Operations
+instance that is not VCF, that object does not exist, the root fails to
+resolve, and every panel reports it cannot render.
+
+1.4.4 changed it to **vSphere World**, owned by the `VMWARE` adapter, which
+exists wherever a vCenter is collected. The id was **constructed** from the
+encoding pattern rather than read from a working export:
+
+```
+002  +  three-digit length of the adapter kind  +  adapter kind  +  resource kind
+002     006                                        VMWARE          vSphere World
+```
+
+Then a dashboard showed "widget is not configured", I assumed my unverified
+string was the cause, and reverted. **It was not the cause** -- that was the
+content import still running, and it corrected itself with nothing changed.
+
+**Now verified** against a third-party SDK-built pak with 44 dashboards,
+`github.com/vmbro/VCF-Operations-vCommunity`:
+
+- `"002006VMWAREvSphere World"` appears **25 times**, on **19 widgets**
+- every one of them a `selfProvider` provider, the same role as our selector
+- `resourceName` is `"vSphere World"`
+- its `entries` table is identical to ours:
+  `{"adapterKindKey": "VMWARE", "resourceKindKey": "vSphere World",
+    "internalId": "resource:id:0_::_", "name": "vSphere World"}`
+
+So the construction was right in every detail. Restored, and the pack no longer
+depends on the VCF adapter existing.
+
+**The lesson is about the revert, not the encoding.** Reverting on a symptom
+that had not been traced undid a correct fix and left a real portability defect
+in place for two more releases. "Unverified" was a fair reason to flag it; it
+was not a reason to assume it guilty the moment anything looked wrong nearby.
+The rule that would have helped: a change you cannot verify is a change to
+*test*, not a change to suspect first.

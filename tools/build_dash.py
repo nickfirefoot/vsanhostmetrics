@@ -299,34 +299,39 @@ def build(template, name, help_file, panels):
     #   002006VMWAREHostSystem
     #   002010VcfAdapterVCFWorld
     #   002028VirtualAndPhysicalSANAdaptervSAN World
-    # REVERTED to VCF World in 1.4.5, and the reason is worth keeping.
+    # Rooted on vSPHERE World, and this value is now VERIFIED rather than
+    # derived. The history is worth keeping because I got it right, reverted
+    # it for the wrong reason, and only restored it on evidence.
     #
-    # 1.4.4 changed this to vSphere World on the theory that pinning a
-    # VcfAdapter object would break non-VCF instances. The theory may still be
-    # right, but I CONSTRUCTED the id from a pattern rather than reading it
-    # from a working export, and shipped it unverified. Result: "widget is not
-    # configured", which is what a provider with an unresolvable root looks
-    # like. The sites that reported the original problem are VCF 9.1.1 anyway,
-    # so VCF World exists there and was never their fault.
+    # The template was exported from a VCF deployment and pinned VCF World, an
+    # object owned by VcfAdapter, which does not exist on an Operations
+    # instance that is not VCF. 1.4.4 changed it to vSphere World, a value I
+    # CONSTRUCTED from the encoding pattern. When a dashboard then showed
+    # "widget is not configured" I assumed my unverified string was the cause
+    # and reverted. It was not: that was the content import still running, and
+    # it corrected itself.
     #
-    # The only two provider roots ever observed in a real export are:
-    #     002010VcfAdapterVCFWorld                      (this one, works here)
-    #     002028VirtualAndPhysicalSANAdaptervSAN World  (Broadcom's ESA dash)
-    # Both are verified. "002006VMWAREvSphere World" is not, and guessing the
-    # encoding is exactly the mistake that produced Configuration|Name.
+    # Now confirmed against a real third-party SDK-built pak with 44
+    # dashboards (github.com/vmbro/VCF-Operations-vCommunity):
+    #   "002006VMWAREvSphere World" appears 25 times, on 19 widgets, every one
+    #   a selfProvider provider in the same role as our cluster selector, with
+    #   resourceName "vSphere World".
+    # and its entries table is identical to the one built below:
+    #   {"adapterKindKey": "VMWARE", "resourceKindKey": "vSphere World",
+    #    "internalId": "resource:id:0_::_", "name": "vSphere World",
+    #    "identifiers": []}
     #
-    # Making this portable to non-VCF Operations needs a verified value, which
-    # means building one provider in the UI on such an instance and exporting
-    # it. Until that exists, ship what is known to work.
-    ROOT_ADAPTER, ROOT_KIND = "VcfAdapter", "VCFWorld"
-    root_kind_id = "002010VcfAdapterVCFWorld"
+    # So the encoding is "002" + the adapter kind's length as three digits +
+    # the adapter kind + the resource kind, and this instance of it is correct.
+    ROOT_ADAPTER, ROOT_KIND = "VMWARE", "vSphere World"
+    root_kind_id = "002006VMWAREvSphere World"
     res = prov["config"].get("resource")
     if isinstance(res, dict):
         # `id` was an ExtJS client-side model handle from the exporting
         # browser session and means nothing anywhere else.
         res.pop("id", None)
         res["resourceKindId"] = root_kind_id
-        res["resourceName"] = "VCF World"
+        res["resourceName"] = ROOT_KIND
         prov["config"]["resource"] = res
     # The document-level entries table is what resolves the resourceId
     # sentinel, by kind and name rather than by instance id, so it has to name
@@ -335,7 +340,7 @@ def build(template, name, help_file, panels):
         if entry.get("resourceKindKey") in ("VCFWorld", "vSphere World"):
             entry["adapterKindKey"] = ROOT_ADAPTER
             entry["resourceKindKey"] = ROOT_KIND
-            entry["name"] = "VCF World"
+            entry["name"] = ROOT_KIND
 
     out = [prov]
     for title, key, coords in panels:
