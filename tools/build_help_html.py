@@ -85,14 +85,14 @@ NOTES = {
  "iopsReadCapacity": "Read operations per second at the vSAN layer. Context -- high latency at high IOPS is a busy disk, high latency at low IOPS is a sick one.",
  "iopsWriteCapacity": "Write operations per second at the vSAN layer.",
  # ---- ESA disk, physical layer ------------------------------------------
- "latencyDevRead": "Read latency at the physical and firmware layer, below vSAN. Compare with the vSAN layer column: if both are high the device is slow, if only the vSAN layer is high the delay is above the disk.",
- "latencyDevWrite": "Write latency at the physical and firmware layer.",
+ "latencyDevRead": "Read latency at the physical and firmware layer, below vSAN. Compare with the vSAN layer column: if both are high the device is slow, if only the vSAN layer is high the delay is above the disk. <b>Product threshold 15 ms warning, 30 ms critical.</b>",
+ "latencyDevWrite": "Write latency at the physical and firmware layer. <b>Product threshold 15 ms warning, 30 ms critical.</b>",
  "latencyDevDAvg": "<b>DAVG</b> -- time spent in the device itself. High DAVG is a slow or failing drive.",
  "latencyDevKAvg": "<b>KAVG</b> -- time spent queued in the VMkernel before reaching the device. High KAVG is contention, not a bad disk.",
  "latencyDevGAvg": "<b>GAVG</b> -- what the guest actually experiences, being DAVG plus KAVG. Read the three together: GAVG tells you it hurts, DAVG and KAVG tell you which to fix.",
  # ---- VM -----------------------------------------------------------------
- "latencyRead": "Read latency for this virtual disk, measured at the vSAN layer.",
- "latencyWrite": "Write latency for this virtual disk, measured at the vSAN layer.",
+ "latencyRead": "Read latency for this virtual disk, measured at the vSAN layer. <b>Product threshold 15 ms warning, 30 ms critical.</b>",
+ "latencyWrite": "Write latency for this virtual disk, measured at the vSAN layer. <b>Product threshold 15 ms warning, 30 ms critical.</b>",
  "iopsRead": "Read operations per second. Always read beside latency: high latency at high IOPS is a busy VM, high latency at near-zero IOPS is a sick one.",
  "iopsWrite": "Write operations per second.",
 }
@@ -112,8 +112,8 @@ NOTES.update({
  "dedupRatio": "Space saving from deduplication and compression, expressed as a ratio scaled by 100 -- <b>134 means 1.34:1</b>, not 134:1. A ratio that falls sharply usually means new data that does not deduplicate, not a fault.",
  "savedByDedup": "Bytes not written because deduplication and compression removed them. The absolute saving behind the ratio beside it.",
  # ---- DOM, shared across client, owner and component manager -------------
- "latencyAvgRead": "Average read latency at this layer. Compare the same column across the client, owner and component manager views: the layer where the number first becomes large is the layer to investigate.",
- "latencyAvgWrite": "Average write latency at this layer. On ESA a write is acknowledged after it is logged, so this is usually far lower than the component manager's figure beneath it.",
+ "latencyAvgRead": "Average read latency at this layer. <b>Broadcom's own threshold for this metric is 15 ms warning and 30 ms critical</b>, published in the Performance Service graph definition as yellow=15000 red=30000 microseconds, direction upper. That is a "something is badly wrong" line rather than a tuning line -- a healthy cluster here runs under 1.5 ms, so the product only flags at roughly ten times normal. Compare the same column across the client, owner and component manager views: the layer where the number first becomes large is the layer to investigate.",
+ "latencyAvgWrite": "Average write latency at this layer. On ESA a write is acknowledged after it is logged, so this is usually far lower than the component manager's figure beneath it. <b>Product threshold 15 ms warning, 30 ms critical.</b>",
  "latencyMaxRead": "Worst read latency in the interval. Read beside the average: a large gap is a tail-latency problem, which guests feel as stalls even when the average looks fine.",
  "latencyMaxWrite": "Worst write latency in the interval. Measured here at <b>14.9 ms against a 957 microsecond average</b> -- a fifteenfold tail on an idle cluster, and the kind of thing an average hides completely.",
  "latencyStddevWrite": "Spread of write latency. High spread with a low average means the work is bimodal: most operations fast, some very slow.",

@@ -422,3 +422,45 @@ path. Three reasons worth preserving:
 publishes a threshold for these counters and corrected it. Nothing here ever
 claimed that. This pack already attributed 0.1% to Broadcom for TCP
 out-of-order, and now attributes the pNIC band to `alarm-261`.
+
+## 10. The product publishes latency thresholds, and they are reachable
+
+Found 2026-10-06 via the netstats pack, which went looking for the pNIC error
+thresholds and found the mechanism instead.
+
+`VsanPerfGraph` carries a `threshold` property (`direction`, `yellow`, `red`).
+Scanned across the whole Performance Service: **70 entity types, 288 graphs, 21
+with a populated threshold.** Every one of the 21 is identical:
+
+```
+direction = upper    yellow = 15000    red = 30000     (microseconds)
+```
+
+So **15 ms warning, 30 ms critical**, on latency graphs for: `cluster-domclient`,
+`cluster-domcompmgr`, `host-domclient`, `host-domcompmgr`,
+`cluster-zdom-top-stats`, `host-zdom-top-stats`, `vsan-esa-disk-scsifw`,
+`vscsi`, `virtual-machine`, the remote-DOM family, and the OSA kinds
+`disk-group`, `cache-disk` and `capacity-disk`.
+
+Nine of those are kinds this pack already ships views for, so **every latency
+column here now has a vendor anchor** where it previously had none. The help
+text says so.
+
+**Read it for what it is.** A healthy cluster here runs DOM latency around 700
+to 1,500 microseconds. The product only flags at 15,000, roughly ten times
+normal. It is a "something is badly wrong" line, not a tuning line, and it does
+not replace comparing hosts against each other.
+
+**The pNIC error thresholds are genuinely unpublished, proven rather than
+assumed.** The same property is **unset on all twelve `vsan-pnic-net` graphs**.
+That is a negative result from a scan that found 21 populated elsewhere, not a
+failed search. `VsanPerfMetricId` has no threshold property at all, and the
+health summary returns only the `perfsvc` group, so the `diagnostics.pnic.*`
+numbers live inside the health service and are not exposed. The empirical
+bracket from 30 days of firings is **yellow <= 1 per mille, red > 3 per mille**,
+with the red bound weak -- one event at 3‰ never went red.
+
+**Official metric names**, for anyone matching strings: *pNIC RX CRC Error*, *RX
+Generic Error*, *RX FIFO Error*, *RX Missed Error*, *RX Buffer Overflow Error*,
+*TX Carrier Error*, *TX Generic Error*, and `pNic 802.3x Pause Rate` -- `pNic`,
+not `pNIC`, in Broadcom's own string. Official unit is `permille`.
