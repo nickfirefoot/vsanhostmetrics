@@ -1616,3 +1616,62 @@ names alone would miss a demotion, which is the exact change contemplated for
 
 Re-verified across every build: 1.3.1 through 1.4.3 to 1.4.4, all still over the
 top, now on 70 kinds, 971 attributes and 20 identifier pairs.
+
+## suite-api 401 orphans every object at VCF-managed sites (2026-10-06)
+
+Observed at vc.vcf.gillaspy.org, VCF Operations 9.0.2. Collector log:
+
+    mapped 3 hosts, 28 VMs, 1 clusters to vCenter objects
+    post https://172.17.0.1/suite-api/api/resources/query: ERROR(401)   [x13]
+    linked 474 objects to 0 vCenter parents (13 parents skipped)
+
+Metrics collect correctly. Nothing attaches. Views report the selected object
+as not applicable; Topology is a single node.
+
+### Verified
+
+- vCenter side is healthy. instanceUuid 95bc97f2-e78d-45bd-b6c7-b9a77beb0529,
+  cluster vSAN uuid present, 3 of 3 host node UUIDs readable, checked directly
+  with PowerCLI as administrator@vsphere.local.
+- The lab works with the IDENTICAL architecture. VsanHostMetrics runs on
+  collector 3 (vsan-mp-test01, local=False) -- a REMOTE collector -- and
+  esxi03.denick.lab carries 168 VsanHostMetrics children alongside 13 VMWARE
+  children. The merge works when suite-api answers.
+- The suite-api host and credential are injected by Operations via
+  cluster_connection_info (aria/ops/adapter_instance.py:48-56). We do not
+  choose or see them.
+
+### Refuted
+
+- "Adapter runs on the master in the lab" -- it does not, it runs on a remote
+  collector.
+- "suite-api fails from remote collectors" -- it succeeds from one in the lab.
+- "authSource: LOCAL is wrong" -- the SDK does hardcode it
+  (suite_api_client.py:111) but the lab authenticates with LOCAL and works.
+- The configured vCenter credential is unrelated; it is a different connection.
+
+### Unknown
+
+Why gillaspy returns 401. Not established whether authentication or
+authorisation failed, nor which account Operations injects there.
+
+### The two measurements that would end it
+
+1. Raise that adapter's log level to DEBUG. suite_api_client.py:351 is
+   `logger.debug(result.text)` -- Operations' own reason string, suppressed at
+   INFO.
+2. Search the same log for `acquire`. `auth/token/acquire: OK(200)` means
+   authentication succeeded and this is permissions; `Could not acquire
+   SuiteAPI token` means it is the credential.
+
+Also unexamined: gillaspy has THREE adapter instance log directories (1253,
+1725, 2170). Stale registrations have not been ruled out.
+
+### Standing decision
+
+BACKLOG's earlier three-option analysis already concluded that building our own
+hierarchy is the right end state and that the suite-api union "adds an API
+dependency the adapter does not currently have". That dependency is what fails
+here. Do not design the replacement until the 401 cause is known -- a cause
+that also affects object identity or instance registration would be inherited
+by any new hierarchy.
