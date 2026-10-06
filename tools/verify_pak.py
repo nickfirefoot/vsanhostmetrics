@@ -94,6 +94,40 @@ def verify(path: str) -> int:
         if itype not in ("1", "2"):
             c.fail(f"identifier {key!r} has unknown identType {itype!r}")
 
+    # Every OBJECT identifier must be part of uniqueness. identType 2 means
+    # informational, and the SDK emits it for `advanced=True` parameters, which
+    # is legitimate ONLY on the adapter instance -- ours is
+    # container_memory_limit, verified. On a real resource kind, a 2 means an
+    # identifier silently stopped contributing to the object key, which re-keys
+    # every object of that kind without changing a single field name.
+    obj_idents = 0
+    for km in re.finditer(r'<ResourceKind\b[^>]*?\bkey="([^"]+)"[^>]*>(.*?)</ResourceKind>',
+                          describe, re.S):
+        kind, body = km.group(1), km.group(2)
+        if kind.endswith("_adapter_instance"):
+            continue
+        for im in re.finditer(
+                r'<ResourceIdentifier\b[^>]*?\bkey="([^"]+)"[^>]*?identType="(\d)"', body):
+            obj_idents += 1
+            if im.group(2) != "1":
+                c.fail(f"{kind}.{im.group(1)} has identType={im.group(2)}, "
+                       "so it is no longer part of the object key")
+    c.saw("object_identifiers", obj_idents)
+
+    # The dashboards carry the identity of the account they were cloned from,
+    # because blanking userId makes Operations report them as not finished
+    # configuring. That is deliberate and a known value. PIN it, so a different
+    # account's identity cannot enter the pak unnoticed.
+    expected_owner = "833b693b-0960-4d05-b868-f14446488fc3"
+    owners = set(re.findall(r'"(?:lastUpdate)?[Uu]serId"\s*:\s*"([0-9a-f-]{36})"',
+                            "".join(z.read(n).decode("utf-8", "ignore")
+                                    for n in z.namelist()
+                                    if "/dashboards/" in n and n.endswith(".json"))))
+    c.saw("dashboard_owners", len(owners))
+    for o in owners:
+        if o != expected_owner:
+            c.fail(f"dashboard carries an unexpected owner identity {o}")
+
     # views
     view_files = [n for n in z.namelist() if "/reports/" in n and n.endswith(".xml")]
     c.saw("views", len(view_files))
