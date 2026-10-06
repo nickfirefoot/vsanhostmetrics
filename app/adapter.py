@@ -40,6 +40,8 @@ from constants import VC_HOST_PARAM
 from constants import VC_USER_PARAM
 from constants import VC_PASS_CRED
 from constants import VERIFY_PARAM
+from constants import METRIC_SCOPE_PARAM
+import metric_scope
 
 import perfsvc
 import metric_labels
@@ -81,6 +83,27 @@ def get_adapter_definition() -> AdapterDefinition:
         )
         # NOTE: lib 1.1.0 has no define_bool_parameter; an enum of "true"/"false"
         # is the supported equivalent.
+        # 1383 of 1636 modelled metrics (84%) are referenced by no shipped
+        # view, and 45 of the 69 entity types by none at all. Every metric
+        # stays DECLARED in describe, so switching this to "all" surfaces them
+        # without a new pak -- but by default we do not query those 45 entity
+        # types, which is 45 fewer round trips per cycle. The vSAN perf API
+        # returns all of an entity's metrics in one call, so narrowing within
+        # an entity saves storage rather than time.
+        d.define_enum_parameter(
+            METRIC_SCOPE_PARAM,
+            values=["dashboard", "all"],
+            default="dashboard",
+            label="Metrics to collect",
+            description="dashboard (default) collects only the metrics the "
+                        "shipped views and dashboards render -- 253 of 1636, "
+                        "skipping 45 entity types entirely. Choose all to "
+                        "collect every metric vSAN exposes, which costs 45 "
+                        "extra queries per cycle and stores 1383 more metrics "
+                        "per object. Every metric is defined either way, so "
+                        "switching to all needs no reinstall.",
+            required=False,
+        )
         d.define_enum_parameter(
             VERIFY_PARAM,
             values=["true", "false"],
@@ -349,6 +372,25 @@ def _unit_for(key: str):
     return node
 
 
+def _scope_for(adapter_instance: AdapterInstance):
+    """{entity: {metric}} to collect, or None for everything.
+
+    metric_scope.COVERED is keyed by RESOURCE KIND because that is what the
+    views name; perfsvc wants ENTITY ids. The model holds both, so translate
+    here rather than duplicating the mapping in the generated file.
+    """
+    if _cfg(adapter_instance, METRIC_SCOPE_PARAM, "dashboard").strip().lower() == "all":
+        return None
+    ent_for_kind = {spec["kind"]: ent
+                    for ent, spec in perfsvc.MODEL.ENTITIES.items()}
+    scope = {}
+    for kind, metrics in metric_scope.COVERED.items():
+        ent = ent_for_kind.get(kind)
+        if ent:
+            scope[ent] = set(metrics)
+    return scope
+
+
 def _cfg(adapter_instance: AdapterInstance, key: str, default: str = "") -> str:
     return adapter_instance.get_identifier_value(key) or default
 
@@ -452,7 +494,8 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
 
             total_problems: List[str] = []
             for cluster in clusters:
-                objs, problems = perfsvc.collect(perf, cluster)
+                objs, problems = perfsvc.collect(
+                    perf, cluster, scope=_scope_for(adapter_instance))
                 total_problems.extend(problems)
                 for key, grouped in objs.items():
                     spec = perfsvc.MODEL.ENTITIES[key.entity]

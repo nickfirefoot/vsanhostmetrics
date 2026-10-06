@@ -28,3 +28,9 @@ THRESHOLDS = {
     "retransmitPct":   {"critical": 0.5},
     "duplicateAckPct": {"critical": 1.0},
 }
+
+# Which metrics to collect. 84% of the 1636 modelled metrics are referenced by
+# no shipped view, and 45 of 69 entity types by none at all -- those 45 are a
+# skipped query each. Declared in describe either way, so a customer who turns
+# this to "all" gets them without a new pak.
+METRIC_SCOPE_PARAM = "metric_scope"

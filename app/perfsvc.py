@@ -18,15 +18,22 @@ path in vsanmetrics.py is retained but dormant; see docs/COLLECTION-DESIGN.md.
 from __future__ import annotations
 
 import datetime
+import logging
 import os
 import re
 import ssl
 import sys
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
 # Vendored vSAN bindings must be importable before pyVmomi types are used.
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "vendor"))
+
+# perfsvc logs through the adapter's root logger. This was MISSING while
+# two call sites already used it, so the orphan diagnostic at
+# build_parent_map would have raised NameError exactly when it fired --
+# a crash in place of the message explaining the crash.
+logger = logging.getLogger(__name__)
 
 from pyVmomi import VmomiSupport  # noqa: E402
 
@@ -652,14 +659,22 @@ def probe(perf, cluster, entity: str = PROBE_ENTITY,
     return len(results), None
 
 
-def collect(perf, cluster, window_minutes: int = 15
+def collect(perf, cluster, window_minutes: int = 15,
+            scope: Optional[Dict[str, Set[str]]] = None
             ) -> Tuple[Dict[ObjectKey, Grouped], List[str]]:
-    """Query every modeled entity type; return the most recent sample of each.
+    """Query modeled entity types; return the most recent sample of each.
 
     Operations collects on its own schedule and wants a point value, while
     perfsvc returns a series.  We take the last non-empty sample -- looking back
     a window rather than an instant, because the 5-minute buckets will not line
     up with the collection cycle.
+
+    `scope` is {entity: {metric, ...}}.  None means every entity and every
+    metric, which is what the adapter passes when the instance asks for all
+    metrics.  Otherwise only the listed entities are QUERIED -- and that is the
+    only part that saves time, because the vSAN perf API returns every metric
+    of an entity type in a single call.  Narrowing the metric set within an
+    entity saves Operations storage, not a round trip.
 
     Returns (objects, problems).  `problems` is non-empty when an entity type
     errors; it is reported rather than swallowed.
@@ -670,10 +685,16 @@ def collect(perf, cluster, window_minutes: int = 15
     problems: List[str] = []
     unsupported: List[str] = []
 
+    wanted = sorted(MODEL.ENTITIES if scope is None
+                    else (e for e in MODEL.ENTITIES if e in scope))
+    if scope is not None:
+        logger.info("querying %d of %d entity types (%d skipped: no shipped "
+                    "view references them)", len(wanted), len(MODEL.ENTITIES),
+                    len(MODEL.ENTITIES) - len(wanted))
     specs = [
         vim.cluster.VsanPerfQuerySpec(
             entityRefId=f"{ent}:*", startTime=start, endTime=now)
-        for ent in sorted(MODEL.ENTITIES)
+        for ent in wanted
     ]
     for spec in specs:
         try:
@@ -704,6 +725,8 @@ def collect(perf, cluster, window_minutes: int = 15
                 continue
             g = out.setdefault(key, Grouped())
             keep = set(MODEL.ENTITIES[key.entity]["metrics"])
+            if scope is not None:
+                keep &= scope.get(key.entity, set())
             for val in (getattr(res, "value", []) or []):
                 mid = getattr(val, "metricId", None)
                 label = getattr(mid, "label", None)

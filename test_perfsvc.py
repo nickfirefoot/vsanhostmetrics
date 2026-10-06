@@ -461,6 +461,73 @@ def test_model_is_non_trivial():
     assert "tcpRcvoopackRate" in t["metrics"]
 
 
+def _scope_probe(scope):
+    """Run collect() against a perf stub and report which entities it asked for."""
+    asked = []
+
+    class _Perf:
+        def VsanPerfQueryPerf(self, specs, cluster):
+            asked.extend(sp.entityRefId.split(":")[0] for sp in specs)
+            return []
+
+    # collect() raises when every entity type comes back empty, which is
+    # correct behaviour and exactly what a stub returning [] triggers. The
+    # entities were already recorded by then, which is all this probe wants.
+    try:
+        perfsvc.collect(_Perf(), object(), scope=scope)
+    except perfsvc.PerfSvcError:
+        pass
+    return asked
+
+
+def test_scope_none_queries_every_entity_type():
+    asked = _scope_probe(None)
+    assert len(asked) == len(perfsvc.MODEL.ENTITIES), (
+        f"queried {len(asked)}, model has {len(perfsvc.MODEL.ENTITIES)}")
+
+
+def test_scope_restricts_which_entities_are_queried():
+    asked = _scope_probe({"cluster-domclient": {"iopsRead"}})
+    assert asked == ["cluster-domclient"], asked
+
+
+def test_dashboard_scope_skips_most_of_the_model():
+    import metric_scope
+    ent_for_kind = {sp["kind"]: e
+                    for e, sp in perfsvc.MODEL.ENTITIES.items()}
+    scope = {ent_for_kind[k]: set(v)
+             for k, v in metric_scope.COVERED.items() if k in ent_for_kind}
+    asked = _scope_probe(scope)
+    # The saving is the point of the feature; assert it is real, not nominal.
+    assert len(asked) < len(perfsvc.MODEL.ENTITIES) / 2, (
+        f"dashboard scope queried {len(asked)} of "
+        f"{len(perfsvc.MODEL.ENTITIES)} -- barely a saving")
+    assert set(asked) <= set(perfsvc.MODEL.ENTITIES)
+
+
+def test_metric_scope_is_not_stale():
+    """app/metric_scope.py is generated; a drifted copy silently under-collects.
+
+    Regenerating is the only honest check -- comparing counts would pass while
+    the contents were wrong.
+    """
+    import importlib.util, io, contextlib, pathlib
+    import metric_scope
+    before = pathlib.Path("app/metric_scope.py").read_text(encoding="utf-8")
+    spec = importlib.util.spec_from_file_location(
+        "gen_metric_scope", "tools/gen_metric_scope.py")
+    gen = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gen)
+    with contextlib.redirect_stdout(io.StringIO()):
+        gen.main()
+    after = pathlib.Path("app/metric_scope.py").read_text(encoding="utf-8")
+    if before != after:
+        pathlib.Path("app/metric_scope.py").write_text(before, encoding="utf-8")
+        raise AssertionError(
+            "app/metric_scope.py is stale -- run tools/gen_metric_scope.py")
+    assert metric_scope.COVERED, "COVERED is empty; the generator examined nothing"
+
+
 if __name__ == "__main__":
     fails = 0
     for name, fn in sorted(globals().items()):
