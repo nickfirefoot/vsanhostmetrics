@@ -52,7 +52,7 @@ $vc = Connect-VIServer -Server $Server -User $User -Password $Password -ErrorAct
 try {
     # 1. The single point of failure. Every parent lookup needs this value, so
     #    an empty one orphans EVERY object at once, cluster and host alike.
-    $si   = Get-View ServiceInstance
+    $si   = $vc.ExtensionData
     $vcid = $si.Content.About.InstanceUuid
     Write-Host ("1. vCenter instanceUuid     : {0}" -f $(if ($vcid) { $vcid } else { "*** EMPTY ***" }))
     Write-Host ("   vCenter                  : {0} {1} build {2}" -f `
@@ -69,7 +69,7 @@ try {
     $withVsanUuid = 0
     foreach ($c in $clusters) {
         $uuid = $null
-        try { $uuid = (Get-View $c.Id).ConfigurationEx.VsanConfigInfo.DefaultConfig.Uuid } catch { }
+        try { $uuid = $c.ExtensionData.ConfigurationEx.VsanConfigInfo.DefaultConfig.Uuid } catch { }
         if ($uuid) { $withVsanUuid++ }
         Write-Host ("   {0,-28} vsan uuid = {1}" -f $c.Name,
             $(if ($uuid) { $uuid } else { "*** NO vSAN CLUSTER UUID ***" }))
