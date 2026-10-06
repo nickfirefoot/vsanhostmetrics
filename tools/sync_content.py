@@ -27,6 +27,17 @@ def main() -> int:
     if not os.path.isdir(proj):
         sys.exit(f"no such project: {proj}")
 
+    # content/reports is entirely generated, so a directory with no generated
+    # source is a leftover. Renaming a view leaves one behind carrying the SAME
+    # pinned GUID as its replacement, and a pak shipping two views under one
+    # identity is a defect nothing downstream would catch.
+    generated = {os.path.basename(x)[:-4] for x in glob.glob(f"{OUT}/*.xml")}
+    for d in sorted(glob.glob(f"{proj}/content/reports/*/")):
+        name = os.path.basename(d.rstrip("/"))
+        if name not in generated:
+            shutil.rmtree(d)
+            print(f"  removed orphaned view directory {name}")
+
     views = 0
     for xml in sorted(glob.glob(f"{OUT}/*.xml")):
         name = os.path.basename(xml)[:-4]

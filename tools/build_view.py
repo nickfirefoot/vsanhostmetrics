@@ -44,6 +44,14 @@ PINNED = {
     # The title gained "Per Host" after that dashboard was built, which would
     # otherwise have moved the GUID and orphaned the widget.
     "vSAN RDT Transport Per Host": "c51f5531-ccea-543d-9a73-0e0d5e359d1a",
+    # Renamed from "vSphere Host Uplinks and Load" so that ONE search of the
+    # Views list for "vSAN" finds all 30 of this pack's views. Uninstalling
+    # removes the dashboards but leaves the views, and nothing marks a view as
+    # belonging to a pack, so a consistent prefix is the only thing that makes
+    # removal tractable. Pinned to the pre-rename GUID: identity is uuid5 of
+    # the title, so without this the rename would orphan the old view and
+    # create a second one.
+    "vSAN Host Uplinks and Load": "84de6a1e-aa7c-5da9-a0d5-a5cb31a72cbd",
 }
 OUTDIR = os.path.expanduser("~/ops-content/out")
 
@@ -357,7 +365,7 @@ VIEWS = [
     # invisible to it. vCenter counts every uplink, so this closes that gap
     # without collecting anything new. It also carries host CPU and memory
     # pressure, which answers "is this vSAN or is the host saturated".
-    ("vSphere Host Uplinks and Load", "HostSystem", [
+    ("vSAN Host Uplinks and Load", "HostSystem", [
         ("net|errorsRx_summation", "", "MAX"),
         ("net|droppedRx_summation", "", "MAX"),
         ("net|errorsTx_summation", "", "MAX"),

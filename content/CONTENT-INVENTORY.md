@@ -5,22 +5,28 @@ edit by hand.
 
 Pack `iSDK_VsanHostMetrics` version **1.4.6**.
 
-## Uninstalling does not remove this content
+## What uninstalling does and does not remove
 
-Verified against a live Operations, not assumed:
+Uninstalling the pack **does remove the dashboards**. It leaves the
+**views**, and there is no API to delete those, so they have to go by hand.
+
+An earlier version of this document claimed uninstall left the dashboards
+too. That was wrong: the 404s below were measured, the uninstall behaviour
+was inferred from them and never tested. Corrected from an actual
+uninstall.
 
 | interface | result |
 |---|---|
+| uninstalling the pack | **removes the dashboards**; leaves the views |
 | uninstall hook in the pak format | none exists; only install-time scripts |
 | `GET /suite-api/api/dashboards` | 404 |
 | `GET /suite-api/internal/dashboards` | 404, with the unsupported-API header |
 | `GET /suite-api/api/views`, `/api/viewdefinitions` | 404 |
 | `GET /suite-api/api/reportdefinitions` | 200, but contains none of ours |
 
-Dashboards carry a **user** identity (`userId`, `lastUpdateUserId`), not a
-solution identity, so Operations treats them as that user's dashboards once
-imported and leaves them in place. That is deliberate -- it protects
-customisations -- but it means removal is manual.
+The views carry no marking that identifies them as this pack's, which is
+why they are tedious to find among the built-in ones. Searching the Views
+list for **`vSAN`** finds 29 of the 30. The exception is listed below.
 
 Since 1.4.5 every id is a uuid5 derived from the title, so **reinstalling
 replaces rather than duplicates**. You only need this list to remove the
@@ -29,7 +35,9 @@ pack entirely, or to clear the one-off duplicates left by upgrading from
 
 ## Dashboards (7)
 
-Dashboards -> select -> Delete.
+Removed automatically by uninstalling the pack. Listed for the case where
+you are clearing the one-off duplicates left by upgrading from 1.4.4 or
+earlier, whose ids were random rather than derived.
 
 | name | id |
 |---|---|
@@ -43,41 +51,41 @@ Dashboards -> select -> Delete.
 
 ## Views (30)
 
-Visualize -> Views -> select -> Delete. Deleting a view a dashboard uses
-leaves that dashboard unable to render, so remove dashboards first.
+**NOT removed by uninstalling.** Visualize -> Views, search `vSAN`, select,
+Delete. These are the titles as the UI shows them.
 
-| name | subject |
+| title | subject |
 |---|---|
-| vSAN_CMMDS_Network | `-` |
-| vSAN_Cluster_Capacity | `-` |
-| vSAN_Cluster_DOM_Client | `-` |
-| vSAN_Cluster_DOM_Component_Manager | `-` |
-| vSAN_Cluster_DOM_Owner | `-` |
-| vSAN_Cluster_RDT | `-` |
-| vSAN_Cluster_Resync | `-` |
-| vSAN_Cluster_Resync_Jobs | `-` |
-| vSAN_Clusters | `-` |
-| vSAN_ESA_Disk_Physical_Layer | `-` |
-| vSAN_ESA_Disks | `-` |
-| vSAN_Host_CPU | `-` |
-| vSAN_Host_DOM | `-` |
-| vSAN_Host_DOM_Component_Manager | `-` |
-| vSAN_Host_DOM_Owner | `-` |
-| vSAN_Host_DOM_Owner_Scheduler | `-` |
-| vSAN_Host_Memory | `-` |
-| vSAN_Host_Network | `-` |
-| vSAN_Host_TCP_Health | `-` |
-| vSAN_RDT_Transport_Per_Host | `-` |
-| vSAN_Segment_Cleaning_Per_Host | `-` |
-| vSAN_VM_Latency | `-` |
-| vSAN_VM_Storage | `-` |
-| vSAN_pNIC_Errors | `-` |
-| vSAN_vmknic | `-` |
-| vSAN_vmknic_RDT_Latency | `-` |
-| vSAN_zDOM_Cluster | `-` |
-| vSAN_zDOM_Per_Host | `-` |
-| vSAN_zDOM_Write_Path | `-` |
-| vSphere_Host_Uplinks_and_Load | `-` |
+| vSAN CMMDS Network | `VsanHostMetrics/VsanCmmdsNet` |
+| vSAN Cluster Capacity | `VsanHostMetrics/VsanClusterCapacity` |
+| vSAN Cluster DOM Client | `VsanHostMetrics/VsanClusterDomclient` |
+| vSAN Cluster DOM Component Manager | `VsanHostMetrics/VsanClusterDomcompmgr` |
+| vSAN Cluster DOM Owner | `VsanHostMetrics/VsanClusterDomowner` |
+| vSAN Cluster RDT | `VsanHostMetrics/VsanClusterRdtLatency` |
+| vSAN Cluster Resync | `VsanHostMetrics/VsanClusterDomcompmgr` |
+| vSAN Cluster Resync Jobs | `VsanHostMetrics/VsanClusterDomowner` |
+| vSAN Clusters | `VMWARE/ClusterComputeResource` |
+| vSAN ESA Disk Physical Layer | `VsanHostMetrics/VsanEsaDiskScsifw` |
+| vSAN ESA Disks | `VsanHostMetrics/VsanEsaDiskLayer` |
+| vSAN Host CPU | `VsanHostMetrics/VsanHostCpu` |
+| vSAN Host DOM | `VsanHostMetrics/VsanHostDomclient` |
+| vSAN Host DOM Component Manager | `VsanHostMetrics/VsanHostDomcompmgr` |
+| vSAN Host DOM Owner | `VsanHostMetrics/VsanHostDomowner` |
+| vSAN Host DOM Owner Scheduler | `VsanHostMetrics/VsanHostDomowner` |
+| vSAN Host Memory | `VsanHostMetrics/VsanMemory` |
+| vSAN Host Network | `VsanHostMetrics/VsanHostNet` |
+| vSAN Host TCP Health | `VsanHostMetrics/VsanTcpIp` |
+| vSAN Host Uplinks and Load | `VMWARE/HostSystem` |
+| vSAN RDT Transport Per Host | `VsanHostMetrics/VsanRdtLatency` |
+| vSAN Segment Cleaning Per Host | `VsanHostMetrics/VsanHostDomowner` |
+| vSAN VM Latency | `VsanHostMetrics/VsanVirtualMachine` |
+| vSAN VM Storage | `VsanHostMetrics/VsanVscsi` |
+| vSAN pNIC Errors | `VsanHostMetrics/VsanPnic` |
+| vSAN vmknic | `VsanHostMetrics/VsanVnic` |
+| vSAN vmknic RDT Latency | `VsanHostMetrics/VsanVnicRdtLatency` |
+| vSAN zDOM Cluster | `VsanHostMetrics/VsanClusterZdomTopStats` |
+| vSAN zDOM Per Host | `VsanHostMetrics/VsanHostZdomTopStats` |
+| vSAN zDOM Write Path | `VsanHostMetrics/VsanZdomVtx` |
 
 ## Objects
 
