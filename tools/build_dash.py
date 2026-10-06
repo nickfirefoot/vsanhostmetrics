@@ -194,6 +194,25 @@ def receiver(template_receiver, title, view_guid, coords, tab, dash_name):
     c["title"] = title
     c["titleLocalized"] = title
     c["viewDefinitionId"] = view_guid
+    # Make the dashboard's 1H/6H/24H/7D selector actually drive this panel.
+    #
+    # Without this the selector is decorative: every view carries its own
+    # time-interval control hardcoded to 7 DAYS and marked visible="false", so
+    # the range could not be changed from the widget OR from the dashboard, and
+    # asking for an hour's view of anything was impossible. Nick asked for this
+    # three times before it got built.
+    #
+    # The key is not invented. Broadcom's own "Performance/Provider/vSAN ESA"
+    # dashboard sets exactly this on its receiver widgets:
+    #     'periodLength': 'dashboardTime'
+    # and conspicuously does NOT set it on its cluster selector, which lists
+    # objects by name and has nothing to do with time. Same split here.
+    #
+    # It also matters for spotting a dead adapter. With a fixed 7-day window and
+    # MAX, data hours stale still draws a number, so the screens look alive
+    # while nothing is collecting. An hour's view shows the hole immediately --
+    # which is exactly how a nine-hour collection outage went unnoticed here.
+    c["periodLength"] = "dashboardTime"
     return w
 
 
