@@ -210,3 +210,42 @@ grep -c '^# HELP vmware_esx_pnic_pkt_err_total' scrape.txt    # issue 3 -> 0
 curl -sk -o /dev/null -w '%{http_code}\n' https://<host>/vsanmetrics   # issue 4 -> 403
 curl -skI -H "Authorization: Bearer $TOK" https://<host>/vsanmetrics   # issue 5 -> 501
 ```
+
+## A pak cannot mark its content as its own (2026-10-06)
+
+**Impact:** uninstalling a management pack removes its dashboards but leaves
+its views behind, and nothing records which pack a view came from. The
+customer is left identifying them by name among the built-ins.
+
+**What the format offers:** nothing.
+
+- `content/files/solutionconfig/` is created as an empty directory with a
+  `.gitkeep` by `adapter_config.py:164`, and that line is the ONLY reference to
+  it in the entire SDK. Nothing reads or writes it. It is a placeholder.
+- A view's XML has no `owner`, `solution`, `pack` or `author` field. Checked
+  against a built pak.
+- `manifest.txt` supports `pak_validation_script`, `adapter_pre_script` and
+  `adapter_post_script`. All three run at INSTALL. There is no uninstall hook;
+  grepping the SDK for "uninstall" returns nothing.
+- No API to delete views either: `/suite-api/api/views` and
+  `/api/viewdefinitions` both 404, `/api/dashboards` 404,
+  `/internal/dashboards` 404 even with the unsupported-API header.
+  `/api/reportdefinitions` answers 200 but contains none of ours, because
+  these are view definitions rather than report definitions.
+
+**The one binding that does exist** is the view's subject:
+
+    <SubjectType adapterKind="VsanHostMetrics" resourceKind="..." />
+
+29 of our 30 views carry it. The thirtieth, "vSAN Host Uplinks and Load",
+subjects `VMWARE/HostSystem` because it borrows vCenter columns, so it cannot
+carry our adapter kind at all. Any platform feature that identified orphaned
+content by missing adapter kind would therefore find 29 and miss one.
+
+**What we do instead:** every view title ends in `[VHM]` (1.4.6), which is the
+only marker that covers all 30, and `content/CONTENT-INVENTORY.md` lists them
+exactly, generated from the pak.
+
+**What would fix it properly:** either a solution id on content so Operations
+can offer it for removal when the solution goes, or an uninstall hook in the
+manifest. Both are Broadcom's to add.
