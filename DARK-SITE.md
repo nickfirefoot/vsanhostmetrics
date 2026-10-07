@@ -38,7 +38,12 @@ Normally, through the UI. The image pull will fail until step 3.
 
 ## 3. Point Operations at your registry
 
-Edit on **every cluster node**:
+Edit on **every cluster node** -- NOT on the Cloud Proxy. `docs/DELIVERY-PIVOT.md`
+records a tested negative: editing `REGISTRY`/`DIGEST` in the **proxy's** copy
+achieves nothing, because Operations owns that file and re-syncs the whole
+plugin directory, restoring the values from its own database. The cluster nodes
+are the source; the proxy is a replica.
+
 
     $VCOPS_BASE/user/plugins/inbound/VsanHostMetrics.conf
 
@@ -75,6 +80,10 @@ vCommunity management pack, which solves the same problem the same way:
 https://github.com/vmbro/VCF-Operations-vCommunity/blob/main/docs/dark-site.md
 
 The `.conf` contents above are read from our own built pak and are exact.
+The proxy-versus-cluster distinction above IS tested (2026-09-23, recorded in
+docs/DELIVERY-PIVOT.md) and is the trap worth knowing: a proxy-side edit looks
+like it worked and is silently reverted.
+
 **The filesystem path and the restart command have NOT been tested against this
 pack on a real deployment** -- they are adopted from a pack that shares the
 format. If the path differs on your build, say so and this gets corrected
