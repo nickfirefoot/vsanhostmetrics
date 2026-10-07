@@ -447,6 +447,42 @@ Available below both collection paths, at the driver:
     esxcli network nic stats get -n vmnic2
     esxcli network nic get -n vmnic2         # whether flow control is enabled at all
 
+### CLOSED 2026-10-07: directional pause counts are unreachable agentlessly
+
+Not a privilege gate and not a gap in anyone's API crawl -- a plumbing fact,
+and Broadcom's own tooling is the evidence. `/usr/lib/vmware/vm-support/nicinfo.sh`
+line 56 reads directional and per-queue counters like this:
+
+    localcli --plugin-dir /usr/lib/vmware/esxcli/int \
+             networkinternal nic privstats get -n $nic
+
+Two things make that unreachable from outside the host:
+
+- `privstats` lives in the **internal** esxcli plugin directory, which is not
+  registered with hostd. Nothing that goes through hostd can see it, under any
+  spelling -- confirmed absent from a 444-handler crawl.
+- `localcli` deliberately **bypasses hostd**, which is why Broadcom's own
+  support script has to use it. It is a local-only path by construction.
+
+`Get-EsxCli` cannot reach it either: PowerCLI rides the same
+RetrieveManagedMethodExecuter route as every other remote esxcli caller.
+
+So directional pause counts, per-queue counters and discard-reason breakdowns
+are permanently out of scope for any agentless collector, this one included.
+The Physical Network screen cannot separate "this host is drowning" from "the
+switch is overloaded", and no amount of further API hunting will change that.
+Stop looking.
+
+Found by the VmwareNetStats pack (2026-10-07) from vendor source, not inferred.
+
+### Also closed: the nmlx5_core ring refusal is a driver gap, not our bug
+
+`nicinfo.sh` reads ring size with plain `network nic ring current get` and
+`ring preset get` -- the same calls we make. So when `nmlx5_core` answers
+"VSI node ... Not supported", the data simply is not in the Sysinfo tree and
+**Broadcom does not work around it either**. See DASHBOARD-PRACTICE.md:411-415.
+Nobody should spend time hunting a Mellanox ring route.
+
 Needs an ESXi credential, the same blocker as the ring-buffer size check, and
 worth doing on the same host. Note the third command first: if flow control is
 disabled on the uplink, `pauseCount` reading zero says nothing at all, and the
