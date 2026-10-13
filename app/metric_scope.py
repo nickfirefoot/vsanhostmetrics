@@ -2,7 +2,7 @@
 
 Regenerate with tools/gen_metric_scope.py after changing tools/build_view.py.
 
-69 kinds, 1636 metrics defined; 439 referenced by views; 1197 not.
+69 kinds, 1636 metrics defined; 443 referenced by views; 1193 not.
 36 kinds are referenced by no view at all and can be skipped
 entirely, which is the only thing that saves a round trip -- the vSAN perf API
 returns every metric of an entity type in one query.
@@ -150,6 +150,15 @@ COVERED = {
         "rdtTx",
         "rdtTxThroughput",
     ),
+    "VsanCpu": (
+        "avgRunPct",
+        "avgUsedPct",
+        "maxRunPct",
+        "maxUsedPct",
+        "readyPct",
+        "runPct",
+        "usedPct",
+    ),
     "VsanDirectCluster": (
         "iopsDevRead",
         "iopsDevWrite",
@@ -193,11 +202,6 @@ COVERED = {
         "writeOpTotal",
         "writeRequested",
         "writeTransferred",
-    ),
-    "VsanHostCpu": (
-        "coreUtilPct",
-        "pcpuUsedPct",
-        "pcpuUtilPct",
     ),
     "VsanHostDomclient": (
         "congestion",
@@ -530,13 +534,13 @@ UNCOVERED_KINDS = (
     "VsanCmmdsWorkload",
     "VsanComputeClusterRemotedomclient",
     "VsanComputeHostRemotedomclient",
-    "VsanCpu",
     "VsanDdhDisk",
     "VsanDiskGroup",
     "VsanDistribution",
     "VsanDomWorld",
     "VsanDpHistoricalStats",
     "VsanHeapMemory",
+    "VsanHostCpu",
     "VsanHostEsaDedupDomcompmgrIo",
     "VsanHostEsaDedupDomownerIo",
     "VsanHostEsaDedupStoreChunksvc",

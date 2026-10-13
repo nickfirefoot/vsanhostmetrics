@@ -1738,3 +1738,30 @@ dependency the adapter does not currently have". That dependency is what fails
 here. Do not design the replacement until the 401 cause is known -- a cause
 that also affects object identity or instance registration would be inherited
 by any new hierarchy.
+
+## Open: 74 schema-permille metrics are collected unconverted (2026-10-13)
+
+The service schema marks **98** metrics `permille`. `perfsvc.PERMILLE` divides
+**24** of them by ten. Until today the label generator declared
+`RATIO.PERCENT` on all 98, so 74 metrics were presented as a percentage whose
+value had never been divided -- a 10x overstatement for anything genuinely
+per-mille.
+
+Fixed conservatively: the unit is now derived from what perfsvc actually
+converts, so those 74 are unitless rather than mislabelled. **No emitted value
+changed.**
+
+The open question is whether to convert all 98 instead. The argument for it is
+in perfsvc.py's own comment: the 24 were "confirmed twice over -- the service
+schema marks these permille, and tcpRcvdupackRate read 1-2 here while an
+independent host scrape measured 0.122 percent". So the schema was RIGHT every
+time it was checked, which is evidence it is right for the other 74.
+
+The argument against acting on that today: all 74 read `0.0` in this lab
+(`readRatio`, `aligned4kRatio`, `randomRatio`, the `riosz*` family -- most live
+on `VsanIoinsight`, which needs IO Insight enabled), so the claim cannot be
+verified here and converting would change 74 emitted values on faith.
+
+To settle it: enable IO Insight on one cluster, read `readRatio` raw, and
+compare against the same ratio computed from `iopsRead`/`iopsWrite`. If raw
+reads ~650 for a 65% read mix, the schema is right and all 98 should convert.

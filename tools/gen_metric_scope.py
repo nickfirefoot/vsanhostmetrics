@@ -55,6 +55,9 @@ DEFAULT_EXTRA = {
     # Already queried for 4 of its 8 metrics by a view; completing it adds no
     # round trip, and a half-populated vSCSI object reads as broken.
     "VsanVscsi": "guest vSCSI, completing a kind already collected",
+    # Four objects carrying readyPct -- is vSAN starved of CPU, not merely
+    # busy. Replaces VsanHostCpu's 244 per-core objects.
+    "VsanCpu": "vSAN CPU readiness, per host",
 }
 
 # Kinds identified by an ESXi THREAD -- one Operations object per world. These
@@ -63,6 +66,14 @@ DEFAULT_EXTRA = {
 # objects carrying 3 metrics each, every one of them zero. Never collect by
 # default; "all" still reaches them.
 THREAD_SCOPED = ("VsanDomWorld", "VsanLsomWorldCpu")
+
+# Kinds excluded even if a view references them, because the data is already
+# collected by another adapter and the object cost is large. VsanHostCpu is
+# identified by [host_uuid, cpu] -- one object PER CORE, measured at 244 of 960
+# on a four-host lab, 25% of everything this pack creates -- for per-core
+# utilisation the built-in vCenter adapter already has. VsanCpu answers the
+# vSAN question (readyPct) in four objects, and is in DEFAULT_EXTRA below.
+REDUNDANT_WITH_VCENTER = ("VsanHostCpu",)
 
 
 def load_views():
@@ -90,7 +101,7 @@ def main():
 
     covered = {}
     for kind, metrics in by_kind.items():
-        if kind in THREAD_SCOPED:
+        if kind in THREAD_SCOPED or kind in REDUNDANT_WITH_VCENTER:
             continue
         if kind in DEFAULT_EXTRA:
             covered[kind] = sorted(metrics)       # whole kind; it is queried anyway

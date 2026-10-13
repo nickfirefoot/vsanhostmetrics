@@ -346,10 +346,19 @@ VIEWS = [
         ("osfsdConsumedSize", "", "MAX"),
         ("vsandevicemonitordConsumedSize", "", "MAX"),
     ]),
-    ("vSAN Host CPU", "VsanHostCpu", [
-        ("pcpuUsedPct", "percent", "MAX"),
-        ("pcpuUtilPct", "percent", "MAX"),
-        ("coreUtilPct", "percent", "MAX"),
+    # Subject moved from VsanHostCpu to VsanCpu. VsanHostCpu is identified by
+    # [host_uuid, cpu] -- ONE OBJECT PER CORE, 244 on a four-host cluster, for
+    # generic per-core utilisation the built-in vCenter adapter already
+    # collects. VsanCpu is [host_uuid]: four objects, and it carries readyPct,
+    # which is the question this view exists to answer -- is vSAN starved of
+    # CPU, as opposed to merely busy. Title unchanged so the GUID is stable and
+    # the view updates in place.
+    ("vSAN Host CPU", "VsanCpu", [
+        ("readyPct", "percent", "MAX"),
+        ("maxRunPct", "percent", "MAX"),
+        ("usedPct", "percent", "MAX"),
+        ("runPct", "percent", "MAX"),
+        ("maxUsedPct", "percent", "MAX"),
     ]),
     # ---- the guest view -------------------------------------------------
     # vSAN VM Storage is per-vSCSI-controller. This is per-VM, which is the

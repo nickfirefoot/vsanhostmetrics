@@ -18,6 +18,8 @@ Usage:
     python3 tools/build_metric_labels.py   # units from docs/assets/hcibench_units.json
 """
 from __future__ import annotations
+import pathlib
+import re
 import json, re, sys, collections
 
 # HCIBench unit -> (SDK Units path, human suffix). None = dimensionless.
@@ -228,6 +230,33 @@ AMBIGUOUS_UNIT = {
 }
 
 
+def converted_permille():
+    """The metrics app/perfsvc.py actually DIVIDES BY 10.
+
+    Parsed from the source rather than imported, because perfsvc pulls in
+    pyVmomi and this generator must run without it.
+
+    Why this and not permille_metrics(): the service schema calls 98 metrics
+    permille; perfsvc converts 24. Declaring RATIO.PERCENT on all 98 labelled
+    74 metrics as a percentage whose value was never divided -- a 10x
+    overstatement in the display for anything that really is per-mille.
+
+    Narrowing the unit to what is converted is the conservative direction. The
+    alternative, converting all 98, would trust the schema for 74 metrics whose
+    values all read 0.0 in the lab, so the claim could not be checked. The
+    comment on perfsvc.PERMILLE records that its 24 were confirmed twice over
+    against an independent host scrape; nothing comparable exists for the rest.
+    """
+    src = pathlib.Path(__file__).resolve().parent.parent / "app" / "perfsvc.py"
+    body = re.search(r"PERMILLE = \{(.*?)\n\}", src.read_text(encoding="utf-8"), re.S)
+    if not body:
+        raise SystemExit("could not find PERMILLE in app/perfsvc.py")
+    found = set(re.findall(r'"([^"]+)"', body.group(1)))
+    if not found:
+        raise SystemExit("PERMILLE parsed as empty -- refusing to label nothing")
+    return found
+
+
 def permille_metrics():
     """Metrics the service reports in per-mille; see perfsvc.PERMILLE."""
     import json
@@ -259,16 +288,26 @@ def main() -> None:
         extra = set()
     metrics = sorted({m for d in P.ENTITIES.values() for m in d["metrics"]} | extra)
     permille = permille_metrics()
+    converted = converted_permille()
+    unconverted = sorted(permille - converted)
+    if unconverted:
+        print(f"  NOTE: {len(unconverted)} metrics the schema calls permille are "
+              f"NOT converted by perfsvc, so they are left with their derived "
+              f"unit rather than being declared a percentage: "
+              f"{', '.join(unconverted[:5])}...")
     labels, units = {}, {}
     stats = collections.Counter()
     for m in metrics:
         # hand-curated > Broadcom's own > derived from the id
         labels[m] = OVERRIDE.get(m) or official.get(m) or label_for(m)
-        # The adapter converts these to percent, so say so in the name --
-        # otherwise a bare "1" reads as a count when it means 1%.
-        if m in permille:
-            if "%" not in labels[m]:
-                labels[m] = f"{labels[m]} (%)"
+        # The adapter converts these to percent. The UNIT says so -- declaring
+        # RATIO.PERCENT makes Operations render "0.1 %" next to the value --
+        # so a "(%)" in the name as well produced "Inbound Packet Drop Rate of
+        # vSwitch Port (%)  0.1 %". Several of the official Broadcom names
+        # already end in "Rate" or "Percentage" too. The unit carries it; the
+        # name does not repeat it. Labels that arrive WITH a percent sign from
+        # OVERRIDE or Broadcom's own naming are left exactly as they are.
+        if m in converted:
             units[m] = "RATIO.PERCENT"
         raw = (hcib.get(m) or {}).get("unit", "")
         # *Actual twins carry the same unit as their base metric
