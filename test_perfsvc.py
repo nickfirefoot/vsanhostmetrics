@@ -225,11 +225,12 @@ def test_nic_error_counters_are_readable():
     metrics the schema does not document."""
     import metric_labels as ml
     # Curated: the official name omits what was missed.
-    assert ml.LABELS["rxMissErr"] == "pNIC RX missed error (ring buffer full) (%)"
-    # Official, plus the "(%)" the per-mille conversion adds so the unit is
-    # visible in the name -- a bare "1" would read as a count, not 1%.
-    assert ml.LABELS["rxCrcErr"] == "pNIC RX CRC Error (%)"
-    assert ml.LABELS["txCarErr"] == "pNIC TX Carrier Error (%)"
+    assert ml.LABELS["rxMissErr"] == "pNIC RX missed error (ring buffer full)"
+    # Official name, with NO "(%)" suffix: the RATIO.PERCENT unit renders
+    # beside the value, so a suffix produced "pNIC RX CRC Error (%)  0.1 %".
+    assert ml.LABELS["rxCrcErr"] == "pNIC RX CRC Error"
+    assert ml.LABELS["txCarErr"] == "pNIC TX Carrier Error"
+    assert "%" not in ml.LABELS["rxCrcErr"], "the unit carries it, not the name"
     assert ml.UNITS["rxCrcErr"] == "RATIO.PERCENT"
     # Derived: undocumented upstream, so our token rules have to carry it.
     assert ml.LABELS["rxLgtErr"] == "RX length errors"
@@ -428,10 +429,42 @@ def test_permille_is_converted_to_percent():
     assert perfsvc.to_percent("rxThroughput", 1000000.0) == 1000000.0
     assert perfsvc.to_percent("rxPackets", 42.0) == 42.0
     import metric_labels as ml
+    # Every converted metric must DECLARE the unit, and must not also spell it
+    # in the name -- Operations renders the unit, so both gives "... (%)  0.1 %".
     for m in perfsvc.PERMILLE:
         if m in ml.LABELS:
-            assert "%" in ml.LABELS[m], f"{m} converted but label hides it"
-            assert ml.UNITS.get(m) == "RATIO.PERCENT", m
+            assert ml.UNITS.get(m) == "RATIO.PERCENT", f"{m} converted, unit not percent"
+            assert "%" not in ml.LABELS[m], f"{m} spells the unit in its name too"
+
+
+def test_nothing_claims_percent_without_being_converted():
+    """The inverse, and the bug it guards against was live until 2026-10-13.
+
+    The service schema calls 98 metrics permille; perfsvc divides 24. The label
+    generator used to declare RATIO.PERCENT from the SCHEMA, so 74 metrics were
+    presented as a percentage whose value had never been divided by ten -- a
+    10x overstatement for anything genuinely per-mille. Declaring a unit we do
+    not honour is worse than declaring none.
+    """
+    import metric_labels as ml
+    claimed = {k for k, v in ml.UNITS.items() if v == "RATIO.PERCENT"}
+    converted = set(perfsvc.PERMILLE)
+    # Already a percentage at source, so no conversion is owed. Two routes:
+    # the id says so anywhere in the name (iopsDelayPctSched, coreUtilPct), or
+    # build_metric_labels.py overrides it because the SCHEMA says "percentage"
+    # rather than "permille" -- a different unit from the one perfsvc converts.
+    SCHEMA_SAYS_PERCENTAGE = {"iopsCacheMissRate", "tputCacheMissRate"}
+
+    def self_describing(k):
+        low = k.lower()
+        return any(t in low for t in ("pct", "percent", "util", "ratio"))
+
+    unjustified = sorted(k for k in claimed - converted
+                         if not self_describing(k)
+                         and k not in SCHEMA_SAYS_PERCENTAGE)
+    assert not unjustified, (
+        f"{len(unjustified)} metrics declare RATIO.PERCENT without being "
+        f"converted: {unjustified[:6]}")
 
 
 def test_adapter_definition_actually_builds():
