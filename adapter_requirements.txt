@@ -1,0 +1,7 @@
+vmware-aria-operations-integration-sdk-lib~=1.1.0
+# The Performance Service is reached over vmomi/SOAP, so the container needs
+# pyVmomi. The vSAN bindings themselves are not on PyPI and are vendored in
+# app/vendor/ -- see that package's docstring for their staleness.
+# Pinned to what pyvmomi~=8.0 resolved to in the published 1.4.6 image
+# (the last 8.x release), so a rebuild gets the same library.
+pyvmomi==8.0.3.0.1

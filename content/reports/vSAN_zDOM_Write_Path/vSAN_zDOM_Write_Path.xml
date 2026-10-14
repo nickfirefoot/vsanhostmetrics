@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="66c1bc8a-59d4-548c-bce9-41eea8ec2440">
-            <Title>vSAN zDOM Write Path</Title>
+            <Title>vSAN zDOM Write Path [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanZdomVtx" type="descendant" />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanZdomVtx" type="self" />

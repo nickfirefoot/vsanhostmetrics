@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="057a006b-7ad1-5df7-af19-832b788b7b16">
-            <Title>vSAN Clusters</Title>
+            <Title>vSAN Clusters [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VMWARE" resourceKind="ClusterComputeResource" type="descendant" />
             <SubjectType adapterKind="VMWARE" resourceKind="ClusterComputeResource" type="self" />

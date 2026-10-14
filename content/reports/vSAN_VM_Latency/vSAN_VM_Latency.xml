@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="e3e80ffe-53d7-5950-91e8-e8113ee3c5ec">
-            <Title>vSAN VM Latency</Title>
+            <Title>vSAN VM Latency [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanVirtualMachine" type="descendant" />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanVirtualMachine" type="self" />

@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="4d71fbcc-a7c2-5f19-8940-b1601efcb0d1">
-            <Title>vSAN Cluster DOM Owner</Title>
+            <Title>vSAN Cluster DOM Owner [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanClusterDomowner" type="descendant" />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanClusterDomowner" type="self" />

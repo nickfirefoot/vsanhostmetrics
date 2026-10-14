@@ -97,19 +97,11 @@ no infrastructure to find out.
 
 ## Wire into a project
 
-```sh
-mp-init          # name: vsan-host-metrics, language: Python, adapter kind: VsanHostMetrics
-```
-
-Then, into the generated project:
-
-1. Copy `app/vsanmetrics.py` and `app/constants.py` in as-is.
-2. Open the **generated** `app/adapter.py`, copy its import block over the one
-   at the top of this `adapter.py`, and keep its `main()` dispatch block.
-   The SDK was renamed from `aria` to `vcf` in 9.0 and the package path may
-   have moved; the generated file is ground truth.
-3. Merge the rest of this `adapter.py` in.
-4. Nothing to add to `adapter_requirements.txt` — stdlib only.
+The repository root is the `mp-build` project: `manifest.txt`, `Dockerfile`,
+`commands.cfg`, `adapter_requirements.txt` (the SDK library and pyVmomi),
+`config.json`, `conf/`, `resources/`, `content/`, and the adapter in `app/`.
+They were generated once with `scaffold_project.py` and committed, so there is
+nothing to scaffold or copy. Run the SDK tools from the checkout:
 
 ```sh
 mp-test          # prompts for hosts + token, then prints objects and metrics
@@ -184,6 +176,96 @@ non-collecting object.
 4. **Token rotation handling**, above. The per-host-vs-cluster-wide question
    is settled (cluster-wide); detecting rotation is not.
 
+## Build and release
+
+GitHub Actions builds the pack (`.github/workflows/build-and-publish.yml`).
+Pull requests, and pushes to `main` or `agent/beta-vsan-host-metrics`, build
+the adapter image, run `test_perfsvc.py`, `test_vsanmetrics.py` and
+`test_adapter.py` inside it, scan it with Trivy and boot it. Nothing is
+published.
+
+To release, merge to the release branch (`agent/beta-vsan-host-metrics`, or
+`main`; the workflow's `RELEASE_BRANCHES` lists both), then:
+
+```
+git tag v1.4.7 && git push origin v1.4.7
+```
+
+The tag sets the version. The workflow writes it into `manifest.txt` on the
+runner before `mp-build`, so there is nothing to bump before tagging; the
+stamped file is never committed. The committed `manifest.txt` stays at the
+last released version, which is what a hand-run `mp-build` uses.
+
+The workflow runs `mp-build` against `ghcr.io/nickfirefoot/vsanhostmetrics`,
+scans the pushed image, signs the image and the pak with cosign (keyless: no
+keys or secrets to manage), attests both with GitHub build provenance, tags
+the image `1.4.7`, and creates a GitHub Release with the pak, its signature
+bundle (`.pak.sigstore.json`) and `SHA256SUMS`. A `v1.4.7-rc.1` tag publishes
+a prerelease and may come from any branch. Its pak carries version `1.4.7`
+(`VsanHostMetrics_1.4.7.pak`); the Release is named `v1.4.7-rc.1` and the image is
+tagged `1.4.7-rc.1`.
+A version that already exists in GHCR is refused; release a new patch version
+instead. The workflow passes the registry to `mp-build` itself; `config.json`
+names the same repository for local builds.
+
+One-time setup: if the first release stops at the anonymous pull check, the
+new GHCR package was created private. Make it public (package settings,
+Change visibility) and re-run the failed jobs. If the package already exists
+because it was pushed by hand, give this repository Write under the package's
+Manage Actions access.
+
+`.trivyignore.yaml` lists the scan findings this repository cannot fix
+(`cryptography` pinned by the SDK library, copies vendored inside pip). Each
+entry expires, and the scan fails again until it is reviewed.
+
+### Verifying what you install
+
+VCF Operations checks none of this. The pak names an image digest in GHCR.
+Per the VMware SDK documentation, the Cloud Proxy pulls this digest on first
+collection, straight from GHCR, with no signature, attestation or
+vulnerability check. Verify that digest yourself:
+
+1. Read what the pak points at (`REGISTRY`, `REPOSITORY`, `DIGEST`):
+
+   ```
+   unzip -p VsanHostMetrics_1.4.7.pak adapter.zip > adapter.zip
+   unzip -p adapter.zip VsanHostMetrics.conf
+   ```
+
+2. Verify that digest and the pak:
+
+   ```
+   IMAGE=ghcr.io/nickfirefoot/vsanhostmetrics@sha256:<DIGEST from step 1>
+   ID='^https://github\.com/nickfirefoot/vsanhostmetrics/\.github/workflows/build-and-publish\.yml@refs/tags/v'
+   ISSUER=https://token.actions.githubusercontent.com
+   cosign verify "$IMAGE" --certificate-identity-regexp "$ID" --certificate-oidc-issuer "$ISSUER"
+   cosign verify-blob VsanHostMetrics_1.4.7.pak --bundle VsanHostMetrics_1.4.7.pak.sigstore.json \
+     --certificate-identity-regexp "$ID" --certificate-oidc-issuer "$ISSUER"
+   gh attestation verify "oci://$IMAGE" --repo nickfirefoot/vsanhostmetrics
+   gh attestation verify VsanHostMetrics_1.4.7.pak --repo nickfirefoot/vsanhostmetrics
+   trivy image --severity HIGH,CRITICAL --ignore-unfixed "$IMAGE"
+   ```
+
+   Trivy shows the `.trivyignore.yaml` findings unless you pass
+   `--ignorefile .trivyignore.yaml` from a checkout of the release tag.
+
+3. Private registry or air-gapped site: verify on a connected host as in
+   step 2, mirror the image as `DARK-SITE.md` describes, and check the mirror
+   serves the same digest before pointing Operations at it:
+
+   ```
+   MIRROR=registry.example.local/nickfirefoot/vsanhostmetrics
+   crane digest "$MIRROR:1.4.7"        # must equal DIGEST from step 1
+   trivy image --severity HIGH,CRITICAL --ignore-unfixed "$MIRROR@sha256:<DIGEST>"
+   ```
+
+   `oras copy -r` in place of the `docker pull`, `tag` and `push` there also
+   carries the signature and attestation, so the cosign check can be repeated
+   against the mirror. Rebuilding with `mp-build -r <mirror>` also names the
+   mirror, but it builds and pushes a new image with a new digest that this
+   repository never signed, attested or scanned, so the checks above no longer
+   apply to it.
+
 ## Deploy
 
 Steps 1-4 below were performed and verified against `example.com` on
@@ -197,7 +279,7 @@ as a command-line option instead of prompting:
 ```sh
 source ~/.mp/bin/activate
 set -a; . ~/harbor.env; set +a          # HARBOR_USER / HARBOR_PASS, mode 600, outside this repo
-mp-build -p ~/vsan-host-metrics --no-ttl \
+mp-build -p . --no-ttl \
   -r "registry.example.com/nickfirefoot/vsanhostmetrics" \
   --registry-username "$HARBOR_USER" \
   --registry-password "$HARBOR_PASS"

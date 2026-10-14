@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="1d4ec589-2f11-5ff5-a0d3-bddbf2a319fc">
-            <Title>vSAN CMMDS Network</Title>
+            <Title>vSAN CMMDS Network [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanCmmdsNet" type="descendant" />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanCmmdsNet" type="self" />

@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="feb4ebf1-534e-5ef4-9bbe-16433d9b783a">
-            <Title>vSAN vmknic RDT Latency</Title>
+            <Title>vSAN vmknic RDT Latency [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanVnicRdtLatency" type="descendant" />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanVnicRdtLatency" type="self" />

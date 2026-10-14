@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="cfaac7b8-f794-5658-ade4-1d7d6adf4f91">
-            <Title>vSAN vmknic</Title>
+            <Title>vSAN vmknic [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanVnic" type="descendant" />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanVnic" type="self" />

@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="c972e782-317e-55b8-b5db-400c703ccfa7">
-            <Title>vSAN Cluster RDT</Title>
+            <Title>vSAN Cluster RDT [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanClusterRdtLatency" type="descendant" />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanClusterRdtLatency" type="self" />

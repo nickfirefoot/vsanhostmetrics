@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="40c18c38-50d6-5e0c-992f-9fd042d3b4ed">
-            <Title>vSAN Cluster Resync Jobs</Title>
+            <Title>vSAN Cluster Resync Jobs [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanClusterDomowner" type="descendant" />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanClusterDomowner" type="self" />

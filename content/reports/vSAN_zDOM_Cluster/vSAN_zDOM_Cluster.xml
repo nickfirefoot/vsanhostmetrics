@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="c3428856-b6d0-5629-a954-5ef5b24622db">
-            <Title>vSAN zDOM Cluster</Title>
+            <Title>vSAN zDOM Cluster [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanClusterZdomTopStats" type="descendant" />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanClusterZdomTopStats" type="self" />

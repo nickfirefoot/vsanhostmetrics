@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="84de6a1e-aa7c-5da9-a0d5-a5cb31a72cbd">
-            <Title>vSphere Host Uplinks and Load</Title>
+            <Title>vSAN Host Uplinks and Load [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VMWARE" resourceKind="HostSystem" type="descendant" />
             <SubjectType adapterKind="VMWARE" resourceKind="HostSystem" type="self" />
