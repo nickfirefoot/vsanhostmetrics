@@ -5,3 +5,8 @@ __pycache__/
 
 # Release bundles are build output, regenerate with tools/build_release_bundle.py
 dist/
+
+# mp-build and mp-test output, and mp-test connections (they hold credentials)
+build/
+logs/
+connections.json

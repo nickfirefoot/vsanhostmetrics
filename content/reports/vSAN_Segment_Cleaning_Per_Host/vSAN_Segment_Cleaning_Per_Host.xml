@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="8c9cf5f4-f8c8-5ea6-9f3f-a9aaa4992029">
-            <Title>vSAN Segment Cleaning Per Host</Title>
+            <Title>vSAN Segment Cleaning Per Host [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanHostDomowner" type="descendant" />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanHostDomowner" type="self" />

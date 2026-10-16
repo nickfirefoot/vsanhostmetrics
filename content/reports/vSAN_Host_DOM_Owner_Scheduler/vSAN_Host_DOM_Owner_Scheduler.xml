@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="2a09900d-2b28-5e7b-bf0c-f0d3ffee3430">
-            <Title>vSAN Host DOM Owner Scheduler</Title>
+            <Title>vSAN Host DOM Owner Scheduler [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanHostDomowner" type="descendant" />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanHostDomowner" type="self" />

@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="b597d3fd-2fbb-546e-88f8-3f6d42537dcf">
-            <Title>vSAN Cluster DOM Component Manager</Title>
+            <Title>vSAN Cluster DOM Component Manager [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanClusterDomcompmgr" type="descendant" />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanClusterDomcompmgr" type="self" />

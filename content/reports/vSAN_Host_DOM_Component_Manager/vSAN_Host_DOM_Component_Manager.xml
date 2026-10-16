@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="4eccde1c-87f0-5572-9caa-7eb237ec221e">
-            <Title>vSAN Host DOM Component Manager</Title>
+            <Title>vSAN Host DOM Component Manager [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanHostDomcompmgr" type="descendant" />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanHostDomcompmgr" type="self" />

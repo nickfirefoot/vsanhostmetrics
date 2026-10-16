@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="24773067-9b6e-536a-a39c-46353dfd5068">
-            <Title>vSAN VM Storage</Title>
+            <Title>vSAN VM Storage [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanVscsi" type="descendant" />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanVscsi" type="self" />

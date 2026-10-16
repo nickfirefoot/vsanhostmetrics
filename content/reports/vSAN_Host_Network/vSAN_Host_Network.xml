@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="d46f58a8-e3a4-519f-9124-ac8ff83871c5">
-            <Title>vSAN Host Network</Title>
+            <Title>vSAN Host Network [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanHostNet" type="descendant" />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanHostNet" type="self" />

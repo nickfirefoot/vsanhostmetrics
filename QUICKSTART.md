@@ -225,22 +225,15 @@ git clone https://github.com/nickfirefoot/vsanhostmetrics && cd vsanhostmetrics
 python3 test_perfsvc.py                      # expect 33/33 — if not, stop
 python3 test_vsanmetrics.py                  # expect 16/16
 
-python3 scaffold_project.py ~/vsan-host-metrics
-cp -a app/. ~/vsan-host-metrics/app/ && cp pak_icon.png ~/vsan-host-metrics/
-cp resources/resources.properties ~/vsan-host-metrics/resources/
-# bump "version" in ~/vsan-host-metrics/manifest.txt
+# the checkout is the mp-build project; bump "version" in manifest.txt
 
-# content is GENERATED; the project tree does not update itself
+# content is GENERATED; regenerate it into the checkout if views changed
 python3 tools/build_view.py && python3 tools/build_dash.py
-python3 tools/sync_content.py ~/vsan-host-metrics
+python3 tools/sync_content.py .
 
-cd ~/vsan-host-metrics
 mp-build --no-ttl -r "<your-registry>/<project>/vsanhostmetrics" \
   --registry-username "<user>" --registry-password "<pass>"
 ```
-
-Use `scaffold_project.py`, **not** `mp-init` — `mp-init` deletes its own
-project on a host without `ensurepip`.
 
 If you point this at your own private registry, the Cloud Proxy must trust its
 CA (`/etc/docker/certs.d/<registry>/ca.crt`) and resolve it **by hostname** —

@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="c51f5531-ccea-543d-9a73-0e0d5e359d1a">
-            <Title>vSAN RDT Transport Per Host</Title>
+            <Title>vSAN RDT Transport Per Host [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanRdtLatency" type="descendant" />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanRdtLatency" type="self" />

@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="4edb922b-10e6-5f18-b0d8-77cdba6df121">
-            <Title>vSAN ESA Disk Physical Layer</Title>
+            <Title>vSAN ESA Disk Physical Layer [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanEsaDiskScsifw" type="descendant" />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanEsaDiskScsifw" type="self" />

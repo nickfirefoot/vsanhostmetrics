@@ -199,8 +199,8 @@ Verified end-to-end 2026-09-23 against `example.com`.
    Expect **847 objects, 0 problems** on a 4-host cluster; any cluster should
    return hundreds and zero problems. Zero objects raises `PerfSvcError`
    deliberately rather than reporting an empty success
-4. SDK project created (`scaffold_project.py`, **not** `mp-init` -- it
-   self-deletes its project on this host), adapter files copied in
+4. SDK project: the repository root is the project, generated once by
+   `scaffold_project.py` and committed, so nothing is created or copied
 5. Icon regenerated if the artwork changed:
    `python3 tools/make_pak_icon.py docs/assets/pak_icon_source.png pak_icon.png`
    -- asserts 256x256 PNG, which `mp-build` does not check

@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="08f4845e-a550-569a-9596-b244075ac675">
-            <Title>vSAN zDOM Per Host</Title>
+            <Title>vSAN zDOM Per Host [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanHostZdomTopStats" type="descendant" />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanHostZdomTopStats" type="self" />

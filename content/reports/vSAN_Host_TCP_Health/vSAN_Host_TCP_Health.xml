@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="c10ec3f1-e693-5b3d-af81-d2d19de1c341">
-            <Title>vSAN Host TCP Health</Title>
+            <Title>vSAN Host TCP Health [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanTcpIp" type="descendant" />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanTcpIp" type="self" />

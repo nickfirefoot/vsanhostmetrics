@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="09f4cb2e-f52c-412a-826d-ee04a3d07d0f">
-            <Title>vSAN pNIC Errors</Title>
+            <Title>vSAN pNIC Errors [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanPnic" type="descendant" />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanPnic" type="self" />

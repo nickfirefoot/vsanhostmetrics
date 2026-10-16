@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="74e1354d-757f-5ca7-a9e4-25e01718c627">
-            <Title>vSAN ESA Disks</Title>
+            <Title>vSAN ESA Disks [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanEsaDiskLayer" type="descendant" />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanEsaDiskLayer" type="self" />

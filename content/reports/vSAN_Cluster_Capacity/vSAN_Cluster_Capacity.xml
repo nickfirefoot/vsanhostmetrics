@@ -2,7 +2,7 @@
 <Content>
     <Views>
         <ViewDef id="80f0f637-d7a6-5252-aaba-6c9d04772960">
-            <Title>vSAN Cluster Capacity</Title>
+            <Title>vSAN Cluster Capacity [VHM]</Title>
             <Description />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanClusterCapacity" type="descendant" />
             <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanClusterCapacity" type="self" />
