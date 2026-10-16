@@ -1765,3 +1765,37 @@ verified here and converting would change 74 emitted values on faith.
 To settle it: enable IO Insight on one cluster, read `readRatio` raw, and
 compare against the same ratio computed from `iopsRead`/`iopsWrite`. If raw
 reads ~650 for a 65% read mix, the schema is right and all 98 should convert.
+
+## Verified: this pack does not disturb vCenter or the built-in vSAN pack (2026-10-16)
+
+Asked because the built-in vSAN ESA content looked orphaned. It is, and not
+because of us.
+
+`VirtualAndPhysicalSANAdapter` has **no adapter instance**. It ships as a
+solution but nothing configured it, so it holds only its `vSAN World` root and
+nothing beneath. That was already recorded here before this pack attached to
+anything. We also cannot have caused it: we only ever write to
+`VMWARE/{HostSystem, VirtualMachine, ClusterComputeResource}` and never create,
+delete or reference a vSAN MP object.
+
+Measured in the lab, all four checks clean:
+
+| check | result |
+|---|---|
+| native children preserved on every object we attach to | yes -- esxi01 10, esxi02 59, esxi03 8, esxi04 14, cluster 5, alongside ours |
+| native parents untouched | yes -- ClusterComputeResource, VmwareDistributedVirtualSwitch, Datacenter, SupervisorCluster, and NSXTAdapter/TransportNode |
+| rename damage from the old MoRef bug | 0 objects |
+| our metrics written onto vCenter objects | 0 of 323 statkeys on a HostSystem |
+
+The relationship merge is doing its job: we add children and change nothing
+else. The one apparent metric match, `diskspace|used`, is vCenter's own key --
+an artefact of comparing only the last `|` segment.
+
+**Not checkable by API:** the dashboards themselves. `/api/dashboards` and
+`/internal/dashboards` both 404. A built-in dashboard rendering empty means its
+objects do not exist, which is exactly the vSAN MP case above.
+
+**To populate the built-in vSAN content** an adapter instance is needed. It
+takes no credentials of its own -- current Operations drives vSAN collection
+from the vCenter adapter instance -- so look for the toggle on that account
+rather than adding an integration.

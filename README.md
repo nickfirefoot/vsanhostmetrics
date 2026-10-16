@@ -1,13 +1,25 @@
 # vSAN Host Metrics
 
-**Objective: pull in the vSAN stats the regular vCenter API misses.**
+**Surfaces the vSAN performance metrics vCenter already collects but never
+exposes, so you can trend and alert on them instead of reading them once in a
+troubleshooting window.**
 
-A management pack for VCF Operations that collects long-term vSAN telemetry
-from the **vSAN Performance Service** through vCenter: **1035 metrics across 31
-resource kinds**, with Broadcom's own metric names where they publish them, and
-every object attached to the vCenter host, VM or cluster it belongs to.
+The vSAN Performance Service holds deep per-host, per-disk and per-NIC
+telemetry -- DOM latency broken out by layer, RDT backpressure, pNIC ring
+overruns, the zDOM write path. The built-in tooling draws you a live graph and
+keeps nothing. This turns it into monitored, historical, alertable data.
 
-On a four-host cluster that is 847 objects, collected in about 9 seconds.
+A management pack for VCF Operations, reading the Performance Service through
+vCenter: **1,636 metrics across 69 resource kinds** defined, with Broadcom's
+own metric names where they publish them, and every object attached to the
+vCenter host, VM or cluster it belongs to.
+
+By default it collects the **443** metrics the shipped dashboards and views
+actually render, from 33 of those 69 kinds. The rest stay declared and are one
+instance setting away -- see **Metrics to collect**.
+
+On a four-host cluster that is 500-850 objects depending on VM count,
+collected in 11-16 seconds against a five-minute cycle.
 
 | | |
 |---|---|
