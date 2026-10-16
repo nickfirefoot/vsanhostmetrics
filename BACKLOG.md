@@ -2,33 +2,47 @@
 
 ## Pending next release — batched, do not ship individually
 
-Changes committed to source but **not yet in a published pak**. Batch these
-into one release rather than cutting a version per fix.
+Committed to source but not yet in a published pak. Last verified 2026-10-16
+against the shipped 1.4.6 pak and the lab, because this table had drifted badly
+enough to mislead: it previously listed as pending a dozen things that had
+shipped, and opened by saying the lab ran 1.1.9 when it runs 1.4.6.
 
 | Item | Status | Needs |
 |---|---|---|
-| **Object-name overwrite** | **fixed, needs rebuild** | the pack renamed every vCenter HostSystem to its MoRef; names correct themselves once redeployed |
-| Drop `Actual`/`Raw` duplicate metrics | proposed | ~50 metrics, identical to their base in every observed pair; pure clutter on a dashboard |
-| Per-mille to percent conversion | proposed | `portRxDrops = 1` means 0.1% and nothing says so. Evidence settled; needs the go-ahead since it changes emitted values |
-| Derived error ratios | proposed | raw counters have no perspective -- 4 errors against 1M packets is noise, against 1K it is a fire. Compute `*PerMillionPackets` in the adapter where numerator and denominator are both already in hand |
-| **Namespace metric keys into a tree** | proposed, **breaking** | keys are flat (`rxMissErr`). Operations renders `\|`-separated keys as a tree, so `Network\|pNIC\|Errors\|RX missed` would fan 994 attributes into browsable branches instead of one list. Changing a key orphans its history and breaks any dashboard or symptom referencing it, so it is a major-version change, not a tidy-up |
-| **Per-family collection toggles, `host-cpu` off by default** | proposed | `VsanHostCpu` is 244 objects for `coreUtilPct`/`pcpuUsedPct`/`pcpuUtilPct` -- generic per-core host CPU the built-in vCenter adapter already collects. With `VsanDomWorld` (315) that is 66% of all objects for 24% of the series. `vsan-cpu` (4 objects, includes `readyPct`) answers "is vSAN CPU-starved" and should stay on |
-| **Restructure into fewer top-level branches** | proposed | a host currently fans straight out into ~5 network families and 6 DOM families. Target: Network / Storage / Cluster / Compute / VM at the top, everything else nested beneath. Cosmetic in the guide, structural if done via metric keys -- see the namespacing row |
-| **Pick a better default throughput unit** | proposed, small | `DATA_RATE` is a single family holding bits and bytes, binary and decimal, each with a conversion factor -- so `Mbit/s` is already selectable in the UI from the `B/s` we declare, and no value conversion is needed. The open question is only which default reads best unscaled. We declare `BIBYTE_PER_SECOND` (binary, scales to KiB/s and MiB/s) because HCIBench charts these as `binBps`; `BYTE_PER_SECOND` (decimal, scales to kB/s and MB/s) matches how networking is normally discussed. **[unverified]** whether Operations converts across bit/byte within the family or only within one subtype -- worth checking in the UI before changing anything |
-| **Drop the redundant "(%)" from labels** | proposed | added so the per-mille conversion was visible in the name, but Operations renders the `RATIO.PERCENT` unit alongside the value anyway, giving "Inbound Packet Drop Rate of vSwitch Port (%)  0.1 %". Several official names already say "Rate" or "Percentage" too. Remove the suffix and let the unit carry it -- the conversion itself stays |
-| Real EULA (`eula.txt`) | committed | rebuild — the scaffold placeholder left the install form's agreement box empty |
-| Network rapid dashboard | generated, imports, panels error | `colorBy` binding confirmed against a working example |
-| `TextDisplay` inline body | does not render | a configured example; `description` was assumed to be the body field |
-| `TextDisplay` `locationUrl` | "URL is not available" | lab egress is fine (Cloud Proxy reaches raw.githubusercontent 200/56ms), so the suspect is `text/plain` + `nosniff` being rejected in HTML view mode. GitHub Pages would serve `text/html` and settle it |
-| Backpressure + disk rapid dashboards | designed, not built | the same `colorBy` fix; then ~20 min each |
+| **`VsanHostCpu` -> `VsanCpu`** | **committed, awaiting a pak** | 244 per-core objects of generic utilisation replaced by 4 carrying `readyPct`. In `v1.4.7-rc.1`. |
+| **74 metrics no longer claim a unit they do not honour** | **committed, awaiting a pak** | they declared `RATIO.PERCENT` without being converted. No emitted value changed. In `v1.4.7-rc.1`. |
+| **`(%)` removed from 98 labels** | **committed, awaiting a pak** | the unit renders beside the value; the name was double-stating it. |
 
-| **Cluster selector on rapid dashboards** | **schema confirmed 2026-09-25** | Object List (cluster, selfProvider on) → Scoreboard (selfProvider off, `relationshipMode -1`, `depth 4`, `subMode resourceKindAll`) wired by one `widgetInteractions` entry; `dashboardNavigations` stays empty. Proven in the UI on a cluster-scoped kind; `docs/assets/dashboard.interaction-working.json`. Builder emits it (`scoreboard_receiver`, `object_list_pinned`). **Open:** (1) whether depth 4 reaches host-scoped kinds (pNIC is cluster → host → pNIC) — `dist/dashboards/rapid-receiver-probe.zip` answers it; (2) the *generic* cluster-list provider — the export is pinned to one cluster by MoRef, which only resolves on the system it came from. Needs one more UI export with the Object List rooted at vSphere World / vCenter filtered to Cluster Compute Resource |
+## Proposed, not started
+
+| Item | Why it is not done |
+|---|---|
+| Drop `Actual`/`Raw` duplicate metrics | ~50 metrics, identical to their base in every observed pair. Changes what is emitted, so it wants a deliberate go-ahead rather than a drive-by. |
+| Derived error ratios | 4 errors against 1M packets is noise; against 1K it is a fire. Compute `*PerMillionPackets` in the adapter where both numerator and denominator are already in hand. |
+| **Namespace metric keys into a tree** | **Breaking — a major version.** 989 keys, 207 view columns. Operations renders `\|` as a tree node, so `Network\|pNIC\|Errors\|RX missed` would fan a flat list into browsable branches, and policies could then enable a whole branch at once. But the key IS the series identity: renaming orphans all collected history and breaks any customer dashboard, symptom or super metric built on the old keys. |
+| Restructure into fewer top-level branches | Depends on the row above; cosmetic in the guide, structural if done via keys. |
+| Pick a better default throughput unit | `DATA_RATE` holds bits and bytes, binary and decimal. **[unverified]** whether Operations converts across bit/byte within the family or only within one subtype. Check in the UI before changing anything. |
+| Convert the other 74 schema-permille metrics | See the entry at the end of this file. They all read `0.0` in this lab, so acting on the schema alone would be faith rather than verification. |
+
+### Done since this table was last honest
+
+Removed rather than left as pending, with what proved it:
+
+- **Object-name overwrite** — fixed; 0 MoRef-named objects in the lab.
+- **Per-mille to percent** — implemented and wired (`perfsvc.py`, `to_percent` at the gauge write).
+- **Per-family collection toggles** — shipped in 1.4.6 as `Metrics to collect`; 33 of 69 kinds, 443 of 1636 metrics by default.
+- **Real EULA** — `eula.txt` carries the actual agreement, not the scaffold placeholder.
+- **Rapid vSAN Network** — ships, along with DOM, ESA Write Path, Host Resources, Overview, Resync and Storage.
+- **`TextDisplay` inline body** — works; the field is `editorData`, not `description`. Bodies of 10k-29k characters render on all seven dashboards.
+- **`TextDisplay` `locationUrl`** — moot. Inline bodies are used instead, so the `text/plain` + `nosniff` question never needed answering.
+- **Cluster selector on rapid dashboards** — present on 7 of 7.
 
 ### Rapid dashboards — the full set
 
-Designed in `content/DASHBOARDS.md`, blocked on the Scoreboard binding probe.
-Once that is confirmed, each is roughly twenty minutes: the panel selection and
-thresholds are already decided, only the widget envelope was wrong.
+Designed in `content/DASHBOARDS.md`. The Scoreboard binding that blocked these
+is confirmed and shipping on all seven dashboards, so the remaining two are
+roughly twenty minutes each: panel selection and thresholds are already
+decided, only the widget envelope was ever wrong.
 
 A *rapid* dashboard answers "is this subsystem bad right now?" across every
 object at once. Not root cause. Built from **error, loss and congestion**
@@ -38,7 +52,7 @@ screen exists to catch.
 
 | # | Dashboard | State | Signals |
 |---|---|---|---|
-| 1 | **Rapid vSAN Network** | panels chosen, generator written | pNIC hardware errors (`rxCrcErr`, `rxFrmErr`, `rxLgtErr`, `rxOvErr`, `rxFifoErr`, `txCarErr`, `txWinErr`, `txHeartErr`, `txAbortErr`), ring overrun (`rxMissErr`), drop rates (`portRxDrops`, `portTxDrops`, `rxPacketsLossRate`, `txPacketsLossRate`, `ioChain*drops`), fabric backpressure (`pauseCount`, `pfcCount`), TCP health (`tcpRcvoopackRate`, `tcpTxRexmitRate`, `tcpRcvdupackRate`, `tcpRxErrRate`) |
+| 1 | **Rapid vSAN Network** | **SHIPPED** | pNIC hardware errors (`rxCrcErr`, `rxFrmErr`, `rxLgtErr`, `rxOvErr`, `rxFifoErr`, `txCarErr`, `txWinErr`, `txHeartErr`, `txAbortErr`), ring overrun (`rxMissErr`), drop rates (`portRxDrops`, `portTxDrops`, `rxPacketsLossRate`, `txPacketsLossRate`, `ioChain*drops`), fabric backpressure (`pauseCount`, `pfcCount`), TCP health (`tcpRcvoopackRate`, `tcpTxRexmitRate`, `tcpRcvdupackRate`, `tcpRxErrRate`) |
 | 2 | **Rapid vSAN Backpressure** | designed | congestion by type (`congestion`, `readCongestion`, `writeCongestion`, `unmapCongestion`, `recoveryWriteCongestion`, `segCleanerUnmapCongestion`), contention vs resync (`componentCongestion`, `sharedCongestion`, `resyncReadCongestion`), RDT pressure (`txSbSpaceMin`, `rxSbSpaceMin`, `txCtxQMax`, `txQLatAvg`, `numReadyDelay`, `kaReset`) |
 | 3 | **Rapid vSAN Disk** | designed | **not** error-based -- there are no disk error counters anywhere in the Performance Service. Detects a sick device by latency behaviour: service-time outliers (`maxReadTimePerf`, `maxWriteTimePerf`, `maxReadTimeCapacity`, `maxWriteTimeCapacity`), device-vs-guest divergence (`latencyDevDAvg` vs `latencyDevGAvg`, `latencyDevKAvg`), physical-vs-vSAN-layer latency, queue depth (`outstandingCmdCount`) |
 
@@ -106,10 +120,6 @@ roughly 30x per instance. The first constraint at a large site is more likely
 is 315 objects on four hosts and scales per host. Per-family collection
 toggles (already on this backlog) are the lever for that.
 
-**Blocking all dashboard work:** the lab still runs **1.1.9**, which collects
-nothing (`ObjectKeyAlreadyExistsException`, fixed in 1.2.0). With zero
-`VsanPnic` objects the panels cannot render, so a correct dashboard and a
-broken one look identical. Install 1.2.0 before drawing any conclusion.
 
 
 Work not done, roughly in the order it becomes worth doing. Items move out of
