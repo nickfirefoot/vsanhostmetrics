@@ -163,6 +163,15 @@ UNIT_OVERRIDE = {
 }
 
 OVERRIDE = {
+    # Official name is "Space Efficiency Ratio", which is accurate and gives a
+    # reader no way to interpret the number. The value is a ratio SCALED BY
+    # 100: 132 means 1.32:1, not 132%. There is no unit that says this --
+    # aria.ops Ratio has only PERCENT, and declaring that would render "132 %",
+    # which is simply false -- so the scale goes in the name, where someone
+    # looking at a column of bare integers will actually see it.
+    # Verified against the lab: used 3.37TB + saved 1.10TB over used 3.37TB
+    # = 1.326, reported as 132.
+    "dedupRatio": "Space Efficiency Ratio (100 = 1.00x)",
     # Official name is "pNIC RX Missed Error", which does not say what was
     # missed. The NIC ring buffer had no free descriptor, so the packet was
     # dropped before the driver ever saw it -- distinct from rxDrp (dropped

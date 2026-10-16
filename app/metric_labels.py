@@ -110,7 +110,7 @@ LABELS: Dict[str, str] = {
     'dedupEngineWriteCount': 'Deduplication Write IO Count',
     'dedupHashReadCount': 'Deduplication Hash Object Read IO Count',
     'dedupHashWriteCount': 'Deduplication Hash Object Write IO Count',
-    'dedupRatio': 'Space Efficiency Ratio',
+    'dedupRatio': 'Space Efficiency Ratio (100 = 1.00x)',
     'deleteCongestion': 'vSAN Layer Delete Congestion',
     'deltaLeafGTEs': 'Delta leaf gt es',
     'deltaSourceChanges': 'Delta source changes',
