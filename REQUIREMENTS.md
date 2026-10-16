@@ -196,7 +196,8 @@ Verified end-to-end 2026-09-23 against `example.com`.
    si,c,m=perfsvc.connect(os.environ['VC_HOST'],os.environ['VC_USER'],os.environ['VC_PASS'],False);\
    o,p=perfsvc.collect(m['vsan-performance-manager'],c[0]);print(len(o),'objects',len(p),'problems')"
    ```
-   Expect **847 objects, 0 problems** on a 4-host cluster; any cluster should
+   Expect **500-850 objects, 0 problems** on a 4-host cluster -- the spread is VM
+count, since the VM-scoped kinds dominate; any cluster should
    return hundreds and zero problems. Zero objects raises `PerfSvcError`
    deliberately rather than reporting an empty success
 4. SDK project: the repository root is the project, generated once by

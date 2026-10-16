@@ -189,7 +189,8 @@ The first collection carries data — there is no warm-up. An empty first cycle
 is a fault, not the design.
 
 Expect roughly **210 objects per host**, plus per-VM and per-disk objects; a
-four-host cluster produces 847 across 31 resource kinds. Names must be real
+four-host cluster produces 500-850 objects depending on VM count, across 33 of
+the 69 resource kinds at the default metric scope. Names must be real
 (`esxi01.example.com [vmnic0]`, `NVMe Micron 7450 MTFDKCB1T9TFR FCD8154… (esxi03.example.com)`),
 never bare UUIDs.
 
