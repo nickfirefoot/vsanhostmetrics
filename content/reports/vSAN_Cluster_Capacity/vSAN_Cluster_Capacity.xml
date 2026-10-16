@@ -101,7 +101,7 @@
                                     </Property>
                                     <Property name="sortCriteria" value="false" />
                                     <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="Space Efficiency Ratio" />
+                                    <Property name="displayName" value="Space Efficiency Ratio (100 = 1.00x)" />
                                     <Property name="addTimestampAsColumn" value="false" />
                                     <Property name="isShowRelativeTimestamp" value="false" />
                                 </Value>

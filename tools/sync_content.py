@@ -32,20 +32,27 @@ def main() -> int:
     # pinned GUID as its replacement, and a pak shipping two views under one
     # identity is a defect nothing downstream would catch.
     generated = {os.path.basename(x)[:-4] for x in glob.glob(f"{OUT}/*.xml")}
-    for d in sorted(glob.glob(f"{proj}/content/reports/*/")):
-        name = os.path.basename(d.rstrip("/"))
-        if name not in generated:
-            shutil.rmtree(d)
-            print(f"  removed orphaned view directory {name}")
+    for root in (REPO, proj):
+        for d in sorted(glob.glob(f"{root}/content/reports/*/")):
+            name = os.path.basename(d.rstrip("/"))
+            if name not in generated:
+                shutil.rmtree(d)
+                print(f"  removed orphaned view directory {name}")
 
+    # Views land in the REPO first. Since the CI workflow builds the pak from
+    # the checkout, content/reports/ in this repository is what ships -- the
+    # project tree is only still written for hand builds. Updating only the
+    # project tree, as this did, meant a regenerated view reached the local
+    # build and never the released pak.
     views = 0
     for xml in sorted(glob.glob(f"{OUT}/*.xml")):
         name = os.path.basename(xml)[:-4]
         if name.endswith(".content") or name == "ALL_VIEWS":
             continue                           # a bundle, not a view
-        d = f"{proj}/content/reports/{name}"
-        os.makedirs(d, exist_ok=True)
-        shutil.copy2(xml, f"{d}/{name}.xml")
+        for root in (REPO, proj):
+            d = f"{root}/content/reports/{name}"
+            os.makedirs(d, exist_ok=True)
+            shutil.copy2(xml, f"{d}/{name}.xml")
         views += 1
 
     # Iterate the GENERATED dashboards, not the repo's existing directories.

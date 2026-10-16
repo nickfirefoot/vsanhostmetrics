@@ -411,6 +411,14 @@ VIEWS = [
 # Where no official name exists the derived fallback is sometimes wrong or
 # useless. Each entry states why; keep the list short.
 OVERRIDE = {
+    # The official name is "Space Efficiency Ratio", which is correct and
+    # leaves a reader no way to read the number. The value is a ratio SCALED
+    # BY 100 -- 132 means 1.32:1, not 132% -- and no unit can say so, because
+    # aria.ops Ratio has only PERCENT and declaring it would render "132 %".
+    # Verified in the lab: (used 3.37TB + saved 1.10TB) / used = 1.326, and
+    # the metric reports 132. label_for() prefers the SCHEMA name over
+    # metric_labels, so the override has to live here to reach the column.
+    ("VsanClusterCapacity", "dedupRatio"): "Space Efficiency Ratio (100 = 1.00x)",
     # the derived name says "Cluster" -- but this view's subject is the
     # PER-HOST kind, so the label would assert the wrong scope
     ("VsanRdtLatency", "maxLatency"): "RDT Network Host Max Latency",
