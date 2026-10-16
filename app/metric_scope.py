@@ -2,7 +2,7 @@
 
 Regenerate with tools/gen_metric_scope.py after changing tools/build_view.py.
 
-69 kinds, 1636 metrics defined; 443 referenced by views; 1193 not.
+69 kinds, 1636 metrics defined; 451 referenced by views; 1185 not.
 36 kinds are referenced by no view at all and can be skipped
 entirely, which is the only thing that saves a round trip -- the vSAN perf API
 returns every metric of an entity type in one query.
@@ -126,6 +126,7 @@ COVERED = {
         "minLatency",
         "numReadyDelay",
         "rxSbSpaceMin",
+        "txCtxQMax",
         "txQLatAvg",
         "txSbSpaceMin",
     ),
@@ -212,6 +213,7 @@ COVERED = {
         "oio",
     ),
     "VsanHostDomcompmgr": (
+        "componentCongestion",
         "iopsRead",
         "iopsWrite",
         "latencyAvgRead",
@@ -221,6 +223,8 @@ COVERED = {
         "latencyStddevWrite",
         "namespaceDispatchedCostWrite",
         "oio",
+        "resyncReadCongestion",
+        "sharedCongestion",
         "throughputRead",
         "throughputWrite",
         "vmdiskDispatchedCostWrite",
@@ -257,6 +261,8 @@ COVERED = {
         "owner2PCCommitLatencyAvgUs",
         "readLeafOwnerLatencyLocal",
         "readLeafOwnerLatencyRemote",
+        "recoveryWriteCongestion",
+        "segCleanerUnmapCongestion",
         "segCleanerUnmapLeafOwnerMaxLatencyAvgUs",
         "serverSwitchCount",
         "throughputSegCleanerUnmap",
@@ -438,6 +444,7 @@ COVERED = {
         "numReadyDelay",
         "rxSbSpaceMax",
         "rxSbSpaceMin",
+        "txCtxQMax",
         "txQLatAvg",
         "txQLatMax",
         "txSbSpaceMin",
@@ -492,6 +499,7 @@ COVERED = {
         "minLatency",
         "numReadyDelay",
         "rxSbSpaceMin",
+        "txCtxQMax",
         "txQLatAvg",
         "txQLatMax",
         "txSbSpaceMin",

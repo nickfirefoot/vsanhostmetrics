@@ -48,9 +48,22 @@ def main() -> int:
         shutil.copy2(xml, f"{d}/{name}.xml")
         views += 1
 
+    # Iterate the GENERATED dashboards, not the repo's existing directories.
+    # Keyed on the repo the other way round, a dashboard added to build_dash.py
+    # has no directory yet, so it is silently skipped and never ships -- which
+    # is exactly what happened the first time Rapid vSAN Backpressure was built.
     dash = 0
-    for src in sorted(glob.glob(f"{REPO}/content/dashboards/*/")):
-        name = os.path.basename(src.rstrip("/"))
+    # Named from build_dash.DASHBOARDS, the source of truth -- NOT by globbing
+    # the output directory. ~/ops-content/out accumulates one-off artefacts
+    # like "Rapid_vSAN_Network-1.4.4-reimport.zip", and a prefix match on
+    # "Rapid_" shipped that as a ninth, duplicate dashboard.
+    sys.path.insert(0, os.path.join(REPO, "tools"))
+    sys.path.insert(0, os.path.join(REPO, "app"))
+    import build_dash
+    generated_dash = [n.replace(" ", "_") for n, _h, _p in build_dash.DASHBOARDS]
+    for name in generated_dash:
+        src = f"{REPO}/content/dashboards/{name}/"
+        os.makedirs(src, exist_ok=True)
         zp = f"{OUT}/{name}.zip"
         if not os.path.exists(zp):
             print(f"  WARNING: no generated {name}.zip; leaving the "

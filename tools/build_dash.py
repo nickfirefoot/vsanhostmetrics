@@ -67,7 +67,7 @@ DASHBOARDS = [
         ("Coordination - the owner",      "vSAN_Cluster_DOM_Owner",             {"w":12,"x":1,"h":6,"y":12}),
         ("Back end - the disks",          "vSAN_Cluster_DOM_Component_Manager", {"w":12,"x":1,"h":6,"y":18}),
         ("Transport - RDT",               "vSAN_Cluster_RDT",                   {"w":12,"x":1,"h":6,"y":24}),
-        ("Host health and load",          "vSphere_Host_Uplinks_and_Load",      {"w":12,"x":1,"h":6,"y":30}),
+        ("Host health and load",          "vSAN_Host_Uplinks_and_Load",      {"w":12,"x":1,"h":6,"y":30}),
     ]),
     # TCP sits BELOW the NIC panels, moved on review. The screen now reads
     # strictly top down through the layers that carry vSAN traffic: vSAN's own
@@ -81,7 +81,7 @@ DASHBOARDS = [
         ("vmknic - the kernel port",      "vSAN_vmknic",                 {"w":12,"x":1,"h":7,"y":26}),
         ("Host network - all vSAN",       "vSAN_Host_Network",           {"w":12,"x":1,"h":7,"y":33}),
         ("TCP error types",               "vSAN_Host_TCP_Health",        {"w":12,"x":1,"h":8,"y":40}),
-        ("Every uplink - from vCenter",   "vSphere_Host_Uplinks_and_Load", {"w":12,"x":1,"h":7,"y":48}),
+        ("Every uplink - from vCenter",   "vSAN_Host_Uplinks_and_Load", {"w":12,"x":1,"h":7,"y":48}),
         ("CMMDS - cluster membership",    "vSAN_CMMDS_Network",          {"w":12,"x":1,"h":7,"y":55}),
     ]),
     ("Rapid vSAN Storage", "rapid-vsan-storage-help", [
@@ -100,6 +100,20 @@ DASHBOARDS = [
         ("Per host - owner",              "vSAN_Host_DOM_Owner",                {"w":12,"x":1,"h":8,"y":27}),
         ("Per host - component manager",  "vSAN_Host_DOM_Component_Manager",    {"w":12,"x":1,"h":8,"y":35}),
         ("Owner network scheduler",       "vSAN_Host_DOM_Owner_Scheduler",      {"w":12,"x":1,"h":8,"y":43}),
+    ]),
+    # Congestion is a CONTROL signal, not an error, so this screen is ordered by
+    # blast radius rather than severity: cluster, then host, then the transport
+    # underneath both. The RDT panels sit at the bottom deliberately -- every
+    # layer above reports congestion when the transport is starved, so reading
+    # upward from there prevents the commonest misdiagnosis.
+    ("Rapid vSAN Backpressure", "rapid-vsan-backpressure-help", [
+        ("Cluster - front end congestion", "vSAN_Cluster_DOM_Client",            {"w":10,"x":3,"h":6,"y":1}),
+        ("Cluster - owner congestion",     "vSAN_Cluster_DOM_Owner",             {"w":12,"x":1,"h":6,"y":7}),
+        ("Back end - device vs host",      "vSAN_Host_DOM_Component_Manager",    {"w":12,"x":1,"h":8,"y":13}),
+        ("Owner - reclaim and rebuild",    "vSAN_Host_DOM_Owner",                {"w":12,"x":1,"h":8,"y":21}),
+        ("Is vSAN throttling itself?",     "vSAN_Host_DOM_Owner_Scheduler",      {"w":12,"x":1,"h":8,"y":29}),
+        ("Transport - cluster",            "vSAN_Cluster_RDT",                   {"w":12,"x":1,"h":6,"y":37}),
+        ("Transport - per host",           "vSAN_RDT_Transport_Per_Host",        {"w":12,"x":1,"h":8,"y":43}),
     ]),
     ("Rapid vSAN Resync", "rapid-vsan-resync-help", [
         ("Jobs outstanding - the risk",   "vSAN_Cluster_Resync_Jobs",           {"w":10,"x":3,"h":8,"y":1}),
@@ -121,9 +135,9 @@ DASHBOARDS = [
     # current value and no retained history, and a view queries a time range.
     # What survived of it folded into the vCenter host view below.
     ("Rapid vSAN Host Resources", "rapid-vsan-host-resources-help", [
-        ("Host health and load",          "vSphere_Host_Uplinks_and_Load", {"w":10,"x":3,"h":7,"y":1}),
+        ("Host health and load",          "vSAN_Host_Uplinks_and_Load", {"w":10,"x":3,"h":7,"y":1}),
         ("vSAN daemon memory",            "vSAN_Host_Memory",              {"w":12,"x":1,"h":8,"y":8}),
-        ("Physical CPU - per pCPU",       "vSAN_Host_CPU",                 {"w":12,"x":1,"h":8,"y":16}),
+        ("vSAN CPU - is it starved?",       "vSAN_Host_CPU",                 {"w":12,"x":1,"h":8,"y":16}),
     ]),
 ]
 

@@ -1809,3 +1809,19 @@ objects do not exist, which is exactly the vSAN MP case above.
 takes no credentials of its own -- current Operations drives vSAN collection
 from the vCenter adapter instance -- so look for the toggle on that account
 rather than adding an integration.
+
+## recoveryWriteCongestion carries a label that contradicts its id (2026-10-16)
+
+The Performance Service's official name for `recoveryWriteCongestion` is
+**"Resync Read Congestions"**. The id says recovery WRITE; the label says resync
+READ. They cannot both be right, and `resyncReadCongestion` already exists as a
+separate metric on `VsanHostDomcompmgr`, so the label is not merely a loose
+synonym -- it collides with a different metric's meaning.
+
+Reproduced rather than corrected, because the label is Broadcom's and this pack
+uses their naming wherever they publish it. The column help on Rapid vSAN
+Backpressure says so on the screen rather than leaving a reader to trust a name
+that is probably wrong.
+
+To settle it: drive a rebuild, and watch whether `recoveryWriteCongestion`
+tracks write congestion or read congestion. One rebuild answers it.

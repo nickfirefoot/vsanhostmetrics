@@ -103,6 +103,31 @@ INTRO = {
      "and throttles rebuild traffic to protect guest IO. The band counters say whether it is "
      "intervening, which nothing else here can show."]),
  ],
+ "Rapid vSAN Backpressure": [
+   ("Backpressure &mdash; is vSAN throttling itself, and which layer is doing it?",
+    ["Congestion is vSAN telling you it has deliberately slowed something down to protect "
+     "itself. It is not an error and it is not a failure &mdash; it is a control signal, and "
+     "the useful question is never <b>is there congestion</b> but <b>which layer raised it "
+     "and why</b>.",
+     "<b>Read this screen top down.</b> The cluster tables say whether the whole cluster is "
+     "under pressure. The per-host tables say whether it is one host. The RDT tables at the "
+     "bottom say whether the problem is the network transport rather than the storage at "
+     "all &mdash; which is the single most commonly misdiagnosed case, because every layer "
+     "above reports congestion when the transport underneath is starved.",
+     "<b>The congestion TYPE is the diagnosis.</b> Read congestion and write congestion "
+     "point at different causes and different fixes. Unmap congestion is space reclamation "
+     "competing with guest IO. Resync read congestion means rebuild traffic is the source, "
+     "which is usually correct behaviour and self-clearing &mdash; the cluster is choosing "
+     "redundancy over latency, and it will stop when the rebuild does.",
+     "<b>Component congestion against shared congestion is the host-versus-device call.</b> "
+     "Component congestion isolated to one object points at a device; shared congestion "
+     "across a host points at the host. Acting on the wrong one replaces healthy hardware.",
+     "On the RDT tables, <b>kaReset deserves attention out of proportion to its size</b>. "
+     "Keepalive resets mean the transport dropped and re-established, and they survive a NIC "
+     "that looks perfectly healthy on every error counter. Small buffer minima "
+     "(txSbSpaceMin, rxSbSpaceMin) next to a rising queue latency is the signature of a "
+     "transport running out of room rather than a disk running slow."]),
+ ],
  "Rapid vSAN Resync": [
    ("Resync &mdash; how much risk is outstanding, and who is paying for it?",
     ["A resync means some data is below the redundancy its policy asks for. Two questions "

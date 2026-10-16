@@ -106,6 +106,7 @@ VIEWS = [
         ("throughputRecWrite", "", "MAX"), ("latencyAvgRecWrite", "", "MAX"),
     ]),
     ("vSAN Cluster RDT", "VsanClusterRdtLatency", [
+        ("txCtxQMax", "", "MAX"),
         ("avgLatency", "", "MAX"), ("maxLatency", "", "MAX"), ("minLatency", "", "MIN"),
         ("txQLatAvg", "", "MAX"), ("txSbSpaceMin", "", "MIN"), ("rxSbSpaceMin", "", "MIN"),
         ("kaReset", "", "CURRENT"), ("numReadyDelay", "", "CURRENT"),
@@ -159,6 +160,7 @@ VIEWS = [
         ("tcpErrs",               "",        "CURRENT"),
     ]),
     ("vSAN RDT Transport Per Host", "VsanRdtLatency", [
+        ("txCtxQMax", "", "MAX"),
         ("avgLatency",    "", "MAX"),
         ("maxLatency",    "", "MAX"),
         ("minLatency",    "", "MIN"),
@@ -222,7 +224,13 @@ VIEWS = [
         ("iopsRecWrite", "", "MAX"),
         ("iopsWrite", "", "MAX"),
     ]),
+    # segCleanerUnmapCongestion and recoveryWriteCongestion added for Rapid
+    # vSAN Backpressure. NOTE: recoveryWriteCongestion carries the official
+    # label "Resync Read Congestions", which contradicts its id -- recorded in
+    # BACKLOG.md rather than silently renamed, because the label is Broadcom's.
     ("vSAN Host DOM Owner", "VsanHostDomowner", [
+        ("segCleanerUnmapCongestion", "", "MAX"),
+        ("recoveryWriteCongestion", "", "MAX"),
         ("latencyAvgWrite", "", "MAX"), ("latencyMaxWrite", "", "MAX"),
         ("latencyStddevWrite", "", "MAX"),
         ("latencyAvgRead", "", "MAX"), ("latencyMaxRead", "", "MAX"),
@@ -254,7 +262,14 @@ VIEWS = [
     ]),
     # Per-host back end. Only the cluster aggregate was on a screen, which
     # cannot answer "which host's disks are slow".
+    # componentCongestion, sharedCongestion and resyncReadCongestion added for
+    # Rapid vSAN Backpressure: they separate "this component is the bottleneck"
+    # from "the whole host is" from "rebuild traffic is doing it", which is the
+    # distinction that decides whether to act on a disk, a host, or to wait.
     ("vSAN Host DOM Component Manager", "VsanHostDomcompmgr", [
+        ("componentCongestion", "", "MAX"),
+        ("sharedCongestion", "", "MAX"),
+        ("resyncReadCongestion", "", "MAX"),
         ("latencyAvgRead", "", "MAX"), ("latencyMaxRead", "", "MAX"),
         ("latencyAvgWrite", "", "MAX"), ("latencyMaxWrite", "", "MAX"),
         ("latencyStddevWrite", "", "MAX"),
@@ -321,6 +336,7 @@ VIEWS = [
         ("portRxDrops", "", "MAX"), ("portTxDrops", "", "MAX"),
     ]),
     ("vSAN vmknic RDT Latency", "VsanVnicRdtLatency", [
+        ("txCtxQMax", "", "MAX"),
         ("avgLatency", "", "MAX"), ("maxLatency", "", "MAX"),
         ("minLatency", "", "MIN"),
         ("txQLatAvg", "", "MAX"), ("txQLatMax", "", "MAX"),
