@@ -375,6 +375,25 @@ same counter" will be asked again.
 
 **The counters are not vSAN's.** vCenter's `alarm-261`, "High pNic error rate
 detected", is an OR of sixteen expressions: eight event types at yellow and red.
+Read from the alarm definition on `vc01` 2026-10-19 rather than inferred -- the
+eight, all `vsan.health.test.diagnostics.pnic.<name>.event`:
+
+| event name | counter | on the pNIC view |
+|---|---|---|
+| `rxcrcerr` | `rxCrcErr` | yes |
+| `rxerr` | `rxErr` | yes |
+| `rxmisserr` | `rxMissErr` | yes |
+| `rxoverr` | `rxOvErr` | yes |
+| `rxfifoerr` | `rxFifoErr` | yes |
+| `txerr` | `txErr` | yes |
+| `txcarerr` | `txCarErr` | yes |
+| `pausecount` | `pauseCount` | yes |
+
+All eight are modelled, collected at the default metric scope, and on the view,
+so Rapid vSAN Network shows the whole set the alarm fires on.
+
+Note the event prefix: these are vSAN HEALTH TEST events, not raw vCenter
+counters, which is the mechanism behind the next paragraph.
 Seven of the eight map to ordinary driver error fields present on **every**
 uplink in the estate, measured 15 of 15 including USB adapters and non-vSAN
 Intel uplinks. Only `pausecount` is unavailable through esxcli. So neither the
