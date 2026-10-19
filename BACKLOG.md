@@ -17,7 +17,7 @@ shipped, and opened by saying the lab ran 1.1.9 when it runs 1.4.6.
 
 | Item | Why it is not done |
 |---|---|
-| Drop `Actual`/`Raw` duplicate metrics | ~50 metrics, identical to their base in every observed pair. Changes what is emitted, so it wants a deliberate go-ahead rather than a drive-by. |
+| Drop `Actual` duplicates | `Actual` only. `perfsvc.metrics_for` already drops every `<name>Actual` whose `<name>` exists, so this is about the describe surface rather than collection. |
 | Derived error ratios | 4 errors against 1M packets is noise; against 1K it is a fire. Compute `*PerMillionPackets` in the adapter where both numerator and denominator are already in hand. |
 | **Namespace metric keys into a tree** | **Breaking — a major version.** 989 keys, 207 view columns. Operations renders `\|` as a tree node, so `Network\|pNIC\|Errors\|RX missed` would fan a flat list into browsable branches, and policies could then enable a whole branch at once. But the key IS the series identity: renaming orphans all collected history and breaks any customer dashboard, symptom or super metric built on the old keys. |
 | Restructure into fewer top-level branches | Depends on the row above; cosmetic in the guide, structural if done via keys. |
@@ -1825,3 +1825,44 @@ that is probably wrong.
 
 To settle it: drive a rebuild, and watch whether `recoveryWriteCongestion`
 tracks write congestion or read congestion. One rebuild answers it.
+
+
+## `Raw` is NOT a duplicate of its base, and nearly deleting it (2026-10-19)
+
+This backlog said "Drop `Actual`/`Raw` duplicate metrics -- identical to their
+base in every observed pair". The `Raw` half of that is **wrong**, and wrong in
+the direction that loses data.
+
+The base counter is a **per-mille RATE over the sample interval**. The `Raw`
+twin is the **cumulative count since the NIC last reset**. They are different
+quantities, and Broadcom's own label says so: `pauseCount` is "pNic 802.3x
+Pause **Rate**".
+
+Measured across every pNIC object in the lab -- 72 Raw/base pairs:
+
+    identical : 68
+    differ    :  4
+
+and the 68 are identical only because BOTH ARE 0.0. Sampling quiet counters and
+concluding "duplicate" is the mistake. The four that differ are precisely the
+ones where something happened:
+
+    esxi03 vmnic2   rxMissErr    rate 0.0  ->  raw 43429
+    esxi04 vmnic0   pauseCount   rate 0.0  ->  raw  5373
+    esxi01 vmnic0   pauseCount   rate 0.0  ->  raw  3970
+    esxi03 vmnic0   pauseCount   rate 0.0  ->  raw  2706
+
+**Do not drop `Raw`.** The pair is the diagnosis: a zero rate beside a large
+cumulative says "this happened in bursts and is not happening now", which no
+single number conveys. It is also what reconciled the disagreement with the
+netstats pack -- vSAN health firing at 1-3 per mille on five-minute samples
+while the lifetime delta averaged 0.0027 per mille, 370 to 1,100x the weekly
+mean, because a rate spikes where a cumulative average flattens.
+
+### Incidental finding: pause frames HAVE occurred here
+
+`pauseCountRaw` is non-zero on vmnic0 of three hosts. Pause frames are real on
+this fabric, not hypothetical -- which sharpens the open "pause frames are
+undirected" entry above, because we still cannot say whether those thousands of
+frames were SENT by the host or RECEIVED from the switch, and that is the
+difference between our problem and the network team's.
