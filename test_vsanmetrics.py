@@ -263,6 +263,48 @@ def test_real_exposition_round_trips_with_nothing_dropped():
     assert len({k.family for k in objs}) == len(vm.MODEL.FAMILIES)
 
 
+def test_help_panel_text_never_lands_on_the_theme_colour():
+    """Every help-panel text node sits on a background the panel controls.
+
+    This is the gate that three broken releases lacked. Both shipped defects
+    are caught here: 1.4.6 set color:#ffffff with no background (invisible on a
+    light dashboard) and 1.4.7-rc.3 set no colour at all and inherited
+    (invisible on a dark one, because the TextDisplay widget hands down no
+    usable foreground).
+
+    Counting hex values and expecting none is NOT a valid check -- it fails a
+    correct self-contained card, whose background is supposed to be there, and
+    it passes a panel that sets nothing. Contrast is a property of a PAIR, so
+    this resolves each foreground against its nearest ancestor background.
+    Measured against the two shipped defects: 1249 and 1568 failing nodes.
+    """
+    sys.path.insert(0, "tools")
+    import check_contrast as cc
+
+    panels = list(cc.sources([]))
+    assert panels, "no text panels found -- this test would prove nothing"
+
+    worst, nodes, uncontrolled = 99.0, 0, []
+    for label, markup in panels:
+        w = cc.Walker()
+        w.feed(markup)
+        for text, fg, bg in w.nodes:
+            nodes += 1
+            if fg is None or bg is None:
+                uncontrolled.append(f"{label}: {text!r} fg={fg} bg={bg}")
+                continue
+            worst = min(worst, cc.contrast(fg, bg))
+
+    assert not uncontrolled, (
+        f"{len(uncontrolled)} text nodes depend on the theme's colour; "
+        f"first: {uncontrolled[0]}")
+    assert nodes > 1000, nodes
+    # 4.5:1 is the WCAG AA bar for body text. It is reachable only because the
+    # panel supplies its own background; no fixed foreground clears it on both
+    # a white and a dark dashboard (luminance must be <=0.1833 and >=0.2243).
+    assert worst >= 4.5, f"worst pairing {worst:.2f}:1 is below 4.5:1"
+
+
 if __name__ == "__main__":
     fails = 0
     for name, fn in sorted(globals().items()):
