@@ -32,16 +32,37 @@ import build_help_html                                   # noqa: E402
 OUT = os.path.expanduser("~/ops-content/out/help")
 NOTES = build_help_html.NOTES
 
-FG = "#ffffff"
-ACCENT = "#8fd3ff"
-RULE = "#4a5a66"
+# NO HARDCODED FOREGROUND. The previous version set color:#ffffff on every
+# paragraph, heading and bold run -- 89 to 147 times per dashboard. White on a
+# dark dashboard is washed out and white on a LIGHT theme is invisible, which
+# is what it shipped as. Operations' theme is an application setting, so a
+# prefers-color-scheme media query would not track it either; inheriting is the
+# only thing that is correct in both.
+#
+# Emphasis comes from WEIGHT and TYPEFACE, not colour, and that is a measured
+# decision rather than a stylistic one. NO fixed colour clears 4.5:1 against
+# both a white and a dark dashboard -- computed against #ffffff, #1b1b1b and
+# #2a3038:
+#
+#   #1a73e8   4.51 / 3.82 / 2.95     #4a9eff   2.75 / 6.25 / 4.83
+#   #1f6feb   4.63 / 3.72 / 2.87     #8fd3ff   1.62 /10.60 / 8.19
+#
+# Anything dark enough for white is too dark for dark, and the reverse. So the
+# only honest answer is to inherit. Metric names get a monospace face instead,
+# which distinguishes them in any theme and suits them better anyway -- they
+# are identifiers, not prose.
+#
+# RULE stays because a translucent grey border tints toward whatever is behind
+# it and so is safe on both.
+RULE = "rgba(128,128,128,0.35)"
+MONO = "ui-monospace,SFMono-Regular,Menlo,Consolas,monospace"
 WRAP = ("font-family:'Metropolis','Segoe UI',sans-serif;font-size:13px;"
-        f"color:{FG};padding:6px 12px")
-H2 = f"font-size:15px;color:{FG};margin:4px 0 10px 0"
-H3 = (f"font-size:13px;color:{FG};margin:16px 0 6px 0;"
+        "padding:6px 12px")
+H2 = "font-size:15px;font-weight:700;margin:4px 0 10px 0"
+H3 = (f"font-size:13px;font-weight:700;margin:16px 0 6px 0;"
       f"border-bottom:1px solid {RULE};padding-bottom:3px")
-P = f"margin:5px 0;line-height:1.45;color:{FG}"
-NAME = f"font-weight:600;color:{ACCENT}"
+P = "margin:5px 0;line-height:1.45"
+NAME = f"font-weight:600;font-family:{MONO}"
 
 # The narrative each screen needs and no metric list can supply: what question
 # the screen answers, and what "normal" looks like on it.
@@ -183,14 +204,14 @@ INTRO = {
 
 def panel_block(panel_title, view_title, kind, columns):
     out = [f'<h3 style="{H3}">{html.escape(panel_title)}</h3>']
-    out.append(f'<p style="{P}">Renders the <b style="color:{FG}">'
+    out.append(f'<p style="{P}">Renders the <b style="font-weight:700">'
                f'{html.escape(view_title)}</b> view.</p>')
     for key, _unit, _tr in columns:
         label = build_view.label_for(kind, key)
         note = NOTES.get(key)
         if not note:
             raise SystemExit(f"no explanation written for {kind}/{key}")
-        note = note.replace("<b>", f'<b style="color:{FG};font-weight:700">')
+        note = note.replace("<b>", '<b style="font-weight:700">')
         out.append(f'<p style="{P}"><span style="{NAME}">{html.escape(label)}'
                    f'</span> &mdash; {note}</p>')
     return out
@@ -207,7 +228,7 @@ def main() -> None:
         for heading, paras in intro:
             body.append(f'<h2 style="{H2}">{heading}</h2>')
             for para in paras:
-                para = para.replace("<b>", f'<b style="color:{FG};font-weight:700">')
+                para = para.replace("<b>", '<b style="font-weight:700">')
                 body.append(f'<p style="{P}">{para}</p>')
         seen = set()
         for panel_title, view_key, _coords in panels:
