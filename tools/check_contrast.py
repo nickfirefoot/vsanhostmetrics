@@ -91,6 +91,24 @@ def decl(style, prop):
     return found
 
 
+def background(style):
+    """Resolve the background, honouring declaration ORDER across properties.
+
+    `background` and `background-color` both set it, so the LAST declaration
+    wins as it does in CSS. Reading one property and falling back to the other
+    -- `decl(s,"background") or decl(s,"background-color")` -- ignores order,
+    so `background:#2b3137;background-color:#ffffff` resolved to the dark card
+    while a browser renders white. The netstats session found the same class of
+    bug within a single property; this is it across two.
+    """
+    found = None
+    for part in style.split(";"):
+        name, _, val = part.partition(":")
+        if name.strip().lower() in ("background", "background-color"):
+            found = _hex(val)
+    return found
+
+
 def opacity(style):
     """Opacity declared on this element, or 1.0."""
     for part in style.split(";"):
@@ -124,7 +142,7 @@ class Walker(html.parser.HTMLParser):
     def handle_starttag(self, tag, attrs):
         style = dict(attrs).get("style", "") or ""
         fg = decl(style, "color")
-        bg = decl(style, "background") or decl(style, "background-color")
+        bg = background(style)
         op = opacity(style)
         if tag not in self.VOID:
             self.opacities.append((tag, op))

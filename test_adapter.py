@@ -131,6 +131,37 @@ def test_vcenter_attach_is_off_by_default():
         "re-asserts foreign child lists"
 
 
+def test_committed_manifest_matches_the_last_released_tag():
+    """manifest.txt tracks the last RELEASE, not the last tag.
+
+    CI overwrites the version from the git tag before mp-build, so a published
+    pak is always labelled by its tag. The committed value only matters for a
+    HAND build, which would otherwise emit a pak labelled with a stale version
+    from current source -- two places disagreeing by discipline, which the
+    netstats session had bite them for real in an INSTALL.md.
+
+    The rule is in a workflow comment, so encode it here: the committed version
+    equals the highest non-prerelease tag. Prereleases (vX.Y.Z-rc.N) do not
+    advance it, which is why 1.4.6 is correct while rc tags carry 1.4.7.
+    """
+    import json
+    import re
+    import subprocess
+
+    version = json.load(open("manifest.txt"))["version"]
+    tags = subprocess.run(["git", "tag", "--list", "v*"],
+                          capture_output=True, text=True).stdout.split()
+    released = sorted(
+        (tuple(int(p) for p in m.group(1).split(".")) for t in tags
+         if (m := re.fullmatch(r"v(\d+\.\d+\.\d+)", t))))
+    if not released:                       # shallow clone: nothing to compare
+        return
+    expected = ".".join(str(p) for p in released[-1])
+    assert version == expected, (
+        f"manifest.txt says {version}; last released tag is {expected}. "
+        f"A hand build would mislabel the pak.")
+
+
 if __name__ == "__main__":
     fails = 0
     names = [n for n in globals() if n.startswith("test_")]
