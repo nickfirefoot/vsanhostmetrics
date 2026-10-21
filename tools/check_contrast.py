@@ -46,7 +46,26 @@ RGB = re.compile(r"rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)"
 # unresolvable rather than being guessed at.
 NAMED = {"white": "#ffffff", "black": "#000000", "red": "#ff0000",
          "silver": "#c0c0c0", "gray": "#808080", "grey": "#808080"}
-UNRESOLVABLE = "?"      # a value we refuse to score, which must fail the check
+class _Unresolvable:
+    """A colour that is PRESENT but has no computable value.
+
+    A distinct type, not a string or None, so it cannot be collapsed into
+    "absent" by a refactor. Those are different faults with different fixes:
+    absent means this element inherits, unresolvable means it declares
+    something no ratio can be computed from. Mutation-testing the probe suite
+    showed that collapsing the two kept most verdicts identical -- a gradient
+    still failed, as "declares no background" rather than "no single value".
+    Making the state unrepresentable beats asserting it in a probe.
+    """
+
+    def __repr__(self):
+        return "<unresolvable>"
+
+    def __bool__(self):
+        return True             # present, so never falsy like an absent value
+
+
+UNRESOLVABLE = _Unresolvable()
 
 
 def _hex(value):
@@ -181,6 +200,37 @@ class Walker(html.parser.HTMLParser):
             for _t, o in self.opacities:
                 eff *= o
             self.nodes.append((data.strip()[:48], fg, bg, own, eff))
+
+
+def classify(markup, bar=4.5):
+    """Return (ok, reasons) for one panel's markup.
+
+    Reasons are NAMED, not just counted, because a probe suite that asserts
+    only pass/fail certifies a belief about the verdict. Collapsing two
+    internal distinctions can keep every verdict identical while losing the
+    distinction -- a gradient failing as "declares no background" rather than
+    "no single value" is the right answer for the wrong reason, and a
+    verdict-only suite stays silent.
+    """
+    w = Walker()
+    w.feed(markup)
+    reasons = set()
+    if w.root_bg is None:
+        reasons.add("rootless")
+    elif w.root_bg == UNRESOLVABLE:
+        reasons.add("root-unresolvable")
+    for _text, fg, bg, own, eff in w.nodes:
+        if eff < 0.999:
+            reasons.add("muted")
+        elif UNRESOLVABLE in (fg, bg):
+            reasons.add("unresolvable")
+        elif fg is None or bg is None:
+            reasons.add("uncontrolled")
+        elif not own:
+            reasons.add("leaning")
+        elif contrast(fg, bg) < bar:
+            reasons.add("low-contrast")
+    return not reasons, reasons
 
 
 def panels_from_json(doc, label):

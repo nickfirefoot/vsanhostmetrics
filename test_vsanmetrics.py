@@ -334,6 +334,86 @@ def test_help_panel_text_never_lands_on_the_theme_colour():
     assert worst >= 4.5, f"worst pairing {worst:.2f}:1 is below 4.5:1"
 
 
+# (markup, expected reasons) -- the empty set means it must PASS. Each probe
+# pins the REASON, not just the verdict: a suite asserting pass/fail alone
+# certifies a belief about the verdict, and a refactor that collapses two
+# internal distinctions keeps every verdict while losing the distinction.
+# The netstats session proved that by collapsing UNRESOLVABLE into "absent"
+# and watching all 22 of their verdict-only probes still agree.
+_CARD = "background:#2b3137;color:#e9edf0"
+CONTRAST_PROBES = [
+    ("correct card",
+     f'<div style="{_CARD}"><p style="color:#e9edf0">t '
+     f'<code style="color:#8fd3ff">m</code></p></div>', set()),
+    ("named colour resolves",
+     '<div style="background:#2b3137;color:white">'
+     '<p style="color:white">t</p></div>', set()),
+    ("opaque rgb resolves",
+     '<div style="background:rgb(43,49,55);color:#e9edf0">'
+     '<p style="color:#e9edf0">t</p></div>', set()),
+    ("no card at all",
+     '<div style="padding:6px"><p style="color:#ffffff">t</p></div>',
+     {"rootless", "uncontrolled"}),
+    ("inherit everything",
+     '<div style="padding:6px"><p>t</p></div>',
+     {"rootless", "uncontrolled"}),
+    ("gradient is unresolvable, NOT absent",
+     '<div style="background:linear-gradient(#2b3137,#ffffff);color:#e9edf0">'
+     '<p style="color:#e9edf0">t</p></div>',
+     {"root-unresolvable", "unresolvable"}),
+    ("translucent rgba is unresolvable, NOT absent",
+     '<div style="background:rgba(43,49,55,0.4);color:#e9edf0">'
+     '<p style="color:#e9edf0">t</p></div>',
+     {"root-unresolvable", "unresolvable"}),
+    ("hsl is refused rather than guessed",
+     '<div style="background:hsl(210,13%,19%);color:#e9edf0">'
+     '<p style="color:#e9edf0">t</p></div>',
+     {"root-unresolvable", "unresolvable"}),
+    ("opacity on the text",
+     f'<div style="{_CARD}">'
+     f'<p style="color:#e9edf0;opacity:0.35">t</p></div>', {"muted"}),
+    ("opacity on an ancestor",
+     f'<div style="{_CARD};opacity:0.5">'
+     f'<p style="color:#e9edf0">t</p></div>', {"muted"}),
+    ("bare inline tag leans on its parent",
+     f'<div style="{_CARD}"><p style="color:#e9edf0">a'
+     f'<code style="font-family:monospace">b</code></p></div>', {"leaning"}),
+    ("ink too dark on a good card",
+     '<div style="background:#2b3137;color:#3a4149">'
+     '<p style="color:#3a4149">t</p></div>', {"low-contrast"}),
+    ("last declaration wins, within a property",
+     '<div style="background:#2b3137;color:#e9edf0">'
+     '<p style="color:#e9edf0;color:#2b3137">t</p></div>', {"low-contrast"}),
+    ("last declaration wins, ACROSS the two background properties",
+     '<div style="background:#2b3137;background-color:#ffffff;color:#e9edf0">'
+     '<p style="color:#e9edf0">t</p></div>', {"low-contrast"}),
+    ("text leaked into a cardless body is not skipped",
+     '<body>loose text</body>', {"rootless", "uncontrolled"}),
+]
+
+
+def test_contrast_probes_pin_the_reason_not_just_the_verdict():
+    """Every failure mode, asserted by REASON.
+
+    Thirteen of these correspond to a defect that actually shipped or that a
+    peer pack found. See CONTRAST_PROBES above for why reasons rather than
+    verdicts.
+    """
+    sys.path.insert(0, "tools")
+    import check_contrast as cc
+
+    wrong = []
+    for name, markup, want in CONTRAST_PROBES:
+        ok, got = cc.classify(markup)
+        if got != want:
+            wrong.append(f"{name}: got {sorted(got) or 'pass'}, "
+                         f"want {sorted(want) or 'pass'}")
+        if ok != (not want):
+            wrong.append(f"{name}: verdict {ok} contradicts reasons {got}")
+    assert not wrong, "probe mismatches:\n  " + "\n  ".join(wrong)
+    assert len(CONTRAST_PROBES) >= 15, len(CONTRAST_PROBES)
+
+
 if __name__ == "__main__":
     fails = 0
     for name, fn in sorted(globals().items()):
