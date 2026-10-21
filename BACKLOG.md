@@ -13,6 +13,60 @@ shipped, and opened by saying the lab ran 1.1.9 when it runs 1.4.6.
 | **74 metrics no longer claim a unit they do not honour** | **committed, awaiting a pak** | they declared `RATIO.PERCENT` without being converted. No emitted value changed. In `v1.4.7-rc.1`. |
 | **`(%)` removed from 98 labels** | **committed, awaiting a pak** | the unit renders beside the value; the name was double-stating it. |
 
+## URGENT — the lab is running a build that attaches foreign children
+
+Verified 2026-10-21 against the paks themselves and the live lab, not the code.
+
+`attach_to_vcenter` (default `false`) exists in **exactly one build: `v1.4.7-rc.4`**.
+Checked each pak's `adapter.zip!VsanHostMetrics/conf/describe.xml`:
+
+| build | `attach_to_vcenter` | `metric_scope` |
+|---|---|---|
+| `v1.4.7-rc.2` | **ABSENT** | present |
+| `v1.4.7-rc.3` | **ABSENT** | present |
+| `v1.4.7-rc.4` | `default="false"` | present |
+
+There is no final `v1.4.7` release. The lab reports "vSAN Host Metrics 1.4.7",
+and its adapter instance shows `metric_scope='dashboard'` with no
+`attach_to_vcenter`, which matches rc.2/rc.3 exactly. **So the pack collecting
+in that lab attaches unconditionally, every cycle.** `app/adapter.py:213` maps
+`"hosts": "HostSystem"` and `"vms": "VirtualMachine"`, so it asserts each
+host's entire child list under REPLACE semantics — CLAUDE.md rule 1.
+
+Measured foreign children per host, 2026-10-21 20:0x UTC:
+
+    esxi01  VsanHostMetrics:81  VsphereNetStats:18   (VMs=9,  113 children)
+    esxi02  VsanHostMetrics:67  VsphereNetStats:21   (VMs=1,  162 children)
+    esxi03  VsanHostMetrics:83  VsphereNetStats:20   (VMs=8,  118 children)
+    esxi04  VsanHostMetrics:83  VsphereNetStats:20   (VMs=8,  116 children)
+
+Child-side state: **26 of 28** VMs have a `HostSystem` parent. The 2 without are
+both `vcf-services-runtime-template-9.1.x`, i.e. templates. Probably legitimate
+and categorically unlike the earlier event, which dropped ordinary VMs — but
+**not proven**, so do not record this as clean.
+
+Action: installing `rc.4` is what stops it. Do not leave rc.2/rc.3 collecting.
+
+## Verification method corrected: contrast is a property of a pair
+
+"Zero `#ffffff` in the pak" was asserted as proof and is not a valid check. It
+fails a correct self-contained card, whose background is *supposed* to be
+present, and it passes a panel that sets no colour at all — the exact rc.3
+defect. A peer pack (MemoryTierAdvanced) caught this.
+
+`tools/check_contrast.py` resolves each foreground against its nearest ancestor
+background. Measured against the two shipped defects: **1.4.6 fails at 1249**
+uncontrolled text nodes, **rc.3 fails at 1568**, **rc.4 passes** with 1568 nodes
+on a controlled background, worst pairing 8.10:1. Wired into
+`test_vsanmetrics.py`, which CI already runs; proved to fail by removing one
+card background (240 nodes) before restoring it.
+
+Also corrected: MemoryTierAdvanced 2.1.5 does **not** have a light-mode
+legibility defect. It has used the own-background card since 2.1.3 at 14.15:1.
+This repository's notes previously listed it as an outstanding defect; that was
+wrong. What all three packs now share is a dark card on a light dashboard —
+legible, but not theme-adaptive. That is an appearance decision, not a bug.
+
 ## Proposed, not started
 
 | Item | Why it is not done |
