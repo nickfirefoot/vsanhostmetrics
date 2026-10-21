@@ -15,9 +15,11 @@ Two constraints learned the hard way and encoded here:
 
   * The rich-text editor **discards `<style>` blocks** but keeps inline
     `style=` attributes, so every rule is written inline on every element.
-  * No colour may be left to inherit. The dashboard renders on a dark
-    background and unstyled text came out black on near-black -- the
-    "help text is invisible" defect. Every element states its colour.
+  * The panel must supply its own background as well as its own colour.
+    Operations' theme is an application setting, the TextDisplay widget
+    hands down no usable foreground, and no single foreground clears 4.5:1
+    on both a white and a dark dashboard -- see CARD_BG below for the
+    arithmetic. Setting both ends is the only thing correct in both themes.
 """
 import html
 import os
@@ -32,37 +34,45 @@ import build_help_html                                   # noqa: E402
 OUT = os.path.expanduser("~/ops-content/out/help")
 NOTES = build_help_html.NOTES
 
-# NO HARDCODED FOREGROUND. The previous version set color:#ffffff on every
-# paragraph, heading and bold run -- 89 to 147 times per dashboard. White on a
-# dark dashboard is washed out and white on a LIGHT theme is invisible, which
-# is what it shipped as. Operations' theme is an application setting, so a
-# prefers-color-scheme media query would not track it either; inheriting is the
-# only thing that is correct in both.
+# THE PANEL CARRIES ITS OWN BACKGROUND. Two earlier attempts both shipped
+# broken, for opposite reasons, and the fix is to stop depending on the theme.
 #
-# Emphasis comes from WEIGHT and TYPEFACE, not colour, and that is a measured
-# decision rather than a stylistic one. NO fixed colour clears 4.5:1 against
-# both a white and a dark dashboard -- computed against #ffffff, #1b1b1b and
-# #2a3038:
+#   v1  color:#ffffff on every element -> invisible on a light dashboard.
+#   v2  no colour at all, inherit      -> the TextDisplay widget does not hand
+#                                         down a usable foreground, so the text
+#                                         fell back to black on a dark theme.
 #
-#   #1a73e8   4.51 / 3.82 / 2.95     #4a9eff   2.75 / 6.25 / 4.83
-#   #1f6feb   4.63 / 3.72 / 2.87     #8fd3ff   1.62 /10.60 / 8.19
+# Inheriting cannot work here and no single foreground can either. Operations'
+# theme is an application setting, so `prefers-color-scheme` does not track it,
+# and 4.5:1 against both a white and a dark dashboard is arithmetically
+# impossible -- a foreground needs relative luminance <= 0.1833 to clear 4.5:1
+# on #ffffff and >= 0.2243 to clear it on #1b1b1b. Those ranges do not overlap.
+# The best any fixed colour can do, balanced across both, is 4.15:1, and across
+# the three backgrounds Operations actually uses (#ffffff, #1b1b1b, #2a3038)
+# the best neutral grey is #848484 at 4.17 / 4.13 / 3.19 -- failing on dark.
 #
-# Anything dark enough for white is too dark for dark, and the reverse. So the
-# only honest answer is to inherit. Metric names get a monospace face instead,
-# which distinguishes them in any theme and suits them better anyway -- they
-# are identifiers, not prose.
-#
-# RULE stays because a translucent grey border tints toward whatever is behind
-# it and so is safe on both.
-RULE = "rgba(128,128,128,0.35)"
+# So the panel sets BOTH ends and the contrast stops being the theme's to
+# decide: #e9edf0 on #2b3137 is 11.17:1, identical in every theme. The card
+# reads as a deliberate callout on a light dashboard (13.15:1 against the page)
+# and merges into a dark one (1.01-1.31:1), which is the right behaviour both
+# ways round. Every colour below is measured against CARD_BG, not against a
+# guess about the page.
+CARD_BG = "#2b3137"
+FG      = "#e9edf0"                  # 11.17:1 on CARD_BG
+ACCENT  = "#8fd3ff"                  #  8.10:1 on CARD_BG
+RULE    = "rgba(255,255,255,0.18)"   # safe now that what is behind it is known
 MONO = "ui-monospace,SFMono-Regular,Menlo,Consolas,monospace"
-WRAP = ("font-family:'Metropolis','Segoe UI',sans-serif;font-size:13px;"
-        "padding:6px 12px")
-H2 = "font-size:15px;font-weight:700;margin:4px 0 10px 0"
-H3 = (f"font-size:13px;font-weight:700;margin:16px 0 6px 0;"
+WRAP = (f"font-family:'Metropolis','Segoe UI',sans-serif;font-size:13px;"
+        f"padding:12px 14px;background:{CARD_BG};color:{FG};"
+        f"border:1px solid {RULE};border-radius:6px")
+H2 = f"font-size:15px;font-weight:700;margin:2px 0 10px 0;color:{FG}"
+H3 = (f"font-size:13px;font-weight:700;margin:16px 0 6px 0;color:{FG};"
       f"border-bottom:1px solid {RULE};padding-bottom:3px")
-P = "margin:5px 0;line-height:1.45"
-NAME = f"font-weight:600;font-family:{MONO}"
+P = f"margin:5px 0;line-height:1.45;color:{FG}"
+# Metric names get the accent AND the monospace face. Colour alone is never the
+# only signal, so the distinction survives if a renderer drops one of them.
+NAME = f"font-weight:600;font-family:{MONO};color:{ACCENT}"
+BOLD = f"font-weight:700;color:{FG}"
 
 # The narrative each screen needs and no metric list can supply: what question
 # the screen answers, and what "normal" looks like on it.
@@ -204,14 +214,14 @@ INTRO = {
 
 def panel_block(panel_title, view_title, kind, columns):
     out = [f'<h3 style="{H3}">{html.escape(panel_title)}</h3>']
-    out.append(f'<p style="{P}">Renders the <b style="font-weight:700">'
+    out.append(f'<p style="{P}">Renders the <b style="{BOLD}">'
                f'{html.escape(view_title)}</b> view.</p>')
     for key, _unit, _tr in columns:
         label = build_view.label_for(kind, key)
         note = NOTES.get(key)
         if not note:
             raise SystemExit(f"no explanation written for {kind}/{key}")
-        note = note.replace("<b>", '<b style="font-weight:700">')
+        note = note.replace("<b>", f'<b style="{BOLD}">')
         out.append(f'<p style="{P}"><span style="{NAME}">{html.escape(label)}'
                    f'</span> &mdash; {note}</p>')
     return out
@@ -228,7 +238,7 @@ def main() -> None:
         for heading, paras in intro:
             body.append(f'<h2 style="{H2}">{heading}</h2>')
             for para in paras:
-                para = para.replace("<b>", '<b style="font-weight:700">')
+                para = para.replace("<b>", f'<b style="{BOLD}">')
                 body.append(f'<p style="{P}">{para}</p>')
         seen = set()
         for panel_title, view_key, _coords in panels:
