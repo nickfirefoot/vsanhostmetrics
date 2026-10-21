@@ -93,7 +93,8 @@ VIEWS = [
         ("congestion", "", "MAX"), ("readCongestion", "", "MAX"),
         ("writeCongestion", "", "MAX"), ("unmapCongestion", "", "MAX"),
         ("iopsRead", "", "MAX"), ("iopsWrite", "", "MAX"), ("oio", "", "MAX"),
-        ("throughputRead", "", "MAX"), ("throughputWrite", "", "MAX"),
+        ("throughputRead", "mebibyteps", "MAX"),
+        ("throughputWrite", "mebibyteps", "MAX"),
     ]),
     ("vSAN Cluster DOM Component Manager", "VsanClusterDomcompmgr", [
         ("latencyAvgRead", "", "MAX"), ("latencyAvgWrite", "", "MAX"),
@@ -103,7 +104,7 @@ VIEWS = [
     ("vSAN Cluster Resync", "VsanClusterDomcompmgr", [
         ("iopsResyncRead", "", "MAX"), ("tputResyncRead", "", "MAX"),
         ("latAvgResyncRead", "", "MAX"), ("iopsRecWrite", "", "MAX"),
-        ("throughputRecWrite", "", "MAX"), ("latencyAvgRecWrite", "", "MAX"),
+        ("throughputRecWrite", "mebibyteps", "MAX"), ("latencyAvgRecWrite", "", "MAX"),
     ]),
     ("vSAN Cluster RDT", "VsanClusterRdtLatency", [
         ("txCtxQMax", "", "MAX"),
@@ -134,6 +135,24 @@ VIEWS = [
         ("rxCrcErrRaw",    "",        "CURRENT"),
         ("pfcCountRaw",    "",        "CURRENT"),
         ("portTxpkts",     "",        "CURRENT"),
+    ]),
+    # vCenter's alarm-261, "High pNic error rate detected", fires at 1 per
+    # mille on exactly these eight counters and no others. This view carries
+    # those eight and nothing else, so the screen matches the alarm rather
+    # than surrounding it with columns the alarm ignores. rxMissErrRaw rides
+    # along as the lifetime count: the rates answer "is it happening now",
+    # the lifetime answers "has this NIC ever been bad" -- a NIC reading 0%
+    # with tens of thousands here has a history worth knowing.
+    ("vSAN High pNIC Error Rate", "VsanPnic", [
+        ("rxCrcErr", "percent", "MAX"),
+        ("rxErr", "percent", "MAX"),
+        ("rxFifoErr", "percent", "MAX"),
+        ("rxMissErr", "percent", "MAX"),
+        ("rxOvErr", "percent", "MAX"),
+        ("txCarErr", "percent", "MAX"),
+        ("txErr", "percent", "MAX"),
+        ("pauseCount", "percent", "MAX"),
+        ("rxMissErrRaw", "", "CURRENT"),
     ]),
     ("vSAN Host Network", "VsanHostNet", [
         ("rxPacketsLossRate", "percent", "MAX"),
@@ -256,8 +275,8 @@ VIEWS = [
         ("numNetSchedMidBandSec", "", "CURRENT"),
         ("numNetSchedLowToMidBand", "", "CURRENT"),
         ("numNetSchedMidToLowBand", "", "CURRENT"),
-        ("numNetSchedSeenTotalTpBps", "", "MAX"),
-        ("numNetSchedSeenNonResyncTpBps", "", "MAX"),
+        ("numNetSchedSeenTotalTpBps", "mebibyteps", "MAX"),
+        ("numNetSchedSeenNonResyncTpBps", "mebibyteps", "MAX"),
         ("numNetSchedControllerIopsLimit", "", "MAX"),
     ]),
     # Per-host back end. Only the cluster aggregate was on a screen, which
@@ -275,7 +294,8 @@ VIEWS = [
         ("latencyStddevWrite", "", "MAX"),
         ("iopsRead", "", "MAX"), ("iopsWrite", "", "MAX"),
         ("oio", "", "MAX"),
-        ("throughputRead", "", "MAX"), ("throughputWrite", "", "MAX"),
+        ("throughputRead", "mebibyteps", "MAX"),
+        ("throughputWrite", "mebibyteps", "MAX"),
         ("vmdiskQueueDepthWrite", "", "MAX"),
         ("vmdiskDispatchedCostWrite", "", "MAX"),
         ("namespaceDispatchedCostWrite", "", "MAX"),
@@ -289,7 +309,7 @@ VIEWS = [
         ("latencyAvgSegCleanerUnmap", "", "MAX"),
         ("latencyMaxSegCleanerUnmap", "", "MAX"),
         ("latencyStddevSegCleanerUnmap", "", "MAX"),
-        ("throughputSegCleanerUnmap", "", "MAX"),
+        ("throughputSegCleanerUnmap", "mebibyteps", "MAX"),
         ("segCleanerUnmapLeafOwnerMaxLatencyAvgUs", "", "MAX"),
         ("iopsUnmap", "", "MAX"),
         ("latencyAvgUnmap", "", "MAX"),
@@ -300,7 +320,8 @@ VIEWS = [
     ("vSAN zDOM Cluster", "VsanClusterZdomTopStats", [
         ("latencyAvgRead", "", "MAX"), ("latencyAvgWrite", "", "MAX"),
         ("iopsRead", "", "MAX"), ("iopsWrite", "", "MAX"),
-        ("throughputRead", "", "MAX"), ("throughputWrite", "", "MAX"),
+        ("throughputRead", "mebibyteps", "MAX"),
+        ("throughputWrite", "mebibyteps", "MAX"),
         ("oio", "", "MAX"),
     ]),
     ("vSAN zDOM Per Host", "VsanHostZdomTopStats", [
@@ -308,7 +329,8 @@ VIEWS = [
         ("readLatencyMaxUs", "", "MAX"), ("writeLatencyMaxUs", "", "MAX"),
         ("unmapLatencyMaxUs", "", "MAX"),
         ("iopsRead", "", "MAX"), ("iopsWrite", "", "MAX"),
-        ("throughputRead", "", "MAX"), ("throughputWrite", "", "MAX"),
+        ("throughputRead", "mebibyteps", "MAX"),
+        ("throughputWrite", "mebibyteps", "MAX"),
         ("oio", "", "MAX"), ("oioWrite", "", "MAX"),
     ]),
     ("vSAN zDOM Write Path", "VsanZdomVtx", [
@@ -382,7 +404,8 @@ VIEWS = [
     ("vSAN VM Latency", "VsanVirtualMachine", [
         ("latencyRead", "", "MAX"), ("latencyWrite", "", "MAX"),
         ("iopsRead", "", "MAX"), ("iopsWrite", "", "MAX"),
-        ("throughputRead", "", "MAX"), ("throughputWrite", "", "MAX"),
+        ("throughputRead", "mebibyteps", "MAX"),
+        ("throughputWrite", "mebibyteps", "MAX"),
     ]),
     # ---- borrowed from the vCenter adapter, collected by nothing here -----
     # Our VsanPnic only sees uplinks carrying vSAN traffic, which on this

@@ -110,7 +110,7 @@
                                 <Value>
                                     <Property name="objectType" value="RESOURCE" />
                                     <Property name="attributeKey" value="throughputRecWrite" />
-                                    <Property name="preferredUnitId" value="" />
+                                    <Property name="preferredUnitId" value="mebibyteps" />
                                     <Property name="isStringAttribute" value="false" />
                                     <Property name="adapterKind" value="VsanHostMetrics" />
                                     <Property name="resourceKind" value="VsanClusterDomcompmgr" />

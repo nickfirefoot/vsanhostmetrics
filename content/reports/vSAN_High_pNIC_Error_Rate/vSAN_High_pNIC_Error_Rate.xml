@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Content>
+    <Views>
+        <ViewDef id="e70e6f0e-028b-5f87-8d1c-a37f076b8a5e">
+            <Title>vSAN High pNIC Error Rate [VHM]</Title>
+            <Description />
+            <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanPnic" type="descendant" />
+            <SubjectType adapterKind="VsanHostMetrics" resourceKind="VsanPnic" type="self" />
+            <Usage>dashboard</Usage>
+            <Usage>report</Usage>
+            <Usage>content</Usage>
+            <Controls>
+                <Control id="time-interval-selector_id_860" type="time-interval-selector" visible="false">
+                    <Property name="advancedTimeMode" value="false" />
+                    <Property name="unit" value="DAYS" />
+                    <Property name="count" value="7" />
+                </Control>
+                <Control id="attributes-selector_id_861" type="attributes-selector" visible="false">
+                    <Property name="attributeInfos">
+                        <List>
+                            <Item>
+                                <Value>
+                                    <Property name="objectType" value="RESOURCE" />
+                                    <Property name="attributeKey" value="rxCrcErr" />
+                                    <Property name="preferredUnitId" value="percent" />
+                                    <Property name="isStringAttribute" value="false" />
+                                    <Property name="adapterKind" value="VsanHostMetrics" />
+                                    <Property name="resourceKind" value="VsanPnic" />
+                                    <Property name="rollUpType" value="NONE" />
+                                    <Property name="rollUpCount" value="0" />
+                                    <Property name="transformations">
+                                        <List>
+                                            <Item value="MAX" />
+                                        </List>
+                                    </Property>
+                                    <Property name="sortCriteria" value="false" />
+                                    <Property name="isProperty" value="false" />
+                                    <Property name="displayName" value="pNIC RX CRC Error" />
+                                    <Property name="addTimestampAsColumn" value="false" />
+                                    <Property name="isShowRelativeTimestamp" value="false" />
+                                </Value>
+                            </Item>
+                            <Item>
+                                <Value>
+                                    <Property name="objectType" value="RESOURCE" />
+                                    <Property name="attributeKey" value="rxErr" />
+                                    <Property name="preferredUnitId" value="percent" />
+                                    <Property name="isStringAttribute" value="false" />
+                                    <Property name="adapterKind" value="VsanHostMetrics" />
+                                    <Property name="resourceKind" value="VsanPnic" />
+                                    <Property name="rollUpType" value="NONE" />
+                                    <Property name="rollUpCount" value="0" />
+                                    <Property name="transformations">
+                                        <List>
+                                            <Item value="MAX" />
+                                        </List>
+                                    </Property>
+                                    <Property name="sortCriteria" value="false" />
+                                    <Property name="isProperty" value="false" />
+                                    <Property name="displayName" value="pNIC RX Generic Error" />
+                                    <Property name="addTimestampAsColumn" value="false" />
+                                    <Property name="isShowRelativeTimestamp" value="false" />
+                                </Value>
+                            </Item>
+                            <Item>
+                                <Value>
+                                    <Property name="objectType" value="RESOURCE" />
+                                    <Property name="attributeKey" value="rxFifoErr" />
+                                    <Property name="preferredUnitId" value="percent" />
+                                    <Property name="isStringAttribute" value="false" />
+                                    <Property name="adapterKind" value="VsanHostMetrics" />
+                                    <Property name="resourceKind" value="VsanPnic" />
+                                    <Property name="rollUpType" value="NONE" />
+                                    <Property name="rollUpCount" value="0" />
+                                    <Property name="transformations">
+                                        <List>
+                                            <Item value="MAX" />
+                                        </List>
+                                    </Property>
+                                    <Property name="sortCriteria" value="false" />
+                                    <Property name="isProperty" value="false" />
+                                    <Property name="displayName" value="pNIC RX FIFO Error" />
+                                    <Property name="addTimestampAsColumn" value="false" />
+                                    <Property name="isShowRelativeTimestamp" value="false" />
+                                </Value>
+                            </Item>
+                            <Item>
+                                <Value>
+                                    <Property name="objectType" value="RESOURCE" />
+                                    <Property name="attributeKey" value="rxMissErr" />
+                                    <Property name="preferredUnitId" value="percent" />
+                                    <Property name="isStringAttribute" value="false" />
+                                    <Property name="adapterKind" value="VsanHostMetrics" />
+                                    <Property name="resourceKind" value="VsanPnic" />
+                                    <Property name="rollUpType" value="NONE" />
+                                    <Property name="rollUpCount" value="0" />
+                                    <Property name="transformations">
+                                        <List>
+                                            <Item value="MAX" />
+                                        </List>
+                                    </Property>
+                                    <Property name="sortCriteria" value="false" />
+                                    <Property name="isProperty" value="false" />
+                                    <Property name="displayName" value="pNIC RX Missed Error" />
+                                    <Property name="addTimestampAsColumn" value="false" />
+                                    <Property name="isShowRelativeTimestamp" value="false" />
+                                </Value>
+                            </Item>
+                            <Item>
+                                <Value>
+                                    <Property name="objectType" value="RESOURCE" />
+                                    <Property name="attributeKey" value="rxOvErr" />
+                                    <Property name="preferredUnitId" value="percent" />
+                                    <Property name="isStringAttribute" value="false" />
+                                    <Property name="adapterKind" value="VsanHostMetrics" />
+                                    <Property name="resourceKind" value="VsanPnic" />
+                                    <Property name="rollUpType" value="NONE" />
+                                    <Property name="rollUpCount" value="0" />
+                                    <Property name="transformations">
+                                        <List>
+                                            <Item value="MAX" />
+                                        </List>
+                                    </Property>
+                                    <Property name="sortCriteria" value="false" />
+                                    <Property name="isProperty" value="false" />
+                                    <Property name="displayName" value="pNIC RX Buffer Overflow Error" />
+                                    <Property name="addTimestampAsColumn" value="false" />
+                                    <Property name="isShowRelativeTimestamp" value="false" />
+                                </Value>
+                            </Item>
+                            <Item>
+                                <Value>
+                                    <Property name="objectType" value="RESOURCE" />
+                                    <Property name="attributeKey" value="txCarErr" />
+                                    <Property name="preferredUnitId" value="percent" />
+                                    <Property name="isStringAttribute" value="false" />
+                                    <Property name="adapterKind" value="VsanHostMetrics" />
+                                    <Property name="resourceKind" value="VsanPnic" />
+                                    <Property name="rollUpType" value="NONE" />
+                                    <Property name="rollUpCount" value="0" />
+                                    <Property name="transformations">
+                                        <List>
+                                            <Item value="MAX" />
+                                        </List>
+                                    </Property>
+                                    <Property name="sortCriteria" value="false" />
+                                    <Property name="isProperty" value="false" />
+                                    <Property name="displayName" value="pNIC TX Carrier Error" />
+                                    <Property name="addTimestampAsColumn" value="false" />
+                                    <Property name="isShowRelativeTimestamp" value="false" />
+                                </Value>
+                            </Item>
+                            <Item>
+                                <Value>
+                                    <Property name="objectType" value="RESOURCE" />
+                                    <Property name="attributeKey" value="txErr" />
+                                    <Property name="preferredUnitId" value="percent" />
+                                    <Property name="isStringAttribute" value="false" />
+                                    <Property name="adapterKind" value="VsanHostMetrics" />
+                                    <Property name="resourceKind" value="VsanPnic" />
+                                    <Property name="rollUpType" value="NONE" />
+                                    <Property name="rollUpCount" value="0" />
+                                    <Property name="transformations">
+                                        <List>
+                                            <Item value="MAX" />
+                                        </List>
+                                    </Property>
+                                    <Property name="sortCriteria" value="false" />
+                                    <Property name="isProperty" value="false" />
+                                    <Property name="displayName" value="pNIC TX Generic Error" />
+                                    <Property name="addTimestampAsColumn" value="false" />
+                                    <Property name="isShowRelativeTimestamp" value="false" />
+                                </Value>
+                            </Item>
+                            <Item>
+                                <Value>
+                                    <Property name="objectType" value="RESOURCE" />
+                                    <Property name="attributeKey" value="pauseCount" />
+                                    <Property name="preferredUnitId" value="percent" />
+                                    <Property name="isStringAttribute" value="false" />
+                                    <Property name="adapterKind" value="VsanHostMetrics" />
+                                    <Property name="resourceKind" value="VsanPnic" />
+                                    <Property name="rollUpType" value="NONE" />
+                                    <Property name="rollUpCount" value="0" />
+                                    <Property name="transformations">
+                                        <List>
+                                            <Item value="MAX" />
+                                        </List>
+                                    </Property>
+                                    <Property name="sortCriteria" value="false" />
+                                    <Property name="isProperty" value="false" />
+                                    <Property name="displayName" value="pNic 802.3x Pause Rate" />
+                                    <Property name="addTimestampAsColumn" value="false" />
+                                    <Property name="isShowRelativeTimestamp" value="false" />
+                                </Value>
+                            </Item>
+                            <Item>
+                                <Value>
+                                    <Property name="objectType" value="RESOURCE" />
+                                    <Property name="attributeKey" value="rxMissErrRaw" />
+                                    <Property name="preferredUnitId" value="" />
+                                    <Property name="isStringAttribute" value="false" />
+                                    <Property name="adapterKind" value="VsanHostMetrics" />
+                                    <Property name="resourceKind" value="VsanPnic" />
+                                    <Property name="rollUpType" value="NONE" />
+                                    <Property name="rollUpCount" value="0" />
+                                    <Property name="transformations">
+                                        <List>
+                                            <Item value="CURRENT" />
+                                        </List>
+                                    </Property>
+                                    <Property name="sortCriteria" value="false" />
+                                    <Property name="isProperty" value="false" />
+                                    <Property name="displayName" value="pNIC RX Missed Error (Total)" />
+                                    <Property name="addTimestampAsColumn" value="false" />
+                                    <Property name="isShowRelativeTimestamp" value="false" />
+                                </Value>
+                            </Item>
+                        </List>
+                    </Property>
+                </Control>
+                <Control id="pagination-control_id_862" type="pagination-control" visible="true">
+                    <Property name="start" value="0" />
+                    <Property name="size" value="50" />
+                </Control>
+                <Control id="metadata_id_863" type="metadata" visible="false">
+                    <Property name="maxPointsCount" value="5000" />
+                    <Property name="hideObjectNameColumn" value="false" />
+                    <Property name="listTopResultSize" value="-1" />
+                </Control>
+            </Controls>
+            <DataProviders>
+                <DataProvider dataType="list-view" id="list-view_id_864" />
+            </DataProviders>
+            <Presentation type="list" />
+        </ViewDef>
+    </Views>
+</Content>

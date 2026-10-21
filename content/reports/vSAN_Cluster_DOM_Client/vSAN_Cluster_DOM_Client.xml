@@ -220,7 +220,7 @@
                                 <Value>
                                     <Property name="objectType" value="RESOURCE" />
                                     <Property name="attributeKey" value="throughputRead" />
-                                    <Property name="preferredUnitId" value="" />
+                                    <Property name="preferredUnitId" value="mebibyteps" />
                                     <Property name="isStringAttribute" value="false" />
                                     <Property name="adapterKind" value="VsanHostMetrics" />
                                     <Property name="resourceKind" value="VsanClusterDomclient" />
@@ -242,7 +242,7 @@
                                 <Value>
                                     <Property name="objectType" value="RESOURCE" />
                                     <Property name="attributeKey" value="throughputWrite" />
-                                    <Property name="preferredUnitId" value="" />
+                                    <Property name="preferredUnitId" value="mebibyteps" />
                                     <Property name="isStringAttribute" value="false" />
                                     <Property name="adapterKind" value="VsanHostMetrics" />
                                     <Property name="resourceKind" value="VsanClusterDomclient" />

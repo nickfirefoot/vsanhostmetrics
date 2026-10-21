@@ -75,14 +75,13 @@ DASHBOARDS = [
     # TCP stack underneath all of it. TCP was previously third, which put the
     # most abstract layer above the two physical ones feeding it.
     ("Rapid vSAN Network", "rapid-vsan-network-help", [
-        ("RDT latencies - per host",      "vSAN_RDT_Transport_Per_Host", {"w":10,"x":3,"h":9,"y":1}),
-        ("RDT latencies - per vmknic",    "vSAN_vmknic_RDT_Latency",     {"w":12,"x":1,"h":7,"y":10}),
-        ("pNIC stats - vSAN uplinks",     "vSAN_pNIC_Errors",            {"w":12,"x":1,"h":9,"y":17}),
-        ("vmknic - the kernel port",      "vSAN_vmknic",                 {"w":12,"x":1,"h":7,"y":26}),
-        ("Host network - all vSAN",       "vSAN_Host_Network",           {"w":12,"x":1,"h":7,"y":33}),
-        ("TCP error types",               "vSAN_Host_TCP_Health",        {"w":12,"x":1,"h":8,"y":40}),
-        ("Every uplink - from vCenter",   "vSAN_Host_Uplinks_and_Load", {"w":12,"x":1,"h":7,"y":48}),
-        ("CMMDS - cluster membership",    "vSAN_CMMDS_Network",          {"w":12,"x":1,"h":7,"y":55}),
+        ("RDT latencies - per vmknic",    "vSAN_vmknic_RDT_Latency",     {"w":10,"x":3,"h":7,"y":1}),
+        ("TCP error types",               "vSAN_Host_TCP_Health",        {"w":12,"x":1,"h":8,"y":8}),
+        ("vmknic - the kernel port",      "vSAN_vmknic",                 {"w":12,"x":1,"h":7,"y":16}),
+        ("High pNIC error rate",          "vSAN_High_pNIC_Error_Rate",   {"w":12,"x":1,"h":8,"y":23}),
+        ("pNIC stats - every counter",    "vSAN_pNIC_Errors",            {"w":12,"x":1,"h":9,"y":31}),
+        ("Every uplink - from vCenter",   "vSAN_Host_Uplinks_and_Load", {"w":12,"x":1,"h":7,"y":40}),
+        ("CMMDS - cluster membership",    "vSAN_CMMDS_Network",          {"w":12,"x":1,"h":7,"y":47}),
     ]),
     ("Rapid vSAN Storage", "rapid-vsan-storage-help", [
         ("ESA disks - vSAN layer",        "vSAN_ESA_Disks",                  {"w":10,"x":3,"h":9,"y":1}),
@@ -99,7 +98,7 @@ DASHBOARDS = [
         ("Per host - client",             "vSAN_Host_DOM",                      {"w":12,"x":1,"h":7,"y":20}),
         ("Per host - owner",              "vSAN_Host_DOM_Owner",                {"w":12,"x":1,"h":8,"y":27}),
         ("Per host - component manager",  "vSAN_Host_DOM_Component_Manager",    {"w":12,"x":1,"h":8,"y":35}),
-        ("Owner network scheduler",       "vSAN_Host_DOM_Owner_Scheduler",      {"w":12,"x":1,"h":8,"y":43}),
+        ("Adaptive network shaping",      "vSAN_Host_DOM_Owner_Scheduler",      {"w":12,"x":1,"h":8,"y":43}),
     ]),
     # Congestion is a CONTROL signal, not an error, so this screen is ordered by
     # blast radius rather than severity: cluster, then host, then the transport
@@ -111,7 +110,7 @@ DASHBOARDS = [
         ("Cluster - owner congestion",     "vSAN_Cluster_DOM_Owner",             {"w":12,"x":1,"h":6,"y":7}),
         ("Back end - device vs host",      "vSAN_Host_DOM_Component_Manager",    {"w":12,"x":1,"h":8,"y":13}),
         ("Owner - reclaim and rebuild",    "vSAN_Host_DOM_Owner",                {"w":12,"x":1,"h":8,"y":21}),
-        ("Is vSAN throttling itself?",     "vSAN_Host_DOM_Owner_Scheduler",      {"w":12,"x":1,"h":8,"y":29}),
+        ("Adaptive network shaping",       "vSAN_Host_DOM_Owner_Scheduler",      {"w":12,"x":1,"h":8,"y":29}),
         ("Transport - cluster",            "vSAN_Cluster_RDT",                   {"w":12,"x":1,"h":6,"y":37}),
         ("Transport - per host",           "vSAN_RDT_Transport_Per_Host",        {"w":12,"x":1,"h":8,"y":43}),
     ]),
@@ -120,7 +119,7 @@ DASHBOARDS = [
         ("Rebuild IO rates",              "vSAN_Cluster_Resync",                {"w":12,"x":1,"h":6,"y":9}),
         ("Guest impact - front end",      "vSAN_Cluster_DOM_Client",            {"w":12,"x":1,"h":6,"y":15}),
         ("Back end during rebuild",       "vSAN_Cluster_DOM_Component_Manager", {"w":12,"x":1,"h":6,"y":21}),
-        ("Is vSAN throttling itself?",    "vSAN_Host_DOM_Owner_Scheduler",      {"w":12,"x":1,"h":8,"y":27}),
+        ("Adaptive network shaping",      "vSAN_Host_DOM_Owner_Scheduler",      {"w":12,"x":1,"h":8,"y":27}),
         ("Segment cleaning",              "vSAN_Segment_Cleaning_Per_Host",     {"w":12,"x":1,"h":8,"y":35}),
     ]),
     ("Rapid vSAN ESA Write Path", "rapid-vsan-esa-write-path-help", [
