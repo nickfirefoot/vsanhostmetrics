@@ -81,7 +81,10 @@ third party verify *without* trusting that attestation, which is worth having,
 not urgent.
 
 **Blocked, not forgotten.** The fix is `PYTHONHASHSEED=0` in the environment
-before any SDK import. This pack builds through `mp-build` in CI rather than a
+before any SDK import. Put it in the workflow's **job-level `env:`**, not in a
+build script: the variable is read at interpreter start so it cannot be set
+in-process, and a job-level block covers `mp-build` and every subprocess it
+spawns, which is what this pack needs since it has no local `build_pak.py`. This pack builds through `mp-build` in CI rather than a
 local `build_pak.py`, so the variable belongs in the workflow's `env:` — and
 writing `.github/workflows/` needs the `workflow` token scope, which the PAT
 does not have. Needs either a token with that scope or a hand edit.
