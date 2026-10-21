@@ -48,6 +48,16 @@ The only valid check is from the CHILD side: every VM must still have a
     with a HostSystem parent            2      <- the failure
     without                            26
 
+**Exclude templates before reading that count.** A VM with the `template`
+property `true` is not running and legitimately has no `HostSystem` parent --
+it keeps `VMFolder` and `VM Entity Status` and nothing else. Proven 2026-10-21
+against the lab: the two VMs without a host parent were both
+`vcf-services-runtime-template-9.1.x` with `template = true`, while every
+`template = false` VM had one. So the healthy state there is **26 of 26
+non-template VMs**, not 26 of 28, and a check that counts all 28 reports a
+2-VM deficit forever. This was twice recorded here as "probably benign, not
+proven"; it is now proven, with an ordinary-VM control.
+
 ### Why the damage is selective, and why that misleads
 
 Measured 2026-10-21: Pods survive on those hosts, VirtualMachines do not. That
