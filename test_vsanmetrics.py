@@ -284,14 +284,21 @@ def test_help_panel_text_never_lands_on_the_theme_colour():
     panels = list(cc.sources([]))
     assert panels, "no text panels found -- this test would prove nothing"
 
-    worst, nodes, uncontrolled, leaning, rootless = 99.0, 0, [], [], []
+    worst, nodes = 99.0, 0
+    uncontrolled, leaning, rootless, muted, unresolved = [], [], [], [], []
     for label, markup in panels:
         w = cc.Walker()
         w.feed(markup)
-        if not w.root_bg:
+        if not w.root_bg or w.root_bg == cc.UNRESOLVABLE:
             rootless.append(label)
-        for text, fg, bg, own in w.nodes:
+        for text, fg, bg, own, eff in w.nodes:
             nodes += 1
+            if eff < 0.999:
+                muted.append(f"{label}: {text!r} at opacity {eff:.2f}")
+                continue
+            if cc.UNRESOLVABLE in (fg, bg):
+                unresolved.append(f"{label}: {text!r} fg={fg} bg={bg}")
+                continue
             if fg is None or bg is None:
                 uncontrolled.append(f"{label}: {text!r} fg={fg} bg={bg}")
                 continue
@@ -312,6 +319,14 @@ def test_help_panel_text_never_lands_on_the_theme_colour():
     assert not leaning, (
         f"{len(leaning)} text nodes lean on an inherited colour; "
         f"first: {leaning[0]}")
+    # Opacity multiplies down the tree, so muted text does not deliver its
+    # nominal contrast however solid its own colour is.
+    assert not muted, f"{len(muted)} muted text nodes; first: {muted[0]}"
+    # A gradient, a translucent background or an unrecognised colour cannot be
+    # scored. Refuse it rather than crediting the first hex in the value,
+    # which let linear-gradient(#2b3137,#ffffff) read as a dark card.
+    assert not unresolved, (
+        f"{len(unresolved)} unresolvable colours; first: {unresolved[0]}")
     assert nodes > 1000, nodes
     # 4.5:1 is the WCAG AA bar for body text. It is reachable only because the
     # panel supplies its own background; no fixed foreground clears it on both

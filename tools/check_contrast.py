@@ -40,19 +40,67 @@ def contrast(a, b):
 
 
 HEX = re.compile(r"#[0-9a-fA-F]{3,8}\b")
+RGB = re.compile(r"rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)"
+                 r"(?:\s*,\s*([\d.]+))?\s*\)")
+# Only the names our own generators could plausibly emit. Anything else stays
+# unresolvable rather than being guessed at.
+NAMED = {"white": "#ffffff", "black": "#000000", "red": "#ff0000",
+         "silver": "#c0c0c0", "gray": "#808080", "grey": "#808080"}
+UNRESOLVABLE = "?"      # a value we refuse to score, which must fail the check
+
+
+def _hex(value):
+    """Resolve one CSS colour value, or UNRESOLVABLE.
+
+    Returns None when the property is simply absent. Earlier this accepted
+    only #rgb/#rrggbb, so `color:white` and `background:rgba(...)` read as
+    ABSENT -- false positives, safe but wrong. A gradient or multi-stop value
+    is deliberately UNRESOLVABLE rather than "the first hex found": taking the
+    first stop let `linear-gradient(#2b3137,#ffffff)` score as a dark card.
+    """
+    v = value.strip().lower()
+    if not v or v in ("none", "transparent", "inherit", "initial", "unset"):
+        return None
+    if "gradient" in v or "var(" in v or "image" in v:
+        return UNRESOLVABLE
+    hexes = [h for h in HEX.findall(v) if len(h) in (4, 7)]
+    rgbs = RGB.findall(v)
+    names = [n for n in NAMED if re.search(rf"\b{n}\b", v)]
+    found = []
+    for h in hexes:
+        found.append("#" + "".join(c * 2 for c in h[1:]) if len(h) == 4 else h)
+    for r, g, b, a in rgbs:
+        if a and float(a) < 1:              # translucent: what is behind it
+            return UNRESOLVABLE             # decides the result, so refuse
+        found.append("#%02x%02x%02x" % (int(r), int(g), int(b)))
+    found += [NAMED[n] for n in names]
+    if not found:
+        # A value is present but nothing recognisable -- never treat that as
+        # absent, which would silently credit an ancestor instead.
+        return UNRESOLVABLE
+    return found[0] if len(set(found)) == 1 else UNRESOLVABLE
 
 
 def decl(style, prop):
-    """Last value of `prop` in an inline style, if it is a usable hex."""
+    """Last declaration of `prop` in an inline style, resolved."""
     found = None
     for part in style.split(";"):
         name, _, val = part.partition(":")
-        if name.strip().lower() != prop:
-            continue
-        m = HEX.search(val)
-        if m and len(m.group(0)) in (4, 7):      # #rgb or #rrggbb only
-            found = m.group(0)
+        if name.strip().lower() == prop:
+            found = _hex(val)
     return found
+
+
+def opacity(style):
+    """Opacity declared on this element, or 1.0."""
+    for part in style.split(";"):
+        name, _, val = part.partition(":")
+        if name.strip().lower() == "opacity":
+            try:
+                return float(val.strip())
+            except ValueError:
+                return 0.0                  # unparseable: treat as muted
+    return 1.0
 
 
 class Walker(html.parser.HTMLParser):
@@ -66,6 +114,7 @@ class Walker(html.parser.HTMLParser):
         self.nodes = []                 # (text, fg, bg)
         self.root_bg = None             # background of the OUTERMOST element
         self._seen_root = False
+        self.opacities = []             # declared opacity, innermost last
 
     def _cur(self):
         fg = next((f for _t, f, _b in reversed(self.stack) if f), None)
@@ -76,7 +125,9 @@ class Walker(html.parser.HTMLParser):
         style = dict(attrs).get("style", "") or ""
         fg = decl(style, "color")
         bg = decl(style, "background") or decl(style, "background-color")
+        op = opacity(style)
         if tag not in self.VOID:
+            self.opacities.append((tag, op))
             if not self._seen_root:
                 # The outermost element is what sits against the theme. A peer
                 # pack found that crediting ANY ancestor background lets a
@@ -88,6 +139,10 @@ class Walker(html.parser.HTMLParser):
             self.stack.append((tag, fg, bg))
 
     def handle_endtag(self, tag):
+        for i in range(len(self.opacities) - 1, -1, -1):
+            if self.opacities[i][0] == tag:
+                del self.opacities[i:]
+                break
         for i in range(len(self.stack) - 1, -1, -1):
             if self.stack[i][0] == tag:
                 del self.stack[i:]
@@ -101,7 +156,13 @@ class Walker(html.parser.HTMLParser):
             # way, but this editor has broken that hop before -- it is why
             # rc.3 shipped unreadable -- so our own output must not rely on it.
             own = bool(self.stack and self.stack[-1][1])
-            self.nodes.append((data.strip()[:48], fg, bg, own))
+            # Opacity multiplies down the tree, so a muted ancestor mutes this
+            # text however solid its own colour is. A peer pack tests this mode
+            # and this checker passed it until they asked.
+            eff = 1.0
+            for _t, o in self.opacities:
+                eff *= o
+            self.nodes.append((data.strip()[:48], fg, bg, own, eff))
 
 
 def panels_from_json(doc, label):
@@ -164,6 +225,7 @@ def main():
     if "--min" in sys.argv:
         bar = float(sys.argv[sys.argv.index("--min") + 1])
     total = bad = inherited = rootless = leaning = 0
+    muted = unresolved = 0
     pairs = {}
     panels = 0
 
@@ -171,12 +233,22 @@ def main():
         panels += 1
         w = Walker()
         w.feed(markup)
-        if not w.root_bg:
+        if not w.root_bg or w.root_bg == UNRESOLVABLE:
             rootless += 1
             print(f"  NO CARD        {label}: outermost element declares no "
                   f"background; the wrapper sits on the theme colour")
-        for text, fg, bg, own in w.nodes:
+        for text, fg, bg, own, eff in w.nodes:
             total += 1
+            if eff < 0.999:
+                muted += 1
+                print(f"  OPACITY {eff:.2f}  {label}: {text!r} -- muted text "
+                      f"does not deliver its nominal contrast")
+                continue
+            if fg == UNRESOLVABLE or bg == UNRESOLVABLE:
+                unresolved += 1
+                print(f"  UNRESOLVABLE   {label}: {text!r} fg={fg} bg={bg} -- "
+                      f"gradient, translucency or an unrecognised colour")
+                continue
             if bg is None:
                 inherited += 1
                 print(f"  INHERITS PAGE  {label}: {text!r} (fg={fg})")
@@ -203,11 +275,14 @@ def main():
     print(f"\n  panels with no card background : {rootless}")
     print(f"  inheriting the page colour : {inherited}")
     print(f"  leaning on a parent colour : {leaning}")
+    print(f"  muted by opacity           : {muted}")
+    print(f"  unresolvable colour values : {unresolved}")
     print(f"  below {bar}:1                 : {bad}")
     if panels == 0:
         print("  no text panels found -- this check proved NOTHING")
         return 2
-    ok = inherited == 0 and bad == 0 and rootless == 0 and leaning == 0
+    ok = (inherited == 0 and bad == 0 and rootless == 0
+          and leaning == 0 and muted == 0 and unresolved == 0)
     print(f"\n  {'PASS' if ok else 'FAIL'}")
     return 0 if ok else 1
 
