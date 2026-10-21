@@ -47,6 +47,50 @@ and categorically unlike the earlier event, which dropped ordinary VMs — but
 
 Action: installing `rc.4` is what stops it. Do not leave rc.2/rc.3 collecting.
 
+## The pak is not byte-reproducible — an SDK defect, not ours
+
+Found by the netstats session and verified here 2026-10-21. Recorded rather
+than fixed, because the fix needs a workflow edit (see below).
+
+`vmware_aria_operations_integration_sdk/describe.py:492`:
+
+    subtypes = set(map(lambda item: item.value._subtype, cls))
+    for subtype in subtypes:
+
+A **set of strings**, iterated. String hashing is seed-randomised per
+interpreter, so `<UnitType>` blocks emit in a different order per build, which
+shifts every `nameKey` after them. Measured by driving `add_units` directly at
+four hash seeds — four different XML digests:
+
+    seed=0  DataSize bytes_base_10  bits_base_2   bits_base_10  bytes_base_2
+    seed=1  DataSize bits_base_2    bytes_base_10 bytes_base_2  bits_base_10
+    seed=2  DataSize bytes_base_10  bits_base_2   bytes_base_2  bits_base_10
+
+The shipped pak has 79 `UnitType` blocks and 2074 `nameKey` references up to
+1259, so the whole numbering moves. This is **not a correctness bug** — each
+build is internally consistent and resolves to the same strings. What it costs
+is the ability to prove a pak came from a given commit by rebuilding it.
+
+**Why this is lower priority here than it is for netstats.** They ship paks
+from `paks/` in the repo, so a rebuild is their only commit-to-artifact link.
+This pack's CI attests instead: `actions/attest-build-provenance` is pinned in
+the workflow and the rc.4 pak digest
+`ba23f020…05cb19` carries **1 Sigstore attestation**, binding artifact to
+workflow run and commit without needing a rebuild. Reproducibility would let a
+third party verify *without* trusting that attestation, which is worth having,
+not urgent.
+
+**Blocked, not forgotten.** The fix is `PYTHONHASHSEED=0` in the environment
+before any SDK import. This pack builds through `mp-build` in CI rather than a
+local `build_pak.py`, so the variable belongs in the workflow's `env:` — and
+writing `.github/workflows/` needs the `workflow` token scope, which the PAT
+does not have. Needs either a token with that scope or a hand edit.
+
+If this is picked up, note two warnings from the netstats session, which hit
+both: a determinism gate that does not run the generator producing the file it
+checks will pass forever, and one of their causes was intermittent at about one
+run in two, so a two-sample comparison passes by luck. Run it several times.
+
 ## Verification method corrected: contrast is a property of a pair
 
 "Zero `#ffffff` in the pak" was asserted as proof and is not a valid check. It
