@@ -115,6 +115,14 @@ Two traps, both hit for real:
   hard-coded `doc["widgets"]` when the real path is
   `dashboards[].widgets[].config.editorData`, found zero panels, and printed
   `PASS`.
+- **Run the test the way CI runs it, not the way your shell runs it.** CI
+  executes these suites *inside the adapter image*, which has no `git` binary
+  and no `.git` directory. A test added here shelled out to `git`, passed
+  locally, and failed three consecutive CI runs with `FileNotFoundError` —
+  sending three failure emails. Reproduce the environment (`cp -R` the tree,
+  drop `.git`, clear `git` from `PATH`) before pushing. When a check genuinely
+  cannot run there, skip it **loudly with a printed reason**; a silent skip is
+  the vacuous pass again.
 - **A gate must run the generator producing the file it checks.** The netstats
   determinism gate ran two content generators and watched `content/`, so
   `describe.xml` — produced by the builder — was never compared.
