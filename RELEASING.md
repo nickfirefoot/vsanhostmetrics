@@ -31,6 +31,14 @@ Ask before:
 Approval for one tag is **not** approval for the next one. A prerelease is
 still a publish.
 
+**The question is not "is this outward-facing" — that part is obvious. It is
+"did he ask for THIS one".** A publish inside an established, repeatedly
+requested workflow does not feel like an escalation; it reads as continuing
+the task. That is exactly the case this rule exists for, and it is the one
+that gets missed. One pack published a version bump on its own initiative
+tonight, on the reasoning that publishing to that repo was the established
+request. Nothing was overwritten, but it was not asked for.
+
 Three refusals that are not negotiable, whoever asks:
 
 1. **Never route a blocked action through a different binary or path.** If a
@@ -60,7 +68,7 @@ committed `manifest.txt` tracks the last *release* (so `1.4.6` is correct
 while rc tags carry `1.4.7`), and that invariant is a test
 (`test_committed_manifest_matches_the_last_released_tag`), not a comment. It
 only matters for a hand build, which would otherwise label a pak with a stale
-version from current source. The netstats session shipped an `INSTALL.md`
+version from current source. Another pack shipped an `INSTALL.md`
 pointing at a different version than its own title before adding the same
 guard.
 
@@ -88,9 +96,8 @@ code path was checked. A gate pointed at `content/` would also have missed
 regenerated since PR #1 would have shipped.
 
 Never point a check at a build directory. `dist/` is gitignored here and still
-holds six probe dashboards no generator produces and paks back to 1.1.9; the
-netstats session's first audit reported faults in exactly such stale
-artefacts, and padding a check to 58 files from 18 with things that *cannot*
+holds six probe dashboards no generator produces and paks back to 1.1.9; one pack's first audit reported faults in exactly such
+stale artefacts, and padding a check to 58 files from 18 with things that *cannot*
 fail is the vacuous pass wearing a bigger number.
 
 ---
@@ -123,9 +130,9 @@ Two traps, both hit for real:
   drop `.git`, clear `git` from `PATH`) before pushing. When a check genuinely
   cannot run there, skip it **loudly with a printed reason**; a silent skip is
   the vacuous pass again.
-- **A gate must run the generator producing the file it checks.** The netstats
-  determinism gate ran two content generators and watched `content/`, so
-  `describe.xml` — produced by the builder — was never compared.
+- **A gate must run the generator producing the file it checks.** A determinism gate elsewhere ran two content
+  generators and watched `content/`, so `describe.xml` — produced by the
+  builder — was never compared.
 
 ---
 
@@ -179,10 +186,10 @@ parent is not sufficient — presence is not completeness. On 2026-10-16 this
 pack was declared clean because hosts showed 8, 10, 14 and 59 VMWARE children;
 26 of 28 VMs had already lost their `HostSystem` parent.
 
-The standard worth matching, set by the memtier session: run the image the pak
+The standard worth matching: run the image the pak
 names **by digest**, against a real vCenter, and count non-own-kind objects on
-the wire payload rather than via `get_parents()`. The netstats session
-measured 0 of 77 objects carrying parent links that way.
+the wire payload rather than via `get_parents()`. One pack measured 0 of 77 objects carrying
+parent links that way.
 
 ---
 
@@ -193,6 +200,13 @@ whatever lands on `main`; a commit-pinned raw URL
 (`raw.githubusercontent.com/<owner>/<repo>/<sha>/...`) is immutable without
 needing CI. A **draft** release's `untagged-<hash>` URL dies when the draft is
 published or re-cut — do not hand one to an operator.
+
+**Reproducibility and attestation are not equivalent, and the difference runs
+the direction people assume it does not.** A reproducible build proves a
+commit *can* produce these bytes. An attestation proves these bytes *came
+from* that commit. The first is the weaker substitute, however much more
+work it is to achieve. A pack may have one, the other, or neither, and the
+document should say which rather than implying provenance is settled.
 
 Prefer provenance that does not require a rebuild. Where a pack's source is on
 GitHub, CI can attest build provenance and bind artifact to commit directly
