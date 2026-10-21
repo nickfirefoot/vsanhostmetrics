@@ -116,6 +116,21 @@ def test_objects_without_uniqueness_identifiers_are_skipped():
     assert adapter._resource_index(c, "VMWARE", "HostSystem") == {}
 
 
+def test_vcenter_attach_is_off_by_default():
+    """CLAUDE.md rule 1. Asserting children on an object another adapter owns
+    REPLACES that object's whole child list. It did: 26 of 28 VMs lost their
+    HostSystem parent on 2026-10-21. This must stay opt-in."""
+    import re, pathlib
+    src = pathlib.Path("app/adapter.py").read_text(encoding="utf-8")
+    m = re.search(r"VC_ATTACH_PARAM,\s*\n\s*values=\[([^\]]+)\],\s*\n\s*default=\"([^\"]+)\"", src)
+    assert m, "the vCenter attach parameter is gone -- rule 1 has no switch"
+    assert m.group(2) == "false", f"default is {m.group(2)!r}, must be 'false'"
+    assert "if not attach_vc:" in src, "the attach is no longer gated"
+    assert "if attach_vc else []" in src, \
+        "the child-merge still runs when not attaching, which reads and " \
+        "re-asserts foreign child lists"
+
+
 if __name__ == "__main__":
     fails = 0
     names = [n for n in globals() if n.startswith("test_")]

@@ -34,3 +34,11 @@ THRESHOLDS = {
 # skipped query each. Declared in describe either way, so a customer who turns
 # this to "all" gets them without a new pak.
 METRIC_SCOPE_PARAM = "metric_scope"
+
+
+# Whether to attach our objects to vCenter objects. OFF by default since
+# 2026-10-21, see CLAUDE.md rule 1: asserting children on an object we do not
+# own destroys the owning adapter's relationships, and it did -- 26 of 28 VMs
+# lost their HostSystem parent. Turning this on re-enables that risk and is
+# only safe if NOTHING ELSE writes child lists on the same objects.
+VC_ATTACH_PARAM = "attach_to_vcenter"

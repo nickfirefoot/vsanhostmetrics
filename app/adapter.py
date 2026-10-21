@@ -41,6 +41,7 @@ from constants import VC_USER_PARAM
 from constants import VC_PASS_CRED
 from constants import VERIFY_PARAM
 from constants import METRIC_SCOPE_PARAM
+from constants import VC_ATTACH_PARAM
 import metric_scope
 
 import perfsvc
@@ -90,6 +91,26 @@ def get_adapter_definition() -> AdapterDefinition:
         # types, which is 45 fewer round trips per cycle. The vSAN perf API
         # returns all of an entity's metrics in one call, so narrowing within
         # an entity saves storage rather than time.
+        # OFF by default since 2026-10-21. See CLAUDE.md rule 1. Attaching to a
+        # vCenter object means asserting that object's COMPLETE child list,
+        # which destroys whatever the owning adapter had there. With a second
+        # pack writing the same lists it cost 26 of 28 VMs their HostSystem
+        # parent. Our objects are orphaned with this off -- views that traverse
+        # from a vCenter object will not find them -- and that is the lesser
+        # harm until the pack owns its own hierarchy.
+        d.define_enum_parameter(
+            VC_ATTACH_PARAM,
+            values=["false", "true"],
+            default="false",
+            label="Attach objects to vCenter inventory",
+            description="Leave false. True makes this pack claim child "
+                        "relationships on vCenter hosts, VMs and clusters, "
+                        "which REPLACES the child list the vCenter adapter "
+                        "maintains and has destroyed VM-to-host relationships "
+                        "in practice. Only consider true if nothing else "
+                        "writes relationships on those objects.",
+            required=False,
+        )
         d.define_enum_parameter(
             METRIC_SCOPE_PARAM,
             values=["dashboard", "all"],
@@ -534,6 +555,14 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
                         len(parents.get("clusters", {})))
             vc_cache: dict = {}
             linked = 0
+            # CLAUDE.md rule 1: off unless the operator explicitly opts in.
+            attach_vc = _cfg(adapter_instance, VC_ATTACH_PARAM,
+                             "false").strip().lower() == "true"
+            if not attach_vc:
+                logger.info("not attaching to vCenter objects (%s=false). "
+                            "Our objects are standalone; nothing writes child "
+                            "lists on objects this pack does not own.",
+                            VC_ATTACH_PARAM)
 
             total_problems: List[str] = []
             for cluster in clusters:
@@ -570,6 +599,8 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
                         value = idents.get(ident)
                         if not value:
                             continue
+                        if not attach_vc:
+                            break
                         parent = _vc_parent(vc_cache, parents, bucket, value)
                         if parent is not None:
                             parent.add_child(obj)
@@ -598,7 +629,8 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
             # Fail CLOSED: if we cannot read an object's existing children we
             # leave that object out of the result entirely, losing our own
             # relationship for a cycle rather than destroying someone else's.
-            kept = _preserve_existing_children(adapter_instance, vc_cache)
+            kept = (_preserve_existing_children(adapter_instance, vc_cache)
+                    if attach_vc else [])
             for parent in kept:
                 result.add_object(parent)
             logger.info("linked %d objects to %d vCenter parents "
