@@ -22,6 +22,7 @@ Two constraints learned the hard way and encoded here:
     arithmetic. Setting both ends is the only thing correct in both themes.
 """
 import html
+import re
 import os
 import sys
 
@@ -73,6 +74,44 @@ P = f"margin:5px 0;line-height:1.45;color:{FG}"
 # only signal, so the distinction survives if a renderer drops one of them.
 NAME = f"font-weight:600;font-family:{MONO};color:{ACCENT}"
 BOLD = f"font-weight:700;color:{FG}"
+# Inline tags the NOTES and INTRO prose may use. Every one gets an explicit
+# colour: <code> and <i> previously shipped bare and relied on inheriting from
+# the enclosing <p>, which is valid CSS but is exactly the hop this editor has
+# broken before. A peer pack hit the matching bug from the other side -- its
+# applier matched only BARE tags, so a fragment that already carried a style
+# attribute came out with no colour at all.
+INLINE = {
+    "b": BOLD,
+    "strong": BOLD,
+    "i": f"font-style:italic;color:{FG}",
+    "em": f"font-style:italic;color:{FG}",
+    "code": f"font-family:{MONO};font-size:12px;color:{ACCENT}",
+}
+
+
+def style_inline(markup):
+    """Give every inline tag an explicit colour; refuse to guess at the rest.
+
+    Raises on a tag that is not in INLINE, and on one that already carries
+    attributes, rather than emitting it bare. Silently passing those through is
+    how <code> and <i> reached a shipped pak with no colour of their own.
+    """
+    def sub(m):
+        tag, attrs = m.group(1).lower(), m.group(2).strip()
+        if tag not in INLINE:
+            raise SystemExit(
+                f"build_dash_help: inline tag <{tag}> has no style in INLINE; "
+                f"add one rather than shipping it uncoloured")
+        if attrs:
+            raise SystemExit(
+                f"build_dash_help: <{tag} {attrs}> already carries attributes; "
+                f"prepend the style instead of substituting the tag")
+        return f'<{tag} style="{INLINE[tag]}">'
+
+    return re.sub(r"<([a-zA-Z][a-zA-Z0-9]*)((?:\s[^>]*)?)>", lambda m: (
+        m.group(0) if m.group(1).lower() not in INLINE
+        and not m.group(0).startswith(tuple(f"<{t}" for t in INLINE))
+        else sub(m)), markup)
 
 # The narrative each screen needs and no metric list can supply: what question
 # the screen answers, and what "normal" looks like on it.
@@ -221,7 +260,7 @@ def panel_block(panel_title, view_title, kind, columns):
         note = NOTES.get(key)
         if not note:
             raise SystemExit(f"no explanation written for {kind}/{key}")
-        note = note.replace("<b>", f'<b style="{BOLD}">')
+        note = style_inline(note)
         out.append(f'<p style="{P}"><span style="{NAME}">{html.escape(label)}'
                    f'</span> &mdash; {note}</p>')
     return out
@@ -238,7 +277,7 @@ def main() -> None:
         for heading, paras in intro:
             body.append(f'<h2 style="{H2}">{heading}</h2>')
             for para in paras:
-                para = para.replace("<b>", f'<b style="{BOLD}">')
+                para = style_inline(para)
                 body.append(f'<p style="{P}">{para}</p>')
         seen = set()
         for panel_title, view_key, _coords in panels:

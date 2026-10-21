@@ -284,20 +284,34 @@ def test_help_panel_text_never_lands_on_the_theme_colour():
     panels = list(cc.sources([]))
     assert panels, "no text panels found -- this test would prove nothing"
 
-    worst, nodes, uncontrolled = 99.0, 0, []
+    worst, nodes, uncontrolled, leaning, rootless = 99.0, 0, [], [], []
     for label, markup in panels:
         w = cc.Walker()
         w.feed(markup)
-        for text, fg, bg in w.nodes:
+        if not w.root_bg:
+            rootless.append(label)
+        for text, fg, bg, own in w.nodes:
             nodes += 1
             if fg is None or bg is None:
                 uncontrolled.append(f"{label}: {text!r} fg={fg} bg={bg}")
                 continue
+            if not own:
+                leaning.append(f"{label}: {text!r}")
             worst = min(worst, cc.contrast(fg, bg))
 
+    # The OUTERMOST element must carry the card. Crediting any ancestor
+    # background lets a panel with no card pass on an inner code-span fill,
+    # while the wrapper's own padding still shows the theme colour.
+    assert not rootless, f"no card background on: {rootless}"
     assert not uncontrolled, (
         f"{len(uncontrolled)} text nodes depend on the theme's colour; "
         f"first: {uncontrolled[0]}")
+    # Inheriting from our own card is valid CSS, but this editor has broken
+    # that hop before -- it is why rc.3 shipped unreadable. <code> and <i>
+    # reached a shipped pak this way.
+    assert not leaning, (
+        f"{len(leaning)} text nodes lean on an inherited colour; "
+        f"first: {leaning[0]}")
     assert nodes > 1000, nodes
     # 4.5:1 is the WCAG AA bar for body text. It is reachable only because the
     # panel supplies its own background; no fixed foreground clears it on both

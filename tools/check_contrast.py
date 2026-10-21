@@ -64,6 +64,8 @@ class Walker(html.parser.HTMLParser):
         super().__init__(convert_charrefs=True)
         self.stack = []                 # (tag, fg, bg)
         self.nodes = []                 # (text, fg, bg)
+        self.root_bg = None             # background of the OUTERMOST element
+        self._seen_root = False
 
     def _cur(self):
         fg = next((f for _t, f, _b in reversed(self.stack) if f), None)
@@ -75,6 +77,14 @@ class Walker(html.parser.HTMLParser):
         fg = decl(style, "color")
         bg = decl(style, "background") or decl(style, "background-color")
         if tag not in self.VOID:
+            if not self._seen_root:
+                # The outermost element is what sits against the theme. A peer
+                # pack found that crediting ANY ancestor background lets a
+                # panel with no card pass, because an inner code-span fill
+                # scores fine on its own -- while the wrapper, and so the
+                # padding and gaps, still show the theme colour.
+                self.root_bg = bg
+                self._seen_root = True
             self.stack.append((tag, fg, bg))
 
     def handle_endtag(self, tag):
@@ -86,7 +96,12 @@ class Walker(html.parser.HTMLParser):
     def handle_data(self, data):
         if data.strip():
             fg, bg = self._cur()
-            self.nodes.append((data.strip()[:48], fg, bg))
+            # Whether the element DIRECTLY holding this text declares its own
+            # colour, or is leaning on an inheritance hop. Valid CSS either
+            # way, but this editor has broken that hop before -- it is why
+            # rc.3 shipped unreadable -- so our own output must not rely on it.
+            own = bool(self.stack and self.stack[-1][1])
+            self.nodes.append((data.strip()[:48], fg, bg, own))
 
 
 def panels_from_json(doc, label):
@@ -136,6 +151,10 @@ def sources(argv):
                     if isinstance(d, dict):
                         yield from panels_from_json(d, os.path.basename(n))
         return
+    # content/dashboards/ ONLY -- this is what build_pak ships. Never point
+    # this at dist/, which is gitignored and still holds six probe dashboards
+    # the builder stopped producing, plus paks back to 1.1.9. A peer pack's
+    # first audit reported faults in exactly such stale artefacts.
     for f in sorted(glob.glob("content/dashboards/*/*.json")):
         yield from panels_from_json(json.load(open(f)), os.path.basename(f))
 
@@ -144,7 +163,7 @@ def main():
     bar = 4.5
     if "--min" in sys.argv:
         bar = float(sys.argv[sys.argv.index("--min") + 1])
-    total = bad = inherited = 0
+    total = bad = inherited = rootless = leaning = 0
     pairs = {}
     panels = 0
 
@@ -152,7 +171,11 @@ def main():
         panels += 1
         w = Walker()
         w.feed(markup)
-        for text, fg, bg in w.nodes:
+        if not w.root_bg:
+            rootless += 1
+            print(f"  NO CARD        {label}: outermost element declares no "
+                  f"background; the wrapper sits on the theme colour")
+        for text, fg, bg, own in w.nodes:
             total += 1
             if bg is None:
                 inherited += 1
@@ -162,6 +185,10 @@ def main():
                 inherited += 1
                 print(f"  NO FOREGROUND  {label}: {text!r} (bg={bg})")
                 continue
+            if not own:
+                leaning += 1
+                print(f"  INHERITS PARENT {label}: {text!r} -- the tag holding "
+                      f"this text sets no colour of its own")
             r = contrast(fg, bg)
             pairs.setdefault((fg, bg), [0, r])[0] += 1
             if r < bar:
@@ -173,12 +200,14 @@ def main():
     for (fg, bg), (n, r) in sorted(pairs.items(), key=lambda kv: kv[1][1]):
         flag = "  <-- worst" if r == min(v[1] for v in pairs.values()) else ""
         print(f"    {fg} on {bg}  {r:6.2f}:1  x{n}{flag}")
-    print(f"\n  inheriting the page colour : {inherited}")
+    print(f"\n  panels with no card background : {rootless}")
+    print(f"  inheriting the page colour : {inherited}")
+    print(f"  leaning on a parent colour : {leaning}")
     print(f"  below {bar}:1                 : {bad}")
     if panels == 0:
         print("  no text panels found -- this check proved NOTHING")
         return 2
-    ok = inherited == 0 and bad == 0
+    ok = inherited == 0 and bad == 0 and rootless == 0 and leaning == 0
     print(f"\n  {'PASS' if ok else 'FAIL'}")
     return 0 if ok else 1
 
