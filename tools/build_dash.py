@@ -130,9 +130,16 @@ DASHBOARDS = [
     # current value and no retained history, and a view queries a time range.
     # What survived of it folded into the vCenter host view below.
     ("Rapid vSAN Host Resources", "rapid-vsan-host-resources-help", [
-        ("Host health and load",          "vSAN_Host_Uplinks_and_Load", {"w":10,"x":3,"h":7,"y":1}),
-        ("vSAN daemon memory",            "vSAN_Host_Memory",              {"w":12,"x":1,"h":8,"y":8}),
-        ("vSAN CPU - is it starved?",       "vSAN_Host_CPU",                 {"w":12,"x":1,"h":8,"y":16}),
+        # What vSAN ITSELF consumes on a host: memory, CPU, network. "Host
+        # health and load" is vCenter's view of the host rather than vSAN's,
+        # and it already appears on Overview (triage) and Network (uplinks) --
+        # a third copy made a third of this three-panel screen a repeat.
+        # vSAN Host Network takes its place: it was orphaned when the Network
+        # dashboard dropped it as a rollup of vmknic, but as a HOST-level
+        # resource panel it has a subject of its own here.
+        ("vSAN daemon memory",            "vSAN_Host_Memory",            {"w":10,"x":3,"h":7,"y":1}),
+        ("vSAN CPU - is it starved?",     "vSAN_Host_CPU",               {"w":12,"x":1,"h":7,"y":8}),
+        ("Host network - all vSAN",       "vSAN_Host_Network",           {"w":12,"x":1,"h":7,"y":15}),
     ]),
 ]
 

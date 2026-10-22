@@ -65,49 +65,12 @@
     {
      "tabId": "ba668641-8b47-5d41-8ac6-af6b7acb6265",
      "collapsed": false,
-     "id": "a0409265-1193-5a85-bdd2-542bf2ba56ca",
+     "id": "06477a2e-a47d-55a9-8123-1d22b58862fe",
      "gridsterCoords": {
       "w": 10,
       "x": 3,
       "h": 7,
       "y": 1
-     },
-     "type": "View",
-     "title": "Host health and load",
-     "config": {
-      "refreshInterval": 300,
-      "resource": null,
-      "widgetId": "a0409265-1193-5a85-bdd2-542bf2ba56ca",
-      "traversalSpecId": "",
-      "refreshContent": {
-       "refreshContent": true
-      },
-      "description": "",
-      "isUpdatedView": true,
-      "title": "Host health and load",
-      "viewDefinitionId": "84de6a1e-aa7c-5da9-a0d5-a5cb31a72cbd",
-      "titleLocalized": "Host health and load",
-      "viewType": "LIST",
-      "chartViewItems": [],
-      "selectFirstRow": {
-       "selectFirstRow": false
-      },
-      "viewDetails": "",
-      "selfProvider": {
-       "selfProvider": false
-      }
-     },
-     "height": 0
-    },
-    {
-     "tabId": "ba668641-8b47-5d41-8ac6-af6b7acb6265",
-     "collapsed": false,
-     "id": "06477a2e-a47d-55a9-8123-1d22b58862fe",
-     "gridsterCoords": {
-      "w": 12,
-      "x": 1,
-      "h": 8,
-      "y": 8
      },
      "type": "View",
      "title": "vSAN daemon memory",
@@ -143,8 +106,8 @@
      "gridsterCoords": {
       "w": 12,
       "x": 1,
-      "h": 8,
-      "y": 16
+      "h": 7,
+      "y": 8
      },
      "type": "View",
      "title": "vSAN CPU - is it starved?",
@@ -176,12 +139,49 @@
     {
      "tabId": "ba668641-8b47-5d41-8ac6-af6b7acb6265",
      "collapsed": false,
+     "id": "cb85b827-9612-52d0-b2f0-4711ac18b56b",
+     "gridsterCoords": {
+      "w": 12,
+      "x": 1,
+      "h": 7,
+      "y": 15
+     },
+     "type": "View",
+     "title": "Host network - all vSAN",
+     "config": {
+      "refreshInterval": 300,
+      "resource": null,
+      "widgetId": "cb85b827-9612-52d0-b2f0-4711ac18b56b",
+      "traversalSpecId": "",
+      "refreshContent": {
+       "refreshContent": true
+      },
+      "description": "",
+      "isUpdatedView": true,
+      "title": "Host network - all vSAN",
+      "viewDefinitionId": "d46f58a8-e3a4-519f-9124-ac8ff83871c5",
+      "titleLocalized": "Host network - all vSAN",
+      "viewType": "LIST",
+      "chartViewItems": [],
+      "selectFirstRow": {
+       "selectFirstRow": false
+      },
+      "viewDetails": "",
+      "selfProvider": {
+       "selfProvider": false
+      }
+     },
+     "height": 0
+    },
+    {
+     "tabId": "ba668641-8b47-5d41-8ac6-af6b7acb6265",
+     "collapsed": false,
      "id": "7790e754-c598-5a02-ab02-527d742a784f",
      "gridsterCoords": {
       "w": 12,
       "x": 1,
       "h": 7,
-      "y": 24
+      "y": 22
      },
      "type": "TextDisplay",
      "title": "How to read this",
@@ -215,17 +215,17 @@
     {
      "widgetIdProvider": "7897534d-539f-5127-b209-506c6a271995",
      "type": "resourceId",
-     "widgetIdReceiver": "a0409265-1193-5a85-bdd2-542bf2ba56ca"
-    },
-    {
-     "widgetIdProvider": "7897534d-539f-5127-b209-506c6a271995",
-     "type": "resourceId",
      "widgetIdReceiver": "06477a2e-a47d-55a9-8123-1d22b58862fe"
     },
     {
      "widgetIdProvider": "7897534d-539f-5127-b209-506c6a271995",
      "type": "resourceId",
      "widgetIdReceiver": "8149f26c-4037-5321-b991-099a61856c23"
+    },
+    {
+     "widgetIdProvider": "7897534d-539f-5127-b209-506c6a271995",
+     "type": "resourceId",
+     "widgetIdReceiver": "cb85b827-9612-52d0-b2f0-4711ac18b56b"
     }
    ],
    "lastUpdateUserId": "833b693b-0960-4d05-b868-f14446488fc3",
