@@ -160,6 +160,17 @@ UNIT_OVERRIDE = {
     # HCIBench charts it in µs; the id says ms and the live value is a
     # constant 20000 -- a 20 s periodic wakeup, not 20 ms.
     "checkpointWorkerWakeupMs": "TIME.MILLISECONDS",
+    # Capacity reports raw bytes and the vSAN schema declares no unit for
+    # them, so Operations rendered 13442182283264 -- a 14-digit column far
+    # wider than any header, which is what actually drove column width on
+    # that view. Declaring the unit lets a view ask for tebibyte/gibibyte and
+    # Operations do the conversion. All five keys are unique to
+    # VsanClusterCapacity, checked, so naming them by metric alone is safe.
+    "total": "DATA_SIZE.BYTE",
+    "free": "DATA_SIZE.BYTE",
+    "used": "DATA_SIZE.BYTE",
+    "savedByDedup": "DATA_SIZE.BYTE",
+    "totalDpOverhead": "DATA_SIZE.BYTE",
 }
 
 OVERRIDE = {

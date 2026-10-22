@@ -85,8 +85,9 @@ VIEWS = [
         ("config|name", "", "CURRENT"),
     ], "VMWARE"),
     ("vSAN Cluster Capacity", "VsanClusterCapacity", [
-        ("free", "", "CURRENT"), ("used", "", "CURRENT"), ("total", "", "CURRENT"),
-        ("dedupRatio", "", "CURRENT"), ("savedByDedup", "", "CURRENT"),
+        ("free", "tebibyte", "CURRENT"), ("used", "tebibyte", "CURRENT"),
+        ("total", "tebibyte", "CURRENT"),
+        ("dedupRatio", "", "CURRENT"), ("savedByDedup", "gibibyte", "CURRENT"),
     ]),
     ("vSAN Cluster DOM Client", "VsanClusterDomclient", [
         ("latencyAvgRead", "", "MAX"), ("latencyAvgWrite", "", "MAX"),
@@ -109,7 +110,7 @@ VIEWS = [
     ("vSAN Cluster RDT", "VsanClusterRdtLatency", [
         ("txCtxQMax", "", "MAX"),
         ("avgLatency", "", "MAX"), ("maxLatency", "", "MAX"), ("minLatency", "", "MIN"),
-        ("txQLatAvg", "", "MAX"), ("txSbSpaceMin", "", "MIN"), ("rxSbSpaceMin", "", "MIN"),
+        ("txQLatAvg", "", "MAX"), ("txSbSpaceMin", "kibibyte", "MIN"), ("rxSbSpaceMin", "", "MIN"),
         ("kaReset", "", "CURRENT"), ("numReadyDelay", "", "CURRENT"),
     ]),
     ("vSAN Host DOM", "VsanHostDomclient", [
@@ -326,7 +327,7 @@ VIEWS = [
     ]),
     ("vSAN zDOM Per Host", "VsanHostZdomTopStats", [
         ("latencyAvgRead", "", "MAX"), ("latencyAvgWrite", "", "MAX"),
-        ("readLatencyMaxUs", "", "MAX"), ("writeLatencyMaxUs", "", "MAX"),
+        ("readLatencyMaxUs", "", "MAX"), ("writeLatencyMaxUs", "milliseconds", "MAX"),
         ("unmapLatencyMaxUs", "", "MAX"),
         ("iopsRead", "", "MAX"), ("iopsWrite", "", "MAX"),
         ("throughputRead", "mebibyteps", "MAX"),
@@ -362,7 +363,7 @@ VIEWS = [
         ("avgLatency", "", "MAX"), ("maxLatency", "", "MAX"),
         ("minLatency", "", "MIN"),
         ("txQLatAvg", "", "MAX"), ("txQLatMax", "", "MAX"),
-        ("txSbSpaceMin", "", "MIN"), ("rxSbSpaceMin", "", "MIN"),
+        ("txSbSpaceMin", "kibibyte", "MIN"), ("rxSbSpaceMin", "", "MIN"),
         ("kaReset", "", "CURRENT"), ("numReadyDelay", "", "CURRENT"),
     ]),
     # Cluster membership traffic. If CMMDS cannot talk, the cluster partitions
@@ -376,13 +377,13 @@ VIEWS = [
     ]),
     # ---- host resources: is vSAN slow, or is the host out of road? --------
     ("vSAN Host Memory", "VsanMemory", [
-        ("kernelConsumedSize", "", "MAX"), ("kernelReservedSize", "", "CURRENT"),
-        ("uwConsumedSize", "", "MAX"), ("uwReservedSize", "", "CURRENT"),
-        ("clomdConsumedSize", "", "MAX"), ("clomdReservedSize", "", "CURRENT"),
-        ("cmmdsdConsumedSize", "", "MAX"), ("cmmdsdReservedSize", "", "CURRENT"),
-        ("vsanmgmtdConsumedSize", "", "MAX"), ("epdConsumedSize", "", "MAX"),
-        ("osfsdConsumedSize", "", "MAX"),
-        ("vsandevicemonitordConsumedSize", "", "MAX"),
+        ("kernelConsumedSize", "mebibyte", "MAX"), ("kernelReservedSize", "mebibyte", "CURRENT"),
+        ("uwConsumedSize", "mebibyte", "MAX"), ("uwReservedSize", "mebibyte", "CURRENT"),
+        ("clomdConsumedSize", "mebibyte", "MAX"), ("clomdReservedSize", "mebibyte", "CURRENT"),
+        ("cmmdsdConsumedSize", "mebibyte", "MAX"), ("cmmdsdReservedSize", "mebibyte", "CURRENT"),
+        ("vsanmgmtdConsumedSize", "mebibyte", "MAX"), ("epdConsumedSize", "mebibyte", "MAX"),
+        ("osfsdConsumedSize", "mebibyte", "MAX"),
+        ("vsandevicemonitordConsumedSize", "mebibyte", "MAX"),
     ]),
     # Subject moved from VsanHostCpu to VsanCpu. VsanHostCpu is identified by
     # [host_uuid, cpu] -- ONE OBJECT PER CORE, 244 on a four-host cluster, for

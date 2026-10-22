@@ -22,7 +22,7 @@
                                 <Value>
                                     <Property name="objectType" value="RESOURCE" />
                                     <Property name="attributeKey" value="free" />
-                                    <Property name="preferredUnitId" value="" />
+                                    <Property name="preferredUnitId" value="tebibyte" />
                                     <Property name="isStringAttribute" value="false" />
                                     <Property name="adapterKind" value="VsanHostMetrics" />
                                     <Property name="resourceKind" value="VsanClusterCapacity" />
@@ -44,7 +44,7 @@
                                 <Value>
                                     <Property name="objectType" value="RESOURCE" />
                                     <Property name="attributeKey" value="used" />
-                                    <Property name="preferredUnitId" value="" />
+                                    <Property name="preferredUnitId" value="tebibyte" />
                                     <Property name="isStringAttribute" value="false" />
                                     <Property name="adapterKind" value="VsanHostMetrics" />
                                     <Property name="resourceKind" value="VsanClusterCapacity" />
@@ -66,7 +66,7 @@
                                 <Value>
                                     <Property name="objectType" value="RESOURCE" />
                                     <Property name="attributeKey" value="total" />
-                                    <Property name="preferredUnitId" value="" />
+                                    <Property name="preferredUnitId" value="tebibyte" />
                                     <Property name="isStringAttribute" value="false" />
                                     <Property name="adapterKind" value="VsanHostMetrics" />
                                     <Property name="resourceKind" value="VsanClusterCapacity" />
@@ -110,7 +110,7 @@
                                 <Value>
                                     <Property name="objectType" value="RESOURCE" />
                                     <Property name="attributeKey" value="savedByDedup" />
-                                    <Property name="preferredUnitId" value="" />
+                                    <Property name="preferredUnitId" value="gibibyte" />
                                     <Property name="isStringAttribute" value="false" />
                                     <Property name="adapterKind" value="VsanHostMetrics" />
                                     <Property name="resourceKind" value="VsanClusterCapacity" />

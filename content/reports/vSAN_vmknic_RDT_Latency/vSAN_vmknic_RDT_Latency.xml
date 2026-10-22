@@ -154,7 +154,7 @@
                                 <Value>
                                     <Property name="objectType" value="RESOURCE" />
                                     <Property name="attributeKey" value="txSbSpaceMin" />
-                                    <Property name="preferredUnitId" value="" />
+                                    <Property name="preferredUnitId" value="kibibyte" />
                                     <Property name="isStringAttribute" value="false" />
                                     <Property name="adapterKind" value="VsanHostMetrics" />
                                     <Property name="resourceKind" value="VsanVnicRdtLatency" />
