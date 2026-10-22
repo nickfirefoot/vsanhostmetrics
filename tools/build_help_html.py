@@ -29,6 +29,25 @@ OUT = os.path.expanduser("~/ops-content/out/help")
 # What each column means, why it is on the screen, and what it does NOT tell
 # you. Written against measurements from a live cluster where one exists.
 NOTES = {
+    # ---- drive hardware (properties, not metrics) ----------------------
+    "model": "The drive's model string as the controller reports it. Two "
+             "drives that look identical in a slot list can be different "
+             "parts; this is what distinguishes them.",
+    "firmware": "The drive's firmware level, read from the device rather "
+                "than from any inventory. <b>This is the first question "
+                "asked about one slow NVMe drive among identical peers</b>, "
+                "and the vSAN Performance Service cannot answer it &mdash; "
+                "none of its counters carry a firmware level, so this comes "
+                "from vCenter's view of the device. A single drive at a "
+                "different level from its peers is worth knowing before you "
+                "start reading latency columns.",
+    "driver": "The ESXi driver bound to the controller this drive sits "
+              "behind, not to the drive itself. <b>Several drives usually "
+              "share one driver</b>, so a driver difference points at a "
+              "controller or a host, not at a disk. Blank means the storage "
+              "topology could not be walked on that host; the drive's own "
+              "firmware is still reported.",
+
  # ---- vSAN CPU, per host (replaced the per-core VsanHostCpu) --------------
  "readyPct": "Time vSAN's own threads spent RUNNABLE but waiting for a physical CPU. This is the question the screen exists to answer: not whether the host is busy, but whether vSAN is being <b>starved</b>. A host can sit at modest utilisation and still show ready time if vSAN is losing the scheduler contest to guest workloads. Rising ready time with flat utilisation means contention, and it shows up as latency everywhere downstream before it shows up here.",
  "maxRunPct": "The highest run percentage observed in the interval, across vSAN's threads. Read it next to the average: a high maximum with a modest average means bursty demand that the average hides, which is exactly the shape that produces intermittent latency nobody can reproduce.",
@@ -236,9 +255,6 @@ NOTES.update({
  "osfsdConsumedSize": "Memory used by <b>osfsd</b>, the object filesystem daemon that presents vSAN objects as namespaces.",
  "vsandevicemonitordConsumedSize": "Memory used by the device monitor, which watches disks for failure and degradation.",
  # ---- host CPU -----------------------------------------------------------
- "pcpuUsedPct": "Proportion of this physical CPU that was used. Listed per CPU rather than per host, so a single hot CPU is visible instead of averaged away.",
- "pcpuUtilPct": "Proportion of this physical CPU that was utilised. Differs from used where frequency scaling or hyperthreading is in play; read the two together.",
- "coreUtilPct": "Utilisation of the physical core this CPU belongs to. A core near saturation while its CPUs look moderate is hyperthread contention.",
  # ---- borrowed from the vCenter adapter ---------------------------------
  "net|errorsRx_summation": "Inbound errors summed across <b>every</b> uplink on the host, counted by vCenter rather than by this pack. This pack only measures uplinks that carry vSAN traffic, which on this cluster is two of four per host, so a standby uplink going bad is invisible to it. This column is here to close that gap.",
  "net|droppedRx_summation": "Inbound packets dropped across every uplink on the host.",

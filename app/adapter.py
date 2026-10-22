@@ -180,6 +180,17 @@ def get_adapter_definition() -> AdapterDefinition:
                 # visible without reading the object name
                 ot.define_string_property(f"{label}_prop", _label_for(label))
 
+            # Drive hardware, for the kinds that ARE a drive. Properties, not
+            # metrics: a firmware level has a current value and no time
+            # series, and a column left marked as a metric queries a time
+            # range and finds nothing -- the mechanism that killed the host
+            # services view.
+            if spec["kind"] in perfsvc.DISK_HARDWARE_KINDS:
+                ot.define_string_property("firmware", "Firmware")
+                ot.define_string_property("driver", "Driver")
+                ot.define_string_property("model", "Model")
+                ot.define_string_property("vendor", "Vendor")
+
             for metric in perfsvc.metrics_for(entity):
                 # Every perfsvc metric is a point value: the service has already
                 # reduced into 5-minute buckets, so nothing here is a rate we
@@ -556,6 +567,7 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
             names = perfsvc.build_name_map(si, clusters, perf, mos)
             logger.info("resolved %d identifier names", len(names))
             parents = perfsvc.build_parent_map(si, clusters, perf, mos)
+            disk_hw = perfsvc.build_disk_hardware(si, clusters)
             logger.info("mapped %d hosts, %d VMs, %d clusters to vCenter objects",
                         len(parents.get("hosts", {})), len(parents.get("vms", {})),
                         len(parents.get("clusters", {})))
@@ -602,6 +614,11 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
                         if value:
                             obj.with_property(f"{name}_prop",
                                               names.get(value, value))
+
+                    if spec["kind"] in perfsvc.DISK_HARDWARE_KINDS:
+                        hw = disk_hw.get(dict(key.idents).get("disk_uuid", ""))
+                        for field, val in (hw or {}).items():
+                            obj.with_property(field, val)
 
                     # Hang the object off the vCenter object it belongs to, so
                     # vSAN metrics show up under the host or VM an operator is

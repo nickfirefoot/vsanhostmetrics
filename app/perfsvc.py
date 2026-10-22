@@ -205,6 +205,80 @@ def connect(host: str, user: str, password: str, verify: bool = False):
     return si, clusters, mos
 
 
+DISK_HARDWARE_KINDS = ("VsanEsaDiskLayer", "VsanEsaDiskScsifw",
+                       "VsanCacheDisk", "VsanCapacityDisk")
+
+
+def build_disk_hardware(service_instance, clusters) -> Dict[str, Dict[str, str]]:
+    """vSAN disk uuid -> {firmware, model, vendor, driver}.
+
+    The Performance Service returns counters only -- nothing in its 1,035
+    metrics carries a firmware or driver level. These come from the vCenter
+    connection this pack already holds, so no new credential or endpoint.
+
+    The join that makes it possible: `vsanSystem.QueryDisksForVsan()` returns,
+    on ONE object, both the `vsanUuid` this pack already keys disks by and the
+    `ScsiDisk` carrying model, vendor and `revision` (the firmware level).
+    Verified against the lab 2026-10-22: 7 vsanUuids across 4 hosts, matching
+    this pack's 7 VsanEsaDiskLayer objects exactly, 1:1.
+
+    Driver is one hop further out, because it belongs to the controller rather
+    than the drive: scsiTopology maps an adapter to its LUNs, and
+    hostBusAdapter carries the driver name. A drive whose topology cannot be
+    walked keeps its firmware and simply has no driver, rather than being
+    dropped.
+
+    Best effort throughout, like build_name_map: a host that raises is skipped
+    and the rest still report. Firmware on three of four hosts beats a
+    collection that fails because one host is unreachable.
+    """
+    out: Dict[str, Dict[str, str]] = {}
+    hosts = []
+    for cluster in clusters:
+        hosts.extend(getattr(cluster, "host", []) or [])
+
+    for host in hosts:
+        try:
+            vsan = host.configManager.vsanSystem
+            disks = vsan.QueryDisksForVsan()
+        except Exception as exc:                            # noqa: BLE001
+            logger.info("disk hardware unavailable on %s: %s",
+                        getattr(host, "name", "?"), type(exc).__name__)
+            continue
+
+        # lun key -> driver, by walking adapter -> target -> lun
+        driver_for_lun: Dict[str, str] = {}
+        try:
+            sd = host.config.storageDevice
+            hba = {a.key: getattr(a, "driver", "") or ""
+                   for a in (sd.hostBusAdapter or [])}
+            for adapter in (sd.scsiTopology.adapter or []):
+                drv = hba.get(adapter.adapter, "")
+                for target in (adapter.target or []):
+                    for lun in (target.lun or []):
+                        if drv:
+                            driver_for_lun[lun.scsiLun] = drv
+        except Exception as exc:                            # noqa: BLE001
+            logger.debug("no scsi topology on %s: %s",
+                         getattr(host, "name", "?"), type(exc).__name__)
+
+        for entry in disks:
+            uuid = (getattr(entry, "vsanUuid", "") or "").strip()
+            if not uuid:
+                continue            # a disk vSAN has not claimed has no uuid
+            disk = entry.disk
+            info = {
+                "firmware": (getattr(disk, "revision", "") or "").strip(),
+                "model": (getattr(disk, "model", "") or "").strip(),
+                "vendor": (getattr(disk, "vendor", "") or "").strip(),
+                "driver": driver_for_lun.get(getattr(disk, "key", ""), ""),
+            }
+            out[uuid] = {k: v for k, v in info.items() if v}
+
+    logger.info("resolved hardware detail for %d vSAN disks", len(out))
+    return out
+
+
 def build_name_map(service_instance, clusters, perf,
                    _mos: Optional[Dict] = None) -> Dict[str, str]:
     """uuid -> human label, for every identifier type we can resolve.

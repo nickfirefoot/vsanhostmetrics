@@ -257,18 +257,31 @@ INTRO = {
  ],
  "Rapid vSAN Host Resources": [
    ("Host resources &mdash; is vSAN slow, or is the host out of road?",
-    ["Every latency figure on every other screen is only meaningful if the host had capacity "
-     "to spare. This screen answers that question first, so the others can be trusted.",
-     "<b>Start with service health.</b> A daemon that is not answering explains more than any "
-     "latency number will. This pack can measure how much memory clomd and cmmdsd consume but "
-     "has no way to tell whether they are responding, and vCenter checks exactly that, so the "
-     "two halves are on the same screen deliberately.",
-     "<b>CPU contention matters more than CPU usage.</b> A host can be busy without anything "
-     "waiting, and can make things wait while looking only moderately busy. Memory swap-in is "
-     "the hard stop: any sustained non-zero value means memory was overcommitted far enough "
-     "to page, and no latency figure anywhere else is reliable while it continues.",
-     "The physical CPU table is listed per CPU rather than per host, so a single hot core is "
-     "visible instead of averaged away."]),
+    ["Every latency figure on every other screen is only meaningful if the host had "
+     "capacity to spare. This screen answers that first, so the others can be trusted. "
+     "It shows what <b>vSAN itself</b> consumes on a host &mdash; memory, CPU, network "
+     "&mdash; not the host's total load, which is vCenter's to report and appears on the "
+     "Overview and Network screens.",
+     "<b>CPU contention matters more than CPU usage, and <code>readyPct</code> is the "
+     "headline.</b> A host can be busy with nothing waiting, and can make things wait "
+     "while looking only moderately busy. Ready time is the one that hurts: it is vSAN's "
+     "threads queued for a core they did not get. Used and run percentages are context "
+     "for it, not peers of it.",
+     "<b>This table is per host, four rows, not per core.</b> It replaced a per-CPU table "
+     "of 244 rows that carried only generic utilisation and no ready time &mdash; more "
+     "rows, less answer. If you need to find a single hot core, that is a vCenter "
+     "question, not a vSAN one.",
+     "<b>Start with service memory.</b> A daemon that is not answering explains more than "
+     "any latency number will. This pack can measure what clomd, cmmdsd and the rest "
+     "consume and reserve; it cannot see whether the process is responding, so a flat "
+     "line here is not the same as a healthy daemon.",
+     "<b>The network table is vSAN's traffic only, aggregated per host.</b> It is the same "
+     "counters the Network screen breaks out per vmknic, summed &mdash; useful here as a "
+     "resource figure (what is this host moving) rather than a fault-finding one. If a "
+     "number looks wrong, the Network screen has the layer detail behind it.",
+     "<b>What this screen cannot tell you.</b> Nothing here reports host memory pressure "
+     "or swap &mdash; those are the host's totals, not vSAN's share, and they come from "
+     "vCenter. A host can be swapping hard while every figure on this screen looks calm."]),
  ],
 }
 

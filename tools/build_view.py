@@ -200,6 +200,12 @@ VIEWS = [
         ("iopsWriteCapacity",   "", "MAX"),
     ]),
     ("vSAN ESA Disk Physical Layer", "VsanEsaDiskScsifw", [
+        # Hardware first: what the drive IS, before how it is behaving. A
+        # firmware level is the first question asked about a slow NVMe drive
+        # and the pack could not answer it until now.
+        ("model", "", "CURRENT"),
+        ("firmware", "", "CURRENT"),
+        ("driver", "", "CURRENT"),
         ("latencyDevRead",  "", "MAX"),
         ("latencyDevWrite", "", "MAX"),
         ("latencyDevDAvg",  "", "MAX"),
@@ -542,6 +548,11 @@ def label_for(kind, key):
 # the note on the vSAN Clusters view.
 PROPERTY_COLUMNS = {
     ("ClusterComputeResource", "config|name"),
+    # Drive hardware. Properties have a current value and no time series, so
+    # a column left marked as a metric queries a time range and finds nothing.
+    ("VsanEsaDiskScsifw", "firmware"),
+    ("VsanEsaDiskScsifw", "driver"),
+    ("VsanEsaDiskScsifw", "model"),
 }
 
 ADAPTER = "VsanHostMetrics"
