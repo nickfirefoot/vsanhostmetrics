@@ -474,6 +474,48 @@ OVERRIDE = {
 }
 
 
+# A column header only needs the part the VIEW TITLE and the ROW do not
+# already say. Broadcom's official names are written for a flat metric list,
+# so on a view titled "vSAN ESA Disk Physical Layer" the official name
+# repeats that prefix in all five columns and the distinguishing word lands
+# off the right edge. These rules strip only redundancy, never meaning:
+# 86 of 200 labels shorten, mean 32 -> 21 characters, longest 45.
+#
+# Order matters -- the prefix strips run before the word abbreviations.
+SHORTEN = [
+    (r"^vSAN ESA Disk Physical/Firmware Layer ", ""),   # the view is named it
+    (r" of vSAN ESA Disk$", ""),                        # the row IS the disk
+    (r" of pNic vSwitch Port$", " (pNIC port)"),
+    (r" of vSAN Host Port$", " (host port)"),
+    (r" of vSwitch Port$", " (vSwitch port)"),
+    (r"^RDT Network ", ""),                             # the view is the RDT one
+    (r"^Num net sched ", "Shaping "),                   # panel says the rest
+    (r"^Seg cleaner ", "Seg clean "),
+    (r"^Seg cleaning ", "Seg clean "),
+    (r"\bAverage\b", "Avg"),
+    (r"\bStandard Deviation\b", "StdDev"),
+    (r"\bstandard deviation\b", "stddev"),
+    (r"\bOutstanding IO\b", "OIO"),
+    (r"\bOutbound\b", "Out"),
+    (r"\bInbound\b", "In"),
+    (r"\bLatency\b", "Lat"),
+    (r"\bPercent\b", "%"),
+    (r"\bpercent\b", "%"),
+    (r"\brolling avg latency us\b", "rolling avg lat \u00b5s"),
+    (r"\bmax latency avg us\b", "max lat \u00b5s"),
+    (r"  +", " "),
+]
+
+
+def shorten(label):
+    """Strip what the view title and row already state. Never shortens to ''."""
+    out = label
+    for pat, rep in SHORTEN:
+        out = re.sub(pat, rep, out)
+    out = out.strip()
+    return out or label
+
+
 def label_for(kind, key):
     """Broadcom's official name verbatim, else the pack's derived label."""
     ent = ENT_FOR.get(kind)
@@ -489,7 +531,7 @@ def label_for(kind, key):
         label += " (Total)"
     if key in INVERTED:
         label += " (Low Is Bad)"
-    return label
+    return shorten(label)
 
 
 # Columns that are PROPERTIES rather than metrics. Operations stores the two

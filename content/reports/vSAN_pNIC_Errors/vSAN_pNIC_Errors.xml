@@ -189,7 +189,7 @@
                                     </Property>
                                     <Property name="sortCriteria" value="false" />
                                     <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="Inbound Packet Drop Rate of pNic vSwitch Port" />
+                                    <Property name="displayName" value="In Packet Drop Rate (pNIC port)" />
                                     <Property name="addTimestampAsColumn" value="false" />
                                     <Property name="isShowRelativeTimestamp" value="false" />
                                 </Value>
@@ -211,7 +211,7 @@
                                     </Property>
                                     <Property name="sortCriteria" value="false" />
                                     <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="Outbound Packet Drop Rate of pNic vSwitch Port" />
+                                    <Property name="displayName" value="Out Packet Drop Rate (pNIC port)" />
                                     <Property name="addTimestampAsColumn" value="false" />
                                     <Property name="isShowRelativeTimestamp" value="false" />
                                 </Value>

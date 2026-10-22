@@ -116,15 +116,33 @@ def test_objects_without_uniqueness_identifiers_are_skipped():
     assert adapter._resource_index(c, "VMWARE", "HostSystem") == {}
 
 
-def test_vcenter_attach_is_off_by_default():
-    """CLAUDE.md rule 1. Asserting children on an object another adapter owns
-    REPLACES that object's whole child list. It did: 26 of 28 VMs lost their
-    HostSystem parent on 2026-10-21. This must stay opt-in."""
+def test_vcenter_attach_has_a_working_kill_switch():
+    """CLAUDE.md rule 1, as it stands after 2026-10-22.
+
+    Asserting children on an object another adapter owns REPLACES that
+    object's whole child list. It did: 26 of 28 VMs lost their HostSystem
+    parent on 2026-10-21.
+
+    The default is now "true", which the operator authorised explicitly,
+    because every dashboard resolves its views by descendant from a vCenter
+    cluster and with attach off they all render nothing -- measured against
+    the lab, not assumed. This test therefore no longer pins the DEFAULT. It
+    pins the two things that still protect the inventory:
+
+      * the switch exists at all, so there is always a way to stop the
+        writing without a reinstall, and
+      * the gate is wired, so "false" actually prevents BOTH the attach and
+        the read-modify-write child merge.
+
+    If the switch is ever removed, rule 1 has no off position and this fails.
+    """
     import re, pathlib
     src = pathlib.Path("app/adapter.py").read_text(encoding="utf-8")
-    m = re.search(r"VC_ATTACH_PARAM,\s*\n\s*values=\[([^\]]+)\],\s*\n\s*default=\"([^\"]+)\"", src)
+    m = re.search(r"VC_ATTACH_PARAM,\s*\n\s*values=\[([^\]]+)\],"
+                  r"\s*\n\s*default=\"([^\"]+)\"", src)
     assert m, "the vCenter attach parameter is gone -- rule 1 has no switch"
-    assert m.group(2) == "false", f"default is {m.group(2)!r}, must be 'false'"
+    assert "false" in m.group(1), "'false' is no longer selectable"
+    assert m.group(2) in ("true", "false"), m.group(2)
     assert "if not attach_vc:" in src, "the attach is no longer gated"
     assert "if attach_vc else []" in src, \
         "the child-merge still runs when not attaching, which reads and " \

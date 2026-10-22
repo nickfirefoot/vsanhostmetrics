@@ -130,18 +130,40 @@ INTRO = {
      "difference went."]),
  ],
  "Rapid vSAN Network": [
-   ("vSAN network &mdash; where is the loss?",
-    ["Four layers carry vSAN traffic and each can fail independently: <b>RDT</b>, vSAN's own "
-     "transport; <b>TCP</b> beneath it; the <b>vmknic</b>, which is the kernel port; and the "
-     "<b>physical NIC</b>. A clean NIC proves nothing about RDT, and a clean RDT proves "
-     "nothing about the NIC.",
-     "Read the layers from the top down and stop at the first one that is unhappy. Latency "
-     "that appears at RDT but not at TCP is vSAN's own queueing. Loss that appears at the "
-     "vmknic but not at the NIC is the host, not the fabric.",
-     "<b>The last two tables are not from this pack.</b> This pack only measures uplinks that "
-     "carry vSAN traffic, which on a typical host is two of four, so a standby uplink going "
-     "bad is invisible to it. vCenter counts every uplink, so those columns close a gap "
-     "rather than repeat one."]),
+   ("vSAN network &mdash; is any layer losing frames right now?",
+    ["Four layers carry vSAN traffic and each fails independently: <b>RDT</b>, vSAN's own "
+     "transport; <b>TCP</b> beneath it; the <b>vmknic</b>, the kernel port; and the "
+     "<b>physical NIC</b>. One panel per layer, top to bottom. <b>This is a triage screen, "
+     "not a root-cause tool</b> &mdash; it answers whether and where, not why.",
+     "<b>Read down and stop at the first unhappy layer.</b> Latency at RDT but not TCP is "
+     "vSAN's own queueing. Loss at the vmknic but not the NIC is the host, not the fabric. "
+     "A clean NIC proves nothing about RDT, and a clean RDT proves nothing about the NIC.",
+     "<b>Every rate column is the period maximum, not the current value.</b> That is "
+     "deliberate and measured: an error burst lands inside one five-minute bucket and is "
+     "gone. A current value misses it almost every time you look.",
+     "<b>Throughput is deliberately not on this screen.</b> A NIC discarding a fraction of "
+     "a percent of frames still moves traffic at line rate, so a throughput panel stays "
+     "green through the exact fault this exists to find.",
+     "<b>Where a threshold is the vendor's, it says so; where it is ours, it says that "
+     "too.</b> The per-mille bands on the pNIC error columns are vCenter's own: "
+     "<code>alarm-261</code>, \"High pNic error rate detected\", fires at 1 per mille on "
+     "eight counters. Everything else here is this pack's judgement, not a published "
+     "standard.",
+     "<b>The two pNIC panels are not duplicates.</b> <b>High pNIC error rate</b> carries "
+     "only those eight alarm counters, so the screen matches what vCenter would alarm on. "
+     "<b>pNIC stats &mdash; every counter</b> adds the drops, ioChain and lifetime columns "
+     "the alarm ignores. The narrow one tells you vCenter agrees; the wide one tells you "
+     "what else the NIC reports.",
+     "<b>Lifetime counters answer a different question from rates.</b> The rate columns say "
+     "whether it is happening now; <code>rxMissErrRaw</code> says whether this NIC has ever "
+     "been bad. A uplink reading zero today with tens of thousands of lifetime missed "
+     "errors has a history worth knowing before you call it healthy.",
+     "<b>What this screen cannot see.</b> This pack measures only uplinks carrying vSAN "
+     "traffic, which on a typical host is two of four, so a standby uplink going bad is "
+     "invisible here &mdash; which is why the last panel comes from vCenter and counts every "
+     "uplink. Pause-frame counts carry no direction, so a non-zero value cannot separate "
+     "\"this host is drowning\" from \"the fabric is congested\", and a zero means nothing at "
+     "all unless flow control is enabled on that uplink."]),
  ],
  "Rapid vSAN Storage": [
    ("vSAN storage &mdash; is it the disk or the queue?",
@@ -279,6 +301,20 @@ def main() -> None:
             for para in paras:
                 para = style_inline(para)
                 body.append(f'<p style="{P}">{para}</p>')
+        # Two house rules every screen needs, stated once per panel rather than
+        # hedged through the prose. A reader who only reads one panel still
+        # gets them.
+        body.append(f'<h3 style="{H3}">Reading any column here</h3>')
+        for para in (
+            "<b>A blank cell is not a zero.</b> Where a driver refuses a read, or a rate "
+            "has no previous sample, this pack emits nothing rather than a zero &mdash; "
+            "because a zero would claim the thing was measured and was fine.",
+            "<b>Rate columns are the maximum over the interval, counters marked Raw are "
+            "cumulative since boot.</b> They are not two views of one number: a Raw column "
+            "beside its rate is a history beside a present reading, and neither is a "
+            "duplicate of the other.",
+        ):
+            body.append(f'<p style="{P}">{style_inline(para)}</p>')
         seen = set()
         for panel_title, view_key, _coords in panels:
             view_title = view_key.replace("_", " ")

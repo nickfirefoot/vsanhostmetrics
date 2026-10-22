@@ -92,13 +92,11 @@ DASHBOARDS = [
         ("VM latency - per VM",           "vSAN_VM_Latency",                 {"w":12,"x":1,"h":8,"y":40}),
     ]),
     ("Rapid vSAN DOM", "rapid-vsan-dom-help", [
-        ("Cluster - client",              "vSAN_Cluster_DOM_Client",            {"w":10,"x":3,"h":7,"y":1}),
         ("Cluster - owner",               "vSAN_Cluster_DOM_Owner",             {"w":12,"x":1,"h":6,"y":8}),
         ("Cluster - component manager",   "vSAN_Cluster_DOM_Component_Manager", {"w":12,"x":1,"h":6,"y":14}),
         ("Per host - client",             "vSAN_Host_DOM",                      {"w":12,"x":1,"h":7,"y":20}),
         ("Per host - owner",              "vSAN_Host_DOM_Owner",                {"w":12,"x":1,"h":8,"y":27}),
         ("Per host - component manager",  "vSAN_Host_DOM_Component_Manager",    {"w":12,"x":1,"h":8,"y":35}),
-        ("Adaptive network shaping",      "vSAN_Host_DOM_Owner_Scheduler",      {"w":12,"x":1,"h":8,"y":43}),
     ]),
     # Congestion is a CONTROL signal, not an error, so this screen is ordered by
     # blast radius rather than severity: cluster, then host, then the transport
@@ -117,9 +115,7 @@ DASHBOARDS = [
     ("Rapid vSAN Resync", "rapid-vsan-resync-help", [
         ("Jobs outstanding - the risk",   "vSAN_Cluster_Resync_Jobs",           {"w":10,"x":3,"h":8,"y":1}),
         ("Rebuild IO rates",              "vSAN_Cluster_Resync",                {"w":12,"x":1,"h":6,"y":9}),
-        ("Guest impact - front end",      "vSAN_Cluster_DOM_Client",            {"w":12,"x":1,"h":6,"y":15}),
         ("Back end during rebuild",       "vSAN_Cluster_DOM_Component_Manager", {"w":12,"x":1,"h":6,"y":21}),
-        ("Adaptive network shaping",      "vSAN_Host_DOM_Owner_Scheduler",      {"w":12,"x":1,"h":8,"y":27}),
         ("Segment cleaning",              "vSAN_Segment_Cleaning_Per_Host",     {"w":12,"x":1,"h":8,"y":35}),
     ]),
     ("Rapid vSAN ESA Write Path", "rapid-vsan-esa-write-path-help", [

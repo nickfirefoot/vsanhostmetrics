@@ -100,15 +100,21 @@ def get_adapter_definition() -> AdapterDefinition:
         # harm until the pack owns its own hierarchy.
         d.define_enum_parameter(
             VC_ATTACH_PARAM,
-            values=["false", "true"],
-            default="false",
+            values=["true", "false"],
+            default="true",
             label="Attach objects to vCenter inventory",
-            description="Leave false. True makes this pack claim child "
-                        "relationships on vCenter hosts, VMs and clusters, "
-                        "which REPLACES the child list the vCenter adapter "
-                        "maintains and has destroyed VM-to-host relationships "
-                        "in practice. Only consider true if nothing else "
-                        "writes relationships on those objects.",
+            description="True is the default because every dashboard in this "
+                        "pack resolves its views by descendant from a vCenter "
+                        "cluster: with this false, the objects are standalone "
+                        "and the dashboards render nothing. The cost is that "
+                        "this pack claims child relationships on vCenter "
+                        "hosts, VMs and clusters, which REPLACES the child "
+                        "list the vCenter adapter maintains and has destroyed "
+                        "VM-to-host relationships in practice. Set it false if "
+                        "anything else writes relationships on those objects, "
+                        "or if you would rather lose the dashboards than risk "
+                        "the inventory; the change takes effect on the next "
+                        "collection with no reinstall.",
             required=False,
         )
         d.define_enum_parameter(
@@ -556,8 +562,20 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
             vc_cache: dict = {}
             linked = 0
             # CLAUDE.md rule 1: off unless the operator explicitly opts in.
+            # DEFAULT TRUE, and that is a deliberate exception to CLAUDE.md
+            # rule 1 which the operator authorised on 2026-10-22. The views
+            # resolve by `descendant` from a vCenter cluster, so with this off
+            # every object is standalone and EVERY dashboard renders nothing --
+            # measured, not assumed. The mitigations that make it acceptable:
+            # this is now the only pack writing foreign child lists (netstats
+            # 2.0.2 emits 0 of 77 parent links, MemoryTierAdvanced 2.2.0 emits
+            # 0 foreign children, both measured in-image by digest), and the
+            # read-modify-write race needs two concurrent writers. Setting the
+            # parameter to false stops the writing immediately with no
+            # reinstall; the cost is blank dashboards, which is visible and
+            # reversible, unlike silent relationship loss.
             attach_vc = _cfg(adapter_instance, VC_ATTACH_PARAM,
-                             "false").strip().lower() == "true"
+                             "true").strip().lower() == "true"
             if not attach_vc:
                 logger.info("not attaching to vCenter objects (%s=false). "
                             "Our objects are standalone; nothing writes child "
