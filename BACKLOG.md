@@ -114,6 +114,49 @@ This repository's notes previously listed it as an outstanding defect; that was
 wrong. What all three packs now share is a dark card on a light dashboard —
 legible, but not theme-adaptive. That is an appearance decision, not a bug.
 
+## Answered: why the dashboard time selector is greyed out
+
+Asked repeatedly; the answer is **a View widget cannot consume dashboard
+time**, and no edit to a view's XML changes that. Settled 2026-10-22 by
+counting a property across shipped artefacts rather than reasoning about
+property names.
+
+A widget follows the dashboard's global time selector only if its config
+carries `periodLength: "dashboardTime"`. Counted in Broadcom's own
+`docs/assets/dashboard.broadcom-vsan-esa.json`:
+
+| widget type | count | carries `periodLength` |
+|---|---|---|
+| Scoreboard | 9 | **9** (7 set to `dashboardTime`) |
+| View | 5 | **0** |
+| TextDisplay | 1 | 0 |
+| ResourceRelationshipAdvanced | 1 | 0 |
+
+The netstats session reached the same conclusion independently from a
+different export (VMware's "Cluster Performance New", 30 widgets: 11
+Scoreboards all carrying `periodLength`, 9 Views carrying none).
+
+**Every dashboard in this pack is View widgets plus one TextDisplay**, so
+there is nothing for the selector to drive and it correctly greys out. A View
+renders a view definition, and that view's window is fixed in its own
+`Controls` block at build time.
+
+**`advancedTimeMode` is a red herring at this layer.** All 31 views here --
+and all 125 across the three packs -- carry `advancedTimeMode=false` and
+`unit=DAYS`, and the only genuine UI export we have
+(`docs/assets/view.vsan-pnic-errors.xml`) matches. Flipping it cannot make a
+dashboard selector reach a View widget. Whether it enables a *per-view*
+interactive range is still completely unexercised and remains unverified; do
+not ship a guess at it.
+
+**If interactive 6H/24H/7D is wanted:** Scoreboard widgets follow the
+selector. `docs/assets/dashboard.scoreboard-working.json` is a confirmed
+working export carrying the full config key set, with `periodLength` null --
+setting that one value to `"dashboardTime"` is the entire difference. So the
+shape is: list views keep their fixed build-time window, and headline numbers
+go in Scoreboards beside them. That is real work (this pack has never shipped
+a Scoreboard) but it is a clone-and-set-one-value job, not a format guess.
+
 ## Proposed, not started
 
 | Item | Why it is not done |
