@@ -203,25 +203,40 @@ def receiver(template_receiver, title, view_guid, coords, tab, dash_name):
     c["title"] = title
     c["titleLocalized"] = title
     c["viewDefinitionId"] = view_guid
-    # Make the dashboard's 1H/6H/24H/7D selector actually drive this panel.
+    # periodLength is DELIBERATELY NOT SET, and the previous comment here was
+    # wrong on its own evidence.
     #
-    # Without this the selector is decorative: every view carries its own
-    # time-interval control hardcoded to 7 DAYS and marked visible="false", so
-    # the range could not be changed from the widget OR from the dashboard, and
-    # asking for an hour's view of anything was impossible. Nick asked for this
-    # three times before it got built.
+    # It used to set 'periodLength': 'dashboardTime' on every View widget,
+    # claiming Broadcom's vSAN ESA dashboard "sets exactly this on its
+    # receiver widgets". Counting the widgets in that very export
+    # (docs/assets/dashboard.broadcom-vsan-esa.json) says otherwise:
     #
-    # The key is not invented. Broadcom's own "Performance/Provider/vSAN ESA"
-    # dashboard sets exactly this on its receiver widgets:
-    #     'periodLength': 'dashboardTime'
-    # and conspicuously does NOT set it on its cluster selector, which lists
-    # objects by name and has nothing to do with time. Same split here.
+    #     Scoreboard                    9 widgets   9 carry periodLength
+    #     View                          5 widgets   0 carry it
+    #     TextDisplay                   1 widget    0
+    #     ResourceRelationshipAdvanced  1 widget    0
     #
-    # It also matters for spotting a dead adapter. With a fixed 7-day window and
-    # MAX, data hours stale still draws a number, so the screens look alive
-    # while nothing is collecting. An hour's view shows the hole immediately --
-    # which is exactly how a nine-hour collection outage went unnoticed here.
-    c["periodLength"] = "dashboardTime"
+    # So Broadcom sets it on SCOREBOARDS. "Receiver widget" was read as "any
+    # widget receiving a selection", which is not what the artefact shows. The
+    # netstats session counted a second VMware-shipped dashboard, 30 widgets,
+    # and found the same split: 11 Scoreboards all carrying it, 9 Views none.
+    #
+    # And our own confirmed-working UI export,
+    # docs/assets/dashboard.rapid-network-v4.json, has periodLength ABSENT on
+    # all four of its View widgets. We were the only thing setting it.
+    #
+    # A View widget renders a view definition whose window is fixed in its own
+    # Controls block at build time; it has no time field to drive. Telling one
+    # to follow a selector it cannot consume is an invented config key, which
+    # in this pack fails silently rather than erroring -- the same shape as the
+    # invented `Configuration|Name` column key.
+    #
+    # The concern the old comment raised is still real: a fixed 7-day MAX
+    # window draws a number from stale data, so screens look alive while
+    # nothing collects, and that hid a nine-hour outage. The answer is a
+    # Scoreboard, which does follow the selector --
+    # docs/assets/dashboard.scoreboard-working.json is a confirmed working
+    # export needing only periodLength set. Not an invented key on a View.
     return w
 
 

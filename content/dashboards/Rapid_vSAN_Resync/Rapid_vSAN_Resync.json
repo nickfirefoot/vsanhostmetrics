@@ -95,8 +95,7 @@
       "viewDetails": "",
       "selfProvider": {
        "selfProvider": false
-      },
-      "periodLength": "dashboardTime"
+      }
      },
      "height": 0
     },
@@ -133,8 +132,7 @@
       "viewDetails": "",
       "selfProvider": {
        "selfProvider": false
-      },
-      "periodLength": "dashboardTime"
+      }
      },
      "height": 0
     },
@@ -171,8 +169,7 @@
       "viewDetails": "",
       "selfProvider": {
        "selfProvider": false
-      },
-      "periodLength": "dashboardTime"
+      }
      },
      "height": 0
     },
@@ -209,8 +206,7 @@
       "viewDetails": "",
       "selfProvider": {
        "selfProvider": false
-      },
-      "periodLength": "dashboardTime"
+      }
      },
      "height": 0
     },
