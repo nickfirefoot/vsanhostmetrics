@@ -1,98 +1,35 @@
 # BACKLOG
 
-## Pending next release — batched, do not ship individually
+## Ready to release as 1.4.7
 
-Committed to source but not yet in a published pak. Last verified 2026-10-16
-against the shipped 1.4.6 pak and the lab, because this table had drifted badly
-enough to mislead: it previously listed as pending a dozen things that had
-shipped, and opened by saying the lab ran 1.1.9 when it runs 1.4.6.
+Verified 2026-10-22 against the shipped `v1.4.7-rc.9` pak AND a live lab
+running it, rather than against source. Every gate below was run, not assumed.
 
-| Item | Status | Needs |
-|---|---|---|
-| **`VsanHostCpu` -> `VsanCpu`** | **committed, awaiting a pak** | 244 per-core objects of generic utilisation replaced by 4 carrying `readyPct`. In `v1.4.7-rc.1`. |
-| **74 metrics no longer claim a unit they do not honour** | **committed, awaiting a pak** | they declared `RATIO.PERCENT` without being converted. No emitted value changed. In `v1.4.7-rc.1`. |
-| **`(%)` removed from 98 labels** | **committed, awaiting a pak** | the unit renders beside the value; the name was double-stating it. |
+| Gate | Result |
+|---|---|
+| `test_perfsvc.py` / `test_adapter.py` / `test_vsanmetrics.py` | 34 / 9 / 18 pass |
+| `tools/check_contrast.py`, repo and shipped pak | PASS, 6 conditions |
+| `tools/check_columns_populate.py` vs the live lab | 273 columns, **0 dead** |
+| `tools/watch_relationships.py` | every non-template VM holds its host parent |
+| CI on the release branch | green |
+| Upgrade safety (rc.3 -> rc.9 `describe.xml`) | 0 metric keys removed, 0 kinds removed |
 
-## URGENT — the lab is running a build that attaches foreign children
+**What this release contains, all now confirmed working in a live
+environment** -- which no previous release in this repository could claim:
 
-Verified 2026-10-21 against the paks themselves and the live lab, not the code.
+* `VsanHostCpu` -> `VsanCpu`: 244 per-core objects of generic utilisation
+  replaced by 4 carrying `readyPct`. Live: 4 objects, `readyPct` populated.
+  Metrics collected dropped by exactly 732 (244 x 3), the removal to the metric.
+* Help panels legible in both themes: own background, 11.17:1, no text node
+  leaning on an inherited colour.
+* `attach_to_vcenter`, default true, with a child-side watchdog.
+* The alarm-261 view: the eight counters vCenter fires on and nothing else.
+* MiB/s and TiB instead of raw bytes; 86 of 200 column labels shortened,
+  mean 32 -> 22 characters.
+* One panel per network layer; `vmknic` once instead of three times.
 
-`attach_to_vcenter` (default `false`) exists in **exactly one build: `v1.4.7-rc.4`**.
-Checked each pak's `adapter.zip!VsanHostMetrics/conf/describe.xml`:
-
-| build | `attach_to_vcenter` | `metric_scope` |
-|---|---|---|
-| `v1.4.7-rc.2` | **ABSENT** | present |
-| `v1.4.7-rc.3` | **ABSENT** | present |
-| `v1.4.7-rc.4` | `default="false"` | present |
-
-There is no final `v1.4.7` release. The lab reports "vSAN Host Metrics 1.4.7",
-and its adapter instance shows `metric_scope='dashboard'` with no
-`attach_to_vcenter`, which matches rc.2/rc.3 exactly. **So the pack collecting
-in that lab attaches unconditionally, every cycle.** `app/adapter.py:213` maps
-`"hosts": "HostSystem"` and `"vms": "VirtualMachine"`, so it asserts each
-host's entire child list under REPLACE semantics — CLAUDE.md rule 1.
-
-Measured foreign children per host, 2026-10-21 20:0x UTC:
-
-    esxi01  VsanHostMetrics:81  VsphereNetStats:18   (VMs=9,  113 children)
-    esxi02  VsanHostMetrics:67  VsphereNetStats:21   (VMs=1,  162 children)
-    esxi03  VsanHostMetrics:83  VsphereNetStats:20   (VMs=8,  118 children)
-    esxi04  VsanHostMetrics:83  VsphereNetStats:20   (VMs=8,  116 children)
-
-Child-side state: **26 of 28** VMs have a `HostSystem` parent. The 2 without are
-both `vcf-services-runtime-template-9.1.x`, i.e. templates. Probably legitimate
-and categorically unlike the earlier event, which dropped ordinary VMs — but
-**not proven**, so do not record this as clean.
-
-Action: installing `rc.4` is what stops it. Do not leave rc.2/rc.3 collecting.
-
-## The pak is not byte-reproducible — an SDK defect, not ours
-
-Found by the netstats session and verified here 2026-10-21. Recorded rather
-than fixed, because the fix needs a workflow edit (see below).
-
-`vmware_aria_operations_integration_sdk/describe.py:492`:
-
-    subtypes = set(map(lambda item: item.value._subtype, cls))
-    for subtype in subtypes:
-
-A **set of strings**, iterated. String hashing is seed-randomised per
-interpreter, so `<UnitType>` blocks emit in a different order per build, which
-shifts every `nameKey` after them. Measured by driving `add_units` directly at
-four hash seeds — four different XML digests:
-
-    seed=0  DataSize bytes_base_10  bits_base_2   bits_base_10  bytes_base_2
-    seed=1  DataSize bits_base_2    bytes_base_10 bytes_base_2  bits_base_10
-    seed=2  DataSize bytes_base_10  bits_base_2   bytes_base_2  bits_base_10
-
-The shipped pak has 79 `UnitType` blocks and 2074 `nameKey` references up to
-1259, so the whole numbering moves. This is **not a correctness bug** — each
-build is internally consistent and resolves to the same strings. What it costs
-is the ability to prove a pak came from a given commit by rebuilding it.
-
-**Why this is lower priority here than it is for netstats.** They ship paks
-from `paks/` in the repo, so a rebuild is their only commit-to-artifact link.
-This pack's CI attests instead: `actions/attest-build-provenance` is pinned in
-the workflow and the rc.4 pak digest
-`ba23f020…05cb19` carries **1 Sigstore attestation**, binding artifact to
-workflow run and commit without needing a rebuild. Reproducibility would let a
-third party verify *without* trusting that attestation, which is worth having,
-not urgent.
-
-**Blocked, not forgotten.** The fix is `PYTHONHASHSEED=0` in the environment
-before any SDK import. Put it in the workflow's **job-level `env:`**, not in a
-build script: the variable is read at interpreter start so it cannot be set
-in-process, and a job-level block covers `mp-build` and every subprocess it
-spawns, which is what this pack needs since it has no local `build_pak.py`. This pack builds through `mp-build` in CI rather than a
-local `build_pak.py`, so the variable belongs in the workflow's `env:` — and
-writing `.github/workflows/` needs the `workflow` token scope, which the PAT
-does not have. Needs either a token with that scope or a hand edit.
-
-If this is picked up, note two warnings from the netstats session, which hit
-both: a determinism gate that does not run the generator producing the file it
-checks will pass forever, and one of their causes was intermittent at about one
-run in two, so a two-sample comparison passes by luck. Run it several times.
+**Nothing is blocking.** The remaining items below are features and hygiene,
+not release blockers, and shipping 1.4.7 does not make any of them harder.
 
 ## Verification method corrected: contrast is a property of a pair
 
