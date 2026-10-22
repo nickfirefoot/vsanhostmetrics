@@ -1,5 +1,9 @@
 # Offline delivery — what works and what does not
 
+> **If the environment HAS egress but only through a proxy, you want
+> `NETWORK-REQUIREMENTS.md` instead.** That case needs two hostnames
+> allowlisted and nothing else. This document is the harder no-egress case.
+
 Tested 2026-09-23 on the lab Cloud Proxy (VCF Operations Cloud Appliance,
 Docker 29.5.3), not inferred. This decides how the pack can be distributed to
 an environment with **no registry and no external network**.
