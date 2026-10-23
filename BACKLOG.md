@@ -94,6 +94,33 @@ shape is: list views keep their fixed build-time window, and headline numbers
 go in Scoreboards beside them. That is real work (this pack has never shipped
 a Scoreboard) but it is a clone-and-set-one-value job, not a format guess.
 
+## Help text: claims removed pending a source (2026-10-23)
+
+The shipped help panels carried readings from one lab, pack history and
+unsourced interpretation. All of it is out, preserved in full in
+`docs/REMOVED-HELP-CLAIMS.md`, and a test now fails on that kind of wording.
+Measured: the scan fails **39 of 194 notes and 15 narrative paragraphs** of the
+rc.12 text and passes the current text.
+
+Of the 194 notes, **86 have a Broadcom description** in the Performance Service
+schema and **108 do not** (14 of those are vCenter columns). For the 94 vSAN
+metrics without a vendor description, the note now restates what the name says
+and nothing more. Treat each as a reading of the name, not an authority, until
+someone documents it. 839 of the 1595 defined metrics have a vendor description.
+
+### Specific items that need a decision or a source
+
+| Item | State |
+|---|---|
+| **`readyPct`, `usedPct`, `runPct`, `avgUsedPct`, `avgRunPct` read 0.0** | Measured straight from the vSAN API, 37 consecutive 5-minute buckets on a cluster carrying ~400 IOPS: all five were zero in every sample; only `maxUsedPct` (3-7) and `maxRunPct` (2-6) moved. Restored to the CPU view on request, so three of the five columns will show zero on this vSAN build. Unknown whether that is this build, this load, or the metrics. |
+| **Denominator of the vSAN CPU percentages** | Not stated by Broadcom ("Percentage of used CPU time"). A claim that vSAN is capped at 10% of total threads was relayed to this repo but is not verified here. Peaks of 6-7 are consistent with it and prove nothing, since the cluster was lightly loaded. Settled by a load test, or by Broadcom. |
+| **alarm-261 threshold value** | The alarm definition names the eight counters and triggers when the vSAN health test for any reports **yellow or red**. It contains **no numeric threshold**. An earlier note said it fires at 1 per mille; that figure is not in the definition and is unverified. The threshold lives in the health test, which has not been read. |
+| **15 ms warning / 30 ms critical** | Verified in the Performance Service graph definitions for client, component manager, zDOM, disk device latency, vSCSI and virtual machine latency. **None exists for the owner layer or for any pNIC counter.** The help text now says exactly that. |
+| **`readLatencyMaxUs`, `writeLatencyMaxUs`, `unmapLatencyMaxUs`** | Read in whole seconds on the lab. A since-boot high-water mark was suspected and is unconfirmed. Removed from the text, still shown. |
+| **`tcpHalfopenDropRate` denominator** | Undocumented. Reads 7-9% on a lab with nothing wrong. Removed from the text. |
+| **"(Low Is Bad)" on `txSbSpaceMin` / `rxSbSpaceMin`** | Added by this repo, not by Broadcom. A judgement about direction, still on the column labels. |
+| **Diagnostic guidance** | "Latency at RDT but not TCP is vSAN's own queueing", "local reads slower than remote point at a local device", "a deep resync queue with low parallelism is usually throttling" and similar were removed. Reasonable, plausibly right, unsourced. Reinstate with a Broadcom KB or documentation reference. |
+
 ## Proposed, not started
 
 | Item | Why it is not done |

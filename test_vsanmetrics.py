@@ -414,6 +414,68 @@ def test_contrast_probes_pin_the_reason_not_just_the_verdict():
     assert len(CONTRAST_PROBES) >= 15, len(CONTRAST_PROBES)
 
 
+# Customer-facing help text states what a metric or panel IS. It does not carry
+# readings from a particular environment, the history of the pack, advice, or
+# interpretation that has no source. Each pattern below matches wording that
+# shipped in earlier builds -- "Measured at 14.9 ms here", "This replaced a
+# per-CPU table", "very likely a since-boot high-water mark" -- and anything
+# removed under this rule is recorded in docs/REMOVED-HELP-CLAIMS.md until it
+# can be validated against a source.
+HELP_TEXT_BANNED = [
+    (r"(?i)\bmeasured\b(?! at the vSAN layer)", "a reading or a claim of measurement"),
+    (r"(?i)\b(here at|cluster here|runs? here|on this (?:lab|cluster|vSAN build)|idle cluster|light cluster|"
+     r"otherwise (?:idle|light))\b", "a reading from one environment"),
+    (r"(?i)\b(replaced|previously|formerly|no longer|used to|is new|was removed)\b",
+     "pack history"),
+    (r"(?i)\b(inferred|unverified|not confirmed|very likely|probably)\b",
+     "a hedge: if it is not established it belongs in BACKLOG.md"),
+    (r"(?i)\b(usually|almost always|points? at|signature|leading indicator|early sign|"
+     r"healthy|normal for|worth knowing)\b",
+     "interpretation without a source"),
+    (r"\brc\.\d|\b20\d\d-\d\d-\d\d\b|\b1\.4\.\d", "a release or a date"),
+    (r"\b(we|our|I)\b", "first person"),
+    (r"\.md\b|BACKLOG|\bdocs/|\btools/|\.py\b", "a pointer to a repository file"),
+    (r"(?i)\b(compare the|treat the|look up|do not treat)\b", "advice"),
+]
+
+
+def _help_text_problems(text):
+    import re
+    out = []
+    for pat, why in HELP_TEXT_BANNED:
+        for m in re.finditer(pat, text):
+            out.append(f"{m.group(0)!r} ({why})")
+    return out
+
+
+def test_shipped_help_text_carries_no_notes_or_unsourced_claims():
+    """Scan the text a customer actually reads, as shipped in the dashboards."""
+    import re
+    sys.path.insert(0, "tools")
+    import check_contrast as cc
+
+    panels = list(cc.sources([]))
+    assert panels, "no help panels found -- this test would prove nothing"
+    found = []
+    for label, markup in panels:
+        plain = re.sub(r"<[^>]+>", " ", markup)
+        for prob in _help_text_problems(plain):
+            found.append(f"{label.split('.json')[0]}: {prob}")
+    assert not found, (f"{len(found)} problems in shipped help text; first 5:\n  "
+                       + "\n  ".join(found[:5]))
+
+    # The scan must be able to fail. Text that shipped in rc.12 and earlier:
+    for known_bad in ("Measured at 14.9 ms here against a 957 microsecond average",
+                      "This replaced a per-CPU table of 244 rows",
+                      "it is very likely a since-boot high-water mark",
+                      "Treat a large value as unverified until it is confirmed",
+                      "a healthy cluster here runs under 1.5 ms",
+                      "points at a local device rather than the fabric",
+                      "treat the id as authoritative and see BACKLOG.md",
+                      "compare the two columns rather than reading either alone"):
+        assert _help_text_problems(known_bad), f"scan missed: {known_bad!r}"
+
+
 if __name__ == "__main__":
     fails = 0
     for name, fn in sorted(globals().items()):

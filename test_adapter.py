@@ -195,6 +195,27 @@ def test_committed_manifest_matches_the_last_released_tag():
         f"A hand build would mislabel the pak.")
 
 
+def test_pack_description_counts_match_the_model():
+    """The solution description is shown in Operations beside the pack name.
+    It carried 69 kinds / 1636 metrics / 439 collected while the pack defined
+    1595 and collected 451 -- and the configuration form said 253 of 1636. A
+    count typed into prose is wrong the first time a view changes, so check it
+    against the model."""
+    import perfsvc
+    import metric_scope
+    ents = perfsvc.MODEL.ENTITIES
+    defined = sum(len(perfsvc.metrics_for(e)) for e in ents)
+    kind_to_ent = {sp["kind"]: e for e, sp in ents.items()}
+    scoped = sum(len(set(m) & set(perfsvc.metrics_for(kind_to_ent[k])))
+                 for k, m in metric_scope.COVERED.items() if k in kind_to_ent)
+    desc = [l for l in open("resources/resources.properties").read().splitlines()
+            if l.startswith("DESCRIPTION=")][0]
+    assert f"{len(ents)} resource kinds" in desc, desc[:120]
+    assert f"{defined} metrics" in desc, (defined, desc[:160])
+    assert f"collects the {scoped} metrics" in desc, (scoped, desc[:260])
+    readme = open("README.md").read()
+    assert f"{defined:,} metrics across {len(ents)} resource kinds" in readme
+
 if __name__ == "__main__":
     fails = 0
     names = [n for n in globals() if n.startswith("test_")]

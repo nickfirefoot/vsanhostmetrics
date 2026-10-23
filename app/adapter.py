@@ -106,29 +106,38 @@ def get_adapter_definition() -> AdapterDefinition:
             description="True is the default because every dashboard in this "
                         "pack resolves its views by descendant from a vCenter "
                         "cluster: with this false, the objects are standalone "
-                        "and the dashboards render nothing. The cost is that "
-                        "this pack claims child relationships on vCenter "
-                        "hosts, VMs and clusters, which REPLACES the child "
-                        "list the vCenter adapter maintains and has destroyed "
-                        "VM-to-host relationships in practice. Set it false if "
-                        "anything else writes relationships on those objects, "
-                        "or if you would rather lose the dashboards than risk "
-                        "the inventory; the change takes effect on the next "
+                        "and the dashboards render nothing. Operations replaces "
+                        "an object's child list with the list a collection "
+                        "reports, so with this true the pack reads the existing "
+                        "children of each vCenter host, VM and cluster it "
+                        "attaches to and reports them together with its own. Set "
+                        "it false if another adapter also writes relationships "
+                        "on those objects; the change takes effect on the next "
                         "collection with no reinstall.",
             required=False,
         )
+        # Counted from the model rather than typed in: these figures changed
+        # every time a view did, and a form that states a stale count is wrong
+        # in front of the person choosing the setting.
+        _ent_for_kind = {sp["kind"]: e for e, sp in perfsvc.MODEL.ENTITIES.items()}
+        _in_scope = {e: set(m) for k, m in metric_scope.COVERED.items()
+                     if (e := _ent_for_kind.get(k))}
+        _all_metrics = sum(len(perfsvc.metrics_for(e)) for e in perfsvc.MODEL.ENTITIES)
+        _scoped_metrics = sum(len(m & set(perfsvc.metrics_for(e)))
+                              for e, m in _in_scope.items())
+        _skipped_types = len(perfsvc.MODEL.ENTITIES) - len(_in_scope)
         d.define_enum_parameter(
             METRIC_SCOPE_PARAM,
             values=["dashboard", "all"],
             default="dashboard",
             label="Metrics to collect",
-            description="dashboard (default) collects only the metrics the "
-                        "shipped views and dashboards render -- 253 of 1636, "
-                        "skipping 45 entity types entirely. Choose all to "
-                        "collect every metric vSAN exposes, which costs 45 "
-                        "extra queries per cycle and stores 1383 more metrics "
-                        "per object. Every metric is defined either way, so "
-                        "switching to all needs no reinstall.",
+            description=f"dashboard (default) collects the {_scoped_metrics} metrics "
+                        f"that the shipped views and dashboards render, from "
+                        f"{len(_in_scope)} of {len(perfsvc.MODEL.ENTITIES)} entity "
+                        f"types. Choose all to collect all {_all_metrics} metrics "
+                        f"this pack defines, which adds {_skipped_types} entity-type "
+                        f"queries to each collection. Every metric is defined either "
+                        f"way, so switching to all needs no reinstall.",
             required=False,
         )
         d.define_enum_parameter(
