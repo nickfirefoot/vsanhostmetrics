@@ -8,6 +8,45 @@ Tested 2026-09-23 on the lab Cloud Proxy (VCF Operations Cloud Appliance,
 Docker 29.5.3), not inferred. This decides how the pack can be distributed to
 an environment with **no registry and no external network**.
 
+## Why this problem exists at all: DOCKERIZED vs GENERAL
+
+Measured 2026-10-23 against the lab, and it reframes everything below.
+
+Operations has two adapter architectures, and `/suite-api/api/adapterkinds/<kind>`
+reports which one an adapter is:
+
+| adapter | type |
+|---|---|
+| `VsanHostMetrics` (this pack) | **DOCKERIZED** |
+| `VsphereNetStats` | **DOCKERIZED** |
+| `VMWARE` | GENERAL |
+| `NSXTAdapter` | GENERAL |
+| `VirtualAndPhysicalSANAdapter` (Broadcom's vSAN MP) | GENERAL |
+| `ManagementPackBuilderAdapter` | GENERAL |
+
+**Everything Broadcom ships is GENERAL. Only Integration SDK packs are
+DOCKERIZED.** A GENERAL adapter has no container: the pak IS the whole thing,
+so installing it is one file import with no registry, no digest and no
+egress. A DOCKERIZED adapter is content plus an image the Cloud Proxy must
+pull by RepoDigest, which is the entire subject of this document.
+
+So the airgap difficulty is not a packaging detail this pack can engineer
+around. It is a property of the adapter TYPE, chosen when the pack was built
+on the Integration SDK. That also explains why Broadcom's own management
+packs install cleanly in environments where ours cannot.
+
+**Management Pack Builder produces GENERAL adapters**, which makes it the
+only observed route to a container-free pak. Whether THIS pack could be
+expressed that way is unknown and probably no: MPB targets REST/JSON-shaped
+sources, while this pack needs the vSAN Management API over SOAP at a
+separate `/vsanHealth` endpoint, the vendored `vsanmgmtObjects` types that
+are absent from pyVmomi, and `entityRefId` grammar parsing. Nothing has been
+built with MPB on this lab, so there is no example here to inspect, and its
+capabilities are UI-driven rather than visible through the API.
+
+Worth settling before investing in any of the options below, because if MPB
+can reach a SOAP endpoint it beats all of them.
+
 ## The mechanism
 
 The Cloud Proxy runs the adapter container by **RepoDigest reference**:
