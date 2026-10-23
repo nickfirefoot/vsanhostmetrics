@@ -399,12 +399,23 @@ VIEWS = [
     # which is the question this view exists to answer -- is vSAN starved of
     # CPU, as opposed to merely busy. Title unchanged so the GUID is stable and
     # the view updates in place.
+    # Only maxUsedPct and maxRunPct carry signal. Measured against the vSAN
+    # API directly, 37 consecutive 5-minute buckets: usedPct, readyPct,
+    # runPct, avgUsedPct and avgRunPct returned 0.0 in every single sample,
+    # while maxUsedPct ran 3.0-7.0 and maxRunPct 2.0-6.0. That is vSAN's
+    # behaviour at source, not a collection fault -- the raw series are zero.
+    #
+    # They were on this view anyway, three of five columns reading a
+    # permanent zero, with readyPct documented as the headline. A column that
+    # is always zero is worse than an absent one: it reads as "measured, and
+    # fine" for the exact condition it is meant to warn about.
+    #
+    # The zero-valued five stay COLLECTED (they cost nothing extra -- the API
+    # returns every metric of an entity in one call) and can be added by hand
+    # if a future vSAN build starts populating them.
     ("vSAN Host CPU", "VsanCpu", [
-        ("readyPct", "percent", "MAX"),
-        ("maxRunPct", "percent", "MAX"),
-        ("usedPct", "percent", "MAX"),
-        ("runPct", "percent", "MAX"),
         ("maxUsedPct", "percent", "MAX"),
+        ("maxRunPct", "percent", "MAX"),
     ]),
     # ---- the guest view -------------------------------------------------
     # vSAN VM Storage is per-vSCSI-controller. This is per-VM, which is the

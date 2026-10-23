@@ -21,7 +21,7 @@
                             <Item>
                                 <Value>
                                     <Property name="objectType" value="RESOURCE" />
-                                    <Property name="attributeKey" value="readyPct" />
+                                    <Property name="attributeKey" value="maxUsedPct" />
                                     <Property name="preferredUnitId" value="percent" />
                                     <Property name="isStringAttribute" value="false" />
                                     <Property name="adapterKind" value="VsanHostMetrics" />
@@ -35,7 +35,7 @@
                                     </Property>
                                     <Property name="sortCriteria" value="false" />
                                     <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="Percentage of Ready CPU Time" />
+                                    <Property name="displayName" value="Used % (max)" />
                                     <Property name="addTimestampAsColumn" value="false" />
                                     <Property name="isShowRelativeTimestamp" value="false" />
                                 </Value>
@@ -58,72 +58,6 @@
                                     <Property name="sortCriteria" value="false" />
                                     <Property name="isProperty" value="false" />
                                     <Property name="displayName" value="Run % (max)" />
-                                    <Property name="addTimestampAsColumn" value="false" />
-                                    <Property name="isShowRelativeTimestamp" value="false" />
-                                </Value>
-                            </Item>
-                            <Item>
-                                <Value>
-                                    <Property name="objectType" value="RESOURCE" />
-                                    <Property name="attributeKey" value="usedPct" />
-                                    <Property name="preferredUnitId" value="percent" />
-                                    <Property name="isStringAttribute" value="false" />
-                                    <Property name="adapterKind" value="VsanHostMetrics" />
-                                    <Property name="resourceKind" value="VsanCpu" />
-                                    <Property name="rollUpType" value="NONE" />
-                                    <Property name="rollUpCount" value="0" />
-                                    <Property name="transformations">
-                                        <List>
-                                            <Item value="MAX" />
-                                        </List>
-                                    </Property>
-                                    <Property name="sortCriteria" value="false" />
-                                    <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="Percentage of Used CPU Time" />
-                                    <Property name="addTimestampAsColumn" value="false" />
-                                    <Property name="isShowRelativeTimestamp" value="false" />
-                                </Value>
-                            </Item>
-                            <Item>
-                                <Value>
-                                    <Property name="objectType" value="RESOURCE" />
-                                    <Property name="attributeKey" value="runPct" />
-                                    <Property name="preferredUnitId" value="percent" />
-                                    <Property name="isStringAttribute" value="false" />
-                                    <Property name="adapterKind" value="VsanHostMetrics" />
-                                    <Property name="resourceKind" value="VsanCpu" />
-                                    <Property name="rollUpType" value="NONE" />
-                                    <Property name="rollUpCount" value="0" />
-                                    <Property name="transformations">
-                                        <List>
-                                            <Item value="MAX" />
-                                        </List>
-                                    </Property>
-                                    <Property name="sortCriteria" value="false" />
-                                    <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="Percentage of Running CPU Time" />
-                                    <Property name="addTimestampAsColumn" value="false" />
-                                    <Property name="isShowRelativeTimestamp" value="false" />
-                                </Value>
-                            </Item>
-                            <Item>
-                                <Value>
-                                    <Property name="objectType" value="RESOURCE" />
-                                    <Property name="attributeKey" value="maxUsedPct" />
-                                    <Property name="preferredUnitId" value="percent" />
-                                    <Property name="isStringAttribute" value="false" />
-                                    <Property name="adapterKind" value="VsanHostMetrics" />
-                                    <Property name="resourceKind" value="VsanCpu" />
-                                    <Property name="rollUpType" value="NONE" />
-                                    <Property name="rollUpCount" value="0" />
-                                    <Property name="transformations">
-                                        <List>
-                                            <Item value="MAX" />
-                                        </List>
-                                    </Property>
-                                    <Property name="sortCriteria" value="false" />
-                                    <Property name="isProperty" value="false" />
-                                    <Property name="displayName" value="Used % (max)" />
                                     <Property name="addTimestampAsColumn" value="false" />
                                     <Property name="isShowRelativeTimestamp" value="false" />
                                 </Value>

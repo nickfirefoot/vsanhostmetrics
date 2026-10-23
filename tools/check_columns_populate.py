@@ -83,7 +83,7 @@ def main():
         if k.get("adapterKindKey") == "VsanHostMetrics":
             bykind[k["resourceKindKey"]].append(r["identifier"])
 
-    total = dead = 0
+    total = dead = zeros = 0
     unverifiable = []
     for title, kind, cols, *_ in build_view.VIEWS:
         ids = bykind.get(kind, [])
@@ -91,6 +91,7 @@ def main():
             unverifiable.append(f"{title} ({kind})")
             continue
         have = set()
+        nonzero = set()
         for rid in ids[:3]:
             try:
                 d = get(f"resources/{rid}/stats/latest")
@@ -98,15 +99,48 @@ def main():
                 continue
             for val in d.get("values", []):
                 for st in val.get("stat-list", {}).get("stat", []):
-                    if st.get("data"):
+                    data = st.get("data") or []
+                    if data:
                         have.add(st["statKey"]["key"])
-        missing = [c[0] for c in cols if c[0] not in have]
+                    # A column that is ALWAYS ZERO is worse than an absent
+                    # one: it reads as "measured, and fine" for the exact
+                    # condition it is meant to warn about. vSAN returns 0.0
+                    # for five of the seven vsan-cpu metrics in every sample,
+                    # and three of them were on a shipped view with readyPct
+                    # documented as the headline. This check passed them,
+                    # because 0.0 IS data -- it tested presence, not signal.
+                    if any(float(x) != 0 for x in data if x is not None):
+                        nonzero.add(st["statKey"]["key"])
+        # Properties are not metrics: they have a current value and no time
+        # series, so they never appear in /stats/latest. Checking them here
+        # reported firmware, driver and model as dead when they were working.
+        props = {k for (kk, k) in getattr(build_view, "PROPERTY_COLUMNS", set())
+                 if kk == kind}
+        missing = [c[0] for c in cols if c[0] not in have and c[0] not in props]
+        flat = [c[0] for c in cols if c[0] in have and c[0] not in nonzero]
+        # Always-zero is REPORTED, never failed. Most of these are error and
+        # congestion counters -- rxCrcErr, pauseCount, congestion,
+        # numPendingResyncJobs, tcpTxRexmitRate -- where zero is the DESIRED
+        # reading on a healthy cluster. A gate that fails a healthy cluster is
+        # worse than no gate, and the first version of this check did exactly
+        # that: 89 "failures" on a cluster with nothing wrong with it.
+        #
+        # It is still worth printing, because the one case that IS a defect
+        # looks identical from here: vSAN returns 0.0 for five of seven
+        # vsan-cpu metrics in every sample, and three were on a shipped view
+        # with readyPct documented as the headline. Telling those apart needs
+        # a human who knows whether the metric is a UTILISATION figure that
+        # should move or an ERROR counter that should not.
+        if flat:
+            print(f"  always zero (check if it should move)  {title}: {flat}")
+            zeros += len(flat)
         total += len(cols)
         if missing:
             dead += len(missing)
             print(f"  DEAD COLUMNS  {title} ({kind}): {missing}")
 
-    print(f"\n  {total} columns checked, {dead} carry no data")
+    print(f"\n  {total} columns checked: {dead} carry no data, "
+          f"{zeros} always zero (informational)")
     for u in unverifiable:
         print(f"  unverifiable (no objects): {u}")
     print(f"\n  {'PASS' if dead == 0 else 'FAIL'}")
