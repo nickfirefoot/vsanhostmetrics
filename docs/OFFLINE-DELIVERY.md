@@ -47,6 +47,47 @@ capabilities are UI-driven rather than visible through the API.
 Worth settling before investing in any of the options below, because if MPB
 can reach a SOAP endpoint it beats all of them.
 
+## Management Pack Builder: investigated and closed, 2026-10-23
+
+MPB produces GENERAL adapters, so an MPB-built pack has no container and
+installs from a single file. That makes it the obvious airgap candidate. It
+does not work for this pack, and the reasons are measured rather than assumed.
+
+**MPB offers exactly two source types: HTTP API and PROMETHEUS.**
+
+**HTTP API cannot reach the Performance Service.** Measured against the lab:
+
+    GET /vsanHealth                  501 Not Implemented   (POST-only SOAP)
+    GET /vsanhealth                  404                   (path is case-sensitive)
+    GET /sdk/vsanServiceVersions.xml 200 text/xml          (version manifest only)
+
+The 501 is the answer: `/vsanHealth` accepts only POST with SOAP envelopes.
+Collection would need a SOAP login at `/sdk` holding a session cookie, then
+`VsanPerfQueryPerf` envelopes carrying typed `VsanPerfQuerySpec` objects, then
+parsing XML whose numbers arrive as CSV strings packed in a `values` field,
+repeated across 69 entity types. MPB's "Use Session Authentication" might
+cover the login; the rest is a SOAP client with vendored type bindings, which
+is why this pack carries `vsanmgmtObjects.py`. A declarative HTTP connector
+does not do that.
+
+**PROMETHEUS needs a Prometheus SERVER, not an exposition endpoint.** The
+connection dialog takes host, port, base path and credentials -- the shape of
+querying a server, not scraping a target. So it would require a Prometheus
+deployed and already scraping, which is infrastructure the customer must run
+and feed. Not a file import.
+
+**And the only vSAN data in Prometheus format is per-ESXi-host anyway.**
+`/vsanmetrics` is served by ESXi (158 metric names, 1912 series), NOT by
+vCenter -- confirmed 404 on vc01 for both `/vsanmetrics` and `//vsanmetrics`.
+It is also a different dataset: 158 host-level cumulative counters against the
+191 columns across 69 entity types these dashboards render, with no per-VM,
+per-vSCSI, per-vmknic or per-disk breakdown. Building on it would be a new
+pack, not a repackaging.
+
+**Standing constraint, set 2026-10-23: this pack does not interface directly
+with ESXi hosts.** vCenter only -- one endpoint, one credential. That closes
+the `/vsanmetrics` route permanently regardless of the points above.
+
 ## The mechanism
 
 The Cloud Proxy runs the adapter container by **RepoDigest reference**:
