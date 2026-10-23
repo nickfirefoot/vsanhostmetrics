@@ -41,6 +41,15 @@ NOTES = {
                 "from vCenter's view of the device. A single drive at a "
                 "different level from its peers is worth knowing before you "
                 "start reading latency columns.",
+    "driver_version": "The controller driver's version string, e.g. "
+                      "<code>1.4.0.8-2vmw.911.0.25714478</code>. "
+                      "<b>This is the field a support case asks for</b>, and "
+                      "the one a known-bad driver is identified by -- the "
+                      "module name alone cannot distinguish a working build "
+                      "from a broken one. It comes from the HCL section of "
+                      "the cluster health summary rather than from the device, "
+                      "so it is blank if that summary is unavailable while the "
+                      "driver name is still reported.",
     "driver": "The ESXi driver bound to the controller this drive sits "
               "behind, not to the drive itself. <b>Several drives usually "
               "share one driver</b>, so a driver difference points at a "

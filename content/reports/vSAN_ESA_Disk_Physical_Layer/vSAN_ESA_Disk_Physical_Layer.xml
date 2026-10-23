@@ -35,7 +35,7 @@
                                     </Property>
                                     <Property name="sortCriteria" value="false" />
                                     <Property name="isProperty" value="true" />
-                                    <Property name="displayName" value="model" />
+                                    <Property name="displayName" value="Model" />
                                     <Property name="addTimestampAsColumn" value="false" />
                                     <Property name="isShowRelativeTimestamp" value="false" />
                                 </Value>
@@ -57,7 +57,7 @@
                                     </Property>
                                     <Property name="sortCriteria" value="false" />
                                     <Property name="isProperty" value="true" />
-                                    <Property name="displayName" value="firmware" />
+                                    <Property name="displayName" value="Firmware" />
                                     <Property name="addTimestampAsColumn" value="false" />
                                     <Property name="isShowRelativeTimestamp" value="false" />
                                 </Value>
@@ -79,7 +79,29 @@
                                     </Property>
                                     <Property name="sortCriteria" value="false" />
                                     <Property name="isProperty" value="true" />
-                                    <Property name="displayName" value="driver" />
+                                    <Property name="displayName" value="Driver" />
+                                    <Property name="addTimestampAsColumn" value="false" />
+                                    <Property name="isShowRelativeTimestamp" value="false" />
+                                </Value>
+                            </Item>
+                            <Item>
+                                <Value>
+                                    <Property name="objectType" value="RESOURCE" />
+                                    <Property name="attributeKey" value="driver_version" />
+                                    <Property name="preferredUnitId" value="" />
+                                    <Property name="isStringAttribute" value="false" />
+                                    <Property name="adapterKind" value="VsanHostMetrics" />
+                                    <Property name="resourceKind" value="VsanEsaDiskScsifw" />
+                                    <Property name="rollUpType" value="NONE" />
+                                    <Property name="rollUpCount" value="0" />
+                                    <Property name="transformations">
+                                        <List>
+                                            <Item value="CURRENT" />
+                                        </List>
+                                    </Property>
+                                    <Property name="sortCriteria" value="false" />
+                                    <Property name="isProperty" value="true" />
+                                    <Property name="displayName" value="Driver Version" />
                                     <Property name="addTimestampAsColumn" value="false" />
                                     <Property name="isShowRelativeTimestamp" value="false" />
                                 </Value>

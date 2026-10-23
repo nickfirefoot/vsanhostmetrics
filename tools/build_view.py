@@ -206,6 +206,7 @@ VIEWS = [
         ("model", "", "CURRENT"),
         ("firmware", "", "CURRENT"),
         ("driver", "", "CURRENT"),
+        ("driver_version", "", "CURRENT"),
         ("latencyDevRead",  "", "MAX"),
         ("latencyDevWrite", "", "MAX"),
         ("latencyDevDAvg",  "", "MAX"),
@@ -449,6 +450,10 @@ OVERRIDE = {
     # the metric reports 132. label_for() prefers the SCHEMA name over
     # metric_labels, so the override has to live here to reach the column.
     ("VsanClusterCapacity", "dedupRatio"): "Space Efficiency Ratio (100 = 1.00x)",
+    ("VsanEsaDiskScsifw", "model"): "Model",
+    ("VsanEsaDiskScsifw", "firmware"): "Firmware",
+    ("VsanEsaDiskScsifw", "driver"): "Driver",
+    ("VsanEsaDiskScsifw", "driver_version"): "Driver Version",
     # the derived name says "Cluster" -- but this view's subject is the
     # PER-HOST kind, so the label would assert the wrong scope
     ("VsanRdtLatency", "maxLatency"): "RDT Network Host Max Latency",
@@ -553,6 +558,7 @@ PROPERTY_COLUMNS = {
     ("VsanEsaDiskScsifw", "firmware"),
     ("VsanEsaDiskScsifw", "driver"),
     ("VsanEsaDiskScsifw", "model"),
+    ("VsanEsaDiskScsifw", "driver_version"),
 }
 
 ADAPTER = "VsanHostMetrics"

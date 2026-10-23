@@ -188,6 +188,7 @@ def get_adapter_definition() -> AdapterDefinition:
             if spec["kind"] in perfsvc.DISK_HARDWARE_KINDS:
                 ot.define_string_property("firmware", "Firmware")
                 ot.define_string_property("driver", "Driver")
+                ot.define_string_property("driver_version", "Driver Version")
                 ot.define_string_property("model", "Model")
                 ot.define_string_property("vendor", "Vendor")
 
@@ -567,7 +568,8 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
             names = perfsvc.build_name_map(si, clusters, perf, mos)
             logger.info("resolved %d identifier names", len(names))
             parents = perfsvc.build_parent_map(si, clusters, perf, mos)
-            disk_hw = perfsvc.build_disk_hardware(si, clusters)
+            disk_hw = perfsvc.build_disk_hardware(
+                si, clusters, mos.get("vsan-cluster-health-system"))
             logger.info("mapped %d hosts, %d VMs, %d clusters to vCenter objects",
                         len(parents.get("hosts", {})), len(parents.get("vms", {})),
                         len(parents.get("clusters", {})))

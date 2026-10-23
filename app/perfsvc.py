@@ -209,7 +209,8 @@ DISK_HARDWARE_KINDS = ("VsanEsaDiskLayer", "VsanEsaDiskScsifw",
                        "VsanCacheDisk", "VsanCapacityDisk")
 
 
-def build_disk_hardware(service_instance, clusters) -> Dict[str, Dict[str, str]]:
+def build_disk_hardware(service_instance, clusters,
+                        _health_system=None) -> Dict[str, Dict[str, str]]:
     """vSAN disk uuid -> {firmware, model, vendor, driver}.
 
     The Performance Service returns counters only -- nothing in its 1,035
@@ -237,6 +238,32 @@ def build_disk_hardware(service_instance, clusters) -> Dict[str, Dict[str, str]]
     for cluster in clusters:
         hosts.extend(getattr(cluster, "host", []) or [])
 
+    # Controller driver VERSION, which hostBusAdapter does not carry -- it
+    # gives the module NAME only ("nvme_pcie"). The version lives in the HCL
+    # section of the cluster health summary, keyed by controller device name,
+    # so it joins to a disk through the same scsiTopology walk used below.
+    #
+    # QueryClusterHealthSummary is a READ. GetClusterHclInfo looks like the
+    # obvious call and is not: its hostResults is empty until the HCL health
+    # check has been RUN, which is an action on the cluster.
+    version_for_hba: Dict[str, str] = {}
+    if _health_system is not None:
+        for cluster in clusters:
+            try:
+                summary = _health_system.VsanQueryVcClusterHealthSummary(
+                    cluster=cluster, includeObjUuids=False, fields=["hclInfo"])
+                for host_result in (getattr(
+                        getattr(summary, "hclInfo", None),
+                        "hostResults", None) or []):
+                    for ctrl in (getattr(host_result, "controllers", None) or []):
+                        dev = getattr(ctrl, "deviceName", "") or ""
+                        ver = getattr(ctrl, "driverVersion", "") or ""
+                        if dev and ver:
+                            version_for_hba[dev] = ver
+            except Exception as exc:                        # noqa: BLE001
+                logger.info("HCL driver versions unavailable: %s",
+                            type(exc).__name__)
+
     for host in hosts:
         try:
             vsan = host.configManager.vsanSystem
@@ -248,16 +275,20 @@ def build_disk_hardware(service_instance, clusters) -> Dict[str, Dict[str, str]]
 
         # lun key -> driver, by walking adapter -> target -> lun
         driver_for_lun: Dict[str, str] = {}
+        hba_for_lun: Dict[str, str] = {}
         try:
             sd = host.config.storageDevice
-            hba = {a.key: getattr(a, "driver", "") or ""
+            hba = {a.key: (getattr(a, "driver", "") or "",
+                           getattr(a, "device", "") or "")
                    for a in (sd.hostBusAdapter or [])}
             for adapter in (sd.scsiTopology.adapter or []):
-                drv = hba.get(adapter.adapter, "")
+                drv, dev = hba.get(adapter.adapter, ("", ""))
                 for target in (adapter.target or []):
                     for lun in (target.lun or []):
                         if drv:
                             driver_for_lun[lun.scsiLun] = drv
+                        if dev:
+                            hba_for_lun[lun.scsiLun] = dev
         except Exception as exc:                            # noqa: BLE001
             logger.debug("no scsi topology on %s: %s",
                          getattr(host, "name", "?"), type(exc).__name__)
@@ -272,6 +303,8 @@ def build_disk_hardware(service_instance, clusters) -> Dict[str, Dict[str, str]]
                 "model": (getattr(disk, "model", "") or "").strip(),
                 "vendor": (getattr(disk, "vendor", "") or "").strip(),
                 "driver": driver_for_lun.get(getattr(disk, "key", ""), ""),
+                "driver_version": version_for_hba.get(
+                    hba_for_lun.get(getattr(disk, "key", ""), ""), ""),
             }
             out[uuid] = {k: v for k, v in info.items() if v}
 
