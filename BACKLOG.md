@@ -1,6 +1,8 @@
 # BACKLOG
 
-## Ready to release as 1.4.7
+## Released as 1.4.7 (2026-10-27)
+
+Published as `v1.4.7`, a non-prerelease and the Latest release, from the commit the gates below were run on. Verified against the published artifact: checksum matches `SHA256SUMS`, one provenance attestation, 976 metric/property keys and 70 kinds identical to rc.12, `attach_to_vcenter` default true.
 
 Verified 2026-10-22 against the shipped `v1.4.7-rc.9` pak AND a live lab
 running it, rather than against source. Every gate below was run, not assumed.

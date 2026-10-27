@@ -2,7 +2,7 @@
     "display_name": "DISPLAY_NAME",
     "name": "iSDK_VsanHostMetrics",
     "description": "DESCRIPTION",
-    "version": "1.4.6",
+    "version": "1.4.7",
     "vcops_minimum_version": "8.10.0",
     "disk_space_required": 500,
     "run_scripts_on_all_nodes": "true",
