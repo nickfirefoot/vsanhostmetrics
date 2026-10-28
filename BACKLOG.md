@@ -1,5 +1,36 @@
 # BACKLOG
 
+## Unreleased, for 1.5.0
+
+Minor rather than patch because the credential type gains a field and
+two defaults now behave differently (verification on works; no
+certificate prompt when it is off). Nothing is removed: `describe.xml`
+keeps every kind, metric and identifier, and existing accounts keep their
+identity.
+
+* **The certificates Operations passes are used.** `verify_certs: true`
+  works against a vCenter whose CA Operations trusts, and against a
+  VMCA-signed vCenter and by IP once its certificate is accepted (chain
+  verification against them, then a thumbprint pin on the vCenter session
+  and the `/vsanHealth` stub). Every vCenter request has a 120 s timeout. The vendored version probe no longer turns off TLS verification
+  for the whole process. The vCenter field accepts a pasted URL or a
+  `:port`.
+* **Username in the credential.** *Upgrade note:* existing accounts keep
+  collecting through the old field and log a WARNING each cycle until the
+  username is entered in the credential. Leave the old field as it is; it is
+  ignored once the credential has a username, and leaving it in place keeps
+  the account's identity (README step 6).
+* **Collection failures reach Operations.** `collect()` reports with
+  `with_error` instead of exiting 0 with no result.
+* **One cluster no longer sinks the rest.** Clusters without vSAN are
+  skipped; a vSAN cluster that does not answer is logged and the others
+  still collect. Validate Connection probes every vSAN cluster.
+* **Clusters in foldered datacenters are collected.**
+* **The collection-problem warning means a problem.** Absent features and
+  attach-off are no longer counted.
+* `tools/sync_content.py` fails when a dashboard was not generated.
+* `app/metric_scope.py` counts defined metrics the way the pak does.
+
 ## Released as 1.4.7 (2026-10-27)
 
 Published as `v1.4.7`, a non-prerelease and the Latest release, from the commit the gates below were run on. Verified against the published artifact: checksum matches `SHA256SUMS`, one provenance attestation, 976 metric/property keys and 70 kinds identical to rc.12, `attach_to_vcenter` default true.
