@@ -476,6 +476,35 @@ def test_shipped_help_text_carries_no_notes_or_unsourced_claims():
         assert _help_text_problems(known_bad), f"scan missed: {known_bad!r}"
 
 
+
+def test_sync_refuses_when_a_dashboard_was_not_generated():
+    """When build_dash.py crashed, sync_content.py printed a WARNING per
+    missing dashboard, reused the committed copy, counted it, and ended
+    'synced N views and M dashboards' with exit 0."""
+    import importlib, tempfile
+    sys.path.insert(0, "tools")
+    sync = importlib.import_module("sync_content")
+    import build_dash
+    names = [n.replace(" ", "_") for n, _h, _p in build_dash.DASHBOARDS]
+    with tempfile.TemporaryDirectory() as out, \
+            tempfile.TemporaryDirectory() as proj:
+        open(os.path.join(out, "Some_View.xml"), "w").write("<x/>")
+        for n in names[1:]:                    # the first one "crashed"
+            open(os.path.join(out, f"{n}.zip"), "wb").close()
+        saved = (sync.OUT, sync.REPO, sys.argv)
+        sync.OUT = out
+        sync.REPO = proj                       # writes, if any, land here
+        sys.argv = ["sync_content.py", proj]
+        try:
+            sync.main()
+            raise AssertionError("a missing dashboard was synced as success")
+        except SystemExit as exc:
+            assert exc.code not in (0, None), exc.code
+            assert names[0] in str(exc.code), exc.code
+        finally:
+            sync.OUT, sync.REPO, sys.argv = saved
+        assert os.listdir(proj) == [], "it wrote before refusing"
+
 if __name__ == "__main__":
     fails = 0
     for name, fn in sorted(globals().items()):
