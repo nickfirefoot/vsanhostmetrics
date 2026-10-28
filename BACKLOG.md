@@ -123,6 +123,41 @@ someone documents it. 839 of the 1595 defined metrics have a vendor description.
 | **"(Low Is Bad)" on `txSbSpaceMin` / `rxSbSpaceMin`** | Added by this repo, not by Broadcom. A judgement about direction, still on the column labels. |
 | **Diagnostic guidance** | "Latency at RDT but not TCP is vSAN's own queueing", "local reads slower than remote point at a local device", "a deep resync queue with low parallelism is usually throttling" and similar were removed. Reasonable, plausibly right, unsourced. Reinstate with a Broadcom KB or documentation reference. |
 
+## Adaptive network shaping: measured, semantics unknown (2026-10-28)
+
+The twelve `numNetSched*` metrics are collected and shown, but nothing in them
+says "activated", and after the help-text cleanup the panel has no reading
+guidance (the old guidance was inferred, see `docs/REMOVED-HELP-CLAIMS.md`).
+
+**Measured over ~6 days (Operations history, 1,673 five-minute samples per host):**
+
+| host | share of time in low band | controller IOPS limit |
+|---|---|---|
+| esxi01 | 0.2% | 380,458 |
+| esxi02 | **50.4%** (43-55% every day, load or not) | **51,200** |
+| esxi03 | 2.1% | 427,972 |
+| esxi04 | 0.0% | 468,287 |
+
+* Low-band and mid-band seconds sum to 300 (299-302) in every bucket on every
+  host, so the share is exact arithmetic. The `*Band` counts are ~10x the `*BandSec`
+  values (a tick count at roughly 10 per second); observed, not documented.
+* The IOPS limit never changed on any host in six days: a static per-host
+  number, not an activation signal.
+* The low-band threshold tracks each host's own rolling average latency within a
+  few percent on esxi01/03/04 (633/635, 743/756, 729/729 us), and is about half
+  of it on esxi02 (124 against 249 us).
+* esxi02 is not the slow host: lowest rolling latency (249 us against 635-756),
+  mid-pack owner write latency. "Throttling because it is slow" does not fit.
+* esxi02 is also the host with the fewest CPUs (48 logical against 64) and the
+  most CPU ready time in the HCIBench run. Three independent signals, one host.
+
+**Unknown, and not stated anywhere customer-facing:** what the low band does,
+what sets the IOPS limit, why esxi02 is in the low band half the time.
+
+**Proposed:** a derived `% of time in low band` metric (`lowBandSec / (lowBandSec +
+midBandSec)`), additive so history is safe; and ask Broadcom what the low band and
+the limit mean.
+
 ## Proposed, not started
 
 | Item | Why it is not done |
