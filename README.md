@@ -84,7 +84,7 @@ sudo apt update && sudo apt install -y python3-venv python3-pip docker.io
 sudo usermod -aG docker "$USER" && newgrp docker
 
 python3 -m venv ~/.mp && source ~/.mp/bin/activate
-pip install vmware-vcf-operations-integration-sdk
+pip install vmware-aria-operations-integration-sdk==1.3.1
 ```
 
 Check the SDK's Requirements page for the exact minimum Docker and Python
