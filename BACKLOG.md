@@ -151,10 +151,36 @@ guidance (the old guidance was inferred, see `docs/REMOVED-HELP-CLAIMS.md`).
 * esxi02 is also the host with the fewest CPUs (48 logical against 64) and the
   most CPU ready time in the HCIBench run. Three independent signals, one host.
 
+**Correction and further measurements (2026-10-28), read straight from the
+Performance Service, 1,441 five-minute buckets per host (10-23 17:10 to 10-28
+17:10, which includes the HCIBench run):**
+
+* An earlier note here said there is no activation metric. That is true of what
+  we COLLECT, not of what the service returns: **it returns 46 `numNetSched*`
+  metrics and we collect 12.** The 34 not collected include
+  `numNetSchedControllerActivations`, the `*TpThrottled` family,
+  `ResyncTotalSharePercent`, `SeenResyncTpBps`, the per-band limits and shares,
+  and the whole High band. They are not on any view, so the default scope skips
+  them; `metric_scope = all` collects them with no reinstall.
+* **`ControllerActivations` is a clock, not an event.** It is ~3,000 per bucket on
+  every host (5-day sums 4,323,063 / 063 / 064 / 063), non-zero in 100% of
+  buckets, regardless of load: ~10 per second. The band counts tally those
+  activations by band (esxi02: 1,608 low + 1,392 mid = 3,000).
+* **No throttling was counted anywhere.** `OwnerTpThrottled`, `CompTpThrottled`,
+  `RecoveryWriteTpThrottled`, `ResyncReadTpThrottled`, `ResyncTotalSharePercent`,
+  `SeenResyncTpBps`, `OwnerIops` and `CompIops` are zero in every bucket on every
+  host, including the 7 buckets of the 2.3M IOPS run and while esxi02 spent about
+  half its time in the low band. So by these counters the low band is not
+  throttling anything; what it does is still unknown.
+* `LowBandHighLimit`, `MidBandHighLimit`, `MidBandLowShare` and
+  `HighBandHighShare` are 0 throughout. A third (High) band exists; its time is
+  negligible here (HighBand max 9 ticks on esxi02, 1 on esxi03, 0 seconds).
+  The earlier "two bands" wording should read "the two bands that were occupied".
+
 **Unknown, and not stated anywhere customer-facing:** what the low band does,
 what sets the IOPS limit, why esxi02 is in the low band half the time.
 
-**Proposed:** a derived `% of time in low band` metric (`lowBandSec / (lowBandSec +
+**Proposed:** collect the 34 uncollected `numNetSched*` metrics (no extra queries: the entity is already queried, so it costs storage only), and a derived `% of time in low band` metric (`lowBandSec / (lowBandSec +
 midBandSec)`), additive so history is safe; and ask Broadcom what the low band and
 the limit mean.
 
