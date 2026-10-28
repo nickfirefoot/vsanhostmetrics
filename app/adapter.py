@@ -18,7 +18,8 @@ Nothing imports it.  It exists so that reviving a family perfsvc does not serve
 change rather than archaeology.
 
 Import block and main() dispatch are taken verbatim from the mp-init generated
-adapter.py (SDK 1.3.1 / lib 1.1.0), which is ground truth.
+adapter.py (SDK 1.3.1 / lib 1.1.0), which is ground truth -- except the
+sys.exit(0) in main()'s finally, which is removed; see the comment there.
 """
 import os
 import sys
@@ -704,6 +705,13 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
                 # collision survived a green test suite.
                 logger.warning("%d collection problem(s); first few: %s",
                                len(total_problems), total_problems[:5])
+        except Exception as exc:                    # noqa: BLE001
+            # The template catches here and this adapter had dropped it, so
+            # every PerfSvcError below -- bad password, untrusted certificate,
+            # no clusters -- vanished. with_error puts the adapter instance in
+            # an error state carrying this text.
+            logger.exception("Collection failed")
+            result.with_error(f"{type(exc).__name__}: {exc}")
         finally:
             _safe_disconnect(si)
 
@@ -756,8 +764,12 @@ def main(argv: List[str]) -> None:
             logger.error(f"Command {method} not found")
             sys.exit(1)
     finally:
+        # No sys.exit(0) here. The generated template has one, and it is safe
+        # there only because the template's collect() catches; a sys.exit in a
+        # finally REPLACES an in-flight exception, so the process exited 0
+        # with no result and no traceback, and Operations reported a generic
+        # failure with nothing in adapter.log to say why.
         logger.info(Timer.graph())
-        sys.exit(0)
 
 
 if __name__ == "__main__":

@@ -9,6 +9,7 @@ second was hidden by the first for three releases.
 Run: python3 test_adapter.py
 """
 import sys
+from unittest.mock import patch
 
 # AdapterInstance.from_input defaults to sys.argv[-2], evaluated at class
 # definition time, so importing the adapter needs two argv entries.
@@ -215,6 +216,53 @@ def test_pack_description_counts_match_the_model():
     assert f"collects the {scoped} metrics" in desc, (scoped, desc[:260])
     readme = open("README.md").read()
     assert f"{defined:,} metrics across {len(ents)} resource kinds" in readme
+
+
+def test_collect_reports_exception_and_disconnects():
+    """A collect that raises must reach Operations as an error, not vanish.
+
+    collect() had try/finally and no except, and main() ended in
+    `finally: sys.exit(0)`, which replaces an in-flight exception: the process
+    exited 0, wrote no result, and logged no traceback. Every PerfSvcError
+    message this adapter composes was lost that way."""
+    session = object()
+    with patch.object(adapter, "_connect", return_value=(session, [object()], {})), \
+         patch.object(adapter, "_safe_disconnect") as disconnect:
+        result = adapter.collect(object())
+    assert "KeyError" in result.get_json()["errorMessage"]
+    disconnect.assert_called_once_with(session)
+
+
+def test_collect_reports_a_login_failure_in_its_own_words():
+    import perfsvc
+    with patch.object(adapter, "_connect",
+                      side_effect=perfsvc.PerfSvcError("vCenter login failed")):
+        result = adapter.collect(object())
+    assert "vCenter login failed" in result.get_json()["errorMessage"]
+
+
+def test_main_does_not_mask_dispatch_failure():
+    with patch.object(adapter.logging, "setup_logging"), \
+         patch.object(adapter.logging, "rotate"), \
+         patch.object(adapter.AdapterInstance, "from_input", side_effect=RuntimeError("dispatch failed")):
+        try:
+            adapter.main(["collect", "input", "output"])
+        except RuntimeError as exc:
+            assert str(exc) == "dispatch failed"
+        else:
+            raise AssertionError("dispatch failure was masked")
+
+
+def test_main_unknown_method_exits_nonzero():
+    with patch.object(adapter.logging, "setup_logging"), \
+         patch.object(adapter.logging, "rotate"):
+        try:
+            adapter.main(["unknown", "input", "output"])
+        except SystemExit as exc:
+            assert exc.code == 1
+        else:
+            raise AssertionError("unknown method did not fail")
+
 
 if __name__ == "__main__":
     fails = 0
