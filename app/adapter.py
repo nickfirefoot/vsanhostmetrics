@@ -537,6 +537,30 @@ def _connect(adapter_instance: AdapterInstance):
     )
 
 
+def _cluster_label(cluster) -> str:
+    """The cluster's name, or its MoRef if the name cannot be read.
+
+    Reading .name is a call to vCenter, and a cluster deleted since the
+    inventory was listed raises ManagedObjectNotFound; getattr's default
+    covers only AttributeError. _moId is local.
+    """
+    try:
+        return cluster.name
+    except Exception:                               # noqa: BLE001
+        return getattr(cluster, "_moId", "?")
+
+
+def _not_vsan(cluster) -> bool:
+    """True only when the cluster's vSAN config says disabled.
+
+    Every cluster is queried either way: a compute cluster that mounts a
+    remote vSAN datastore may report vSAN disabled and still have
+    Performance Service data. This only decides how a cluster that returned
+    nothing is reported.
+    """
+    return perfsvc.vsan_enabled(cluster) is False
+
+
 # ---------------------------------------------------------------------------
 # Test
 # ---------------------------------------------------------------------------
@@ -555,25 +579,57 @@ def test(adapter_instance: AdapterInstance) -> TestResult:
                     "Connected to vCenter but no clusters are visible. The "
                     "account likely lacks Read-only propagated from the root.")
                 return result
-            # A single query, NOT a full collection. This used to call
-            # perfsvc.collect, which queries all 69 entity types; 99% of the
-            # test's runtime was that call, and on a large cluster it overran
-            # the Validate Connection timeout so a correctly configured
-            # account was told the connection timed out.
-            found, problem = perfsvc.probe(mos["vsan-performance-manager"],
-                                           clusters[0])
-            if problem:
+            # One query PER CLUSTER, NOT a full collection. This used to
+            # call perfsvc.collect, which queries all 69 entity types; 99% of
+            # the test's runtime was that call, and on a large cluster it
+            # overran the Validate Connection timeout so a correctly
+            # configured account was told the connection timed out. It then
+            # probed clusters[0] only, so a compute-only first cluster failed
+            # the test while the vSAN clusters would have collected, and a
+            # broken second cluster passed it.
+            failed, no_vsan = [], []
+            for cluster in clusters:
+                name, found = "?", 0
+                try:
+                    name = _cluster_label(cluster)
+                    found, problem = perfsvc.probe(
+                        mos["vsan-performance-manager"], cluster)
+                except Exception as exc:            # noqa: BLE001
+                    problem = perfsvc.fault_text(exc)
+                if not found and _not_vsan(cluster):
+                    # Nothing back from a cluster whose vSAN config says
+                    # disabled is its normal state, not a failure.
+                    no_vsan.append(name)
+                    logger.info("%s: cluster %s has vSAN disabled, probe "
+                                "returned nothing%s", host, name,
+                                f" ({problem})" if problem else "")
+                    continue
+                if problem:
+                    failed.append(f"{name} ({problem})")
+                logger.info("%s: cluster %s, probe returned %d result(s)%s",
+                            host, name, found,
+                            f", problem: {problem}" if problem else "")
+            if failed:
+                result.with_error(
+                    f"Connected to {host}, but the vSAN Performance Service "
+                    f"did not answer on {len(failed)} of {len(clusters)} "
+                    f"cluster(s): {'; '.join(failed)}. Check that it is "
+                    f"enabled on each. Collection skips a cluster that does "
+                    f"not answer and still collects the others.")
+                return result
+            if len(no_vsan) == len(clusters):
                 result.with_error(
                     f"Connected to {host} and found {len(clusters)} cluster(s), "
-                    f"but the vSAN Performance Service did not answer: {problem}. "
-                    "Check that it is enabled on the cluster.")
+                    f"none with vSAN enabled: {', '.join(sorted(no_vsan))}.")
                 return result
-            logger.info("%s: %d cluster(s), probe returned %d result(s)",
-                        host, len(clusters), found)
+            logger.info("%s: %d cluster(s) answered, %d with vSAN disabled",
+                        host, len(clusters) - len(no_vsan), len(no_vsan))
         except perfsvc.PerfSvcError as exc:
+            logger.warning("Test failed: %s", exc)
             result.with_error(str(exc))
         except Exception as exc:                    # noqa: BLE001
-            result.with_error(f"{host}: {type(exc).__name__}: {exc}")
+            logger.exception("Test failed")
+            result.with_error(f"{host}: {perfsvc.fault_text(exc)}")
         finally:
             _safe_disconnect(si)
         return result
@@ -650,10 +706,37 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
                             VC_ATTACH_PARAM)
 
             total_problems: List[str] = []
+            scope = _scope_for(adapter_instance)
+            # One cluster that returns nothing -- Performance Service off, or
+            # a fault -- used to raise out of this loop and lose every other
+            # cluster's data with it. Each cluster now stands alone; the
+            # cycle fails only if none answered. A failed cluster cannot be
+            # shown in the UI without failing the cycle (with_error drops
+            # every object), so it is logged as an ERROR every cycle instead.
+            # Every cluster is queried; "no data" from one whose vSAN config
+            # says disabled is its normal state and is logged at INFO.
+            failed: List[str] = []
+            no_vsan: List[str] = []
+            collected = 0
             for cluster in clusters:
-                objs, problems = perfsvc.collect(
-                    perf, cluster, scope=_scope_for(adapter_instance))
-                total_problems.extend(problems)
+                cname = "?"
+                try:
+                    cname = _cluster_label(cluster)
+                    objs, problems = perfsvc.collect(perf, cluster, scope=scope)
+                except Exception as exc:            # noqa: BLE001
+                    if _not_vsan(cluster):
+                        no_vsan.append(cname)
+                        logger.info("cluster %s has vSAN disabled; nothing "
+                                    "collected (%s)", cname,
+                                    perfsvc.fault_text(exc))
+                        continue
+                    logger.error("cluster %s not collected: %s", cname,
+                                 perfsvc.fault_text(exc),
+                                 exc_info=not isinstance(exc, perfsvc.PerfSvcError))
+                    failed.append(f"{cname}: {perfsvc.fault_text(exc)}")
+                    continue
+                collected += 1
+                total_problems.extend(f"{cname}: {p}" for p in problems)
                 for key, grouped in objs.items():
                     spec = perfsvc.MODEL.ENTITIES[key.entity]
                     obj = result.object(
@@ -696,6 +779,16 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
                             parent.add_child(obj)
                             linked += 1
                         break
+
+            if not collected:
+                if failed:
+                    raise perfsvc.PerfSvcError(
+                        f"No cluster returned vSAN data ({len(failed)} of "
+                        f"{len(clusters)} failed): " + "; ".join(failed[:3]))
+                raise perfsvc.PerfSvcError(
+                    f"{len(clusters)} cluster(s) visible, none with vSAN "
+                    f"enabled: {', '.join(sorted(no_vsan))}.")
+            total_problems.extend(f"cluster not collected: {f}" for f in failed)
 
             # Re-attach the children that already belonged to each vCenter
             # object before adding it to our result.

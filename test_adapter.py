@@ -317,6 +317,139 @@ def test_an_unreadable_certificate_entry_is_skipped_not_fatal():
     assert warn.called
 
 
+class _Cluster:
+    def __init__(self, name): self.name = name
+
+
+def _collect_with(clusters, enabled, outcome, enabled_fn=None):
+    """Run adapter.collect against fake clusters.
+
+    enabled: {name: True/False/None}; outcome: {name: "ok" | Exception}."""
+    import perfsvc
+    key = perfsvc.parse_ref("host-domclient:6a46db86-350f-f7e5-653d-9c6b00c512b6")
+
+    def _collect(perf, cluster, scope=None):
+        out = outcome[cluster.name]
+        if isinstance(out, Exception):
+            raise out
+        g = perfsvc.Grouped(); g.gauges["readCount"] = 1.0
+        return {key: g}, []
+
+    inst = _Instance({"vcenter_host": "vc01.example.com",
+                      "attach_to_vcenter": "false"})
+    with patch.object(adapter, "_connect",
+                      return_value=(None, clusters, {"vsan-performance-manager": None})), \
+         patch.object(perfsvc, "build_name_map", return_value={}), \
+         patch.object(perfsvc, "build_parent_map", return_value={}), \
+         patch.object(perfsvc, "build_disk_hardware", return_value={}), \
+         patch.object(perfsvc, "vsan_enabled",
+                      side_effect=enabled_fn or (lambda c: enabled[c.name])), \
+         patch.object(perfsvc, "collect", side_effect=_collect):
+        return adapter.collect(inst).get_json()
+
+
+def test_one_failing_cluster_does_not_discard_the_others():
+    """A cluster without data raised out of the loop and lost every other
+    cluster's results with it -- silently, before collect() caught."""
+    import perfsvc
+    clusters = [_Cluster("compute-only"), _Cluster("broken"), _Cluster("good")]
+    with patch.object(adapter.logger, "error") as err:
+        out = _collect_with(
+            clusters, {"compute-only": False, "broken": True, "good": None},
+            {"compute-only": perfsvc.PerfSvcError("no data"),
+             "broken": perfsvc.PerfSvcError("Performance Service returned no data"),
+             "good": "ok"})
+    assert "errorMessage" not in out, out.get("errorMessage")
+    assert len(out["result"]) == 1, out["result"]
+    # vSAN disabled and no data: normal. vSAN enabled and no data: reported.
+    logged = " ".join(str(c) for c in err.call_args_list)
+    assert "broken" in logged and "compute-only" not in logged, logged
+
+
+def test_every_cluster_is_queried_even_with_vsan_disabled():
+    """A compute cluster mounting a remote vSAN datastore may report vSAN
+    disabled and still have data; 1.4.7 queried it, so this must too."""
+    out = _collect_with([_Cluster("client")], {"client": False}, {"client": "ok"})
+    assert "errorMessage" not in out, out.get("errorMessage")
+    assert len(out["result"]) == 1, out["result"]
+
+
+def test_every_cluster_failing_is_an_error():
+    import perfsvc
+    out = _collect_with(
+        [_Cluster("a"), _Cluster("b")], {"a": True, "b": None},
+        {"a": perfsvc.PerfSvcError("no data"), "b": RuntimeError("boom")})
+    assert "No cluster returned vSAN data (2 of 2 failed)" in out["errorMessage"], out
+
+
+def test_no_vsan_cluster_at_all_is_an_error():
+    import perfsvc
+    out = _collect_with([_Cluster("a")], {"a": False},
+                        {"a": perfsvc.PerfSvcError("no data")})
+    assert "none with vSAN enabled" in out["errorMessage"], out
+
+
+def test_a_cluster_deleted_mid_cycle_does_not_sink_the_others():
+    """cluster.name is a call to vCenter; a cluster removed since the
+    inventory was listed raises ManagedObjectNotFound, which getattr's
+    default does not catch."""
+    import perfsvc
+
+    class _Gone:
+        _moId = "domain-c99"
+        @property
+        def name(self):
+            raise perfsvc.vmodl.fault.ManagedObjectNotFound()
+    gone = _Gone()
+    out = _collect_with([gone, _Cluster("good")], {"good": True},
+                        {"good": "ok"},
+                        enabled_fn=lambda c: None if c is gone else True)
+    assert "errorMessage" not in out, out.get("errorMessage")
+    assert len(out["result"]) == 1, out["result"]
+
+
+def _test_with(clusters, enabled, problems, found=3, answers=()):
+    import perfsvc
+    probed = []
+    def _probe(perf, cluster):
+        probed.append(cluster.name)
+        if enabled[cluster.name] is False and cluster.name not in answers:
+            return (0, problems.get(cluster.name))
+        return (0, problems[cluster.name]) if problems.get(cluster.name) else (found, None)
+    inst = _Instance({"vcenter_host": "vc01.example.com"})
+    with patch.object(adapter, "_connect",
+                      return_value=(None, clusters, {"vsan-performance-manager": None})), \
+         patch.object(perfsvc, "vsan_enabled", side_effect=lambda c: enabled[c.name]), \
+         patch.object(perfsvc, "probe", side_effect=_probe):
+        return adapter.test(inst).get_json(), probed
+
+
+def test_validate_probes_every_cluster_not_just_the_first():
+    clusters = [_Cluster("compute-only"), _Cluster("a"), _Cluster("b")]
+    enabled = {"compute-only": False, "a": True, "b": True}
+    out, probed = _test_with(clusters, enabled, {})
+    assert out == {}, out
+    assert probed == ["compute-only", "a", "b"], probed
+    out, _ = _test_with(clusters, enabled, {"b": "NotFound: service disabled"})
+    assert "1 of 3" in out["errorMessage"] and "b (" in out["errorMessage"], out
+    # a vSAN-disabled cluster that does not answer is not a failure
+    out, _ = _test_with(clusters, enabled, {"compute-only": "InvalidArgument"})
+    assert out == {}, out
+
+
+def test_validate_counts_a_vsan_disabled_cluster_that_answers():
+    """A compute cluster on a remote vSAN datastore can report vSAN disabled
+    and still return data; it is a working cluster, not 'none with vSAN'."""
+    out, probed = _test_with([_Cluster("client")], {"client": False}, {},
+                             answers=("client",))
+    assert out == {}, out
+
+
+def test_validate_with_no_vsan_cluster_says_so():
+    out, probed = _test_with([_Cluster("c1")], {"c1": False}, {})
+    assert "none with vSAN enabled: c1" in out["errorMessage"], out
+    assert probed == ["c1"]
+
 if __name__ == "__main__":
     fails = 0
     names = [n for n in globals() if n.startswith("test_")]

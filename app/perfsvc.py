@@ -974,6 +974,22 @@ def parse_ref(ref: str) -> Optional[ObjectKey]:
     return ObjectKey(entity, tuple(idents))
 
 
+def vsan_enabled(cluster) -> Optional[bool]:
+    """True/False from the cluster's vSAN config, None if it cannot be read.
+
+    connect() returns every ClusterComputeResource, vSAN or not, and a
+    compute-only cluster has no Performance Service to ask. None is treated
+    as "try it" by the caller, so an unreadable config never hides a cluster.
+    """
+    try:
+        cfg = getattr(getattr(cluster, "configurationEx", None),
+                      "vsanConfigInfo", None)
+        enabled = getattr(cfg, "enabled", None)
+    except Exception:                                    # noqa: BLE001
+        return None
+    return None if enabled is None else bool(enabled)
+
+
 PROBE_ENTITY = "cluster-domclient"
 
 
