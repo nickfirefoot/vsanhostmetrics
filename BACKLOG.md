@@ -165,7 +165,11 @@ Performance Service, 1,441 five-minute buckets per host (10-23 17:10 to 10-28
 * **`ControllerActivations` is a clock, not an event.** It is ~3,000 per bucket on
   every host (5-day sums 4,323,063 / 063 / 064 / 063), non-zero in 100% of
   buckets, regardless of load: ~10 per second. The band counts tally those
-  activations by band (esxi02: 1,608 low + 1,392 mid = 3,000).
+  activations by band (esxi02: 1,608 low + 1,392 mid = 3,000). Range over 5,764 buckets
+  (4 hosts x 1,441): 2,988 to 3,014, first percentile 2,999, and 2,999-3,001 on every
+  host inside the HCIBench window while hosts ran at 105-110% CPU. A support dashboard
+  reading a constant 3.0k is therefore correct, not stuck. Its only plausible use is as
+  a liveness check; what a sustained drop would mean is unknown.
 * **Every throttling counter is zero, and that proves nothing about the low band.**
   `OwnerTpThrottled`, `CompTpThrottled`, `RecoveryWriteTpThrottled`,
   `ResyncReadTpThrottled`, `ResyncTotalSharePercent`, `SeenResyncTpBps`,
