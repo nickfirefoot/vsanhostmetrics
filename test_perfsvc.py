@@ -582,6 +582,39 @@ def test_nothing_turns_tls_verification_off_for_the_process():
         assert not re.search(r"_create_default_https_context\s*=", src), f
 
 
+def test_clusters_in_foldered_datacenters_are_found():
+    """Only datacenters directly under the root were walked, so a datacenter
+    inside a folder was skipped and its clusters never collected."""
+    made = []
+
+    class _View:
+        def __init__(self, clusters): self.view = clusters; self.destroyed = False
+        def DestroyView(self): self.destroyed = True
+
+    class _VM:
+        def CreateContainerView(self, container, types, recursive):
+            made.append((container, types, recursive))
+            v = _View(["c-in-root-dc", "c-in-foldered-dc"]); made.append(v)
+            return v
+
+    class _Content:
+        rootFolder = "root"; viewManager = _VM()
+
+    class _SI:
+        _stub = None
+        def RetrieveContent(self): return _Content()
+
+    real = perfsvc.vsanapiutils.GetVsanVcMos
+    perfsvc.vsanapiutils.GetVsanVcMos = lambda *a, **k: {}
+    try:
+        _, clusters, _ = perfsvc._inventory(_SI(), None, None)
+    finally:
+        perfsvc.vsanapiutils.GetVsanVcMos = real
+    assert clusters == ["c-in-root-dc", "c-in-foldered-dc"], clusters
+    assert made[0] == ("root", [perfsvc.vim.ClusterComputeResource], True), made[0]
+    assert made[1].destroyed, "the container view was left on the server"
+
+
 def test_a_session_is_logged_out_if_reading_inventory_fails():
     """connect() logs in, then reads inventory; if that read fails the caller
     never gets the session to disconnect, so connect must."""
@@ -603,6 +636,25 @@ def test_a_session_is_logged_out_if_reading_inventory_fails():
         assert gone == [si], gone
     finally:
         perfsvc.Disconnect = real
+
+
+def test_absent_features_are_not_reported_as_problems():
+    """'N entity types not available' was appended to problems, so the
+    caller's collection-problem warning fired on nearly every cluster every
+    cycle. Absent features are a property of the cluster, not a fault."""
+    _patch_specs()
+
+    class _Perf:
+        def VsanPerfQueryPerf(self, specs, cluster):
+            ent = specs[0].entityRefId.split(":")[0]
+            if ent == "host-domclient":
+                return [_Result(f"host-domclient:{HOST}",
+                                [_Value("readCount", "1,2,3")])]
+            raise perfsvc.vmodl.fault.NotSupported()
+
+    objs, problems = perfsvc.collect(_Perf(), cluster=None)
+    assert objs, "the supported entity type was lost"
+    assert problems == [], problems
 
 
 def test_labels_use_us_spelling():

@@ -825,7 +825,10 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
             # the selected object as not applicable -- which reads as broken
             # content rather than a broken collection, and has sent several
             # investigations in the wrong direction.
-            if not linked:
+            # Only when attaching was asked for. With attach_to_vcenter
+            # false, standalone objects are the chosen state, and reporting
+            # them as orphaned made this an ERROR and a warning every cycle.
+            if attach_vc and not linked:
                 total_problems.append(
                     "No vSAN object could be attached to any vCenter object. "
                     "Views will report the selected object as not applicable "

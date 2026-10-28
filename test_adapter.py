@@ -450,6 +450,17 @@ def test_validate_with_no_vsan_cluster_says_so():
     assert "none with vSAN enabled: c1" in out["errorMessage"], out
     assert probed == ["c1"]
 
+
+def test_attach_off_is_not_reported_as_orphaned_every_cycle():
+    """With attach_to_vcenter false nothing is attached by choice; it was
+    still logged as ORPHANED and counted as a collection problem."""
+    with patch.object(adapter.logger, "error") as err, \
+         patch.object(adapter.logger, "warning") as warn:
+        out = _collect_with([_Cluster("good")], {"good": True}, {"good": "ok"})
+    assert "errorMessage" not in out
+    assert not err.called, err.call_args_list
+    assert not warn.called, warn.call_args_list
+
 if __name__ == "__main__":
     fails = 0
     names = [n for n in globals() if n.startswith("test_")]

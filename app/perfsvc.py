@@ -423,18 +423,19 @@ def _inventory(si, ctx, thumbprint):
 
 def _read_inventory(si, ctx, thumbprint):
     content = si.RetrieveContent()
-    clusters: List = []
-
-    def _walk(folder) -> None:
-        for child in getattr(folder, "childEntity", []):
-            if isinstance(child, vim.ClusterComputeResource):
-                clusters.append(child)
-            elif hasattr(child, "childEntity"):
-                _walk(child)
-
-    for dc in content.rootFolder.childEntity:
-        if isinstance(dc, vim.Datacenter):
-            _walk(dc.hostFolder)
+    # A recursive ContainerView, as build_name_map uses for VMs. Walking
+    # rootFolder.childEntity only reached datacenters directly under the
+    # root, so a datacenter inside a folder was skipped and its clusters
+    # were never collected, with nothing to say so.
+    view = content.viewManager.CreateContainerView(
+        content.rootFolder, [vim.ClusterComputeResource], True)
+    try:
+        clusters: List = list(view.view)
+    finally:
+        try:
+            view.DestroyView()
+        except Exception:                                # noqa: BLE001
+            pass
 
     # The vSAN API version is taken from the bindings rather than probed.
     # vsanapiutils.GetLatestVmodlVersion fetched vsanServiceVersions.xml with
@@ -1110,11 +1111,13 @@ def collect(perf, cluster, window_minutes: int = 15,
                     g.props[name] = value
 
     if unsupported:
-        # One summary line, not one per entity per cycle.
-        problems.append(
-            f"{len(unsupported)} entity type(s) not available on this "
-            f"cluster (feature absent or wildcard unsupported): "
-            f"{', '.join(sorted(unsupported))}")
+        # One summary line, not one per entity per cycle -- and at INFO, not
+        # in `problems`. Most clusters lack some feature, so as a problem it
+        # made the caller's "collection problem(s)" warning fire every cycle,
+        # which teaches readers to ignore the one that matters.
+        logger.info("%d entity type(s) not available on this cluster "
+                    "(feature absent or wildcard unsupported): %s",
+                    len(unsupported), ", ".join(sorted(unsupported)))
 
     if not out:
         raise PerfSvcError(
