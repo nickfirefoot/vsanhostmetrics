@@ -166,12 +166,29 @@ Performance Service, 1,441 five-minute buckets per host (10-23 17:10 to 10-28
   every host (5-day sums 4,323,063 / 063 / 064 / 063), non-zero in 100% of
   buckets, regardless of load: ~10 per second. The band counts tally those
   activations by band (esxi02: 1,608 low + 1,392 mid = 3,000).
-* **No throttling was counted anywhere.** `OwnerTpThrottled`, `CompTpThrottled`,
-  `RecoveryWriteTpThrottled`, `ResyncReadTpThrottled`, `ResyncTotalSharePercent`,
-  `SeenResyncTpBps`, `OwnerIops` and `CompIops` are zero in every bucket on every
-  host, including the 7 buckets of the 2.3M IOPS run and while esxi02 spent about
-  half its time in the low band. So by these counters the low band is not
-  throttling anything; what it does is still unknown.
+* **Every throttling counter is zero, and that proves nothing about the low band.**
+  `OwnerTpThrottled`, `CompTpThrottled`, `RecoveryWriteTpThrottled`,
+  `ResyncReadTpThrottled`, `ResyncTotalSharePercent`, `SeenResyncTpBps`,
+  `OwnerIops` and `CompIops` are zero in every bucket on every host. But the
+  cluster had **no resync activity for the whole period** (every resync job and
+  IO counter zero in 1,673 samples), and VMware's description of the feature
+  says it limits resynchronization traffic, so there was nothing for it to
+  throttle. An earlier version of this note concluded the low band "is not
+  throttling anything"; that was too strong. The counters can only say something
+  during a resync.
+* **What the one vendor source says** (VMware blog, "Adaptive network traffic
+  shaping with the vSAN Express Storage Architecture", 2022-09-13): the mechanism
+  works per host; each host's distributed object manager monitors the round-trip
+  latency of vSAN IO to other hosts "and determines a course of action based on
+  the dynamic range it falls within"; higher latency means less resync traffic is
+  allowed; under saturation resync is capped at 20% of bandwidth. It does **not**
+  mention a controller, bands, activations or any metric name. Reading the
+  `numNetSched*` names onto that description (bands as the latency ranges,
+  activations as evaluation cycles) is an inference, not something it states.
+* **Test that would settle a lot:** cause a resync (put a host into maintenance
+  mode with full data migration), record `tools/capture_cpu_load.py`-style, and
+  see which of the 46 counters move, and whether esxi02's low-band share matters.
+
 * `LowBandHighLimit`, `MidBandHighLimit`, `MidBandLowShare` and
   `HighBandHighShare` are 0 throughout. A third (High) band exists; its time is
   negligible here (HighBand max 9 ticks on esxi02, 1 on esxi03, 0 seconds).
