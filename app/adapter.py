@@ -39,6 +39,7 @@ from constants import ADAPTER_KIND
 from constants import ADAPTER_NAME
 from constants import VC_HOST_PARAM
 from constants import VC_USER_PARAM
+from constants import VC_USER_CRED
 from constants import VC_PASS_CRED
 from constants import VERIFY_PARAM
 from constants import METRIC_SCOPE_PARAM
@@ -75,15 +76,22 @@ def get_adapter_definition() -> AdapterDefinition:
                         "vc01.example.com:8443.",
             required=True,
         )
+        # DEPRECATED. The username now lives in the credential with the
+        # password, as in the vCenter adapter: one credential is a complete
+        # login, reusable across accounts, and rotating the service account
+        # no longer edits a field that is part of the account's identity.
+        # This field stays (optional, same key, same identity bit) so an
+        # account created before 1.5.0 keeps working until its credential
+        # carries the username; see _username().
         d.define_string_parameter(
             VC_USER_PARAM,
-            label="vCenter username",
-            description="Must include the domain. Example: "
-                        "vsanmon@vsphere.local -- a bare username without "
-                        "@vsphere.local will not authenticate. Read-only is "
-                        "sufficient: System.View and System.Read propagated "
-                        "from the vCenter root, no cluster edit rights.",
-            required=True,
+            label="vCenter username (deprecated)",
+            description="New accounts: leave empty and enter the username "
+                        "in the credential. Accounts created before 1.5.0: "
+                        "leave this as it is and add the username to the "
+                        "credential; once the credential has one, this field "
+                        "is ignored.",
+            required=False,
         )
         # NOTE: lib 1.1.0 has no define_bool_parameter; an enum of "true"/"false"
         # is the supported equivalent.
@@ -169,7 +177,16 @@ def get_adapter_definition() -> AdapterDefinition:
         )
 
         cred = d.define_credential_type("vsan_vc_credential", "vCenter credential")
-        # NOTE: credential parameters in lib 1.1.0 take only key/label/required.
+        # NOTE: credential parameters in lib 1.1.0 take only key/label/required,
+        # so the worked example that the identifier's description carried
+        # moves into the label. Not required, because a credential saved
+        # before 1.5.0 has no such field and must still load; test() reports
+        # a missing username in words.
+        cred.define_string_parameter(
+            VC_USER_CRED,
+            label="vCenter username, with domain (e.g. vsanmon@vsphere.local)",
+            required=False,
+        )
         cred.define_password_parameter(
             VC_PASS_CRED,
             label="vCenter password",
@@ -499,6 +516,32 @@ def _password(adapter_instance: AdapterInstance) -> str:
     return adapter_instance.get_credential_value(VC_PASS_CRED) or ""
 
 
+def _username(adapter_instance: AdapterInstance) -> str:
+    """From the credential; the old identifier only as a fallback."""
+    user = (adapter_instance.get_credential_value(VC_USER_CRED) or "").strip()
+    legacy = _cfg(adapter_instance, VC_USER_PARAM).strip()
+    if user:
+        if legacy and legacy != user:
+            logger.info("the deprecated account field 'vCenter username "
+                        "(deprecated)' differs from the credential's "
+                        "username; the credential is used and the old field "
+                        "is ignored")
+        return user
+    if legacy:
+        # Not "clear the old field": it is part of the account's identity,
+        # and how Operations treats an edit to it on a live account is not
+        # established. Left in place, it is simply ignored.
+        logger.warning("vCenter username taken from the deprecated account "
+                       "field 'vCenter username (deprecated)'. Edit this "
+                       "account's credential and enter the username there; "
+                       "the old field is then ignored and can be left as "
+                       "is. This fallback goes in a later major version.")
+        return legacy
+    raise perfsvc.PerfSvcError(
+        "No vCenter username. Edit the account's credential and enter the "
+        "username with its domain, e.g. vsanmon@vsphere.local.")
+
+
 def _accepted_pems(adapter_instance: AdapterInstance) -> List[str]:
     """Certificates Operations passes for this account.
 
@@ -529,7 +572,7 @@ def _connect(adapter_instance: AdapterInstance):
     host, port = perfsvc.split_host(_cfg(adapter_instance, VC_HOST_PARAM))
     return perfsvc.connect(
         host,
-        _cfg(adapter_instance, VC_USER_PARAM),
+        _username(adapter_instance),
         _password(adapter_instance),
         verify=_verify(adapter_instance),
         accepted_pems=_accepted_pems(adapter_instance),

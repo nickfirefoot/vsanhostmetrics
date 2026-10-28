@@ -461,6 +461,56 @@ def test_attach_off_is_not_reported_as_orphaned_every_cycle():
     assert not err.called, err.call_args_list
     assert not warn.called, warn.call_args_list
 
+
+def test_username_comes_from_the_credential():
+    """The username was a plain account field, part of the account's
+    identity, so a credential was never a complete login."""
+    inst = _Instance({"vcenter_user": "old@vsphere.local"},
+                     {"vcenter_username": " new@vsphere.local ",
+                      "vcenter_password": "x"})
+    with patch.object(adapter.logger, "warning") as warn:
+        assert adapter._username(inst) == "new@vsphere.local"
+    assert not warn.called
+
+
+def test_an_account_from_before_the_move_keeps_working_and_is_told():
+    inst = _Instance({"vcenter_user": "old@vsphere.local"},
+                     {"vcenter_password": "x"})
+    with patch.object(adapter.logger, "warning") as warn:
+        assert adapter._username(inst) == "old@vsphere.local"
+    assert warn.called and "deprecated" in warn.call_args[0][0]
+
+
+def test_no_username_anywhere_is_reported_in_words():
+    import perfsvc
+    inst = _Instance({"vcenter_host": "vc01.example.com"}, {"vcenter_password": "x"})
+    try:
+        adapter._username(inst)
+        raise AssertionError("expected PerfSvcError")
+    except perfsvc.PerfSvcError as exc:
+        assert "credential" in str(exc), exc
+    assert "credential" in adapter.test(inst).get_json()["errorMessage"]
+
+
+def test_credential_carries_the_username_and_the_old_field_is_optional():
+    d = adapter.get_adapter_definition().to_json()
+    cred = {c["key"]: c for c in d["credential_types"]}["vsan_vc_credential"]
+    keys = [f["key"] for f in cred["fields"]]
+    assert keys == ["vcenter_username", "vcenter_password"], keys
+    old = {i["key"]: i for i in d["adapter_instance"]["identifiers"]}["vcenter_user"]
+    assert old["required"] is False, old
+    # Same identity bit as before, so existing accounts keep their identity.
+    assert old["ident_type"] == 1, old
+
+
+def test_a_differing_old_username_is_noted_and_ignored():
+    inst = _Instance({"vcenter_user": "old@vsphere.local"},
+                     {"vcenter_username": "new@vsphere.local"})
+    with patch.object(adapter.logger, "info") as info:
+        assert adapter._username(inst) == "new@vsphere.local"
+    assert any("ignored" in c[0][0] for c in info.call_args_list), info.call_args_list
+
+
 if __name__ == "__main__":
     fails = 0
     names = [n for n in globals() if n.startswith("test_")]

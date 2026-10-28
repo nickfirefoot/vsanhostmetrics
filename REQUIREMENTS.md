@@ -151,7 +151,7 @@ catch up -- the rule has to be scoped to the network.
 
 | Credential | Used by | Stored | Scope |
 |---|---|---|---|
-| **vCenter account** | the adapter, at collection time | Operations adapter instance (credential) | read-only, propagated from the vCenter root |
+| **vCenter account** | the adapter, at collection time | Operations credential: username and password (username there since 1.5.0) | read-only, propagated from the vCenter root |
 | ESXi bearer token | dormant host path only -- not used at runtime | n/a | **cluster-wide** (verified) |
 | Registry push credential | `mp-build` on the build host | `~/harbor.env`, mode 600, **outside this repo** | project-scoped robot recommended |
 | Registry pull credential | Cloud Proxy | `/root/.docker/config.json` on the proxy | pull-only is sufficient |
