@@ -264,6 +264,59 @@ def test_main_unknown_method_exits_nonzero():
             raise AssertionError("unknown method did not fail")
 
 
+
+class _Cert:
+    def __init__(self, pem): self.pem = pem
+    def get_certificate_string(self): return self.pem
+
+
+class _Instance:
+    """Stands in for AdapterInstance: identifiers, credential, certificates."""
+    def __init__(self, idents, creds=None, certs=()):
+        self.idents = idents; self.creds = creds or {}; self.certs = list(certs)
+    def get_identifier_value(self, key, default=None):
+        return self.idents.get(key, default)
+    def get_credential_value(self, key):
+        return self.creds.get(key)
+    def get_certificates(self):
+        return self.certs
+
+
+def test_connect_passes_the_accepted_certificates_and_a_clean_host():
+    """The platform hands the accepted certificate to every test and collect;
+    it was never read. And the host field is trimmed before it is used."""
+    seen = {}
+    def _fake(host, user, password, **kw):
+        seen.update(host=host, **kw)
+        return None, [], {}
+    inst = _Instance({"vcenter_host": " https://vc01.example.com:8443/ui ",
+                      "vcenter_user": "u@vsphere.local"},
+                     {"vcenter_password": "x"},
+                     [_Cert("PEM-1"), _Cert(""), _Cert("PEM-2")])
+    with patch.object(adapter.perfsvc, "connect", side_effect=_fake):
+        adapter._connect(inst)
+    assert seen["host"] == "vc01.example.com" and seen["port"] == 8443, seen
+    assert seen["accepted_pems"] == ["PEM-1", "PEM-2"], seen
+    assert seen["verify"] is True, "verification must default on"
+
+
+def test_certificate_prompt_only_when_verifying_and_never_doubled():
+    on = _Instance({"vcenter_host": "https://vc01.example.com/"})
+    urls = adapter.get_endpoints(on).get_json()["endpointUrls"]
+    assert urls == ["https://vc01.example.com"], urls
+    off = _Instance({"vcenter_host": "vc01.example.com", "verify_certs": "false"})
+    assert adapter.get_endpoints(off).get_json()["endpointUrls"] == []
+
+
+def test_an_unreadable_certificate_entry_is_skipped_not_fatal():
+    class _Bad:
+        def get_certificate_string(self): raise KeyError("certPemString")
+    inst = _Instance({}, {}, [_Bad(), _Cert("None"), _Cert("PEM-OK")])
+    with patch.object(adapter.logger, "warning") as warn:
+        assert adapter._accepted_pems(inst) == ["PEM-OK"]
+    assert warn.called
+
+
 if __name__ == "__main__":
     fails = 0
     names = [n for n in globals() if n.startswith("test_")]

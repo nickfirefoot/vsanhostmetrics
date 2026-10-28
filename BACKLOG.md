@@ -386,9 +386,16 @@ Open question for the vendor, now sharper: is there an append-only way to add a
 subscription, or must every consumer read-modify-write a shared list and race
 each other?
 
-**`verify_certs: true` is untested, and the reasoning behind it may be wrong.**
-See the note under Blocking, above -- accepted certs land in Operations' trust
-store while `scrape()` runs inside the container with its own CA bundle.
+**`verify_certs: true` now uses the accepted certificate (1.5.0).** The
+suspicion here was half right: Operations does not put an accepted certificate
+in the container's trust store, it passes it to the adapter in every call
+(`AdapterInstance.get_certificates()`), together with every CA Operations
+trusts cluster-wide, and nothing read it. `perfsvc.connect` now verifies the
+chain against all of them first, then pins an exactly matching leaf with
+pyVmomi's `thumbprint`, for both the vCenter session and the `/vsanHealth`
+stub. Proven with `mp-test` against a vCenter whose CA the container does not
+trust (leaf, CA-only, mixed and wrong certificates); not yet in the
+Operations dialog.
 
 ## Completeness
 

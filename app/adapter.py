@@ -61,16 +61,18 @@ def get_adapter_definition() -> AdapterDefinition:
         # The descriptions carry WORKED EXAMPLES, not just prose. Both of these
         # fields are filled in wrong on a first attempt often enough to be
         # worth the words: the username gets typed without its domain, and the
-        # server gets an IP, which then fails certificate hostname matching in
-        # a way that looks like an untrusted chain rather than a wrong name.
+        # server gets pasted as a URL. A URL is now trimmed to its host and
+        # port (perfsvc.split_host), and an IP works once its certificate is
+        # accepted, because the accepted certificate is pinned rather than
+        # hostname-matched.
         d.define_string_parameter(
             VC_HOST_PARAM,
             label="vCenter Server",
-            description="FQDN of the vCenter Server managing the vSAN cluster. "
-                        "Example: vc01.example.com -- NOT an IP address and NOT "
-                        "a URL. An IP works only if certificate verification is "
-                        "off; with it on, an IP fails hostname matching and the "
-                        "error looks identical to an untrusted certificate.",
+            description="FQDN or IP address of the vCenter Server managing the "
+                        "vSAN cluster. Example: vc01.example.com. A URL such as "
+                        "https://vc01.example.com/ is trimmed to the host; a "
+                        "port other than 443 can be given as "
+                        "vc01.example.com:8443.",
             required=True,
         )
         d.define_string_parameter(
@@ -145,13 +147,14 @@ def get_adapter_definition() -> AdapterDefinition:
             VERIFY_PARAM,
             values=["true", "false"],
             label="Verify vCenter certificate",
-            description="Set to false unless you have imported the VMCA root "
-                        "into the adapter's trust store. vCenter presents a "
-                        "VMCA-issued certificate (CN=CA, DC=vsphere, DC=local) "
-                        "that the adapter's base image does not trust, so the "
-                        "default of true does NOT work unmodified. If you do "
-                        "leave it true, the server field above must hold the "
-                        "FQDN rather than an IP.",
+            description="Leave true. When you validate the connection, "
+                        "Operations shows vCenter's certificate for review; "
+                        "accept it and the adapter trusts exactly that "
+                        "certificate, including a VMCA-issued one and when "
+                        "the server field holds an IP address. If vCenter's "
+                        "certificate is later replaced, collection fails "
+                        "until the new one is accepted. False turns "
+                        "certificate checking off entirely.",
             default="true",
         )
         # Special key read by the collector to size the adapter container.
@@ -496,12 +499,41 @@ def _password(adapter_instance: AdapterInstance) -> str:
     return adapter_instance.get_credential_value(VC_PASS_CRED) or ""
 
 
+def _accepted_pems(adapter_instance: AdapterInstance) -> List[str]:
+    """Certificates Operations passes for this account.
+
+    That is the leaves the user accepted for it plus every CA the
+    Operations cluster trusts globally, on every test and collect. The SDK
+    applies them to nothing, so perfsvc.connect does. Each entry is read on
+    its own: one that cannot be read is logged and skipped, and the rest are
+    still used.
+    """
+    pems = []
+    certs = list(adapter_instance.get_certificates() or [])
+    for i, cert in enumerate(certs, 1):
+        try:
+            pem = cert.get_certificate_string()
+        except Exception as exc:                    # noqa: BLE001
+            logger.warning("certificate %d of %d from Operations could not "
+                           "be read (%s); skipped", i, len(certs),
+                           type(exc).__name__)
+            continue
+        if pem and pem != "None":
+            pems.append(pem)
+    logger.info("Operations passed %d certificate(s) for this account",
+                len(pems))
+    return pems
+
+
 def _connect(adapter_instance: AdapterInstance):
+    host, port = perfsvc.split_host(_cfg(adapter_instance, VC_HOST_PARAM))
     return perfsvc.connect(
-        _cfg(adapter_instance, VC_HOST_PARAM),
+        host,
         _cfg(adapter_instance, VC_USER_PARAM),
         _password(adapter_instance),
         verify=_verify(adapter_instance),
+        accepted_pems=_accepted_pems(adapter_instance),
+        port=port,
     )
 
 
@@ -548,12 +580,23 @@ def test(adapter_instance: AdapterInstance) -> TestResult:
 
 
 def get_endpoints(adapter_instance: AdapterInstance) -> EndpointResult:
-    """Hand vCenter's cert to Operations so it lands in the trust store."""
+    """Ask Operations to show vCenter's certificate for review and accept.
+
+    What the user accepts comes back on every test and collect as
+    get_certificates(), and perfsvc.connect pins it. With verification off
+    nothing is checked, so no prompt: accepting would mean nothing.
+    """
     with Timer(logger, "Get Endpoints"):
         result = EndpointResult()
-        host = _cfg(adapter_instance, VC_HOST_PARAM)
-        if host:
-            result.with_endpoint(f"https://{host}")
+        if not _verify(adapter_instance):
+            return result
+        try:
+            host, port = perfsvc.split_host(_cfg(adapter_instance, VC_HOST_PARAM))
+        except perfsvc.PerfSvcError as exc:
+            # Test Connection reports the same error with its wording.
+            logger.warning("no certificate endpoint: %s", exc)
+            return result
+        result.with_endpoint(perfsvc.endpoint_url(host, port))
         return result
 
 
@@ -711,7 +754,7 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
             # no clusters -- vanished. with_error puts the adapter instance in
             # an error state carrying this text.
             logger.exception("Collection failed")
-            result.with_error(f"{type(exc).__name__}: {exc}")
+            result.with_error(perfsvc.fault_text(exc))
         finally:
             _safe_disconnect(si)
 

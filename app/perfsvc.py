@@ -18,13 +18,16 @@ path in vsanmetrics.py is retained but dormant; see docs/COLLECTION-DESIGN.md.
 from __future__ import annotations
 
 import datetime
+import hashlib
 import logging
 import os
 import re
+import socket
 import ssl
 import sys
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Dict, List, Optional, Sequence, Set, Tuple
+from urllib.parse import urlsplit
 
 # Vendored vSAN bindings must be importable before pyVmomi types are used.
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "vendor"))
@@ -53,6 +56,7 @@ import vsanmgmtObjects        # noqa: E402,F401  registers the vSAN types
 import vsanapiutils           # noqa: E402
 from pyVim.connect import SmartConnect, Disconnect   # noqa: E402
 from pyVmomi import vim, vmodl                       # noqa: E402
+from pyVmomi.Security import ThumbprintMismatchException  # noqa: E402
 
 try:
     from . import perfsvc_model as _model            # type: ignore
@@ -157,34 +161,267 @@ class PerfSvcError(RuntimeError):
     """
 
 
-def connect(host: str, user: str, password: str, verify: bool = False):
-    """Returns (service_instance, clusters, vsan_mos)."""
-    ctx = ssl.create_default_context() if verify else ssl._create_unverified_context()
+def split_host(value: str) -> Tuple[str, int]:
+    """The vCenter field as typed -> (host, port).
+
+    The field is documented as a hostname, and people paste URLs into it:
+    " https://vc01.example.com/ui " became https://https://... in the
+    certificate prompt and an unresolvable host in SmartConnect, which also
+    takes no port from the host string. One normaliser, used by the endpoint
+    Operations fetches the certificate from AND by the connection, so the
+    certificate accepted is the one the connection meets.
+    """
+    raw = (value or "").strip()
+    if not raw:
+        raise PerfSvcError("No vCenter Server configured.")
     try:
-        si = SmartConnect(host=host, user=user, pwd=password, sslContext=ctx)
+        parts = urlsplit(raw if "//" in raw else f"//{raw}")
+        host, port = parts.hostname, parts.port or 443
+    except ValueError as exc:
+        raise PerfSvcError(f"vCenter Server {raw!r} is not a host name, "
+                           f"IP address or URL: {exc}") from exc
+    if not host:
+        raise PerfSvcError(f"vCenter Server {raw!r} has no host name in it.")
+    return host, port
+
+
+def endpoint_url(host: str, port: int = 443) -> str:
+    """https URL for the certificate prompt, IPv6-safe."""
+    name = f"[{host}]" if ":" in host else host
+    return f"https://{name}" if port == 443 else f"https://{name}:{port}"
+
+
+# Seconds pyVmomi waits on any single HTTP request to vCenter -- the
+# connect, or the reply to one call -- before giving up. The Cloud Proxy puts
+# no timeout on a collection, so without one a vCenter that accepts the
+# connection and then stalls holds that collection forever. A whole
+# collection of the lab's ESA cluster (33 entity-type queries plus the
+# inventory reads) takes about a minute, so no single request should come
+# near two.
+HTTP_TIMEOUT_S = 120
+
+
+def usable_certificates(pems: Sequence[str]) -> List[Tuple[bytes, str]]:
+    """[(der, sha256 hex)] for every received certificate that parses.
+
+    Operations sends this account's accepted certificates PLUS every CA the
+    cluster trusts globally, one PEM each. One that does not parse -- an
+    empty or "None" entry, stray whitespace, a truncated body -- is logged
+    and skipped, so a good certificate later in the list is still used.
+    Parsed by OpenSSL itself, the same parser the trust store uses.
+    """
+    out: List[Tuple[bytes, str]] = []
+    pems = list(pems or ())
+    for i, pem in enumerate(pems, 1):
+        try:
+            der = ssl.PEM_cert_to_DER_cert(str(pem).strip())
+            ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT).load_verify_locations(
+                cadata=der)
+        except Exception as exc:                          # noqa: BLE001
+            logger.warning("received certificate %d of %d is not a usable "
+                           "certificate (%s); skipped", i, len(pems),
+                           type(exc).__name__)
+            continue
+        out.append((der, hashlib.sha256(der).hexdigest()))
+    return out
+
+
+def _anchored_context(certs: Sequence[Tuple[bytes, str]]) -> ssl.SSLContext:
+    """The container's CA bundle plus every received certificate as a trust
+    anchor, hostname checking on.
+
+    A CA Operations trusts globally then validates vCenter's chain the way
+    it does for Operations itself; an accepted leaf validates too, while its
+    name matches and it is in date. PARTIAL_CHAIN lets an intermediate or a
+    leaf act as an anchor; without it OpenSSL accepts only a self-signed
+    root, and an issuing CA on its own would not verify.
+    """
+    ctx = ssl.create_default_context()
+    for der, _ in certs:
+        ctx.load_verify_locations(cadata=der)
+    if certs:
+        ctx.verify_flags |= getattr(ssl, "VERIFY_X509_PARTIAL_CHAIN", 0)
+    return ctx
+
+
+def presented_sha256(host: str, port: int) -> Optional[str]:
+    """SHA-256 of the leaf vCenter presents, read without trusting it.
+
+    Only a TLS handshake: nothing is sent on the connection. Used to choose
+    the certificate to pin, and to put both sides of a mismatch in the error.
+    """
+    ctx = ssl._create_unverified_context()
+    try:
+        with socket.create_connection((host, port), timeout=HTTP_TIMEOUT_S) as sock:
+            with ctx.wrap_socket(sock, server_hostname=host) as tls:
+                return hashlib.sha256(tls.getpeercert(binary_form=True)).hexdigest()
+    except Exception as exc:                              # noqa: BLE001
+        logger.warning("could not read the certificate %s:%d presents: %s",
+                       host, port, fault_text(exc))
+        return None
+
+
+def fault_text(exc: BaseException) -> str:
+    """Readable text for an exception: a pyVmomi fault's msg, not its repr.
+
+    str() of a vmodl fault is a multi-line dump (dynamicType = <unset>,
+    dynamicProperty = [] ...), which is what the UI showed.
+    """
+    if isinstance(exc, vmodl.MethodFault):
+        name = getattr(type(exc), "__name__", "fault")
+        msg = getattr(exc, "msg", None)
+        return f"{name}: {msg}" if msg else name
+    return f"{type(exc).__name__}: {exc}"
+
+
+def connect(host: str, user: str, password: str, verify: bool = True,
+            accepted_pems: Sequence[str] = (), port: int = 443):
+    """Returns (service_instance, clusters, vsan_mos).
+
+    `accepted_pems` is what Operations passes as certificate_config: the
+    leaves the user accepted for this account (Review and accept stores the
+    presented leaf only), plus every CA the Operations cluster trusts
+    globally. Where Operations already trusts vCenter through such a CA, no
+    accept dialog appears and only the CAs arrive. Certificate handling,
+    with verify on:
+
+    1. Normal verification, hostname included, against the container's CA
+       bundle plus every received certificate as an anchor. A vCenter whose
+       CA Operations trusts, or whose accepted leaf matches its name, passes
+       here.
+    2. Otherwise the leaf vCenter presents must EXACTLY match a received
+       certificate (SHA-256), pinned with pyVmomi's thumbprint. That is what
+       accepting a certificate means in Operations: the pin replaces the
+       chain, hostname and expiry checks, so an accepted VMCA certificate, an
+       IP address in the server field and an accepted certificate that has
+       expired all work. pyVmomi checks the pin on each connection before
+       anything -- the login included -- is sent on it.
+
+    Before this, the received certificates were never read: the prompt was
+    shown, the answer ignored, and the default (verify on) failed against
+    every VMCA-signed vCenter.
+
+    With verify off, nothing is checked. That is the operator's explicit
+    choice, and the only path that uses an unverified connection.
+    """
+    if not verify:
+        ctx = ssl._create_unverified_context()
+        return _inventory(_login(host, port, user, password, ctx, None),
+                          ctx, None)
+
+    certs = usable_certificates(accepted_pems)
+    ctx = _anchored_context(certs)
+    try:
+        si = _login(host, port, user, password, ctx, None)
     except ssl.SSLCertVerificationError as exc:
-        # Reached with the DEFAULT configuration, so the message has to carry
-        # the remedy. vCenter presents a VMCA-issued certificate, and nothing
-        # in the adapter's base image trusts the VMCA. Verification also needs
-        # the FQDN: an IP address fails hostname matching even once the root
-        # is trusted, and that failure looks identical to an untrusted chain.
+        untrusted = exc
+    else:
+        return _inventory(si, ctx, None)
+
+    why = getattr(untrusted, "verify_message", None) or str(untrusted)
+    accepted = [sha for _, sha in certs]
+    presented = presented_sha256(host, port)
+    if presented and presented in accepted:
+        # The version probe SmartConnect makes before logging in
+        # (vimServiceVersions.xml) runs on this context and is NOT pinned; it
+        # carries no credential. The login and every call after it go
+        # through stubs that check the pin first.
+        ctx = ssl._create_unverified_context()
+        try:
+            si = _login(host, port, user, password, ctx, presented)
+        except _PinMismatch as exc:
+            # vCenter presented a different certificate to the login than
+            # to the look a moment earlier.
+            presented = exc.actual or presented
+        else:
+            logger.info("%s: certificate not trusted by chain (%s); matched "
+                        "the certificate accepted in Operations (sha256 %s)",
+                        host, why, presented)
+            return _inventory(si, ctx, presented)
+
+    seen = presented or "unreadable"
+    if not accepted:
         raise PerfSvcError(
-            f"vCenter certificate verification failed for {host}: {exc}. "
-            f"'Verify vCenter certificate' is on. vCenter's certificate is "
-            f"issued by the VMCA, which this adapter container does not trust "
-            f"by default. Either import the VMCA root "
-            f"(https://{host}/certs/download.zip) into the container trust "
-            f"store, or set 'Verify vCenter certificate' to false. If it is "
-            f"already trusted, check that this field holds the FQDN and not "
-            f"an IP address."
-        ) from exc
+            f"vCenter certificate for {host} is not trusted "
+            f"({why}; presented sha256 {seen}) and "
+            f"Operations passed no certificate for this account. Edit the "
+            f"account in Operations and click Validate Connection; it shows "
+            f"vCenter's certificate for review. Accept it and the adapter "
+            f"trusts exactly that certificate."
+        ) from untrusted
+    raise PerfSvcError(
+        f"vCenter certificate for {host} is not trusted "
+        f"({why}) and matches none of the "
+        f"{len(accepted)} certificate(s) Operations passed for this account. "
+        f"Presented sha256 {seen}; received sha256 {', '.join(accepted)}. "
+        f"If vCenter's certificate was renewed or replaced, edit the account "
+        f"in Operations, click Validate Connection and accept the new "
+        f"certificate."
+    ) from untrusted
+
+
+class _PinMismatch(Exception):
+    """The certificate presented is not the pinned one."""
+    def __init__(self, actual: Optional[str]):
+        super().__init__(f"presented sha256 {actual}")
+        self.actual = actual
+
+
+def _pin_mismatch(exc: Optional[BaseException]):
+    """The ThumbprintMismatchException behind `exc`, or None.
+
+    pyVmomi raises it from the first call on the stub -- RetrieveContent,
+    before the login -- and SmartConnect re-raises it wrapped in
+    vim.fault.HostConnectFault. Look through the chain rather than reading
+    the message, which reported it as a login failure."""
+    seen = 0
+    while exc is not None and seen < 10:
+        if isinstance(exc, ThumbprintMismatchException):
+            return exc
+        exc = exc.__cause__ or exc.__context__
+        seen += 1
+    return None
+
+
+def _login(host, port, user, password, ctx, thumbprint):
+    # SmartConnect's API-version probe opens its own connection with no
+    # timeout argument; the socket default covers it. The adapter is a
+    # one-shot process, but restore it anyway.
+    previous = socket.getdefaulttimeout()
+    socket.setdefaulttimeout(HTTP_TIMEOUT_S)
+    try:
+        return SmartConnect(host=host, port=port, user=user, pwd=password,
+                            sslContext=ctx, thumbprint=thumbprint,
+                            httpConnectionTimeout=HTTP_TIMEOUT_S)
+    except ssl.SSLCertVerificationError:
+        raise                                    # connect() decides
     except Exception as exc:
+        mismatch = _pin_mismatch(exc)
+        if mismatch is not None:
+            raise _PinMismatch(getattr(mismatch, "actual", None)) from exc
         raise PerfSvcError(
-            f"vCenter login failed for {user}@{host}: {exc}. "
+            f"vCenter login failed for {user}@{host}: {fault_text(exc)}. "
             f"Check the credential and that the account has at least the "
             f"Read-only role propagated from the vCenter root."
         ) from exc
+    finally:
+        socket.setdefaulttimeout(previous)
 
+
+def _inventory(si, ctx, thumbprint):
+    """(si, clusters, vsan_mos) for a logged-in session, which is logged out
+    again if this fails -- the caller never receives it to disconnect."""
+    try:
+        return _read_inventory(si, ctx, thumbprint)
+    except Exception:
+        try:
+            Disconnect(si)
+        except Exception:                                # noqa: BLE001
+            pass
+        raise
+
+
+def _read_inventory(si, ctx, thumbprint):
     content = si.RetrieveContent()
     clusters: List = []
 
@@ -199,9 +436,16 @@ def connect(host: str, user: str, password: str, verify: bool = False):
         if isinstance(dc, vim.Datacenter):
             _walk(dc.hostFolder)
 
+    # The vSAN API version is taken from the bindings rather than probed.
+    # vsanapiutils.GetLatestVmodlVersion fetched vsanServiceVersions.xml with
+    # TLS verification switched off for the whole process, returned the
+    # newest vsan version for anything but vSAN 6.6, and on any error fell
+    # back to the plain vim version, after which vSAN calls failed with a
+    # version error rather than the real cause.
     mos = vsanapiutils.GetVsanVcMos(
         si._stub, context=ctx,
-        version=vsanapiutils.GetLatestVmodlVersion(host))
+        version=VmomiSupport.newestVersions.Get("vsan"),
+        thumbprint=thumbprint, httpConnectionTimeout=HTTP_TIMEOUT_S)
     return si, clusters, mos
 
 
@@ -762,7 +1006,7 @@ def probe(perf, cluster, entity: str = PROBE_ENTITY,
     except (vmodl.fault.InvalidArgument, vmodl.fault.NotSupported):
         return 0, None
     except Exception as exc:                             # noqa: BLE001
-        return 0, f"{type(exc).__name__}: {exc}"
+        return 0, fault_text(exc)
     return len(results), None
 
 

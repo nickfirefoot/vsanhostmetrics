@@ -100,10 +100,10 @@ the same 70 resource kinds and 971 attributes. Compare the key sets, as above.
 
 | Field | Value |
 |---|---|
-| vCenter Server | **FQDN** of vCenter |
+| vCenter Server | FQDN or IP of vCenter |
 | vCenter username | e.g. `vsanmon@vsphere.local` |
 | Credential | that account's password |
-| Verify vCenter certificate | **false** — see below |
+| Verify vCenter certificate | `true` (default); accept the certificate when prompted |
 | Cloud Proxy / Group | **your Cloud Proxy**, explicitly |
 | container_memory_limit | 1024 (Advanced Settings) |
 
@@ -114,18 +114,16 @@ collector group, Operations tries to run the container on an analytics node
 that never pulled the image — and the failure reads like a registry problem
 rather than a placement one.
 
-**Certificate verification.** The default is `true` and **does not work
-unmodified**: vCenter presents a VMCA-issued certificate
-(`CN=CA, DC=vsphere, DC=local`) that nothing in the adapter's base image
-trusts. Either set it false, or import the VMCA root from
-`https://<vcenter>/certs/download.zip` into the container trust store. If you
-leave it `true`, the vCenter field must hold the **FQDN** — an IP fails
-hostname matching even once the root is trusted, and that failure looks
-identical to an untrusted chain.
+**Certificate verification.** Leave it `true`. Click **Validate Connection**;
+Operations shows vCenter's certificate for review. Accept it, and the adapter
+trusts exactly that certificate, so a VMCA-issued certificate that nothing in
+the adapter's base image trusts works, and so does an IP address in the
+vCenter field. If Operations already trusts vCenter's CA there is no prompt,
+and the adapter verifies against that CA (use the FQDN then). If vCenter's
+certificate is replaced later, validate again and accept the new one.
 
-Click **Validate Connection** before saving. That runs a real Performance
-Service query, so green proves credential, privilege and network path at once.
-Expect one certificate-acceptance prompt for vCenter.
+Validate Connection runs a real Performance Service query, so green proves
+credential, privilege and network path at once.
 
 ## 2b. Give the dashboards two or three collection cycles before judging them
 
@@ -250,8 +248,10 @@ Untested, listed so a failure is recognised rather than debugged from scratch:
 
 - **VCF Operations 8.x.** `manifest.txt` claims `vcops_minimum_version 8.10.0`
   but only 9.x has been run.
-- **`Verify vCenter certificate: true`.** Known to fail without importing the
-  VMCA root; the import path itself has not been exercised.
+- **`Verify vCenter certificate: true` in the Operations dialog.** The
+  accept-and-pin path is proven with `mp-test`, which hands the adapter the
+  endpoint's certificate the way Operations does; the Operations dialog
+  itself has not been exercised against it here.
 - **OSA clusters.** All modelling and testing is on **ESA**. The OSA entity
   types are in the model but return nothing on ESA, so they are unverified.
 - **vSAN file services and iSCSI.** Present in the schema, never enabled.
