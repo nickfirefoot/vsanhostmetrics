@@ -95,11 +95,12 @@ def get_adapter_definition() -> AdapterDefinition:
         )
         # NOTE: lib 1.1.0 has no define_bool_parameter; an enum of "true"/"false"
         # is the supported equivalent.
-        # 1383 of 1636 modelled metrics (84%) are referenced by no shipped
-        # view, and 45 of the 69 entity types by none at all. Every metric
-        # stays DECLARED in describe, so switching this to "all" surfaces them
-        # without a new pak -- but by default we do not query those 45 entity
-        # types, which is 45 fewer round trips per cycle. The vSAN perf API
+        # Most modelled metrics are referenced by no shipped view, and about
+        # half the entity types by none at all (the current counts are in the
+        # header of the generated app/metric_scope.py). Every metric stays
+        # DECLARED in describe, so switching this to "all" surfaces them
+        # without a new pak -- but by default we do not query the unreferenced
+        # entity types, one round trip fewer per type per cycle. The vSAN perf API
         # returns all of an entity's metrics in one call, so narrowing within
         # an entity saves storage rather than time.
         # OFF by default since 2026-10-21. See CLAUDE.md rule 1. Attaching to a

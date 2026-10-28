@@ -36,7 +36,7 @@ collecting adapter. The full metric catalogue is at the bottom of this file.
 | File | SDK dependency | Notes |
 |---|---|---|
 | `app/perfsvc.py` | none | Performance Service client: connect, collect, parse `entityRefId`, resolve UUIDs to names. The logic. |
-| `app/perfsvc_model.py` | none | **Generated.** 31 entity types, 1035 metrics, regenerable from a live service with `tools/model_from_perfsvc.py`. `app/perfsvc_model_extra.py` adds the rest, for 69 kinds and 1636 metrics merged. |
+| `app/perfsvc_model.py` | none | **Generated.** 31 entity types, 1035 metrics, regenerable from a live service with `tools/model_from_perfsvc.py`. `app/perfsvc_model_extra.py` adds the rest, for 69 kinds and 1636 metric ids merged; 1595 are defined once each `*Actual` duplicate of a base metric is dropped. |
 | `app/metric_labels.py` | none | **Generated.** Labels and units, from Broadcom's schema plus HCIBench. |
 | `app/adapter.py` | yes | `get_adapter_definition()` / `test()` / `get_endpoints()` / `collect()`. Thin glue. |
 | `app/vendor/` | none | VMware's vSAN API bindings, BSD-2-Clause. See `NOTICE`. |

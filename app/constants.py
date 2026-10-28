@@ -33,9 +33,9 @@ THRESHOLDS = {
     "duplicateAckPct": {"critical": 1.0},
 }
 
-# Which metrics to collect. 84% of the 1636 modelled metrics are referenced by
-# no shipped view, and 45 of 69 entity types by none at all -- those 45 are a
-# skipped query each. Declared in describe either way, so a customer who turns
+# Which metrics to collect. Most modelled metrics are referenced by no shipped
+# view, and about half the entity types by none at all -- each of those is a
+# skipped query (counts: the header of the generated app/metric_scope.py). Declared in describe either way, so a customer who turns
 # this to "all" gets them without a new pak.
 METRIC_SCOPE_PARAM = "metric_scope"
 

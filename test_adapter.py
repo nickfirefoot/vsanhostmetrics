@@ -216,6 +216,10 @@ def test_pack_description_counts_match_the_model():
     assert f"collects the {scoped} metrics" in desc, (scoped, desc[:260])
     readme = open("README.md").read()
     assert f"{defined:,} metrics across {len(ents)} resource kinds" in readme
+    # The generated scope file states the same counts, from the same rule.
+    assert (f"{len(ents)} kinds, {defined} metrics defined; {scoped} "
+            f"referenced by views; {defined - scoped} not."
+            in metric_scope.__doc__), metric_scope.__doc__[:300]
 
 
 def test_collect_reports_exception_and_disconnects():
