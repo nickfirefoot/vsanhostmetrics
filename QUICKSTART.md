@@ -54,8 +54,9 @@ answer is in the pak rather than in the version number.
 **1.x to 2.0.0 follows [MIGRATION.md](MIGRATION.md), not the rules below.**
 2.0.0 removes one identifying field (`vcenter_user`) and makes the
 credential's username field required; it removes no resource kind or metric,
-and uninstalling would delete every object's history.
-This holds until the live install recorded in MIGRATION.md says otherwise.
+and uninstalling would delete every object's history. The in-place upgrade
+was accepted on 8.18.7, 9.0.2 and 9.1.1 with accounts and objects kept
+(MIGRATION.md, Live upgrade result).
 
 *Schema unchanged* -- install over the top. Tick both boxes above and leave the
 adapter instance alone. Its credentials, its collector assignment and its

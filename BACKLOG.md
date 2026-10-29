@@ -7,10 +7,12 @@ account field (`vcenter_user`). The username is read only from the
 credential, as in the vCenter adapter. Against 1.4.7, `describe.xml`
 keeps every resource kind and metric key and loses exactly that one
 identifier, which was required there, so every existing account has a value
-in it. Whether Operations accepts the upgrade in place and keeps accounts,
-objects and history is owed to the live install (`MIGRATION.md`); do not tag
-`v2.0.0` before that result is recorded (RELEASING.md section 5). The 1.5.0 release candidates carried the old field as a
-deprecated fallback; that fallback is gone and 1.5.0 is not released.
+in it. v2.0.0-rc.1 installed in place over 1.5.0-rc.2 on 8.18.7, 9.0.2 and
+9.1.1 with accounts, credentials and objects kept (`MIGRATION.md`, Live
+upgrade result). A direct install over 1.4.7, the last release, has not been
+run, and RELEASING.md section 5 asks for it before `v2.0.0` is tagged. The
+1.5.0 release candidates carried the old field as a deprecated fallback; that
+fallback is gone and 1.5.0 is not released.
 
 * **Username in the credential, and only there.** *Upgrade note:* enter the
   username in each account's credential before or right after upgrading.

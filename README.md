@@ -374,9 +374,10 @@ The reported digest must match the `DIGEST` line in the pak's `.conf`.
 rule below: install over the top and keep the adapter instances. 2.0.0 removes
 one identifying field (`vcenter_user`) and makes the credential's username
 field required; it removes no resource kind or metric, and uninstalling would
-delete every object's history. This holds until the live install recorded in
-MIGRATION.md says otherwise. To tell which case a release is, use the checker
-in QUICKSTART.md section 1.
+delete every object's history. The in-place upgrade was accepted on 8.18.7,
+9.0.2 and 9.1.1 with accounts and objects kept (MIGRATION.md, Live upgrade
+result). To tell which case a release is, use the checker in QUICKSTART.md
+section 1.
 
 **Replacing an existing install?** Remove the old pack first
 (Administration -> Integrations -> Repository, select it, Uninstall) and delete
