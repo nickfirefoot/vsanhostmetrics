@@ -1,13 +1,21 @@
 # BACKLOG
 
-## Unreleased, for 1.5.0
+## Unreleased, for 2.0.0
 
-Minor rather than patch because the credential type gains a field and
-two defaults now behave differently (verification on works; no
-certificate prompt when it is off). Nothing is removed: `describe.xml`
-keeps every kind, metric and identifier, and existing accounts keep their
-identity.
+Major because one thing is removed on purpose: the *vCenter username*
+account field (`vcenter_user`). The username is read only from the
+credential, as in the vCenter adapter. Every resource kind and metric key
+is kept, so history carries over; `describe.xml` loses exactly that one
+identifier. The 1.5.0 release candidates carried the old field as a
+deprecated fallback; that fallback is gone and 1.5.0 is not released.
 
+* **Username in the credential, and only there.** *Upgrade note:* enter the
+  username in each account's credential before or right after upgrading.
+  An account whose credential has none stops collecting with "No vCenter
+  username" until it does; nothing is deleted. The account's identity is
+  now the vCenter Server plus the three enum settings, so two accounts on
+  the same vCenter that differed only by username now collide. See
+  `MIGRATION.md`.
 * **The certificates Operations passes are used.** `verify_certs: true`
   works against a vCenter whose CA Operations trusts, and against a
   VMCA-signed vCenter and by IP once its certificate is accepted (chain
@@ -15,11 +23,6 @@ identity.
   and the `/vsanHealth` stub). Every vCenter request has a 120 s timeout. The vendored version probe no longer turns off TLS verification
   for the whole process. The vCenter field accepts a pasted URL or a
   `:port`.
-* **Username in the credential.** *Upgrade note:* existing accounts keep
-  collecting through the old field and log a WARNING each cycle until the
-  username is entered in the credential. Leave the old field as it is; it is
-  ignored once the credential has a username, and leaving it in place keeps
-  the account's identity (README step 6).
 * **Collection failures reach Operations.** `collect()` reports with
   `with_error` instead of exiting 0 with no result.
 * **One cluster no longer sinks the rest.** Clusters without vSAN are
@@ -30,6 +33,9 @@ identity.
   attach-off are no longer counted.
 * `tools/sync_content.py` fails when a dashboard was not generated.
 * `app/metric_scope.py` counts defined metrics the way the pak does.
+* A test fails if pyvmomi leaves 8.x: the thumbprint pin relies on 8.x
+  checking it on every connection, and 9.x would let the login through
+  unverified.
 
 ## Released as 1.4.7 (2026-10-27)
 
@@ -417,7 +423,7 @@ Open question for the vendor, now sharper: is there an append-only way to add a
 subscription, or must every consumer read-modify-write a shared list and race
 each other?
 
-**`verify_certs: true` now uses the accepted certificate (1.5.0).** The
+**`verify_certs: true` now uses the accepted certificate (2.0.0).** The
 suspicion here was half right: Operations does not put an accepted certificate
 in the container's trust store, it passes it to the adapter in every call
 (`AdapterInstance.get_certificates()`), together with every CA Operations

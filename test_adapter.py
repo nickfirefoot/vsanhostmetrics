@@ -293,9 +293,9 @@ def test_connect_passes_the_accepted_certificates_and_a_clean_host():
     def _fake(host, user, password, **kw):
         seen.update(host=host, **kw)
         return None, [], {}
-    inst = _Instance({"vcenter_host": " https://vc01.example.com:8443/ui ",
-                      "vcenter_user": "u@vsphere.local"},
-                     {"vcenter_password": "x"},
+    inst = _Instance({"vcenter_host": " https://vc01.example.com:8443/ui "},
+                     {"vcenter_username": "u@vsphere.local",
+                      "vcenter_password": "x"},
                      [_Cert("PEM-1"), _Cert(""), _Cert("PEM-2")])
     with patch.object(adapter.perfsvc, "connect", side_effect=_fake):
         adapter._connect(inst)
@@ -468,8 +468,9 @@ def test_attach_off_is_not_reported_as_orphaned_every_cycle():
 
 def test_username_comes_from_the_credential():
     """The username was a plain account field, part of the account's
-    identity, so a credential was never a complete login."""
-    inst = _Instance({"vcenter_user": "old@vsphere.local"},
+    identity, so a credential was never a complete login. Since 2.0.0 the
+    credential is the only place it is read from."""
+    inst = _Instance({"vcenter_host": "vc01.example.com"},
                      {"vcenter_username": " new@vsphere.local ",
                       "vcenter_password": "x"})
     with patch.object(adapter.logger, "warning") as warn:
@@ -477,42 +478,35 @@ def test_username_comes_from_the_credential():
     assert not warn.called
 
 
-def test_an_account_from_before_the_move_keeps_working_and_is_told():
-    inst = _Instance({"vcenter_user": "old@vsphere.local"},
-                     {"vcenter_password": "x"})
-    with patch.object(adapter.logger, "warning") as warn:
-        assert adapter._username(inst) == "old@vsphere.local"
-    assert warn.called and "deprecated" in warn.call_args[0][0]
-
-
-def test_no_username_anywhere_is_reported_in_words():
+def test_a_credential_without_a_username_fails_test_and_collect_in_words():
+    """An account carried over from 1.4.x whose credential was never given
+    the username. The old account field is gone, so there is nothing to fall
+    back to: test and collect both say what to fix, and no login is tried."""
     import perfsvc
-    inst = _Instance({"vcenter_host": "vc01.example.com"}, {"vcenter_password": "x"})
+    inst = _Instance({"vcenter_host": "vc01.example.com",
+                      "vcenter_user": "old@vsphere.local"},   # left over, unread
+                     {"vcenter_password": "x"})
     try:
         adapter._username(inst)
         raise AssertionError("expected PerfSvcError")
     except perfsvc.PerfSvcError as exc:
-        assert "credential" in str(exc), exc
-    assert "credential" in adapter.test(inst).get_json()["errorMessage"]
+        assert "No vCenter username" in str(exc), exc
+    with patch.object(adapter.perfsvc, "connect") as connect:
+        tested = adapter.test(inst).get_json()
+        collected = adapter.collect(inst).get_json()
+    assert not connect.called, "no login may be tried without a username"
+    assert "No vCenter username" in tested["errorMessage"], tested
+    assert "No vCenter username" in collected["errorMessage"], collected
 
 
-def test_credential_carries_the_username_and_the_old_field_is_optional():
+def test_the_username_is_a_required_credential_field_and_no_identifier():
     d = adapter.get_adapter_definition().to_json()
     cred = {c["key"]: c for c in d["credential_types"]}["vsan_vc_credential"]
-    keys = [f["key"] for f in cred["fields"]]
-    assert keys == ["vcenter_username", "vcenter_password"], keys
-    old = {i["key"]: i for i in d["adapter_instance"]["identifiers"]}["vcenter_user"]
-    assert old["required"] is False, old
-    # Same identity bit as before, so existing accounts keep their identity.
-    assert old["ident_type"] == 1, old
-
-
-def test_a_differing_old_username_is_noted_and_ignored():
-    inst = _Instance({"vcenter_user": "old@vsphere.local"},
-                     {"vcenter_username": "new@vsphere.local"})
-    with patch.object(adapter.logger, "info") as info:
-        assert adapter._username(inst) == "new@vsphere.local"
-    assert any("ignored" in c[0][0] for c in info.call_args_list), info.call_args_list
+    fields = {f["key"]: f for f in cred["fields"]}
+    assert list(fields) == ["vcenter_username", "vcenter_password"], list(fields)
+    assert fields["vcenter_username"]["required"] is True, fields
+    idents = [i["key"] for i in d["adapter_instance"]["identifiers"]]
+    assert "vcenter_user" not in idents, idents
 
 
 if __name__ == "__main__":

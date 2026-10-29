@@ -101,7 +101,6 @@ the same 70 resource kinds and 971 attributes. Compare the key sets, as above.
 | Field | Value |
 |---|---|
 | vCenter Server | FQDN or IP of vCenter |
-| vCenter username (deprecated) | leave empty |
 | Credential | username with domain, e.g. `vsanmon@vsphere.local`, and its password |
 | Verify vCenter certificate | `true` (default); accept the certificate when prompted |
 | Cloud Proxy / Group | **your Cloud Proxy**, explicitly |

@@ -3,10 +3,6 @@ ADAPTER_NAME = "vSAN Host Metrics"
 
 # --- Adapter instance configuration (Performance Service source) -----------
 VC_HOST_PARAM = "vcenter_host"
-# Deprecated since 1.5.0: the username moved into the credential
-# (VC_USER_CRED). The identifier is kept, optional, so accounts created
-# before then keep working until their credential is updated.
-VC_USER_PARAM = "vcenter_user"
 VC_USER_CRED = "vcenter_username"
 VC_PASS_CRED = "vcenter_password"
 VERIFY_PARAM = "verify_certs"
