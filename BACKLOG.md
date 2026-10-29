@@ -4,15 +4,19 @@
 
 Major because one thing is removed on purpose: the *vCenter username*
 account field (`vcenter_user`). The username is read only from the
-credential, as in the vCenter adapter. Every resource kind and metric key
-is kept, so history carries over; `describe.xml` loses exactly that one
-identifier. The 1.5.0 release candidates carried the old field as a
+credential, as in the vCenter adapter. Against 1.4.7, `describe.xml`
+keeps every resource kind and metric key and loses exactly that one
+identifier, which was required there, so every existing account has a value
+in it. Whether Operations accepts the upgrade in place and keeps accounts,
+objects and history is owed to the live install (`MIGRATION.md`); do not tag
+`v2.0.0` before that result is recorded (RELEASING.md section 5). The 1.5.0 release candidates carried the old field as a
 deprecated fallback; that fallback is gone and 1.5.0 is not released.
 
 * **Username in the credential, and only there.** *Upgrade note:* enter the
   username in each account's credential before or right after upgrading.
   An account whose credential has none stops collecting with "No vCenter
-  username" until it does; nothing is deleted. The account's identity is
+  username" until it does; the adapter attempts no login and deletes
+  nothing. Do not uninstall 1.x first. The account's identity is
   now the vCenter Server plus the three enum settings, so two accounts on
   the same vCenter that differed only by username now collide. See
   `MIGRATION.md`.

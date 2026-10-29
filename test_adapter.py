@@ -483,20 +483,37 @@ def test_a_credential_without_a_username_fails_test_and_collect_in_words():
     the username. The old account field is gone, so there is nothing to fall
     back to: test and collect both say what to fix, and no login is tried."""
     import perfsvc
+    import logging
+    secret = "pw-6d1f0c-must-not-surface"
     inst = _Instance({"vcenter_host": "vc01.example.com",
                       "vcenter_user": "old@vsphere.local"},   # left over, unread
-                     {"vcenter_password": "x"})
+                     {"vcenter_password": secret})
+
+    class _Keep(logging.Handler):
+        def __init__(self):
+            super().__init__(logging.DEBUG); self.lines = []
+        def emit(self, record):
+            self.lines.append(self.format(record))
     try:
         adapter._username(inst)
         raise AssertionError("expected PerfSvcError")
     except perfsvc.PerfSvcError as exc:
         assert "No vCenter username" in str(exc), exc
-    with patch.object(adapter.perfsvc, "connect") as connect:
-        tested = adapter.test(inst).get_json()
-        collected = adapter.collect(inst).get_json()
+    keep = _Keep(); root = logging.getLogger()
+    level = root.level; root.addHandler(keep); root.setLevel(logging.DEBUG)
+    try:
+        with patch.object(adapter.perfsvc, "connect") as connect:
+            tested = adapter.test(inst).get_json()
+            collected = adapter.collect(inst).get_json()
+    finally:
+        root.removeHandler(keep); root.setLevel(level)
     assert not connect.called, "no login may be tried without a username"
     assert "No vCenter username" in tested["errorMessage"], tested
     assert "No vCenter username" in collected["errorMessage"], collected
+    # The password reaches neither error message nor any log line.
+    assert secret not in tested["errorMessage"] + collected["errorMessage"]
+    assert keep.lines, "the error path logged nothing; the check would be vacuous"
+    assert not any(secret in line for line in keep.lines)
 
 
 def test_the_username_is_a_required_credential_field_and_no_identifier():

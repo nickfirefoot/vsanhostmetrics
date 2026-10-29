@@ -174,6 +174,13 @@ Check the gating defaults too: `_cfg` falls back to its default for an
 identifier an existing instance does not have, so `attach_to_vcenter` defaults
 to `false` and an upgraded instance stops attaching with no reconfiguration.
 
+**An identifier removed is a gate on the tag.** When the diff shows an
+adapter identifier removed (2.0.0 removes `vcenter_user`), do not cut the
+release tag until the live-install result in `MIGRATION.md` is filled in from
+an install over the last release on every supported Operations version. A
+release candidate may be tagged to produce the pak for that install; the
+release itself may not.
+
 ---
 
 ## 6. Relationship safety is a release gate

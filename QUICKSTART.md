@@ -51,6 +51,12 @@ Tick **both** boxes:
 **Upgrading?** It depends on whether the release changes the schema, and the
 answer is in the pak rather than in the version number.
 
+**1.x to 2.0.0 follows [MIGRATION.md](MIGRATION.md), not the rules below.**
+2.0.0 removes one identifying field (`vcenter_user`) and makes the
+credential's username field required; it removes no resource kind or metric,
+and uninstalling would delete every object's history.
+This holds until the live install recorded in MIGRATION.md says otherwise.
+
 *Schema unchanged* -- install over the top. Tick both boxes above and leave the
 adapter instance alone. Its credentials, its collector assignment and its
 collected history all survive, and the new views and dashboards appear on the
@@ -77,19 +83,47 @@ def schema(p):
     # forces an uninstall. Match the tag, then the attribute, anywhere in it.
     def keys(tag):
         return set(re.findall(r'<%s\b[^>]*?\bkey="([^"]+)"' % tag, d))
+    def attr(tag, name):
+        m = re.search(r'\b%s="([^"]*)"' % name, tag)
+        return m.group(1) if m else None
     # identType 1 = part of uniqueness, 2 = informational. A key DEMOTED from
     # 1 to 2 keeps the field in the schema and still changes every computed
     # object identity, so compare the pair rather than the name.
     idents = set(re.findall(
         r'<ResourceIdentifier\b[^>]*?\bkey="([^"]+)"[^>]*?identType="(\d)"', d))
+    # Credential fields by kind, with `required`: a field that becomes
+    # required is a change every existing credential has to answer.
+    creds = {}
+    for kind, body in re.findall(
+            r'<CredentialKind\b[^>]*?\bkey="([^"]+)"[^>]*>(.*?)</CredentialKind>',
+            d, re.S):
+        for f in re.findall(r'<CredentialField\b[^>]*>', body):
+            creds[kind + '|' + attr(f, 'key')] = attr(f, 'required')
     return (keys('ResourceKind'), keys('ResourceAttribute'),
-            keys('CredentialKind'), idents)
+            keys('CredentialKind'), idents, creds)
 old, new = schema(sys.argv[1]), schema(sys.argv[2])
-print("schema unchanged" if old == new else "SCHEMA CHANGED -- uninstall first")
+# An identifier that is only REMOVED is reported on its own: 1.x to 2.0.0
+# removes vcenter_user and nothing else, and follows MIGRATION.md.
+gone = {k for k, t in old[3] - new[3] if k not in {n for n, _ in new[3]}}
+rest = (old[0], old[1], old[2], {i for i in old[3] if i[0] not in gone})
+if rest != new[:4]:
+    print("SCHEMA CHANGED -- uninstall first")
+if gone:
+    print("identifier removed: %s -- see MIGRATION.md, not the uninstall rule"
+          % ", ".join(sorted(gone)))
+for f in sorted(set(old[4]) | set(new[4])):
+    if old[4].get(f) != new[4].get(f):
+        print("credential field %s: required %s -> %s -- existing credentials"
+              " may need editing" % (f, old[4].get(f, 'absent'),
+                                     new[4].get(f, 'absent')))
+if rest == new[:4] and not gone and old[4] == new[4]:
+    print("schema unchanged")
 PY
 ```
 
-Pass the old pak then the new one. Do not diff `describe.xml` byte for byte:
+Pass the old pak then the new one. An identifier that is only removed, and a
+credential field that is added or changes `required`, are reported on their
+own lines rather than as an uninstall verdict. Do not diff `describe.xml` byte for byte:
 the SDK writes the `UnitType` block in a different order on every build, so two
 builds of the same schema differ in hundreds of lines while describing exactly
 the same 70 resource kinds and 971 attributes. Compare the key sets, as above.
