@@ -51,6 +51,13 @@ Tick **both** boxes:
 **Upgrading?** It depends on whether the release changes the schema, and the
 answer is in the pak rather than in the version number.
 
+**1.x to 2.0.0 follows [MIGRATION.md](MIGRATION.md), not the rules below.**
+2.0.0 removes one identifying field (`vcenter_user`) and makes the
+credential's username field required; it removes no resource kind or metric,
+and uninstalling would delete every object's history. The in-place upgrade
+was accepted on 8.18.7, 9.0.2 and 9.1.1 with accounts and objects kept
+(MIGRATION.md, Live upgrade result).
+
 *Schema unchanged* -- install over the top. Tick both boxes above and leave the
 adapter instance alone. Its credentials, its collector assignment and its
 collected history all survive, and the new views and dashboards appear on the
@@ -77,19 +84,47 @@ def schema(p):
     # forces an uninstall. Match the tag, then the attribute, anywhere in it.
     def keys(tag):
         return set(re.findall(r'<%s\b[^>]*?\bkey="([^"]+)"' % tag, d))
+    def attr(tag, name):
+        m = re.search(r'\b%s="([^"]*)"' % name, tag)
+        return m.group(1) if m else None
     # identType 1 = part of uniqueness, 2 = informational. A key DEMOTED from
     # 1 to 2 keeps the field in the schema and still changes every computed
     # object identity, so compare the pair rather than the name.
     idents = set(re.findall(
         r'<ResourceIdentifier\b[^>]*?\bkey="([^"]+)"[^>]*?identType="(\d)"', d))
+    # Credential fields by kind, with `required`: a field that becomes
+    # required is a change every existing credential has to answer.
+    creds = {}
+    for kind, body in re.findall(
+            r'<CredentialKind\b[^>]*?\bkey="([^"]+)"[^>]*>(.*?)</CredentialKind>',
+            d, re.S):
+        for f in re.findall(r'<CredentialField\b[^>]*>', body):
+            creds[kind + '|' + attr(f, 'key')] = attr(f, 'required')
     return (keys('ResourceKind'), keys('ResourceAttribute'),
-            keys('CredentialKind'), idents)
+            keys('CredentialKind'), idents, creds)
 old, new = schema(sys.argv[1]), schema(sys.argv[2])
-print("schema unchanged" if old == new else "SCHEMA CHANGED -- uninstall first")
+# An identifier that is only REMOVED is reported on its own: 1.x to 2.0.0
+# removes vcenter_user and nothing else, and follows MIGRATION.md.
+gone = {k for k, t in old[3] - new[3] if k not in {n for n, _ in new[3]}}
+rest = (old[0], old[1], old[2], {i for i in old[3] if i[0] not in gone})
+if rest != new[:4]:
+    print("SCHEMA CHANGED -- uninstall first")
+if gone:
+    print("identifier removed: %s -- see MIGRATION.md, not the uninstall rule"
+          % ", ".join(sorted(gone)))
+for f in sorted(set(old[4]) | set(new[4])):
+    if old[4].get(f) != new[4].get(f):
+        print("credential field %s: required %s -> %s -- existing credentials"
+              " may need editing" % (f, old[4].get(f, 'absent'),
+                                     new[4].get(f, 'absent')))
+if rest == new[:4] and not gone and old[4] == new[4]:
+    print("schema unchanged")
 PY
 ```
 
-Pass the old pak then the new one. Do not diff `describe.xml` byte for byte:
+Pass the old pak then the new one. An identifier that is only removed, and a
+credential field that is added or changes `required`, are reported on their
+own lines rather than as an uninstall verdict. Do not diff `describe.xml` byte for byte:
 the SDK writes the `UnitType` block in a different order on every build, so two
 builds of the same schema differ in hundreds of lines while describing exactly
 the same 70 resource kinds and 971 attributes. Compare the key sets, as above.
@@ -100,10 +135,9 @@ the same 70 resource kinds and 971 attributes. Compare the key sets, as above.
 
 | Field | Value |
 |---|---|
-| vCenter Server | **FQDN** of vCenter |
-| vCenter username | e.g. `vsanmon@vsphere.local` |
-| Credential | that account's password |
-| Verify vCenter certificate | **false** — see below |
+| vCenter Server | FQDN or IP of vCenter |
+| Credential | username with domain, e.g. `vsanmon@vsphere.local`, and its password |
+| Verify vCenter certificate | `true` (default); accept the certificate when prompted |
 | Cloud Proxy / Group | **your Cloud Proxy**, explicitly |
 | container_memory_limit | 1024 (Advanced Settings) |
 
@@ -114,18 +148,16 @@ collector group, Operations tries to run the container on an analytics node
 that never pulled the image — and the failure reads like a registry problem
 rather than a placement one.
 
-**Certificate verification.** The default is `true` and **does not work
-unmodified**: vCenter presents a VMCA-issued certificate
-(`CN=CA, DC=vsphere, DC=local`) that nothing in the adapter's base image
-trusts. Either set it false, or import the VMCA root from
-`https://<vcenter>/certs/download.zip` into the container trust store. If you
-leave it `true`, the vCenter field must hold the **FQDN** — an IP fails
-hostname matching even once the root is trusted, and that failure looks
-identical to an untrusted chain.
+**Certificate verification.** Leave it `true`. Click **Validate Connection**;
+Operations shows vCenter's certificate for review. Accept it, and the adapter
+trusts exactly that certificate, so a VMCA-issued certificate that nothing in
+the adapter's base image trusts works, and so does an IP address in the
+vCenter field. If Operations already trusts vCenter's CA there is no prompt,
+and the adapter verifies against that CA (use the FQDN then). If vCenter's
+certificate is replaced later, validate again and accept the new one.
 
-Click **Validate Connection** before saving. That runs a real Performance
-Service query, so green proves credential, privilege and network path at once.
-Expect one certificate-acceptance prompt for vCenter.
+Validate Connection runs a real Performance Service query, so green proves
+credential, privilege and network path at once.
 
 ## 2b. Give the dashboards two or three collection cycles before judging them
 
@@ -250,8 +282,10 @@ Untested, listed so a failure is recognised rather than debugged from scratch:
 
 - **VCF Operations 8.x.** `manifest.txt` claims `vcops_minimum_version 8.10.0`
   but only 9.x has been run.
-- **`Verify vCenter certificate: true`.** Known to fail without importing the
-  VMCA root; the import path itself has not been exercised.
+- **`Verify vCenter certificate: true` in the Operations dialog.** The
+  accept-and-pin path is proven with `mp-test`, which hands the adapter the
+  endpoint's certificate the way Operations does; the Operations dialog
+  itself has not been exercised against it here.
 - **OSA clusters.** All modelling and testing is on **ESA**. The OSA entity
   types are in the model but return nothing on ESA, so they are unverified.
 - **vSAN file services and iSCSI.** Present in the schema, never enabled.

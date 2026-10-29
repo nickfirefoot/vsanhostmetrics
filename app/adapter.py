@@ -18,7 +18,8 @@ Nothing imports it.  It exists so that reviving a family perfsvc does not serve
 change rather than archaeology.
 
 Import block and main() dispatch are taken verbatim from the mp-init generated
-adapter.py (SDK 1.3.1 / lib 1.1.0), which is ground truth.
+adapter.py (SDK 1.3.1 / lib 1.1.0), which is ground truth -- except the
+sys.exit(0) in main()'s finally, which is removed; see the comment there.
 """
 import os
 import sys
@@ -37,7 +38,7 @@ from aria.ops.timer import Timer
 from constants import ADAPTER_KIND
 from constants import ADAPTER_NAME
 from constants import VC_HOST_PARAM
-from constants import VC_USER_PARAM
+from constants import VC_USER_CRED
 from constants import VC_PASS_CRED
 from constants import VERIFY_PARAM
 from constants import METRIC_SCOPE_PARAM
@@ -60,35 +61,28 @@ def get_adapter_definition() -> AdapterDefinition:
         # The descriptions carry WORKED EXAMPLES, not just prose. Both of these
         # fields are filled in wrong on a first attempt often enough to be
         # worth the words: the username gets typed without its domain, and the
-        # server gets an IP, which then fails certificate hostname matching in
-        # a way that looks like an untrusted chain rather than a wrong name.
+        # server gets pasted as a URL. A URL is now trimmed to its host and
+        # port (perfsvc.split_host), and an IP works once its certificate is
+        # accepted, because the accepted certificate is pinned rather than
+        # hostname-matched.
         d.define_string_parameter(
             VC_HOST_PARAM,
             label="vCenter Server",
-            description="FQDN of the vCenter Server managing the vSAN cluster. "
-                        "Example: vc01.example.com -- NOT an IP address and NOT "
-                        "a URL. An IP works only if certificate verification is "
-                        "off; with it on, an IP fails hostname matching and the "
-                        "error looks identical to an untrusted certificate.",
-            required=True,
-        )
-        d.define_string_parameter(
-            VC_USER_PARAM,
-            label="vCenter username",
-            description="Must include the domain. Example: "
-                        "vsanmon@vsphere.local -- a bare username without "
-                        "@vsphere.local will not authenticate. Read-only is "
-                        "sufficient: System.View and System.Read propagated "
-                        "from the vCenter root, no cluster edit rights.",
+            description="FQDN or IP address of the vCenter Server managing the "
+                        "vSAN cluster. Example: vc01.example.com. A URL such as "
+                        "https://vc01.example.com/ is trimmed to the host; a "
+                        "port other than 443 can be given as "
+                        "vc01.example.com:8443.",
             required=True,
         )
         # NOTE: lib 1.1.0 has no define_bool_parameter; an enum of "true"/"false"
         # is the supported equivalent.
-        # 1383 of 1636 modelled metrics (84%) are referenced by no shipped
-        # view, and 45 of the 69 entity types by none at all. Every metric
-        # stays DECLARED in describe, so switching this to "all" surfaces them
-        # without a new pak -- but by default we do not query those 45 entity
-        # types, which is 45 fewer round trips per cycle. The vSAN perf API
+        # Most modelled metrics are referenced by no shipped view, and about
+        # half the entity types by none at all (the current counts are in the
+        # header of the generated app/metric_scope.py). Every metric stays
+        # DECLARED in describe, so switching this to "all" surfaces them
+        # without a new pak -- but by default we do not query the unreferenced
+        # entity types, one round trip fewer per type per cycle. The vSAN perf API
         # returns all of an entity's metrics in one call, so narrowing within
         # an entity saves storage rather than time.
         # OFF by default since 2026-10-21. See CLAUDE.md rule 1. Attaching to a
@@ -144,13 +138,14 @@ def get_adapter_definition() -> AdapterDefinition:
             VERIFY_PARAM,
             values=["true", "false"],
             label="Verify vCenter certificate",
-            description="Set to false unless you have imported the VMCA root "
-                        "into the adapter's trust store. vCenter presents a "
-                        "VMCA-issued certificate (CN=CA, DC=vsphere, DC=local) "
-                        "that the adapter's base image does not trust, so the "
-                        "default of true does NOT work unmodified. If you do "
-                        "leave it true, the server field above must hold the "
-                        "FQDN rather than an IP.",
+            description="Leave true. When you validate the connection, "
+                        "Operations shows vCenter's certificate for review; "
+                        "accept it and the adapter trusts exactly that "
+                        "certificate, including a VMCA-issued one and when "
+                        "the server field holds an IP address. If vCenter's "
+                        "certificate is later replaced, collection fails "
+                        "until the new one is accepted. False turns "
+                        "certificate checking off entirely.",
             default="true",
         )
         # Special key read by the collector to size the adapter container.
@@ -165,7 +160,19 @@ def get_adapter_definition() -> AdapterDefinition:
         )
 
         cred = d.define_credential_type("vsan_vc_credential", "vCenter credential")
-        # NOTE: credential parameters in lib 1.1.0 take only key/label/required.
+        # The username lives here with the password, as in the vCenter
+        # adapter: one credential is a complete login, and rotating the
+        # service account does not edit the account's identity. Since 2.0.0
+        # it is the only place the username is read from.
+        # NOTE: credential parameters in lib 1.1.0 take only key/label/required,
+        # so the worked example goes in the label. Required, so the form asks
+        # for it; a credential saved by 1.4.x has no such field, and
+        # _username() reports that in words rather than trying to log in.
+        cred.define_string_parameter(
+            VC_USER_CRED,
+            label="vCenter username, with domain (e.g. vsanmon@vsphere.local)",
+            required=True,
+        )
         cred.define_password_parameter(
             VC_PASS_CRED,
             label="vCenter password",
@@ -495,13 +502,76 @@ def _password(adapter_instance: AdapterInstance) -> str:
     return adapter_instance.get_credential_value(VC_PASS_CRED) or ""
 
 
+def _username(adapter_instance: AdapterInstance) -> str:
+    """From the credential, the only place it is kept since 2.0.0."""
+    user = (adapter_instance.get_credential_value(VC_USER_CRED) or "").strip()
+    if user:
+        return user
+    raise perfsvc.PerfSvcError(
+        "No vCenter username. Edit the account's credential and enter the "
+        "username with its domain, e.g. vsanmon@vsphere.local.")
+
+
+def _accepted_pems(adapter_instance: AdapterInstance) -> List[str]:
+    """Certificates Operations passes for this account.
+
+    That is the leaves the user accepted for it plus every CA the
+    Operations cluster trusts globally, on every test and collect. The SDK
+    applies them to nothing, so perfsvc.connect does. Each entry is read on
+    its own: one that cannot be read is logged and skipped, and the rest are
+    still used.
+    """
+    pems = []
+    certs = list(adapter_instance.get_certificates() or [])
+    for i, cert in enumerate(certs, 1):
+        try:
+            pem = cert.get_certificate_string()
+        except Exception as exc:                    # noqa: BLE001
+            logger.warning("certificate %d of %d from Operations could not "
+                           "be read (%s); skipped", i, len(certs),
+                           type(exc).__name__)
+            continue
+        if pem and pem != "None":
+            pems.append(pem)
+    logger.info("Operations passed %d certificate(s) for this account",
+                len(pems))
+    return pems
+
+
 def _connect(adapter_instance: AdapterInstance):
+    host, port = perfsvc.split_host(_cfg(adapter_instance, VC_HOST_PARAM))
     return perfsvc.connect(
-        _cfg(adapter_instance, VC_HOST_PARAM),
-        _cfg(adapter_instance, VC_USER_PARAM),
+        host,
+        _username(adapter_instance),
         _password(adapter_instance),
         verify=_verify(adapter_instance),
+        accepted_pems=_accepted_pems(adapter_instance),
+        port=port,
     )
+
+
+def _cluster_label(cluster) -> str:
+    """The cluster's name, or its MoRef if the name cannot be read.
+
+    Reading .name is a call to vCenter, and a cluster deleted since the
+    inventory was listed raises ManagedObjectNotFound; getattr's default
+    covers only AttributeError. _moId is local.
+    """
+    try:
+        return cluster.name
+    except Exception:                               # noqa: BLE001
+        return getattr(cluster, "_moId", "?")
+
+
+def _not_vsan(cluster) -> bool:
+    """True only when the cluster's vSAN config says disabled.
+
+    Every cluster is queried either way: a compute cluster that mounts a
+    remote vSAN datastore may report vSAN disabled and still have
+    Performance Service data. This only decides how a cluster that returned
+    nothing is reported.
+    """
+    return perfsvc.vsan_enabled(cluster) is False
 
 
 # ---------------------------------------------------------------------------
@@ -522,37 +592,80 @@ def test(adapter_instance: AdapterInstance) -> TestResult:
                     "Connected to vCenter but no clusters are visible. The "
                     "account likely lacks Read-only propagated from the root.")
                 return result
-            # A single query, NOT a full collection. This used to call
-            # perfsvc.collect, which queries all 69 entity types; 99% of the
-            # test's runtime was that call, and on a large cluster it overran
-            # the Validate Connection timeout so a correctly configured
-            # account was told the connection timed out.
-            found, problem = perfsvc.probe(mos["vsan-performance-manager"],
-                                           clusters[0])
-            if problem:
+            # One query PER CLUSTER, NOT a full collection. This used to
+            # call perfsvc.collect, which queries all 69 entity types; 99% of
+            # the test's runtime was that call, and on a large cluster it
+            # overran the Validate Connection timeout so a correctly
+            # configured account was told the connection timed out. It then
+            # probed clusters[0] only, so a compute-only first cluster failed
+            # the test while the vSAN clusters would have collected, and a
+            # broken second cluster passed it.
+            failed, no_vsan = [], []
+            for cluster in clusters:
+                name, found = "?", 0
+                try:
+                    name = _cluster_label(cluster)
+                    found, problem = perfsvc.probe(
+                        mos["vsan-performance-manager"], cluster)
+                except Exception as exc:            # noqa: BLE001
+                    problem = perfsvc.fault_text(exc)
+                if not found and _not_vsan(cluster):
+                    # Nothing back from a cluster whose vSAN config says
+                    # disabled is its normal state, not a failure.
+                    no_vsan.append(name)
+                    logger.info("%s: cluster %s has vSAN disabled, probe "
+                                "returned nothing%s", host, name,
+                                f" ({problem})" if problem else "")
+                    continue
+                if problem:
+                    failed.append(f"{name} ({problem})")
+                logger.info("%s: cluster %s, probe returned %d result(s)%s",
+                            host, name, found,
+                            f", problem: {problem}" if problem else "")
+            if failed:
+                result.with_error(
+                    f"Connected to {host}, but the vSAN Performance Service "
+                    f"did not answer on {len(failed)} of {len(clusters)} "
+                    f"cluster(s): {'; '.join(failed)}. Check that it is "
+                    f"enabled on each. Collection skips a cluster that does "
+                    f"not answer and still collects the others.")
+                return result
+            if len(no_vsan) == len(clusters):
                 result.with_error(
                     f"Connected to {host} and found {len(clusters)} cluster(s), "
-                    f"but the vSAN Performance Service did not answer: {problem}. "
-                    "Check that it is enabled on the cluster.")
+                    f"none with vSAN enabled: {', '.join(sorted(no_vsan))}.")
                 return result
-            logger.info("%s: %d cluster(s), probe returned %d result(s)",
-                        host, len(clusters), found)
+            logger.info("%s: %d cluster(s) answered, %d with vSAN disabled",
+                        host, len(clusters) - len(no_vsan), len(no_vsan))
         except perfsvc.PerfSvcError as exc:
+            logger.warning("Test failed: %s", exc)
             result.with_error(str(exc))
         except Exception as exc:                    # noqa: BLE001
-            result.with_error(f"{host}: {type(exc).__name__}: {exc}")
+            logger.exception("Test failed")
+            result.with_error(f"{host}: {perfsvc.fault_text(exc)}")
         finally:
             _safe_disconnect(si)
         return result
 
 
 def get_endpoints(adapter_instance: AdapterInstance) -> EndpointResult:
-    """Hand vCenter's cert to Operations so it lands in the trust store."""
+    """Ask Operations to show vCenter's certificate for review and accept.
+
+    What the user accepts comes back on every test and collect as
+    get_certificates(), and perfsvc.connect pins it. With verification off
+    nothing is checked, so no prompt: accepting would mean nothing.
+    """
     with Timer(logger, "Get Endpoints"):
         result = EndpointResult()
-        host = _cfg(adapter_instance, VC_HOST_PARAM)
-        if host:
-            result.with_endpoint(f"https://{host}")
+        if not _verify(adapter_instance):
+            return result
+        try:
+            host, port = perfsvc.split_host(_cfg(adapter_instance, VC_HOST_PARAM))
+        except perfsvc.PerfSvcError as exc:
+            # Test Connection reports the same error with its wording.
+            logger.warning("no certificate endpoint: %s", exc)
+            return result
+        result.with_endpoint(perfsvc.endpoint_url(host, port))
         return result
 
 
@@ -606,10 +719,37 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
                             VC_ATTACH_PARAM)
 
             total_problems: List[str] = []
+            scope = _scope_for(adapter_instance)
+            # One cluster that returns nothing -- Performance Service off, or
+            # a fault -- used to raise out of this loop and lose every other
+            # cluster's data with it. Each cluster now stands alone; the
+            # cycle fails only if none answered. A failed cluster cannot be
+            # shown in the UI without failing the cycle (with_error drops
+            # every object), so it is logged as an ERROR every cycle instead.
+            # Every cluster is queried; "no data" from one whose vSAN config
+            # says disabled is its normal state and is logged at INFO.
+            failed: List[str] = []
+            no_vsan: List[str] = []
+            collected = 0
             for cluster in clusters:
-                objs, problems = perfsvc.collect(
-                    perf, cluster, scope=_scope_for(adapter_instance))
-                total_problems.extend(problems)
+                cname = "?"
+                try:
+                    cname = _cluster_label(cluster)
+                    objs, problems = perfsvc.collect(perf, cluster, scope=scope)
+                except Exception as exc:            # noqa: BLE001
+                    if _not_vsan(cluster):
+                        no_vsan.append(cname)
+                        logger.info("cluster %s has vSAN disabled; nothing "
+                                    "collected (%s)", cname,
+                                    perfsvc.fault_text(exc))
+                        continue
+                    logger.error("cluster %s not collected: %s", cname,
+                                 perfsvc.fault_text(exc),
+                                 exc_info=not isinstance(exc, perfsvc.PerfSvcError))
+                    failed.append(f"{cname}: {perfsvc.fault_text(exc)}")
+                    continue
+                collected += 1
+                total_problems.extend(f"{cname}: {p}" for p in problems)
                 for key, grouped in objs.items():
                     spec = perfsvc.MODEL.ENTITIES[key.entity]
                     obj = result.object(
@@ -653,6 +793,16 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
                             linked += 1
                         break
 
+            if not collected:
+                if failed:
+                    raise perfsvc.PerfSvcError(
+                        f"No cluster returned vSAN data ({len(failed)} of "
+                        f"{len(clusters)} failed): " + "; ".join(failed[:3]))
+                raise perfsvc.PerfSvcError(
+                    f"{len(clusters)} cluster(s) visible, none with vSAN "
+                    f"enabled: {', '.join(sorted(no_vsan))}.")
+            total_problems.extend(f"cluster not collected: {f}" for f in failed)
+
             # Re-attach the children that already belonged to each vCenter
             # object before adding it to our result.
             #
@@ -688,7 +838,10 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
             # the selected object as not applicable -- which reads as broken
             # content rather than a broken collection, and has sent several
             # investigations in the wrong direction.
-            if not linked:
+            # Only when attaching was asked for. With attach_to_vcenter
+            # false, standalone objects are the chosen state, and reporting
+            # them as orphaned made this an ERROR and a warning every cycle.
+            if attach_vc and not linked:
                 total_problems.append(
                     "No vSAN object could be attached to any vCenter object. "
                     "Views will report the selected object as not applicable "
@@ -704,6 +857,13 @@ def collect(adapter_instance: AdapterInstance) -> CollectResult:
                 # collision survived a green test suite.
                 logger.warning("%d collection problem(s); first few: %s",
                                len(total_problems), total_problems[:5])
+        except Exception as exc:                    # noqa: BLE001
+            # The template catches here and this adapter had dropped it, so
+            # every PerfSvcError below -- bad password, untrusted certificate,
+            # no clusters -- vanished. with_error puts the adapter instance in
+            # an error state carrying this text.
+            logger.exception("Collection failed")
+            result.with_error(perfsvc.fault_text(exc))
         finally:
             _safe_disconnect(si)
 
@@ -756,8 +916,12 @@ def main(argv: List[str]) -> None:
             logger.error(f"Command {method} not found")
             sys.exit(1)
     finally:
+        # No sys.exit(0) here. The generated template has one, and it is safe
+        # there only because the template's collect() catches; a sys.exit in a
+        # finally REPLACES an in-flight exception, so the process exited 0
+        # with no result and no traceback, and Operations reported a generic
+        # failure with nothing in adapter.log to say why.
         logger.info(Timer.graph())
-        sys.exit(0)
 
 
 if __name__ == "__main__":

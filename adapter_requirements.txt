@@ -4,4 +4,8 @@ vmware-aria-operations-integration-sdk-lib~=1.1.0
 # app/vendor/ -- see that package's docstring for their staleness.
 # Pinned to what pyvmomi~=8.0 resolved to in the published 1.4.6 image
 # (the last 8.x release), so a rebuild gets the same library.
+# Do NOT bump to 9.x without changing the pinned login in app/perfsvc.py
+# connect(): the thumbprint pin there relies on 8.0.x checking it on every
+# connection (SoapStubAdapter.GetConnection); 9.x would skip the check. A
+# test fails on a 9.x install until that is done.
 pyvmomi==8.0.3.0.1

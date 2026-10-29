@@ -41,9 +41,16 @@ def valid_ipv6(addr):
       return False
    return True
 
+# LOCAL CHANGE (vsanhostmetrics): `thumbprint` and `httpConnectionTimeout`
+# added to _GetVsanStub, GetVsanVcStub and GetVsanVcMos and passed to
+# SoapStubAdapter, so the vSAN stub pins the same certificate as the vCenter
+# session it shares a cookie with, and gives up on a stalled request instead
+# of waiting forever. The port is kept from the vCenter stub rather than
+# dropped back to 443.
 def _GetVsanStub(
       stub, endpoint=VSAN_API_VC_SERVICE_ENDPOINT,
-      context=None, version='vim.version.version11'
+      context=None, version='vim.version.version11', thumbprint=None,
+      httpConnectionTimeout=None
    ):
    index = stub.host.rfind(':')
    if valid_ipv6(stub.host[:index][1:-1]):
@@ -52,17 +59,23 @@ def _GetVsanStub(
       hostname = stub.host[:index]
    vsanStub = SoapStubAdapter(
       host=hostname,
+      port=int(stub.host[index + 1:]),
       path=endpoint,
       version=version,
-      sslContext=context
+      sslContext=context,
+      thumbprint=thumbprint,
+      httpConnectionTimeout=httpConnectionTimeout
    )
    vsanStub.cookie = stub.cookie
    return vsanStub
 
 # Construct a stub for access vCenter side vSAN APIs.
-def GetVsanVcStub(stub, context=None, version=VSAN_VMODL_VERSION):
+def GetVsanVcStub(stub, context=None, version=VSAN_VMODL_VERSION,
+                  thumbprint=None, httpConnectionTimeout=None):
    return _GetVsanStub(stub, endpoint=VSAN_API_VC_SERVICE_ENDPOINT,
-                       context=context, version=version)
+                       context=context, version=version,
+                       thumbprint=thumbprint,
+                       httpConnectionTimeout=httpConnectionTimeout)
 
 # Construct a stub for access ESXi side vSAN APIs.
 def GetVsanEsxStub(stub, context=None, version=VSAN_VMODL_VERSION):
@@ -70,8 +83,11 @@ def GetVsanEsxStub(stub, context=None, version=VSAN_VMODL_VERSION):
                        context=context, version=version)
 
 # Construct a stub for access ESXi side vSAN APIs.
-def GetVsanVcMos(vcStub, context=None, version=VSAN_VMODL_VERSION):
-   vsanStub = GetVsanVcStub(vcStub, context, version=version)
+def GetVsanVcMos(vcStub, context=None, version=VSAN_VMODL_VERSION,
+                 thumbprint=None, httpConnectionTimeout=None):
+   vsanStub = GetVsanVcStub(vcStub, context, version=version,
+                            thumbprint=thumbprint,
+                            httpConnectionTimeout=httpConnectionTimeout)
    vcMos = {
       'vsan-disk-management-system' : vim.cluster.VsanVcDiskManagementSystem(
                                          'vsan-disk-management-system',
@@ -227,10 +243,13 @@ def WaitForTasks(tasks, si):
 def GetLatestVmodlVersion(hostname):
    try:
       vsanVmodlUrl = 'https://%s/sdk/vsanServiceVersions.xml' % hostname
-      if (hasattr(ssl, '_create_unverified_context') and
-         hasattr(ssl, '_create_default_https_context')):
-         ssl._create_default_https_context = ssl._create_unverified_context
-      xmldoc = minidom.parse(urlopen(vsanVmodlUrl, timeout=5))
+      # LOCAL CHANGE (vsanhostmetrics): the original replaced
+      # ssl._create_default_https_context with the unverified one, which
+      # turned off certificate verification for every later stdlib HTTPS
+      # call in the process. The fetch stays unverified, as before, but only
+      # this fetch. The adapter no longer calls this function; tools/ do.
+      xmldoc = minidom.parse(urlopen(vsanVmodlUrl, timeout=5,
+                                     context=ssl._create_unverified_context()))
       for element in xmldoc.getElementsByTagName('name'):
          if (element.firstChild.nodeValue == "urn:vsan"):
             versions = xmldoc.getElementsByTagName('version')

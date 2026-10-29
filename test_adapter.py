@@ -9,6 +9,7 @@ second was hidden by the first for three releases.
 Run: python3 test_adapter.py
 """
 import sys
+from unittest.mock import patch
 
 # AdapterInstance.from_input defaults to sys.argv[-2], evaluated at class
 # definition time, so importing the adapter needs two argv entries.
@@ -215,6 +216,315 @@ def test_pack_description_counts_match_the_model():
     assert f"collects the {scoped} metrics" in desc, (scoped, desc[:260])
     readme = open("README.md").read()
     assert f"{defined:,} metrics across {len(ents)} resource kinds" in readme
+    # The generated scope file states the same counts, from the same rule.
+    assert (f"{len(ents)} kinds, {defined} metrics defined; {scoped} "
+            f"referenced by views; {defined - scoped} not."
+            in metric_scope.__doc__), metric_scope.__doc__[:300]
+
+
+def test_collect_reports_exception_and_disconnects():
+    """A collect that raises must reach Operations as an error, not vanish.
+
+    collect() had try/finally and no except, and main() ended in
+    `finally: sys.exit(0)`, which replaces an in-flight exception: the process
+    exited 0, wrote no result, and logged no traceback. Every PerfSvcError
+    message this adapter composes was lost that way."""
+    session = object()
+    with patch.object(adapter, "_connect", return_value=(session, [object()], {})), \
+         patch.object(adapter, "_safe_disconnect") as disconnect:
+        result = adapter.collect(object())
+    assert "KeyError" in result.get_json()["errorMessage"]
+    disconnect.assert_called_once_with(session)
+
+
+def test_collect_reports_a_login_failure_in_its_own_words():
+    import perfsvc
+    with patch.object(adapter, "_connect",
+                      side_effect=perfsvc.PerfSvcError("vCenter login failed")):
+        result = adapter.collect(object())
+    assert "vCenter login failed" in result.get_json()["errorMessage"]
+
+
+def test_main_does_not_mask_dispatch_failure():
+    with patch.object(adapter.logging, "setup_logging"), \
+         patch.object(adapter.logging, "rotate"), \
+         patch.object(adapter.AdapterInstance, "from_input", side_effect=RuntimeError("dispatch failed")):
+        try:
+            adapter.main(["collect", "input", "output"])
+        except RuntimeError as exc:
+            assert str(exc) == "dispatch failed"
+        else:
+            raise AssertionError("dispatch failure was masked")
+
+
+def test_main_unknown_method_exits_nonzero():
+    with patch.object(adapter.logging, "setup_logging"), \
+         patch.object(adapter.logging, "rotate"):
+        try:
+            adapter.main(["unknown", "input", "output"])
+        except SystemExit as exc:
+            assert exc.code == 1
+        else:
+            raise AssertionError("unknown method did not fail")
+
+
+
+class _Cert:
+    def __init__(self, pem): self.pem = pem
+    def get_certificate_string(self): return self.pem
+
+
+class _Instance:
+    """Stands in for AdapterInstance: identifiers, credential, certificates."""
+    def __init__(self, idents, creds=None, certs=()):
+        self.idents = idents; self.creds = creds or {}; self.certs = list(certs)
+    def get_identifier_value(self, key, default=None):
+        return self.idents.get(key, default)
+    def get_credential_value(self, key):
+        return self.creds.get(key)
+    def get_certificates(self):
+        return self.certs
+
+
+def test_connect_passes_the_accepted_certificates_and_a_clean_host():
+    """The platform hands the accepted certificate to every test and collect;
+    it was never read. And the host field is trimmed before it is used."""
+    seen = {}
+    def _fake(host, user, password, **kw):
+        seen.update(host=host, **kw)
+        return None, [], {}
+    inst = _Instance({"vcenter_host": " https://vc01.example.com:8443/ui "},
+                     {"vcenter_username": "u@vsphere.local",
+                      "vcenter_password": "x"},
+                     [_Cert("PEM-1"), _Cert(""), _Cert("PEM-2")])
+    with patch.object(adapter.perfsvc, "connect", side_effect=_fake):
+        adapter._connect(inst)
+    assert seen["host"] == "vc01.example.com" and seen["port"] == 8443, seen
+    assert seen["accepted_pems"] == ["PEM-1", "PEM-2"], seen
+    assert seen["verify"] is True, "verification must default on"
+
+
+def test_certificate_prompt_only_when_verifying_and_never_doubled():
+    on = _Instance({"vcenter_host": "https://vc01.example.com/"})
+    urls = adapter.get_endpoints(on).get_json()["endpointUrls"]
+    assert urls == ["https://vc01.example.com"], urls
+    off = _Instance({"vcenter_host": "vc01.example.com", "verify_certs": "false"})
+    assert adapter.get_endpoints(off).get_json()["endpointUrls"] == []
+
+
+def test_an_unreadable_certificate_entry_is_skipped_not_fatal():
+    class _Bad:
+        def get_certificate_string(self): raise KeyError("certPemString")
+    inst = _Instance({}, {}, [_Bad(), _Cert("None"), _Cert("PEM-OK")])
+    with patch.object(adapter.logger, "warning") as warn:
+        assert adapter._accepted_pems(inst) == ["PEM-OK"]
+    assert warn.called
+
+
+class _Cluster:
+    def __init__(self, name): self.name = name
+
+
+def _collect_with(clusters, enabled, outcome, enabled_fn=None):
+    """Run adapter.collect against fake clusters.
+
+    enabled: {name: True/False/None}; outcome: {name: "ok" | Exception}."""
+    import perfsvc
+    key = perfsvc.parse_ref("host-domclient:6a46db86-350f-f7e5-653d-9c6b00c512b6")
+
+    def _collect(perf, cluster, scope=None):
+        out = outcome[cluster.name]
+        if isinstance(out, Exception):
+            raise out
+        g = perfsvc.Grouped(); g.gauges["readCount"] = 1.0
+        return {key: g}, []
+
+    inst = _Instance({"vcenter_host": "vc01.example.com",
+                      "attach_to_vcenter": "false"})
+    with patch.object(adapter, "_connect",
+                      return_value=(None, clusters, {"vsan-performance-manager": None})), \
+         patch.object(perfsvc, "build_name_map", return_value={}), \
+         patch.object(perfsvc, "build_parent_map", return_value={}), \
+         patch.object(perfsvc, "build_disk_hardware", return_value={}), \
+         patch.object(perfsvc, "vsan_enabled",
+                      side_effect=enabled_fn or (lambda c: enabled[c.name])), \
+         patch.object(perfsvc, "collect", side_effect=_collect):
+        return adapter.collect(inst).get_json()
+
+
+def test_one_failing_cluster_does_not_discard_the_others():
+    """A cluster without data raised out of the loop and lost every other
+    cluster's results with it -- silently, before collect() caught."""
+    import perfsvc
+    clusters = [_Cluster("compute-only"), _Cluster("broken"), _Cluster("good")]
+    with patch.object(adapter.logger, "error") as err:
+        out = _collect_with(
+            clusters, {"compute-only": False, "broken": True, "good": None},
+            {"compute-only": perfsvc.PerfSvcError("no data"),
+             "broken": perfsvc.PerfSvcError("Performance Service returned no data"),
+             "good": "ok"})
+    assert "errorMessage" not in out, out.get("errorMessage")
+    assert len(out["result"]) == 1, out["result"]
+    # vSAN disabled and no data: normal. vSAN enabled and no data: reported.
+    logged = " ".join(str(c) for c in err.call_args_list)
+    assert "broken" in logged and "compute-only" not in logged, logged
+
+
+def test_every_cluster_is_queried_even_with_vsan_disabled():
+    """A compute cluster mounting a remote vSAN datastore may report vSAN
+    disabled and still have data; 1.4.7 queried it, so this must too."""
+    out = _collect_with([_Cluster("client")], {"client": False}, {"client": "ok"})
+    assert "errorMessage" not in out, out.get("errorMessage")
+    assert len(out["result"]) == 1, out["result"]
+
+
+def test_every_cluster_failing_is_an_error():
+    import perfsvc
+    out = _collect_with(
+        [_Cluster("a"), _Cluster("b")], {"a": True, "b": None},
+        {"a": perfsvc.PerfSvcError("no data"), "b": RuntimeError("boom")})
+    assert "No cluster returned vSAN data (2 of 2 failed)" in out["errorMessage"], out
+
+
+def test_no_vsan_cluster_at_all_is_an_error():
+    import perfsvc
+    out = _collect_with([_Cluster("a")], {"a": False},
+                        {"a": perfsvc.PerfSvcError("no data")})
+    assert "none with vSAN enabled" in out["errorMessage"], out
+
+
+def test_a_cluster_deleted_mid_cycle_does_not_sink_the_others():
+    """cluster.name is a call to vCenter; a cluster removed since the
+    inventory was listed raises ManagedObjectNotFound, which getattr's
+    default does not catch."""
+    import perfsvc
+
+    class _Gone:
+        _moId = "domain-c99"
+        @property
+        def name(self):
+            raise perfsvc.vmodl.fault.ManagedObjectNotFound()
+    gone = _Gone()
+    out = _collect_with([gone, _Cluster("good")], {"good": True},
+                        {"good": "ok"},
+                        enabled_fn=lambda c: None if c is gone else True)
+    assert "errorMessage" not in out, out.get("errorMessage")
+    assert len(out["result"]) == 1, out["result"]
+
+
+def _test_with(clusters, enabled, problems, found=3, answers=()):
+    import perfsvc
+    probed = []
+    def _probe(perf, cluster):
+        probed.append(cluster.name)
+        if enabled[cluster.name] is False and cluster.name not in answers:
+            return (0, problems.get(cluster.name))
+        return (0, problems[cluster.name]) if problems.get(cluster.name) else (found, None)
+    inst = _Instance({"vcenter_host": "vc01.example.com"})
+    with patch.object(adapter, "_connect",
+                      return_value=(None, clusters, {"vsan-performance-manager": None})), \
+         patch.object(perfsvc, "vsan_enabled", side_effect=lambda c: enabled[c.name]), \
+         patch.object(perfsvc, "probe", side_effect=_probe):
+        return adapter.test(inst).get_json(), probed
+
+
+def test_validate_probes_every_cluster_not_just_the_first():
+    clusters = [_Cluster("compute-only"), _Cluster("a"), _Cluster("b")]
+    enabled = {"compute-only": False, "a": True, "b": True}
+    out, probed = _test_with(clusters, enabled, {})
+    assert out == {}, out
+    assert probed == ["compute-only", "a", "b"], probed
+    out, _ = _test_with(clusters, enabled, {"b": "NotFound: service disabled"})
+    assert "1 of 3" in out["errorMessage"] and "b (" in out["errorMessage"], out
+    # a vSAN-disabled cluster that does not answer is not a failure
+    out, _ = _test_with(clusters, enabled, {"compute-only": "InvalidArgument"})
+    assert out == {}, out
+
+
+def test_validate_counts_a_vsan_disabled_cluster_that_answers():
+    """A compute cluster on a remote vSAN datastore can report vSAN disabled
+    and still return data; it is a working cluster, not 'none with vSAN'."""
+    out, probed = _test_with([_Cluster("client")], {"client": False}, {},
+                             answers=("client",))
+    assert out == {}, out
+
+
+def test_validate_with_no_vsan_cluster_says_so():
+    out, probed = _test_with([_Cluster("c1")], {"c1": False}, {})
+    assert "none with vSAN enabled: c1" in out["errorMessage"], out
+    assert probed == ["c1"]
+
+
+def test_attach_off_is_not_reported_as_orphaned_every_cycle():
+    """With attach_to_vcenter false nothing is attached by choice; it was
+    still logged as ORPHANED and counted as a collection problem."""
+    with patch.object(adapter.logger, "error") as err, \
+         patch.object(adapter.logger, "warning") as warn:
+        out = _collect_with([_Cluster("good")], {"good": True}, {"good": "ok"})
+    assert "errorMessage" not in out
+    assert not err.called, err.call_args_list
+    assert not warn.called, warn.call_args_list
+
+
+def test_username_comes_from_the_credential():
+    """The username was a plain account field, part of the account's
+    identity, so a credential was never a complete login. Since 2.0.0 the
+    credential is the only place it is read from."""
+    inst = _Instance({"vcenter_host": "vc01.example.com"},
+                     {"vcenter_username": " new@vsphere.local ",
+                      "vcenter_password": "x"})
+    with patch.object(adapter.logger, "warning") as warn:
+        assert adapter._username(inst) == "new@vsphere.local"
+    assert not warn.called
+
+
+def test_a_credential_without_a_username_fails_test_and_collect_in_words():
+    """An account carried over from 1.4.x whose credential was never given
+    the username. The old account field is gone, so there is nothing to fall
+    back to: test and collect both say what to fix, and no login is tried."""
+    import perfsvc
+    import logging
+    secret = "pw-6d1f0c-must-not-surface"
+    inst = _Instance({"vcenter_host": "vc01.example.com",
+                      "vcenter_user": "old@vsphere.local"},   # left over, unread
+                     {"vcenter_password": secret})
+
+    class _Keep(logging.Handler):
+        def __init__(self):
+            super().__init__(logging.DEBUG); self.lines = []
+        def emit(self, record):
+            self.lines.append(self.format(record))
+    try:
+        adapter._username(inst)
+        raise AssertionError("expected PerfSvcError")
+    except perfsvc.PerfSvcError as exc:
+        assert "No vCenter username" in str(exc), exc
+    keep = _Keep(); root = logging.getLogger()
+    level = root.level; root.addHandler(keep); root.setLevel(logging.DEBUG)
+    try:
+        with patch.object(adapter.perfsvc, "connect") as connect:
+            tested = adapter.test(inst).get_json()
+            collected = adapter.collect(inst).get_json()
+    finally:
+        root.removeHandler(keep); root.setLevel(level)
+    assert not connect.called, "no login may be tried without a username"
+    assert "No vCenter username" in tested["errorMessage"], tested
+    assert "No vCenter username" in collected["errorMessage"], collected
+    # The password reaches neither error message nor any log line.
+    assert secret not in tested["errorMessage"] + collected["errorMessage"]
+    assert keep.lines, "the error path logged nothing; the check would be vacuous"
+    assert not any(secret in line for line in keep.lines)
+
+
+def test_the_username_is_a_required_credential_field_and_no_identifier():
+    d = adapter.get_adapter_definition().to_json()
+    cred = {c["key"]: c for c in d["credential_types"]}["vsan_vc_credential"]
+    fields = {f["key"]: f for f in cred["fields"]}
+    assert list(fields) == ["vcenter_username", "vcenter_password"], list(fields)
+    assert fields["vcenter_username"]["required"] is True, fields
+    idents = [i["key"] for i in d["adapter_instance"]["identifiers"]]
+    assert "vcenter_user" not in idents, idents
+
 
 if __name__ == "__main__":
     fails = 0

@@ -27,6 +27,10 @@ vulnerabilities:
     purls: ["pkg:pypi/msgpack@1.1.2"]
     statement: Vendored inside pip in the SDK base image, not used by the adapter.
     expired_at: 2027-01-11
+  - id: CVE-2026-114613
+    purls: ["pkg:pypi/msgpack@1.1.2"]
+    statement: Vendored inside pip in the SDK base image, not used by the adapter.
+    expired_at: 2027-01-11
   - id: CVE-2025-47273
     purls: ["pkg:pypi/setuptools@70.3.0"]
     statement: Vendored inside pip in the SDK base image, not used by the adapter.

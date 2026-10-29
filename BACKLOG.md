@@ -1,5 +1,48 @@
 # BACKLOG
 
+## Unreleased, for 2.0.0
+
+Major because one thing is removed on purpose: the *vCenter username*
+account field (`vcenter_user`). The username is read only from the
+credential, as in the vCenter adapter. Against 1.4.7, `describe.xml`
+keeps every resource kind and metric key and loses exactly that one
+identifier, which was required there, so every existing account has a value
+in it. v2.0.0-rc.1 installed in place over 1.5.0-rc.2 on 8.18.7, 9.0.2 and
+9.1.1 with accounts, credentials and objects kept (`MIGRATION.md`, Live
+upgrade result). A direct install over 1.4.7, the last release, has not been
+run, and RELEASING.md section 5 asks for it before `v2.0.0` is tagged. The
+1.5.0 release candidates carried the old field as a deprecated fallback; that
+fallback is gone and 1.5.0 is not released.
+
+* **Username in the credential, and only there.** *Upgrade note:* enter the
+  username in each account's credential before or right after upgrading.
+  An account whose credential has none stops collecting with "No vCenter
+  username" until it does; the adapter attempts no login and deletes
+  nothing. Do not uninstall 1.x first. The account's identity is
+  now the vCenter Server plus the three enum settings, so two accounts on
+  the same vCenter that differed only by username now collide. See
+  `MIGRATION.md`.
+* **The certificates Operations passes are used.** `verify_certs: true`
+  works against a vCenter whose CA Operations trusts, and against a
+  VMCA-signed vCenter and by IP once its certificate is accepted (chain
+  verification against them, then a thumbprint pin on the vCenter session
+  and the `/vsanHealth` stub). Every vCenter request has a 120 s timeout. The vendored version probe no longer turns off TLS verification
+  for the whole process. The vCenter field accepts a pasted URL or a
+  `:port`.
+* **Collection failures reach Operations.** `collect()` reports with
+  `with_error` instead of exiting 0 with no result.
+* **One cluster no longer sinks the rest.** Clusters without vSAN are
+  skipped; a vSAN cluster that does not answer is logged and the others
+  still collect. Validate Connection probes every vSAN cluster.
+* **Clusters in foldered datacenters are collected.**
+* **The collection-problem warning means a problem.** Absent features and
+  attach-off are no longer counted.
+* `tools/sync_content.py` fails when a dashboard was not generated.
+* `app/metric_scope.py` counts defined metrics the way the pak does.
+* A test fails if pyvmomi leaves 8.x: the thumbprint pin relies on 8.x
+  checking it on every connection, and 9.x would let the login through
+  unverified.
+
 ## Released as 1.4.7 (2026-10-27)
 
 Published as `v1.4.7`, a non-prerelease and the Latest release, from the commit the gates below were run on. Verified against the published artifact: checksum matches `SHA256SUMS`, one provenance attestation, 976 metric/property keys and 70 kinds identical to rc.12, `attach_to_vcenter` default true.
@@ -386,9 +429,16 @@ Open question for the vendor, now sharper: is there an append-only way to add a
 subscription, or must every consumer read-modify-write a shared list and race
 each other?
 
-**`verify_certs: true` is untested, and the reasoning behind it may be wrong.**
-See the note under Blocking, above -- accepted certs land in Operations' trust
-store while `scrape()` runs inside the container with its own CA bundle.
+**`verify_certs: true` now uses the accepted certificate (2.0.0).** The
+suspicion here was half right: Operations does not put an accepted certificate
+in the container's trust store, it passes it to the adapter in every call
+(`AdapterInstance.get_certificates()`), together with every CA Operations
+trusts cluster-wide, and nothing read it. `perfsvc.connect` now verifies the
+chain against all of them first, then pins an exactly matching leaf with
+pyVmomi's `thumbprint`, for both the vCenter session and the `/vsanHealth`
+stub. Proven with `mp-test` against a vCenter whose CA the container does not
+trust (leaf, CA-only, mixed and wrong certificates); not yet in the
+Operations dialog.
 
 ## Completeness
 

@@ -96,8 +96,8 @@ Performance Service rebuild at fleet scale -- one rule per site, not N.
 
 ### vCenter certificate
 
-`Verify vCenter certificate` defaults to **true and does not work unmodified**.
-vCenter presents a VMCA-issued certificate:
+`Verify vCenter certificate` defaults to **true**. vCenter presents a
+VMCA-issued certificate:
 
 ```
 subject= CN = vcenter.example.com
@@ -105,12 +105,13 @@ issuer = CN = CA, DC = vsphere, DC = local
 Verify return code: 21 (unable to verify the first certificate)
 ```
 
-Nothing in the adapter's base image trusts the VMCA, so a stock install that
-accepts the defaults fails with `CERTIFICATE_VERIFY_FAILED`. Either import the
-VMCA root from `https://<vcenter>/certs/download.zip` into the container trust
-store, or set the field to false. If left true the field must hold the **FQDN**
--- an IP fails hostname matching even once the root is trusted. The adapter's
-error message names both causes; see `README.md` step 6.
+Nothing in the adapter's base image trusts the VMCA, so the adapter does not
+rely on a chain: accept the certificate when Operations shows it during
+Validate Connection, and the adapter requires vCenter's certificate to match
+the accepted one exactly. If Operations already trusts vCenter's CA, the
+adapter verifies against that CA instead. Nothing needs importing into the
+container, and an IP address in the server field works once the certificate
+is accepted. See `README.md` step 6.
 
 ### If you host the image on a private registry inside vSphere
 
@@ -150,7 +151,7 @@ catch up -- the rule has to be scoped to the network.
 
 | Credential | Used by | Stored | Scope |
 |---|---|---|---|
-| **vCenter account** | the adapter, at collection time | Operations adapter instance (credential) | read-only, propagated from the vCenter root |
+| **vCenter account** | the adapter, at collection time | Operations credential: username and password (the username only there since 2.0.0) | read-only, propagated from the vCenter root |
 | ESXi bearer token | dormant host path only -- not used at runtime | n/a | **cluster-wide** (verified) |
 | Registry push credential | `mp-build` on the build host | `~/harbor.env`, mode 600, **outside this repo** | project-scoped robot recommended |
 | Registry pull credential | Cloud Proxy | `/root/.docker/config.json` on the proxy | pull-only is sufficient |
@@ -218,7 +219,8 @@ count, since the VM-scoped kinds dominate; any cluster should
 9. Cloud Proxy: DNS resolves the registry, CA trusted, `docker pull` by digest
    returns the same digest
 10. Pak installed; adapter instance created **against the Cloud Proxy** as
-    collector, with `Verify vCenter certificate` false (see section 3)
+    collector, with `Verify vCenter certificate` true and vCenter's
+    certificate accepted (see section 3)
 11. Objects appear with real names -- not UUIDs. Verified through the
     Operations API rather than by eye:
     ```sh

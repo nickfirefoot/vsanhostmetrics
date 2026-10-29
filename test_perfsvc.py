@@ -249,27 +249,432 @@ def test_cache_miss_is_not_pluralised_into_missed():
     assert not wrong, wrong[:5]
 
 
-def test_cert_failure_names_the_remedy():
-    """The DEFAULT config hits this path -- verify_certs defaults to true and
-    vCenter presents a VMCA-issued cert nothing trusts -- so the message has to
-    say what to do, not just that verification failed."""
-    import ssl as _ssl
+# Two throwaway self-signed certificates, public halves only: a leaf that is
+# not vCenter's, and a CA that did not issue vCenter's certificate.
+PEM_A = """-----BEGIN CERTIFICATE-----
+MIIBlTCCATugAwIBAgIUW2YSru6pA80i/lFe73J+yUy/QIAwCgYIKoZIzj0EAwIw
+IDEeMBwGA1UEAwwVdmMtdGVzdC1hLmV4YW1wbGUuY29tMB4XDTI2MTAyODIxMjQz
+OVoXDTM2MTAyNTIxMjQzOVowIDEeMBwGA1UEAwwVdmMtdGVzdC1hLmV4YW1wbGUu
+Y29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEdOLWuB89IWDh4DW4rw6pODKo
+lmFVs9rG7GBlxq/KPob6p59H8BNEjN7IOqKkXsqzoullha9DLeLzvcipRsM4K6NT
+MFEwHQYDVR0OBBYEFDerNn5qcXyaP/kGMQuF+4VCX5vyMB8GA1UdIwQYMBaAFDer
+Nn5qcXyaP/kGMQuF+4VCX5vyMA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwID
+SAAwRQIgbId05iYysPcWrY7FjG5ZmyU1plFkcWjThVsDFXSPRBACIQDuu/JELywq
+E15KVDROT2fKJgGAnZWQX64NVtGCWbOmiw==
+-----END CERTIFICATE-----
+"""
+PEM_B = """-----BEGIN CERTIFICATE-----
+MIIBlTCCATugAwIBAgIUOPE4r8VFCC50hOPe9pdLZ84l8UAwCgYIKoZIzj0EAwIw
+IDEeMBwGA1UEAwwVdmMtdGVzdC1iLmV4YW1wbGUuY29tMB4XDTI2MTAyODIxMjQz
+OVoXDTM2MTAyNTIxMjQzOVowIDEeMBwGA1UEAwwVdmMtdGVzdC1iLmV4YW1wbGUu
+Y29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEF6VJ0ik5cGBBfo2FvJB+B5tr
+2x4CO/e01bRaedrIsR1IvI0uNL7rbW4xPsZYD++iNWffptMWWcCVHR92nTX4jqNT
+MFEwHQYDVR0OBBYEFMWYBxy/yLs6vzWm0N69r0HgFpldMB8GA1UdIwQYMBaAFMWY
+Bxy/yLs6vzWm0N69r0HgFpldMA8GA1UdEwEB/wQFMAMBAf8wCgYIKoZIzj0EAwID
+SAAwRQIhAOhYoLkCRxAWGRMyXiH+K+cmuNEcCX6VSyr68LRVnSMLAiAPnHvg0lyC
+S8KhoShbQZhuPZZEZPux/wVC6x6hZxqWIQ==
+-----END CERTIFICATE-----
+"""
 
-    def _boom(**kwargs):
-        raise _ssl.SSLCertVerificationError("certificate verify failed")
 
-    real = perfsvc.SmartConnect
-    perfsvc.SmartConnect = _boom
+def _tls_lab():
+    """A root CA, an issuing CA and a leaf for 'localhost' (DNS SAN only, as
+    lab vCenters have), generated per run so no private key lives in the
+    repository, and a TLS server on 127.0.0.1 presenting leaf + issuing CA,
+    as the lab vCenters do. Returns (port, pems by name, stop) or None when
+    the cryptography package is absent (outside the adapter image)."""
     try:
-        perfsvc.connect("vc01.example.com", "u", "p", verify=True)
+        from cryptography import x509
+        from cryptography.hazmat.primitives import hashes, serialization
+        from cryptography.hazmat.primitives.asymmetric import ec
+        from cryptography.x509.oid import NameOID
+    except ImportError:
+        print("    (skipped: no cryptography package -- runs inside the "
+              "adapter image, as CI runs it)")
+        return None
+    import datetime as _dt, os as _os, socket as _socket, ssl as _ssl
+    import tempfile, threading
+
+    now = _dt.datetime.now(_dt.timezone.utc)
+
+    def make(cn, issuer_cert, issuer_key, ca, san=None):
+        key = ec.generate_private_key(ec.SECP256R1())
+        name = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, cn)])
+        b = (x509.CertificateBuilder().subject_name(name)
+             .issuer_name(issuer_cert.subject if issuer_cert else name)
+             .public_key(key.public_key()).serial_number(x509.random_serial_number())
+             .not_valid_before(now - _dt.timedelta(days=1))
+             .not_valid_after(now + _dt.timedelta(days=30))
+             .add_extension(x509.BasicConstraints(ca=ca, path_length=None), critical=True))
+        if san:
+            b = b.add_extension(x509.SubjectAlternativeName(
+                [x509.DNSName(san)]), critical=False)
+        cert = b.sign(issuer_key or key, hashes.SHA256())
+        return cert, key
+
+    root, root_key = make("Test Root", None, None, True)
+    issuing, issuing_key = make("Test Issuing", root, root_key, True)
+    leaf, leaf_key = make("localhost", issuing, issuing_key, False, "localhost")
+    pem = lambda c: c.public_bytes(serialization.Encoding.PEM).decode()
+
+    d = tempfile.mkdtemp()
+    chain = _os.path.join(d, "chain.pem"); keyf = _os.path.join(d, "key.pem")
+    open(chain, "w").write(pem(leaf) + pem(issuing))
+    open(keyf, "wb").write(leaf_key.private_bytes(
+        serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8,
+        serialization.NoEncryption()))
+    sctx = _ssl.SSLContext(_ssl.PROTOCOL_TLS_SERVER)
+    sctx.load_cert_chain(chain, keyf)
+    srv = _socket.socket(); srv.bind(("127.0.0.1", 0)); srv.listen(16)
+    srv.settimeout(0.2)
+    stop = threading.Event()
+
+    def serve():
+        while not stop.is_set():
+            try:
+                conn, _ = srv.accept()
+            except OSError:
+                continue
+            try:
+                with sctx.wrap_socket(conn, server_side=True) as tls:
+                    tls.recv(1)
+            except Exception:                            # noqa: BLE001
+                pass
+    threading.Thread(target=serve, daemon=True).start()
+
+    def close():
+        stop.set(); srv.close()
+    return srv.getsockname()[1], {"leaf": pem(leaf), "issuing": pem(issuing),
+                                  "root": pem(root)}, close
+
+
+class _TLSConnect:
+    """Stands in for SmartConnect: a REAL handshake with the context it is
+    given against the lab server (so chain, anchor and hostname checks are
+    OpenSSL's, not a fake's), then pyVmomi's own thumbprint check, with a
+    mismatch wrapped the way pyVmomi 8 wraps it (in HostConnectFault)."""
+    def __init__(self, port):
+        self.port = port; self.calls = []
+
+    def __call__(self, host, port, user, pwd, sslContext, thumbprint,
+                 httpConnectionTimeout=None):
+        import socket as _socket
+        from pyVmomi.Security import VerifyCertThumbprint
+        self.calls.append((sslContext.verify_mode, thumbprint,
+                           httpConnectionTimeout))
+        with _socket.create_connection((host, self.port), timeout=5) as raw:
+            with sslContext.wrap_socket(raw, server_hostname=host) as tls:
+                der = tls.getpeercert(True)
+        if thumbprint:
+            try:
+                VerifyCertThumbprint(der, thumbprint)
+            except perfsvc.ThumbprintMismatchException as exc:
+                raise RuntimeError(f"HostConnectFault: {exc}")
+        return "si"
+
+
+def _connect_lab(lab, host, received, verify=True):
+    port, _, _ = lab
+    fake = _TLSConnect(port)
+    real_sc, real_inv = perfsvc.SmartConnect, perfsvc._inventory
+    perfsvc.SmartConnect = fake
+    perfsvc._inventory = lambda si, ctx, fp: (si, ["c"], {"fp": fp})
+    try:
+        _, _, mos = perfsvc.connect(host, "u", "p", verify=verify,
+                                    accepted_pems=received, port=port)
+        return mos["fp"], fake.calls
+    finally:
+        perfsvc.SmartConnect, perfsvc._inventory = real_sc, real_inv
+
+
+def _sha(pem):
+    import hashlib, ssl as _ssl
+    return hashlib.sha256(_ssl.PEM_cert_to_DER_cert(pem.strip())).hexdigest()
+
+
+def test_received_certificates_verify_by_chain_or_by_pin():
+    """What Operations passes is this account's accepted leaves PLUS every
+    CA the cluster trusts. Where Operations trusts vCenter through a CA, no
+    accept dialog fires and only CAs arrive (devel 9.0.2), so a leaf-only
+    pin failed there. Each case: (host, received, expected thumbprint pinned
+    or None for verified by chain)."""
+    lab = _tls_lab()
+    if lab is None:
+        return
+    port, p, close = lab
+    try:
+        leaf = _sha(p["leaf"])
+        cases = {
+            "leaf accepted, name matches": ("localhost", [p["leaf"]], None),
+            "leaf accepted, by IP (pin)": ("127.0.0.1", [p["leaf"]], leaf),
+            "CAs only": ("localhost", [p["issuing"], p["root"]], None),
+            "issuing CA only (partial chain)": ("localhost", [p["issuing"]], None),
+            "root only": ("localhost", [p["root"]], None),
+            "mixed": ("localhost", [PEM_A, p["issuing"], p["root"]], None),
+            "mixed, by IP (pin)": ("127.0.0.1", [p["root"], p["leaf"]], leaf),
+        }
+        for label, (host, received, want) in cases.items():
+            fp, calls = _connect_lab(lab, host, received)
+            assert fp == want, (label, fp, want)
+            assert all(c[2] == perfsvc.HTTP_TIMEOUT_S for c in calls), (label, calls)
+    finally:
+        close()
+
+
+def test_a_certificate_nobody_accepted_is_rejected_with_both_sides_named():
+    lab = _tls_lab()
+    if lab is None:
+        return
+    port, p, close = lab
+    try:
+        for label, host, received in (
+                ("another leaf", "localhost", [PEM_A]),
+                ("another CA", "localhost", [PEM_B]),
+                ("CAs only, by IP: an IP needs the leaf accepted",
+                 "127.0.0.1", [p["issuing"], p["root"]])):
+            try:
+                _connect_lab(lab, host, received)
+                raise AssertionError(f"{label}: let through")
+            except perfsvc.PerfSvcError as exc:
+                text = str(exc)
+                assert "matches none" in text, (label, text)
+                assert _sha(p["leaf"]) in text, (label, "presented sha missing")
+                for pem in received:
+                    assert _sha(pem) in text, (label, "received sha missing")
+        try:
+            _connect_lab(lab, "localhost", [])
+            raise AssertionError("nothing received: let through")
+        except perfsvc.PerfSvcError as exc:
+            assert "Validate Connection" in str(exc), exc
+            assert _sha(p["leaf"]) in str(exc), exc
+    finally:
+        close()
+
+
+def test_a_certificate_swapped_between_look_and_login_is_rejected():
+    """The leaf is read once to choose the pin; if the login then meets a
+    different certificate, pyVmomi's pin check refuses it, and that must be
+    reported as a mismatch, not as a failed login."""
+    lab = _tls_lab()
+    if lab is None:
+        return
+    port, p, close = lab
+    real = perfsvc.presented_sha256
+    perfsvc.presented_sha256 = lambda host, port: _sha(PEM_A)
+    try:
+        _connect_lab(lab, "127.0.0.1", [PEM_A])
+        raise AssertionError("a swapped certificate was let through")
+    except perfsvc.PerfSvcError as exc:
+        assert "matches none" in str(exc), exc
+        assert _sha(p["leaf"]) in str(exc), "the certificate actually met is not named"
+    finally:
+        perfsvc.presented_sha256 = real
+        close()
+
+
+def test_the_pin_relies_on_pyvmomi_8_checking_every_connection():
+    """perfsvc.connect pins with an unverified context plus `thumbprint`.
+    That is safe only because pyVmomi 8.0.x's GetConnection verifies the
+    thumbprint on every new connection. pyVmomi 9.x checks a pin only after
+    an SSLCertVerificationError, which an unverified context never raises,
+    so the login would go out unverified. Fail loudly on a bump; see the
+    comment at the pinned login in perfsvc.connect for what to change."""
+    import inspect
+    from importlib.metadata import version
+    from pyVmomi.SoapAdapter import SoapStubAdapter
+    installed = version("pyvmomi")
+    assert installed.split(".")[0] == "8", (
+        f"pyVmomi {installed}: change the pinned login in perfsvc.connect "
+        f"before moving off 8.x")
+    src = inspect.getsource(SoapStubAdapter.GetConnection)
+    assert "_VerifyThumbprint(" in src, (
+        "SoapStubAdapter.GetConnection no longer checks the thumbprint; the "
+        "pinned login in perfsvc.connect would not be verified")
+
+
+def test_one_bad_received_entry_does_not_stop_the_good_one():
+    """A malformed entry -- empty, the string "None" (what CertificateInfo
+    returns for a missing PEM), stray whitespace, broken base64 -- raised a
+    raw ValueError and the valid certificate after it was never tried."""
+    lab = _tls_lab()
+    if lab is None:
+        return
+    port, p, close = lab
+    try:
+        lines = p["leaf"].splitlines()
+        broken = "\n".join(lines[:2] + lines[3:])     # a body line missing
+        received = ["", "None", broken, "\n  " + p["leaf"] + "\n\n"]
+        fp, _ = _connect_lab(lab, "127.0.0.1", received)
+        assert fp == _sha(p["leaf"]), fp
+        assert [s for _, s in perfsvc.usable_certificates(received)] == \
+            [_sha(p["leaf"])]
+    finally:
+        close()
+
+
+def test_verify_off_checks_nothing_and_pins_nothing():
+    lab = _tls_lab()
+    if lab is None:
+        return
+    port, p, close = lab
+    try:
+        import ssl as _ssl
+        fp, calls = _connect_lab(lab, "127.0.0.1", [PEM_A], verify=False)
+        assert fp is None
+        assert [c[:2] for c in calls] == [(_ssl.CERT_NONE, None)], calls
+    finally:
+        close()
+
+
+def test_a_wrong_password_is_still_reported_as_a_login_failure():
+    """The pin-mismatch detection must not swallow ordinary login faults,
+    and the UI gets the fault's message, not its multi-line repr."""
+    def _bad_login(**kwargs):
+        raise perfsvc.vim.fault.InvalidLogin(
+            msg="Cannot complete login due to an incorrect user name or password.")
+    real = perfsvc.SmartConnect
+    perfsvc.SmartConnect = _bad_login
+    try:
+        perfsvc.connect("vc01.example.com", "u", "p", verify=False)
         raise AssertionError("expected PerfSvcError")
     except perfsvc.PerfSvcError as exc:
         text = str(exc)
-        assert "VMCA" in text, text
-        assert "Verify vCenter certificate" in text, text
-        assert "FQDN" in text, text
+        assert "login failed" in text and "incorrect user name" in text, text
+        assert "dynamicType" not in text, text
     finally:
         perfsvc.SmartConnect = real
+
+
+def test_the_version_probe_has_a_timeout_and_it_is_restored():
+    """SmartConnect's API-version probe takes no timeout argument."""
+    import socket as _socket
+    seen = []
+    def _record(**kwargs):
+        seen.append((_socket.getdefaulttimeout(), kwargs.get("httpConnectionTimeout")))
+        return "si"
+    real, before = perfsvc.SmartConnect, _socket.getdefaulttimeout()
+    perfsvc.SmartConnect = _record
+    try:
+        perfsvc._login("vc01.example.com", 443, "u", "p", None, None)
+    finally:
+        perfsvc.SmartConnect = real
+    assert seen == [(perfsvc.HTTP_TIMEOUT_S, perfsvc.HTTP_TIMEOUT_S)], seen
+    assert _socket.getdefaulttimeout() == before
+
+
+def test_host_field_is_normalised():
+    """A URL pasted into the server field produced https://https://... in the
+    certificate prompt and an unresolvable host in SmartConnect."""
+    cases = {
+        "vc01.example.com": ("vc01.example.com", 443),
+        "  vc01.example.com  ": ("vc01.example.com", 443),
+        "https://vc01.example.com/": ("vc01.example.com", 443),
+        "https://vc01.example.com/ui/app": ("vc01.example.com", 443),
+        "vc01.example.com:8443": ("vc01.example.com", 8443),
+        "https://192.0.2.10:8443/sdk": ("192.0.2.10", 8443),
+        "[2001:db8::10]": ("2001:db8::10", 443),
+    }
+    for raw, want in cases.items():
+        assert perfsvc.split_host(raw) == want, (raw, perfsvc.split_host(raw))
+    assert perfsvc.endpoint_url("vc01.example.com") == "https://vc01.example.com"
+    assert perfsvc.endpoint_url("vc01.example.com", 8443) == \
+        "https://vc01.example.com:8443"
+    assert perfsvc.endpoint_url("2001:db8::10") == "https://[2001:db8::10]"
+    for bad in ("", "   ", "vc01.example.com:notaport"):
+        try:
+            perfsvc.split_host(bad)
+            raise AssertionError(f"{bad!r} was accepted")
+        except perfsvc.PerfSvcError:
+            pass
+
+
+def test_nothing_turns_tls_verification_off_for_the_process():
+    """The vendored vsanapiutils.GetLatestVmodlVersion replaced
+    ssl._create_default_https_context with the unverified one, on every
+    connect, whatever the verify setting said."""
+    import pathlib, re, ssl as _ssl
+    before = _ssl._create_default_https_context
+    import vsanapiutils
+    vsanapiutils.GetLatestVmodlVersion("127.0.0.1:1")    # refused, offline
+    assert _ssl._create_default_https_context is before
+    for f in pathlib.Path("app").rglob("*.py"):
+        src = f.read_text(encoding="utf-8")
+        assert not re.search(r"_create_default_https_context\s*=", src), f
+
+
+def test_clusters_in_foldered_datacenters_are_found():
+    """Only datacenters directly under the root were walked, so a datacenter
+    inside a folder was skipped and its clusters never collected."""
+    made = []
+
+    class _View:
+        def __init__(self, clusters): self.view = clusters; self.destroyed = False
+        def DestroyView(self): self.destroyed = True
+
+    class _VM:
+        def CreateContainerView(self, container, types, recursive):
+            made.append((container, types, recursive))
+            v = _View(["c-in-root-dc", "c-in-foldered-dc"]); made.append(v)
+            return v
+
+    class _Content:
+        rootFolder = "root"; viewManager = _VM()
+
+    class _SI:
+        _stub = None
+        def RetrieveContent(self): return _Content()
+
+    real = perfsvc.vsanapiutils.GetVsanVcMos
+    perfsvc.vsanapiutils.GetVsanVcMos = lambda *a, **k: {}
+    try:
+        _, clusters, _ = perfsvc._inventory(_SI(), None, None)
+    finally:
+        perfsvc.vsanapiutils.GetVsanVcMos = real
+    assert clusters == ["c-in-root-dc", "c-in-foldered-dc"], clusters
+    assert made[0] == ("root", [perfsvc.vim.ClusterComputeResource], True), made[0]
+    assert made[1].destroyed, "the container view was left on the server"
+
+
+def test_a_session_is_logged_out_if_reading_inventory_fails():
+    """connect() logs in, then reads inventory; if that read fails the caller
+    never gets the session to disconnect, so connect must."""
+    gone = []
+
+    class _SI:
+        _stub = None
+        def RetrieveContent(self): raise RuntimeError("NoPermission")
+
+    real = perfsvc.Disconnect
+    perfsvc.Disconnect = gone.append
+    try:
+        si = _SI()
+        try:
+            perfsvc._inventory(si, None, None)
+            raise AssertionError("expected the inventory failure")
+        except RuntimeError:
+            pass
+        assert gone == [si], gone
+    finally:
+        perfsvc.Disconnect = real
+
+
+def test_absent_features_are_not_reported_as_problems():
+    """'N entity types not available' was appended to problems, so the
+    caller's collection-problem warning fired on nearly every cluster every
+    cycle. Absent features are a property of the cluster, not a fault."""
+    _patch_specs()
+
+    class _Perf:
+        def VsanPerfQueryPerf(self, specs, cluster):
+            ent = specs[0].entityRefId.split(":")[0]
+            if ent == "host-domclient":
+                return [_Result(f"host-domclient:{HOST}",
+                                [_Value("readCount", "1,2,3")])]
+            raise perfsvc.vmodl.fault.NotSupported()
+
+    objs, problems = perfsvc.collect(_Perf(), cluster=None)
+    assert objs, "the supported entity type was lost"
+    assert problems == [], problems
 
 
 def test_labels_use_us_spelling():

@@ -110,8 +110,15 @@ def main():
         if hit:
             covered[kind] = hit
 
-    total = sum(len(v) for v in by_kind.values())
-    n_cov = sum(len(v) for v in covered.values())
+    # Count what the pak DEFINES, by the rule perfsvc.metrics_for applies:
+    # each <name>Actual whose <name> is also present is dropped. Counting the
+    # raw ids in the model files put a higher figure here than the one the
+    # pack description and the configuration form state.
+    def _defined(metrics):
+        names = set(metrics)
+        return {m for m in names if not (m.endswith("Actual") and m[:-6] in names)}
+    total = sum(len(_defined(v)) for v in by_kind.values())
+    n_cov = sum(len(set(v) & _defined(by_kind[k])) for k, v in covered.items())
 
     out = ROOT / "app" / "metric_scope.py"
     with out.open("w", encoding="utf-8") as f:
