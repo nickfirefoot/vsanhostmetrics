@@ -326,6 +326,17 @@ def connect(host: str, user: str, password: str, verify: bool = True,
         # (vimServiceVersions.xml) runs on this context and is NOT pinned; it
         # carries no credential. The login and every call after it go
         # through stubs that check the pin first.
+        #
+        # PYVMOMI 8.0.x ONLY. An unverified context plus `thumbprint` is safe
+        # because 8.0.x's SoapStubAdapter.GetConnection checks the thumbprint
+        # on every new connection, unconditionally. pyVmomi 9.x checks a pin
+        # only inside its SSLCertVerificationError handler, so with an
+        # unverified context it would never check it and the login would go
+        # out unverified. Before bumping pyvmomi to 9.x, change this to a
+        # verifying context plus a SoapStubAdapter built here with
+        # serverPemCert (no SmartConnect version probe), for the vCenter
+        # session and the vSAN stub. test_perfsvc.py fails on a bump until
+        # then.
         ctx = ssl._create_unverified_context()
         try:
             si = _login(host, port, user, password, ctx, presented)

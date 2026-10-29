@@ -472,6 +472,26 @@ def test_a_certificate_swapped_between_look_and_login_is_rejected():
         close()
 
 
+def test_the_pin_relies_on_pyvmomi_8_checking_every_connection():
+    """perfsvc.connect pins with an unverified context plus `thumbprint`.
+    That is safe only because pyVmomi 8.0.x's GetConnection verifies the
+    thumbprint on every new connection. pyVmomi 9.x checks a pin only after
+    an SSLCertVerificationError, which an unverified context never raises,
+    so the login would go out unverified. Fail loudly on a bump; see the
+    comment at the pinned login in perfsvc.connect for what to change."""
+    import inspect
+    from importlib.metadata import version
+    from pyVmomi.SoapAdapter import SoapStubAdapter
+    installed = version("pyvmomi")
+    assert installed.split(".")[0] == "8", (
+        f"pyVmomi {installed}: change the pinned login in perfsvc.connect "
+        f"before moving off 8.x")
+    src = inspect.getsource(SoapStubAdapter.GetConnection)
+    assert "_VerifyThumbprint(" in src, (
+        "SoapStubAdapter.GetConnection no longer checks the thumbprint; the "
+        "pinned login in perfsvc.connect would not be verified")
+
+
 def test_one_bad_received_entry_does_not_stop_the_good_one():
     """A malformed entry -- empty, the string "None" (what CertificateInfo
     returns for a missing PEM), stray whitespace, broken base64 -- raised a
